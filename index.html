@@ -1763,6 +1763,42 @@
             .toggle-icon { font-size: 1.3rem; }
             .wing-btns { flex-direction: column; }
         }
+        /* Fix for card-bottom visibility - always show on hover regardless of visible class */
+.committee-card:hover .card-bottom,
+.wing-animated:hover .card-bottom,
+.auditing-board-pro:hover .audit-hover-actions {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    animation: none !important;
+}
+
+/* Ensure animations play even when cards are already visible */
+.wing-animated.visible .wing-icon-circle {
+    animation-play-state: running !important;
+}
+
+/* Make sure animations don't stop */
+.wing-urdu .wing-icon-circle,
+.wing-english .typing-dots span,
+.wing-arabic .wing-icon-circle,
+.wing-malayalam .wing-icon-circle,
+.wing-song .eq-bars span,
+.wing-maths .wing-icon-circle,
+.wing-art .paint-dot,
+.wing-library .wing-icon-circle,
+.wing-geography .wing-icon-circle,
+.wing-gk .wing-icon-circle,
+.wing-science .atom-orbit,
+.wing-publication .wing-icon-circle,
+.wing-media .wing-icon-circle,
+.wing-medical .wing-icon-circle,
+.wing-sports .wing-icon-circle,
+.wing-sports .sparticle,
+.wing-foreign .wing-icon-circle,
+.wing-foreign .flag-stripes span {
+    animation-play-state: running !important;
+    animation-iteration-count: infinite !important;
+}
     </style>
 </head>
 <body>
