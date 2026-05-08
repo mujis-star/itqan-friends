@@ -1799,6 +1799,332 @@
     animation-play-state: running !important;
     animation-iteration-count: infinite !important;
 }
+        /* ============================================ */
+/* ANIMATED COMMITTEE CARDS */
+/* ============================================ */
+
+.committee-card-animated {
+    background: linear-gradient(145deg, var(--bg-tertiary) 0%, rgba(20, 23, 36, 0.9) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.12);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.committee-card-animated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 3;
+}
+
+.committee-card-animated:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+}
+
+.committee-inner {
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* President - Crown glow */
+.committee-president .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 184, 0, 0.08));
+    color: #FFD700;
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
+    animation: crownGlow 2s ease-in-out infinite;
+}
+.committee-president::after { background: linear-gradient(90deg, #FFD700, #FFB800, #FFD700); }
+.committee-president .committee-role { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+.committee-president { border-color: rgba(255, 215, 0, 0.25); }
+.committee-president:hover { border-color: rgba(255, 215, 0, 0.6); box-shadow: 0 30px 60px rgba(255, 215, 0, 0.25); }
+.committee-president .btn-primary { background: linear-gradient(135deg, #FFD700, #FFB800); color: #000; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3); }
+.committee-president .btn-primary:hover { box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5); }
+.committee-president .btn-outline { border-color: #FFD700; color: #FFD700; }
+.committee-president .btn-outline:hover { background-color: #FFD700; color: #000; }
+
+@keyframes crownGlow {
+    0%, 100% { box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 15px 50px rgba(255, 215, 0, 0.6), 0 0 80px rgba(255, 215, 0, 0.3); transform: scale(1.05); }
+}
+
+/* Vice President - Shield pulse */
+.committee-vp .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.25), rgba(192, 192, 192, 0.08));
+    color: #C0C0C0;
+    box-shadow: 0 8px 30px rgba(192, 192, 192, 0.3);
+    animation: shieldPulse 2.5s ease-in-out infinite;
+}
+.committee-vp::after { background: linear-gradient(90deg, #C0C0C0, #E8E8E8, #C0C0C0); }
+.committee-vp .committee-role { color: #C0C0C0; }
+.committee-vp { border-color: rgba(192, 192, 192, 0.25); }
+.committee-vp:hover { border-color: rgba(192, 192, 192, 0.6); }
+.committee-vp .btn-primary { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); color: #000; }
+.committee-vp .btn-outline { border-color: #C0C0C0; color: #C0C0C0; }
+.committee-vp .btn-outline:hover { background-color: #C0C0C0; color: #000; }
+
+@keyframes shieldPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* Secretary - Pen writing */
+.committee-secretary .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.05));
+    color: var(--primary);
+    box-shadow: 0 8px 25px rgba(0, 240, 255, 0.25);
+    animation: penWrite 3s ease-in-out infinite;
+}
+.committee-secretary::after { background: linear-gradient(90deg, #00F0FF, #00B8D4, #00F0FF); }
+.committee-secretary .committee-role { color: var(--primary); }
+
+@keyframes penWrite {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    25% { transform: rotate(-8deg) translateX(-4px); }
+    75% { transform: rotate(8deg) translateX(4px); }
+}
+
+/* Joint Secretary - Gear spin */
+.committee-js .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(130, 80, 255, 0.2), rgba(130, 80, 255, 0.05));
+    color: #8250FF;
+    box-shadow: 0 8px 25px rgba(130, 80, 255, 0.25);
+    animation: gearSpin 4s linear infinite;
+}
+.committee-js::after { background: linear-gradient(90deg, #8250FF, #A78BFA, #8250FF); }
+.committee-js .committee-role { color: #8250FF; }
+.committee-js { border-color: rgba(130, 80, 255, 0.2); }
+.committee-js:hover { border-color: rgba(130, 80, 255, 0.5); }
+.committee-js .btn-primary { background-color: #8250FF; }
+.committee-js .btn-outline { border-color: #8250FF; color: #8250FF; }
+.committee-js .btn-outline:hover { background-color: #8250FF; color: #fff; }
+
+@keyframes gearSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Treasurer - Coin bounce */
+.committee-treasurer .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(0, 220, 130, 0.2), rgba(0, 220, 130, 0.05));
+    color: #00DC82;
+    box-shadow: 0 8px 25px rgba(0, 220, 130, 0.25);
+    animation: coinBounce 1s ease-in-out infinite;
+}
+.committee-treasurer::after { background: linear-gradient(90deg, #00DC82, #69F0AE, #00DC82); }
+.committee-treasurer .committee-role { color: #00DC82; }
+.committee-treasurer { border-color: rgba(0, 220, 130, 0.2); }
+.committee-treasurer:hover { border-color: rgba(0, 220, 130, 0.5); }
+.committee-treasurer .btn-primary { background-color: #00DC82; color: #000; }
+.committee-treasurer .btn-outline { border-color: #00DC82; color: #00DC82; }
+.committee-treasurer .btn-outline:hover { background-color: #00DC82; color: #000; }
+
+@keyframes coinBounce {
+    0%, 100% { transform: translateY(0) rotateY(0deg); }
+    50% { transform: translateY(-18px) rotateY(180deg); }
+}
+
+/* Financial Manager - Chart bar */
+.committee-finance .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(255, 100, 100, 0.2), rgba(255, 100, 100, 0.05));
+    color: #FF6464;
+    box-shadow: 0 8px 25px rgba(255, 100, 100, 0.25);
+    animation: chartBar 1.5s ease-in-out infinite;
+}
+.committee-finance::after { background: linear-gradient(90deg, #FF6464, #FF8A80, #FF6464); }
+.committee-finance .committee-role { color: #FF6464; }
+.committee-finance { border-color: rgba(255, 100, 100, 0.2); }
+.committee-finance:hover { border-color: rgba(255, 100, 100, 0.5); }
+.committee-finance .btn-primary { background-color: #FF6464; }
+.committee-finance .btn-outline { border-color: #FF6464; color: #FF6464; }
+.committee-finance .btn-outline:hover { background-color: #FF6464; color: #fff; }
+
+@keyframes chartBar {
+    0%, 100% { transform: scaleY(0.8); }
+    50% { transform: scaleY(1.2); }
+}
+
+/* P.R.O - Megaphone broadcast */
+.committee-pro .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(255, 184, 0, 0.05));
+    color: var(--accent);
+    box-shadow: 0 8px 25px rgba(255, 184, 0, 0.25);
+    animation: broadcast 1.8s ease-in-out infinite;
+}
+.committee-pro::after { background: linear-gradient(90deg, #FFB800, #FFD54F, #FFB800); }
+.committee-pro .committee-role { color: var(--accent); }
+.committee-pro { border-color: rgba(255, 184, 0, 0.2); }
+.committee-pro:hover { border-color: rgba(255, 184, 0, 0.5); }
+.committee-pro .btn-primary { background-color: var(--accent); color: #000; }
+.committee-pro .btn-outline { border-color: var(--accent); color: var(--accent); }
+.committee-pro .btn-outline:hover { background-color: var(--accent); color: #000; }
+
+@keyframes broadcast {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.15) rotate(-5deg); }
+    75% { transform: scale(1.1) rotate(5deg); }
+}
+
+/* Auditing Board - Shield scan */
+.committee-audit {
+    background: linear-gradient(135deg, var(--bg-tertiary) 60%, rgba(255, 51, 102, 0.08));
+    border: 2px solid rgba(255, 51, 102, 0.3);
+}
+.committee-audit .committee-icon-circle {
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.25), rgba(255, 51, 102, 0.08));
+    color: var(--secondary);
+    box-shadow: 0 8px 30px rgba(255, 51, 102, 0.3);
+    animation: shieldScan 2s ease-in-out infinite;
+}
+.committee-audit::after { background: linear-gradient(90deg, #FF3366, #FF6B9D, #FF3366); }
+.committee-audit .committee-role { color: var(--secondary); }
+
+@keyframes shieldScan {
+    0%, 100% { box-shadow: 0 8px 30px rgba(255, 51, 102, 0.3); }
+    50% { box-shadow: 0 15px 50px rgba(255, 51, 102, 0.6), 0 0 70px rgba(255, 51, 102, 0.3); }
+}
+
+/* Common committee card styles */
+.committee-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.committee-card-animated:hover .committee-icon-circle {
+    transform: scale(1.15) rotate(-8deg);
+}
+
+.committee-role {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+}
+
+.committee-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.6rem;
+}
+
+.committee-desc {
+    color: var(--gray);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    flex-grow: 1;
+}
+
+.committee-btns {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.committee-btns .btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+/* Audit specific */
+.committee-audit .audit-inner {
+    text-align: center;
+}
+
+.committee-audit .audit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--secondary);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--glow-secondary);
+}
+
+.committee-audit .audit-members-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.committee-audit .audit-member {
+    text-align: center;
+}
+
+.committee-audit .audit-member .audit-role {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 3px;
+}
+
+.committee-audit .audit-member .audit-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.committee-audit .audit-divider-line {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.committee-audit .audit-desc-text {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+}
+
+/* Fix header alignment */
+.committee-header, .subwings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.committee-header h2, .subwings-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
     </style>
 </head>
 <body>
