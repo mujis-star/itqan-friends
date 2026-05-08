@@ -2363,161 +2363,227 @@
         </div>
     </div>
 
-    <script>
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
+    
+    // Close mobile menu when a link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
         });
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-        const committeeHeader = document.getElementById('committeeHeader');
-        const committeeGrid = document.getElementById('committeeGrid');
-        committeeHeader.addEventListener('click', () => {
-            committeeHeader.classList.toggle('active');
-            committeeGrid.classList.toggle('active');
-        });
-        const subwingsHeader = document.getElementById('subwingsHeader');
-        const subwingsContainer = document.getElementById('subwingsGrid');
-        subwingsHeader.addEventListener('click', () => {
-            subwingsHeader.classList.toggle('active');
-            subwingsContainer.classList.toggle('active');
-        });
-        const profileModal = document.getElementById('profileModal');
-        const modalClose = document.getElementById('modalClose');
-        const modalCloseBtn = document.getElementById('modalCloseBtn');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSubtitle = document.getElementById('modalSubtitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalPhoto = document.getElementById('modalPhoto');
-        const photoPlaceholder = document.getElementById('photoPlaceholder');
-        const modalBadges = document.getElementById('modalBadges');
-        const modalDetails = document.getElementById('modalDetails');
-        const modalContactInfo = document.getElementById('modalContactInfo');
-        const modalEmailBtn = document.getElementById('modalEmailBtn');
-        const modalCallBtn = document.getElementById('modalCallBtn');
-        const profileData = {
-            'Sayed Hudaif': { wing: 'Core Committee', responsibilities: ['Setting union strategic direction', 'Representing members in high-level decisions', 'Overseeing all union activities', 'Chairing executive meetings'], contact: { email: 'president@itqanunion.org', phone: '+91 98765 43210' } },
-            'Sayed Burhan': { wing: 'Core Committee', responsibilities: ['Supporting the president in strategic decisions', 'Overseeing daily union operations', 'Coordinating between different wings', 'Standing in for president when needed'], contact: { email: 'vicepresident@itqanunion.org', phone: '+91 98765 43211' } },
-            'Zidan': { wing: 'Core Committee', responsibilities: ['Maintaining union records and documentation', 'Managing official correspondence', 'Recording and distributing meeting minutes', 'Coordinating communication flow'], contact: { email: 'secretary@itqanunion.org', phone: '+91 98765 43212' } },
-            'Muhyudheen': { wing: 'Core Committee', responsibilities: ['Assisting the secretary in daily tasks', 'Handling specific administrative assignments', 'Maintaining membership records', 'Coordinating event logistics'], contact: { email: 'jointsecretary@itqanunion.org', phone: '+91 98765 43213' } },
-            'Mirsad': { wing: 'Core Committee', responsibilities: ['Managing union finances and budget', 'Preparing financial reports', 'Handling accounts and transactions', 'Ensuring financial compliance'], contact: { email: 'treasurer@itqanunion.org', phone: '+91 98765 43214' } },
-            'Thanzeeh': { wing: 'Core Committee', responsibilities: ['Overseeing all financial operations', 'Ensuring fiscal responsibility', 'Financial planning and analysis', 'Audit preparation and compliance'], contact: { email: 'finance@itqanunion.org', phone: '+91 98765 43215' } },
-            'Shahzad': { wing: 'Core Committee', responsibilities: ['Managing external communications', 'Handling media relations and press releases', 'Coordinating public events and campaigns', 'Building community relationships'], contact: { email: 'pro@itqanunion.org', phone: '+91 98765 43216' } },
-            'Adnan': { wing: 'Core Committee', responsibilities: ['Chairing the Auditing Board', 'Overseeing financial audits and reviews', 'Ensuring financial transparency', 'Monitoring compliance with financial policies'], contact: { email: 'audit.chair@itqanunion.org', phone: '+91 98765 43217' } },
-            'Rashad': { wing: 'Core Committee', responsibilities: ['Assisting the Audit Board Chair', 'Coordinating audit procedures', 'Documenting audit findings', 'Preparing audit reports'], contact: { email: 'audit.convener@itqanunion.org', phone: '+91 98765 43218' } }
-        };
-        function showProfile(name, position, description, photoUrl = '') {
-            const profile = profileData[name] || {};
-            modalTitle.textContent = name;
-            modalSubtitle.textContent = position;
-            modalDescription.textContent = description;
-            if (photoUrl && photoUrl.trim() !== '') {
-                modalPhoto.src = photoUrl;
-                modalPhoto.style.display = 'block';
-                photoPlaceholder.style.display = 'none';
-            } else {
-                modalPhoto.style.display = 'none';
-                photoPlaceholder.style.display = 'flex';
-                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-                photoPlaceholder.innerHTML = `<span>${initials}</span>`;
-            }
-            if (profile.wing) { modalBadges.innerHTML = `<span class="wing-badge">${profile.wing}</span>`; }
-            else if (position.includes('Wing')) { modalBadges.innerHTML = `<span class="wing-badge">${position.split('Wing')[0]} Wing</span>`; }
-            else { modalBadges.innerHTML = ''; }
-            if (profile.responsibilities && profile.responsibilities.length > 0) {
-                modalDetails.innerHTML = `<h4><i class="fas fa-tasks"></i> Key Responsibilities</h4><ul>${profile.responsibilities.map(resp => `<li>${resp}</li>`).join('')}</ul>`;
-            } else { modalDetails.innerHTML = ''; }
-            if (profile.contact) {
-                modalContactInfo.innerHTML = `<h4><i class="fas fa-address-card"></i> Contact Information</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${profile.contact.email}</span></div><div class="contact-item"><i class="fas fa-phone"></i><span>${profile.contact.phone}</span></div>`;
-                modalEmailBtn.onclick = () => { window.location.href = `mailto:${profile.contact.email}`; };
-                modalCallBtn.onclick = () => { window.location.href = `tel:${profile.contact.phone}`; };
-                modalEmailBtn.style.display = 'inline-block';
-                modalCallBtn.style.display = 'inline-block';
-            } else {
-                modalContactInfo.innerHTML = `<h4><i class="fas fa-info-circle"></i> Contact Information</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div><div class="contact-item"><i class="fas fa-phone"></i><span>Contact via union office</span></div>`;
-                modalEmailBtn.onclick = () => { window.location.href = `mailto:${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org`; };
-                modalCallBtn.onclick = () => { alert(`Please contact the ITQAN Union office for ${name}'s contact details.`); };
-                modalEmailBtn.style.display = 'inline-block';
-                modalCallBtn.style.display = 'inline-block';
-            }
-            profileModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    });
+    
+    // Toggle Committee Section
+    const committeeHeader = document.getElementById('committeeHeader');
+    const committeeGrid = document.getElementById('committeeGrid');
+    
+    committeeHeader.addEventListener('click', () => {
+        committeeHeader.classList.toggle('active');
+        committeeGrid.classList.toggle('active');
+        
+        // Make cards visible immediately when grid opens
+        if (committeeGrid.classList.contains('active')) {
+            setTimeout(() => {
+                document.querySelectorAll('#committeeGrid .committee-card').forEach(card => {
+                    card.classList.add('visible');
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }, 100);
         }
-        function showAbout(wingName, department, description) {
-            modalTitle.textContent = wingName;
-            modalSubtitle.textContent = department;
-            modalDescription.textContent = description;
-            const wingPhoto = `wings/${wingName.toLowerCase().replace(/\s+/g, '-')}.jpg`;
-            modalPhoto.src = wingPhoto;
-            modalPhoto.onerror = function() {
-                modalPhoto.style.display = 'none';
-                photoPlaceholder.style.display = 'flex';
-                photoPlaceholder.innerHTML = `<i class="fas fa-users"></i>`;
-            };
+    });
+    
+    // Toggle Subwings Section
+    const subwingsHeader = document.getElementById('subwingsHeader');
+    const subwingsContainer = document.getElementById('subwingsGrid');
+    
+    subwingsHeader.addEventListener('click', () => {
+        subwingsHeader.classList.toggle('active');
+        subwingsContainer.classList.toggle('active');
+        
+        // Make wing cards visible immediately when grid opens
+        if (subwingsContainer.classList.contains('active')) {
+            setTimeout(() => {
+                document.querySelectorAll('#subwingsGrid .wing-animated, #subwingsGrid .committee-card').forEach(card => {
+                    card.classList.add('visible');
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            }, 100);
+        }
+    });
+    
+    // Profile Modal Elements
+    const profileModal = document.getElementById('profileModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalPhoto = document.getElementById('modalPhoto');
+    const photoPlaceholder = document.getElementById('photoPlaceholder');
+    const modalBadges = document.getElementById('modalBadges');
+    const modalDetails = document.getElementById('modalDetails');
+    const modalContactInfo = document.getElementById('modalContactInfo');
+    const modalEmailBtn = document.getElementById('modalEmailBtn');
+    const modalCallBtn = document.getElementById('modalCallBtn');
+    
+    // Profile Data
+    const profileData = {
+        'Sayed Hudaif': { wing: 'Core Committee', responsibilities: ['Setting union strategic direction', 'Representing members in high-level decisions', 'Overseeing all union activities', 'Chairing executive meetings'], contact: { email: 'president@itqanunion.org', phone: '+91 98765 43210' } },
+        'Sayed Burhan': { wing: 'Core Committee', responsibilities: ['Supporting the president in strategic decisions', 'Overseeing daily union operations', 'Coordinating between different wings', 'Standing in for president when needed'], contact: { email: 'vicepresident@itqanunion.org', phone: '+91 98765 43211' } },
+        'Zidan': { wing: 'Core Committee', responsibilities: ['Maintaining union records and documentation', 'Managing official correspondence', 'Recording and distributing meeting minutes', 'Coordinating communication flow'], contact: { email: 'secretary@itqanunion.org', phone: '+91 98765 43212' } },
+        'Muhyudheen': { wing: 'Core Committee', responsibilities: ['Assisting the secretary in daily tasks', 'Handling specific administrative assignments', 'Maintaining membership records', 'Coordinating event logistics'], contact: { email: 'jointsecretary@itqanunion.org', phone: '+91 98765 43213' } },
+        'Mirsad': { wing: 'Core Committee', responsibilities: ['Managing union finances and budget', 'Preparing financial reports', 'Handling accounts and transactions', 'Ensuring financial compliance'], contact: { email: 'treasurer@itqanunion.org', phone: '+91 98765 43214' } },
+        'Thanzeeh': { wing: 'Core Committee', responsibilities: ['Overseeing all financial operations', 'Ensuring fiscal responsibility', 'Financial planning and analysis', 'Audit preparation and compliance'], contact: { email: 'finance@itqanunion.org', phone: '+91 98765 43215' } },
+        'Shahzad': { wing: 'Core Committee', responsibilities: ['Managing external communications', 'Handling media relations and press releases', 'Coordinating public events and campaigns', 'Building community relationships'], contact: { email: 'pro@itqanunion.org', phone: '+91 98765 43216' } },
+        'Adnan': { wing: 'Core Committee', responsibilities: ['Chairing the Auditing Board', 'Overseeing financial audits and reviews', 'Ensuring financial transparency', 'Monitoring compliance with financial policies'], contact: { email: 'audit.chair@itqanunion.org', phone: '+91 98765 43217' } },
+        'Rashad': { wing: 'Core Committee', responsibilities: ['Assisting the Audit Board Chair', 'Coordinating audit procedures', 'Documenting audit findings', 'Preparing audit reports'], contact: { email: 'audit.convener@itqanunion.org', phone: '+91 98765 43218' } }
+    };
+    
+    // Show Profile function
+    function showProfile(name, position, description, photoUrl = '') {
+        const profile = profileData[name] || {};
+        modalTitle.textContent = name;
+        modalSubtitle.textContent = position;
+        modalDescription.textContent = description;
+        
+        if (photoUrl && photoUrl.trim() !== '') {
+            modalPhoto.src = photoUrl;
             modalPhoto.style.display = 'block';
             photoPlaceholder.style.display = 'none';
-            modalBadges.innerHTML = `<span class="wing-badge">${wingName}</span>`;
-            modalDetails.innerHTML = `<h4><i class="fas fa-calendar-check"></i> Key Activities</h4><ul><li>Regular meetings and workshops</li><li>Skill development programs</li><li>Competitions and events</li><li>Community outreach initiatives</li><li>Training and mentoring sessions</li></ul>`;
-            modalContactInfo.innerHTML = `<h4><i class="fas fa-info-circle"></i> Wing Information</h4><div class="contact-item"><i class="fas fa-users"></i><span>Multiple members and coordinators</span></div><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div><div class="contact-item"><i class="fas fa-clock"></i><span>Activities: Weekly meetings, monthly events</span></div>`;
-            modalEmailBtn.onclick = () => { window.location.href = `mailto:${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org`; };
-            modalCallBtn.onclick = () => { alert(`Please contact the ${wingName} Chairman for more information.`); };
-            profileModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+        } else {
+            modalPhoto.style.display = 'none';
+            photoPlaceholder.style.display = 'flex';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            photoPlaceholder.innerHTML = `<span>${initials}</span>`;
         }
-        function closeModal() {
-            profileModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
+        
+        if (profile.wing) {
+            modalBadges.innerHTML = `<span class="wing-badge">${profile.wing}</span>`;
+        } else if (position.includes('Wing')) {
+            modalBadges.innerHTML = `<span class="wing-badge">${position.split('Wing')[0]} Wing</span>`;
+        } else {
+            modalBadges.innerHTML = '';
         }
-        modalClose.addEventListener('click', closeModal);
-        modalCloseBtn.addEventListener('click', closeModal);
-        profileModal.addEventListener('click', (e) => { if (e.target === profileModal) closeModal(); });
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    navLinks.classList.remove('active');
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                    window.scrollTo({ top: targetElement.offsetTop - 100, behavior: 'smooth' });
-                }
-            });
+        
+        if (profile.responsibilities && profile.responsibilities.length > 0) {
+            modalDetails.innerHTML = `<h4><i class="fas fa-tasks"></i> Key Responsibilities</h4><ul>${profile.responsibilities.map(resp => `<li>${resp}</li>`).join('')}</ul>`;
+        } else {
+            modalDetails.innerHTML = '';
+        }
+        
+        if (profile.contact) {
+            modalContactInfo.innerHTML = `<h4><i class="fas fa-address-card"></i> Contact Information</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${profile.contact.email}</span></div><div class="contact-item"><i class="fas fa-phone"></i><span>${profile.contact.phone}</span></div>`;
+            modalEmailBtn.onclick = () => { window.location.href = `mailto:${profile.contact.email}`; };
+            modalCallBtn.onclick = () => { window.location.href = `tel:${profile.contact.phone}`; };
+            modalEmailBtn.style.display = 'inline-block';
+            modalCallBtn.style.display = 'inline-block';
+        } else {
+            modalContactInfo.innerHTML = `<h4><i class="fas fa-info-circle"></i> Contact Information</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div><div class="contact-item"><i class="fas fa-phone"></i><span>Contact via union office</span></div>`;
+            modalEmailBtn.onclick = () => { window.location.href = `mailto:${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org`; };
+            modalCallBtn.onclick = () => { alert(`Please contact the ITQAN Union office for ${name}'s contact details.`); };
+            modalEmailBtn.style.display = 'inline-block';
+            modalCallBtn.style.display = 'inline-block';
+        }
+        
+        profileModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Show About function
+    function showAbout(wingName, department, description) {
+        modalTitle.textContent = wingName;
+        modalSubtitle.textContent = department;
+        modalDescription.textContent = description;
+        
+        const wingPhoto = `wings/${wingName.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+        modalPhoto.src = wingPhoto;
+        modalPhoto.onerror = function() {
+            modalPhoto.style.display = 'none';
+            photoPlaceholder.style.display = 'flex';
+            photoPlaceholder.innerHTML = `<i class="fas fa-users"></i>`;
+        };
+        modalPhoto.style.display = 'block';
+        photoPlaceholder.style.display = 'none';
+        
+        modalBadges.innerHTML = `<span class="wing-badge">${wingName}</span>`;
+        modalDetails.innerHTML = `<h4><i class="fas fa-calendar-check"></i> Key Activities</h4><ul><li>Regular meetings and workshops</li><li>Skill development programs</li><li>Competitions and events</li><li>Community outreach initiatives</li><li>Training and mentoring sessions</li></ul>`;
+        modalContactInfo.innerHTML = `<h4><i class="fas fa-info-circle"></i> Wing Information</h4><div class="contact-item"><i class="fas fa-users"></i><span>Multiple members and coordinators</span></div><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div><div class="contact-item"><i class="fas fa-clock"></i><span>Activities: Weekly meetings, monthly events</span></div>`;
+        
+        modalEmailBtn.onclick = () => { window.location.href = `mailto:${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org`; };
+        modalCallBtn.onclick = () => { alert(`Please contact the ${wingName} Chairman for more information.`); };
+        
+        profileModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close modal
+    function closeModal() {
+        profileModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    modalClose.addEventListener('click', closeModal);
+    modalCloseBtn.addEventListener('click', closeModal);
+    profileModal.addEventListener('click', (e) => { if (e.target === profileModal) closeModal(); });
+    
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if(targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if(targetElement) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                window.scrollTo({ top: targetElement.offsetTop - 100, behavior: 'smooth' });
+            }
         });
-        const observerOptions = { threshold: 0.2, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.feature-card, .committee-card, .about-card, .wing-animated').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
+    });
+    
+    // Make ALL cards visible on page load and when they come into view
+    function makeAllVisible() {
+        document.querySelectorAll('.committee-card, .wing-animated, .feature-card, .about-card').forEach(card => {
+            card.classList.add('visible');
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
         });
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.committee-card, .wing-animated').forEach(card => {
-                const rect = card.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 100 && rect.bottom > 0) { card.classList.add('visible'); }
-            });
+    }
+    
+    // Run on load
+    window.addEventListener('load', () => {
+        makeAllVisible();
+    });
+    
+    // Also run after a short delay for dynamic content
+    setTimeout(makeAllVisible, 500);
+    setTimeout(makeAllVisible, 1500);
+    
+    // Intersection Observer for scroll animations
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -30px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
+            }
         });
-        window.addEventListener('scroll', () => {
-            document.querySelectorAll('.committee-card:not(.visible), .wing-animated:not(.visible)').forEach(card => {
-                const rect = card.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 50 && rect.bottom > 50) { card.classList.add('visible'); }
-            });
-        });
-    </script>
+    }, observerOptions);
+    
+    // Observe all animatable elements
+    document.querySelectorAll('.feature-card, .committee-card, .about-card, .wing-animated').forEach(el => {
+        observer.observe(el);
+    });
+</script>
 </body>
 </html>
