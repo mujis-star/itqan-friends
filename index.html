@@ -51,7 +51,7 @@
         .nav-links a:hover { color: var(--primary); }
         .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--secondary); transition: width 0.3s; }
         .nav-links a:hover::after { width: 100%; }
-        .mobile-menu-btn { display: none; font-size: 1.5rem; background: none; border: none; color: var(--primary); cursor: pointer; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; background: none; border: none; color: var(--primary); cursor: pointer; z-index: 1002; }
 
         /* Auth UI */
         .auth-area { display: flex; align-items: center; gap: 0.6rem; }
@@ -140,7 +140,6 @@
         .wing-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
         .wing-btns .btn { flex: 1; min-width: 70px; padding: 8px 10px; font-size: 0.73rem; text-align: center; }
 
-        /* Wing Themes & Animations */
         .wing-urdu .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: var(--accent); animation: penMove 3s ease-in-out infinite; } .wing-urdu::after { background: linear-gradient(90deg, #FFB800, #FF6B35, #FFB800); } .wing-urdu .wing-label, .wing-urdu .chip-role { color: var(--accent); } .wing-urdu .btn-primary { background-color: var(--accent); color: #000; } .wing-urdu .btn-outline { border-color: var(--accent); color: var(--accent); }
         .wing-english .wing-icon { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: var(--primary); } .wing-english::after { background: linear-gradient(90deg, #00F0FF, #00B8D4, #00F0FF); } .wing-english .wing-label { color: var(--primary); }
         .typing-dots { display: flex; gap: 3px; position: absolute; top: 15px; right: 15px; z-index: 4; } .typing-dots span { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; animation: dotBounce 1.4s ease-in-out infinite; } .typing-dots span:nth-child(2) { animation-delay: 0.2s; } .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
@@ -150,7 +149,7 @@
         .wing-malayalam .wing-icon { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; animation: waveFloat 3s ease-in-out infinite; } .wing-malayalam::after { background: linear-gradient(90deg, #00C864, #00E676, #00C864); } .wing-malayalam .wing-label, .wing-malayalam .chip-role { color: #00C864; } .wing-malayalam .btn-primary { background-color: #00C864; color: #000; } .wing-malayalam .btn-outline { border-color: #00C864; color: #00C864; }
         @keyframes waveFloat { 0%,100%{transform:translateY(0)rotate(0deg);} 25%{transform:translateY(-6px)rotate(3deg);} 75%{transform:translateY(4px)rotate(-3deg);} }
         .wing-song .wing-icon { background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.05)); color: var(--secondary); } .wing-song::after { background: linear-gradient(90deg, #FF3366, #FF6B9D, #FF3366); } .wing-song .wing-label { color: var(--secondary); }
-        .eq-bars { display: flex; gap: 2px; align-items: flex-end; position: absolute; top: 12px; right: 12px; z-index: 4; height: 25px; } .eq-bars span { width: 3px; background: var(--secondary); border-radius: 2px; animation: eqJump 0.8s ease-in-out infinite; } .eq-bars span:nth-child(1) { height: 12px; animation-delay: 0s; } .eq-bars span:nth-child(2) { height: 20px; animation-delay: 0.15s; } .eq-bars span:nth-child(3) { height: 15px; animation-delay: 0.3s; } .eq-bars span:nth-child(4) { height: 22px; animation-delay: 0.45s; }
+        .eq-bars { display: flex; gap: 2px; align-items: flex-end; position: absolute; top: 12px; right: 12px; z-index: 4; height: 25px; } .eq-bars span { width: 3px; background: var(--secondary); border-radius: 2px; animation: eqJump 0.8s ease-in-out infinite; } .eq-bars span:nth-child(1) { height: 12px; } .eq-bars span:nth-child(2) { height: 20px; animation-delay: 0.15s; } .eq-bars span:nth-child(3) { height: 15px; animation-delay: 0.3s; } .eq-bars span:nth-child(4) { height: 22px; animation-delay: 0.45s; }
         @keyframes eqJump { 0%,100%{transform:scaleY(0.5);opacity:0.6;} 50%{transform:scaleY(1);opacity:1;} }
         .wing-maths .wing-icon { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; animation: gearRotate 4s linear infinite; } .wing-maths::after { background: linear-gradient(90deg, #8250FF, #A78BFA, #8250FF); } .wing-maths .wing-label, .wing-maths .chip-role { color: #8250FF; } .wing-maths .btn-primary { background-color: #8250FF; } .wing-maths .btn-outline { border-color: #8250FF; color: #8250FF; }
         .wing-art .wing-icon { background: linear-gradient(135deg, rgba(255,100,150,0.2), rgba(255,200,50,0.1)); color: #FF6496; } .wing-art::after { background: linear-gradient(90deg, #FF6496, #FFB800, #00F0FF, #FF6496); } .wing-art .wing-label { color: #FF6496; }
@@ -282,9 +281,35 @@
         @keyframes toastIn { from{opacity:0;transform:translateX(100px);} to{opacity:1;transform:translateX(0);} }
         @keyframes toastOut { from{opacity:1;} to{opacity:0;transform:translateX(100px);} }
 
+        /* ==========================================
+           FIXED MOBILE RESPONSIVE LAYOUT
+           ========================================== */
         @media (max-width: 768px) {
-            .mobile-menu-btn { display: flex; } .nav-links { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: rgba(11,13,23,0.98); backdrop-filter: blur(20px); flex-direction: column; justify-content: center; align-items: center; gap: 2rem; z-index: 1000; } .nav-links.active { display: flex; }
-            .hero h1 { font-size: 2rem; } .hero { padding: 5rem 1rem; } .footer-container, .about-cards-container { grid-template-columns: 1fr; } .committee-grid { grid-template-columns: 1fr; }
+            .mobile-menu-btn { display: flex; position: relative; z-index: 1002; }
+            .logo-tagline { display: none; } /* Hide tagline to save space */
+            
+            /* Force mobile menu to be a fullscreen overlay */
+            .nav-links { 
+                display: none; 
+                position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+                background-color: rgba(11,13,23,0.98); backdrop-filter: blur(20px); 
+                flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; z-index: 1001; padding: 2rem; 
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { width: 100%; text-align: center; }
+            .nav-links a { font-size: 1.2rem; display: block; padding: 10px; }
+            
+            /* Center Auth buttons nicely inside mobile menu */
+            .auth-area { flex-direction: column; width: 80%; gap: 1rem; margin-top: 1rem; }
+            .auth-btn { width: 100%; font-size: 1rem; padding: 12px; text-align: center; }
+            .auth-user-btn { width: 80%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 1rem; }
+
+            /* Other responsive fixes */
+            .hero h1 { font-size: 2rem; } 
+            .hero { padding: 5rem 1rem; } 
+            .footer-container, .about-cards-container { grid-template-columns: 1fr; } 
+            .committee-grid { grid-template-columns: 1fr; }
+            .modal-header-with-photo { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -304,9 +329,7 @@
     </header>
 
     <section class="hero" id="home"><div class="container"><h1>United for Professional Growth & Excellence</h1><p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p><div class="hero-btns"><a href="#about" class="btn">Discover More</a><a href="#committee" class="btn btn-primary">Meet Our Leadership</a></div></div></section>
-
     <section class="features" id="about"><div class="container"><h2 class="section-title">Cultivating <span>Intelligent</span> and <span>Qualified</span> Professional Networks</h2><div class="features-grid"><div class="feature-card"><div class="feature-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration.</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change.</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-trophy"></i></div><h3>Our Achievements</h3><p>Recognized with the Best Union Award and featured in Mission-20 Publication.</p></div></div></div></section>
-
     <section class="about-cards"><div class="container"><h2 class="section-title">ITQAN <span>Union</span> Initiatives</h2><div class="about-cards-container"><div class="about-card" onclick="window.location.href='publication.html'"><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div><div class="about-card" onclick="window.location.href='achievement.html'"><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div><div class="about-card" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><h3>🎭 ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival – where talent meets glory.</p><div style="margin-top:1rem;"><span class="btn btn-sm btn-outline" style="pointer-events:none;">🏆 Live Event Hub →</span></div></div></div></div></section>
 
     <section class="committee-section" id="committee">
@@ -351,64 +374,55 @@
 
     <footer id="contact"><div class="container"><div class="footer-container"><div class="footer-column"><h3>Events</h3><ul class="footer-links"><li><a href="https://itqan-artfeast.vercel.app/">🎭 ZENITH Arts Fest 2K26</a></li><li><a href="#">📸 Media Gallery</a></li></ul></div><div class="footer-column"><h3>ITQAN UNION</h3><p class="footer-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="social-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div><div class="footer-column"><h3>Contact Information</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2025 ITQAN Union. All Rights Reserved. | Built with Unity & Excellence</p></div></div></footer>
 
-    <!-- Profile Modal -->
     <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button><div class="modal-header-with-photo"><div class="profile-photo-container"><img id="modalPhoto" src="" alt="Profile" class="profile-photo" style="display:none;"><div class="photo-placeholder" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="profile-header-info"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wing-badges" id="modalBadges"></div></div></div><div class="modal-body"><p id="modalDescription"></p><div class="details-section" id="modalDetails"></div><div class="contact-info" id="modalContactInfo"></div></div><div class="modal-footer"><button class="btn btn-outline btn-sm" onclick="closeModal()"><i class="fas fa-times"></i> Close</button></div></div></div>
-
-    <!-- Auth Modal -->
-    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div><form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="form-group"><label>Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Login</button></form><form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="form-group"><label>Full Name</label><input type="text" class="form-input" id="regName" required placeholder="Your Name"></div><div class="form-group"><label>Email</label><input type="email" class="form-input" id="regEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password (min 6 chars)</label><input type="password" class="form-input" id="regPassword" required placeholder="••••••••"></div><div class="form-group"><label>Select your Wing (Optional)</label><select class="form-input form-select" id="regWing"><option value="">-- General Member --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option></select></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Register</button></form></div></div>
-
-    <!-- User Dashboard -->
+    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div><form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="form-group"><label>Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Login</button></form><form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="form-group"><label>Full Name</label><input type="password" class="form-input" id="regName" required placeholder="Your Name"></div><div class="form-group"><label>Email</label><input type="email" class="form-input" id="regEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password (min 6 chars)</label><input type="password" class="form-input" id="regPassword" required placeholder="••••••••"></div><div class="form-group"><label>Select your Wing (Optional)</label><select class="form-input form-select" id="regWing"><option value="">-- General Member --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option></select></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Register</button></form></div></div>
     <div class="dashboard-panel" id="userDashboard"><div class="dash-header"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button class="dash-close" onclick="closeDashboards()"><i class="fas fa-times"></i></button></div><div class="dash-body" id="dashBody"></div></div>
-
-    <!-- Admin Panel -->
-    <div class="admin-overlay" id="adminPanel"><div class="admin-topbar"><h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3><button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button></div><div class="admin-body"><div class="stat-grid" id="adminStats"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Total Users</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-tie"></i></div><div class="stat-value" id="totalCore">0</div><div class="stat-label">Core Committee</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-plane"></i></div><div class="stat-value" id="totalWings">0</div><div class="stat-label">Wing Leaders</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-value" id="totalMembers">0</div><div class="stat-label">Students</div></div></div><h3 style="color:var(--dark); margin-bottom:1rem;">Registered Members</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Wing</th><th>Action</th></tr></thead><tbody id="adminUserTable"></tbody></table></div></div></div>
+    <div class="admin-overlay" id="adminPanel"><div class="admin-topbar"><h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3><button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button></div><div class="admin-body"><div class="stat-grid"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Total Users</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-tie"></i></div><div class="stat-value" id="totalCore">0</div><div class="stat-label">Core Committee</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-plane"></i></div><div class="stat-value" id="totalWings">0</div><div class="stat-label">Wing Leaders</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-value" id="totalMembers">0</div><div class="stat-label">Students</div></div></div><h3 style="color:var(--dark); margin-bottom:1rem;">Registered Members</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Wing</th><th>Action</th></tr></thead><tbody id="adminUserTable"></tbody></table></div></div></div>
 
     <script>
         // ==========================================
-        // FIREBASE CONFIGURATION
+        // 🛑 STOP! READ THIS! 🛑
+        // You MUST paste your real Firebase Config below. 
+        // Go to Firebase Console > Project Settings > Your Apps > Config.
+        // If you leave "YOUR_API_KEY" as is, the login WILL NOT WORK.
         // ==========================================
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // REPLACE THIS
-            authDomain: "YOUR_PROJECT.firebaseapp.com", // REPLACE THIS
-            projectId: "YOUR_PROJECT_ID", // REPLACE THIS
-            storageBucket: "YOUR_PROJECT.appspot.com", // REPLACE THIS
-            messagingSenderId: "YOUR_SENDER_ID", // REPLACE THIS
-            appId: "YOUR_APP_ID" // REPLACE THIS
+            apiKey: "YOUR_API_KEY", 
+            authDomain: "YOUR_PROJECT.firebaseapp.com", 
+            projectId: "YOUR_PROJECT_ID", 
+            storageBucket: "YOUR_PROJECT.appspot.com", 
+            messagingSenderId: "YOUR_SENDER_ID", 
+            appId: "YOUR_APP_ID"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         // ==========================================
-        // UI HELPERS
+        // UI HELPERS & MOBILE MENU FIX
         // ==========================================
-        function showToast(message, type = 'info') {
-            const c = document.getElementById('toastContainer');
-            const t = document.createElement('div');
-            t.className = `toast toast-${type}`; t.innerText = message; c.appendChild(t);
-            setTimeout(() => t.remove(), 3500);
-        }
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('active'));
+        function showToast(message, type = 'info') { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerText = message; c.appendChild(t); setTimeout(() => t.remove(), 3500); }
+        
+        // Fixed Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#navLinks a, #navLinks .auth-btn').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
         document.getElementById('committeeHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('committeeGrid').classList.toggle('active'); });
         document.getElementById('subwingsHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('subwingsGrid').classList.toggle('active'); });
 
-        function showProfile(name, position, description, photoUrl = '') {
-            document.getElementById('modalTitle').textContent = name; document.getElementById('modalSubtitle').textContent = position; document.getElementById('modalDescription').textContent = description;
-            const p = document.getElementById('modalPhoto'), pl = document.getElementById('photoPlaceholder');
-            if(photoUrl) { p.src = photoUrl; p.style.display = 'block'; pl.style.display = 'none'; } else { p.style.display = 'none'; pl.style.display = 'flex'; }
-            document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${position.includes('Wing') ? 'Wing Leader' : 'Core Committee'}</span>`;
-            document.getElementById('modalDetails').innerHTML = `<h4>Key Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li><li>Team management</li></ul>`;
-            document.getElementById('modalContactInfo').innerHTML = `<h4>Contact</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`;
-            document.getElementById('profileModal').classList.add('active');
-        }
-        function showAbout(wingName, department, description) {
-            document.getElementById('modalTitle').textContent = wingName; document.getElementById('modalSubtitle').textContent = department; document.getElementById('modalDescription').textContent = description;
-            document.getElementById('modalPhoto').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'flex';
-            document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${wingName}</span>`;
-            document.getElementById('modalDetails').innerHTML = `<h4>Key Activities</h4><ul><li>Regular meetings and workshops</li><li>Skill development programs</li></ul>`;
-            document.getElementById('modalContactInfo').innerHTML = `<h4>Wing Info</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`;
-            document.getElementById('profileModal').classList.add('active');
-        }
+        function showProfile(name, position, description, photoUrl = '') { document.getElementById('modalTitle').textContent = name; document.getElementById('modalSubtitle').textContent = position; document.getElementById('modalDescription').textContent = description; const p = document.getElementById('modalPhoto'), pl = document.getElementById('photoPlaceholder'); if(photoUrl) { p.src = photoUrl; p.style.display = 'block'; pl.style.display = 'none'; } else { p.style.display = 'none'; pl.style.display = 'flex'; } document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${position.includes('Wing') ? 'Wing Leader' : 'Core Committee'}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Key Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li><li>Team management</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Contact</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
+        function showAbout(wingName, department, description) { document.getElementById('modalTitle').textContent = wingName; document.getElementById('modalSubtitle').textContent = department; document.getElementById('modalDescription').textContent = description; document.getElementById('modalPhoto').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'flex'; document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${wingName}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Key Activities</h4><ul><li>Regular meetings and workshops</li><li>Skill development programs</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Wing Info</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
         function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
 
         // ==========================================
@@ -419,70 +433,23 @@
         function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
         function switchAuthTab(tab) { document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active')); if(tab==='login'){ document.querySelectorAll('.auth-tab')[0].classList.add('active'); document.getElementById('loginForm').classList.add('active'); } else { document.querySelectorAll('.auth-tab')[1].classList.add('active'); document.getElementById('registerForm').classList.add('active'); } }
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, password = document.getElementById('regPassword').value, wing = document.getElementById('regWing').value;
-            const errorEl = document.getElementById('authError');
-            try {
-                const cred = await auth.createUserWithEmailAndPassword(email, password);
-                await db.collection('users').doc(cred.user.uid).set({ name, email, role: 'member', wing: wing || 'General', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                closeAuthModal(); showToast('Registration Successful! Welcome to ITQAN.', 'success');
-            } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); }
-        }
-        async function handleLogin(e) {
-            e.preventDefault(); const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value, errorEl = document.getElementById('authError');
-            try { await auth.signInWithEmailAndPassword(email, password); closeAuthModal(); showToast('Logged in successfully!', 'success'); } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); }
-        }
+        async function handleRegister(e) { e.preventDefault(); const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, password = document.getElementById('regPassword').value, wing = document.getElementById('regWing').value; const errorEl = document.getElementById('authError'); try { const cred = await auth.createUserWithEmailAndPassword(email, password); await db.collection('users').doc(cred.user.uid).set({ name, email, role: 'member', wing: wing || 'General', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); closeAuthModal(); showToast('Registration Successful! Welcome to ITQAN.', 'success'); } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); } }
+        async function handleLogin(e) { e.preventDefault(); const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value, errorEl = document.getElementById('authError'); try { await auth.signInWithEmailAndPassword(email, password); closeAuthModal(); showToast('Logged in successfully!', 'success'); } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); } }
         function handleLogout() { auth.signOut(); closeDashboards(); closeAdminPanel(); showToast('You have been logged out.', 'info'); }
 
-        auth.onAuthStateChanged(async (user) => {
-            const authArea = document.getElementById('authArea');
-            if (user) {
-                const doc = await db.collection('users').doc(user.uid).get();
-                if (doc.exists) { currentUserData = doc.data(); const initials = currentUserData.name.split(' ').map(n => n[0]).join('').toUpperCase(); authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="user-avatar-sm">${initials}</div>${currentUserData.name.split(' ')[0]}</button>`; }
-                else { authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><i class="fas fa-user"></i> Account</button>`; }
-            } else { currentUserData = null; authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`; }
-        });
+        auth.onAuthStateChanged(async (user) => { const authArea = document.getElementById('authArea'); if (user) { const doc = await db.collection('users').doc(user.uid).get(); if (doc.exists) { currentUserData = doc.data(); const initials = currentUserData.name.split(' ').map(n => n[0]).join('').toUpperCase(); authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="user-avatar-sm">${initials}</div>${currentUserData.name.split(' ')[0]}</button>`; } else { authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><i class="fas fa-user"></i> Account</button>`; } } else { currentUserData = null; authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`; } });
 
         // ==========================================
-        // USER DASHBOARD LOGIC
+        // USER DASHBOARD & ADMIN LOGIC
         // ==========================================
-        function openDashboard() {
-            if(!currentUserData) return showToast('Error loading profile data.', 'error');
-            document.getElementById('userDashboard').classList.add('open'); document.getElementById('overlayDim').classList.add('active');
-            const data = currentUserData, initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase(), isAdmin = data.role === 'admin';
-            const roleLabel = data.role === 'admin' ? 'Administrator' : (data.role === 'core' ? 'Core Committee' : (data.role === 'wing' ? 'Wing Leader' : 'Student Member'));
-            document.getElementById('dashBody').innerHTML = `<div class="dash-profile-card"><div class="dash-avatar">${initials}</div><div class="dash-name">${data.name}</div><div class="dash-position">${roleLabel}</div>${data.wing ? `<div class="dash-wing-tag">${data.wing}</div>` : ''}</div><div class="dash-section"><h4><i class="fas fa-id-card"></i> Profile Details</h4><div class="dash-info-row"><span class="dash-info-label">Email</span><span class="dash-info-value">${data.email}</span></div><div class="dash-info-row"><span class="dash-info-label">Role</span><span class="dash-info-value">${roleLabel}</span></div><div class="dash-info-row"><span class="dash-info-label">Wing</span><span class="dash-info-value">${data.wing || 'N/A'}</span></div></div><div class="dash-actions">${isAdmin ? `<button class="dash-action-btn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Open Admin Panel</button>` : ''}<button class="dash-action-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444;"></i> Logout</button></div>`;
-        }
+        function openDashboard() { if(!currentUserData) return showToast('Error loading profile data.', 'error'); document.getElementById('userDashboard').classList.add('open'); document.getElementById('overlayDim').classList.add('active'); const data = currentUserData, initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase(), isAdmin = data.role === 'admin'; const roleLabel = data.role === 'admin' ? 'Administrator' : (data.role === 'core' ? 'Core Committee' : (data.role === 'wing' ? 'Wing Leader' : 'Student Member')); document.getElementById('dashBody').innerHTML = `<div class="dash-profile-card"><div class="dash-avatar">${initials}</div><div class="dash-name">${data.name}</div><div class="dash-position">${roleLabel}</div>${data.wing ? `<div class="dash-wing-tag">${data.wing}</div>` : ''}</div><div class="dash-section"><h4><i class="fas fa-id-card"></i> Profile Details</h4><div class="dash-info-row"><span class="dash-info-label">Email</span><span class="dash-info-value">${data.email}</span></div><div class="dash-info-row"><span class="dash-info-label">Role</span><span class="dash-info-value">${roleLabel}</span></div><div class="dash-info-row"><span class="dash-info-label">Wing</span><span class="dash-info-value">${data.wing || 'N/A'}</span></div></div><div class="dash-actions">${isAdmin ? `<button class="dash-action-btn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Open Admin Panel</button>` : ''}<button class="dash-action-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444;"></i> Logout</button></div>`; }
         function closeDashboards() { document.getElementById('userDashboard').classList.remove('open'); document.getElementById('overlayDim').classList.remove('active'); }
-
-        // ==========================================
-        // ADMIN PANEL LOGIC
-        // ==========================================
         function openAdminPanel() { closeDashboards(); document.getElementById('adminPanel').classList.add('active'); loadAdminData(); }
         function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
 
-        async function loadAdminData() {
-            try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get(); let users = [];
-                snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
-                document.getElementById('totalUsers').innerText = users.length;
-                document.getElementById('totalCore').innerText = users.filter(u => u.role === 'core' || u.role === 'admin').length;
-                document.getElementById('totalWings').innerText = users.filter(u => u.role === 'wing').length;
-                document.getElementById('totalMembers').innerText = users.filter(u => u.role === 'member').length;
-                const tbody = document.getElementById('adminUserTable'); tbody.innerHTML = '';
-                users.forEach(u => {
-                    const roleClass = u.role === 'admin' ? 'admin' : (u.role === 'core' ? 'core' : (u.role === 'wing' ? 'wing' : 'member'));
-                    const roleName = u.role === 'admin' ? 'Admin' : (u.role === 'core' ? 'Core' : (u.role === 'wing' ? 'Wing L.' : 'Student'));
-                    tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="role-badge ${roleClass}">${roleName}</span></td><td>${u.wing || 'N/A'}</td><td><select class="form-input form-select" onchange="updateRole('${u.id}', this.value)" style="font-size:0.8rem; padding:5px; width:110px;"><option value="member" ${u.role==='member'?'selected':''}>Student</option><option value="wing" ${u.role==='wing'?'selected':''}>Wing Leader</option><option value="core" ${u.role==='core'?'selected':''}>Core</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select></td></tr>`;
-                });
-            } catch (err) { console.error(err); showToast('Failed to load admin data.', 'error'); }
-        }
-
-        async function updateRole(uid, newRole) {
-            try { await db.collection('users').doc(uid).update({ role: newRole }); showToast('User role updated!', 'success'); loadAdminData(); } catch(err) { showToast('Error updating role.', 'error'); }
-        }
-
+        async function loadAdminData() { try { const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get(); let users = []; snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() })); document.getElementById('totalUsers').innerText = users.length; document.getElementById('totalCore').innerText = users.filter(u => u.role === 'core' || u.role === 'admin').length; document.getElementById('totalWings').innerText = users.filter(u => u.role === 'wing').length; document.getElementById('totalMembers').innerText = users.filter(u => u.role === 'member').length; const tbody = document.getElementById('adminUserTable'); tbody.innerHTML = ''; users.forEach(u => { const roleClass = u.role === 'admin' ? 'admin' : (u.role === 'core' ? 'core' : (u.role === 'wing' ? 'wing' : 'member')); const roleName = u.role === 'admin' ? 'Admin' : (u.role === 'core' ? 'Core' : (u.role === 'wing' ? 'Wing L.' : 'Student')); tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="role-badge ${roleClass}">${roleName}</span></td><td>${u.wing || 'N/A'}</td><td><select class="form-input form-select" onchange="updateRole('${u.id}', this.value)" style="font-size:0.8rem; padding:5px; width:110px;"><option value="member" ${u.role==='member'?'selected':''}>Student</option><option value="wing" ${u.role==='wing'?'selected':''}>Wing Leader</option><option value="core" ${u.role==='core'?'selected':''}>Core</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select></td></tr>`; }); } catch (err) { console.error(err); showToast('Failed to load admin data.', 'error'); } }
+        async function updateRole(uid, newRole) { try { await db.collection('users').doc(uid).update({ role: newRole }); showToast('User role updated!', 'success'); loadAdminData(); } catch(err) { showToast('Error updating role.', 'error'); } }
+        
         // Auto-make first user Admin
         auth.onAuthStateChanged(async (user) => { if (user) { const docRef = db.collection('users').doc(user.uid); const doc = await docRef.get(); if (!doc.exists) { const snapshot = await db.collection('users').get(); if(snapshot.size === 0) { await db.collection('users').doc(user.uid).set({ name: user.email.split('@')[0], email: user.email, role: 'admin', wing: 'All', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); showToast('First user detected! You are now Admin.', 'info'); } } } });
     </script>
