@@ -41,7 +41,7 @@
         .btn-success { background-color: #10B981; box-shadow: 0 4px 15px rgba(16,185,129,0.2); color: #fff; }
         .btn-success:hover { background-color: #059669; box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
         .btn-warning { background-color: var(--accent); box-shadow: 0 4px 15px rgba(255,184,0,0.2); color: #000; }
-        .btn-warning:hover { background-color: #E6A600; box-shadow: 0 6px 20px rgba(255,184,0,0.4); }
+        .btn-warning:hover { background-color: #E6A600; }
 
         header { background-color: rgba(11, 13, 23, 0.85); backdrop-filter: blur(15px); padding: 1.2rem 0; box-shadow: 0 5px 20px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,240,255,0.1); }
         .header-container { display: flex; justify-content: space-between; align-items: center; }
@@ -137,14 +137,12 @@
         .wing-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
         .wing-btns .btn { flex: 1; min-width: 70px; padding: 8px 10px; font-size: 0.73rem; text-align: center; }
 
-        .wing-urdu .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: var(--accent); animation: penMove 3s ease-in-out infinite; } .wing-urdu::after { background: linear-gradient(90deg, #FFB800, #FF6B35, #FFB800); } .wing-urdu .wing-label, .wing-urdu .chip-role { color: var(--accent); } .wing-urdu .btn-primary { background-color: var(--accent); color: #000; }
+        .wing-urdu .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: var(--accent); } .wing-urdu::after { background: linear-gradient(90deg, #FFB800, #FF6B35, #FFB800); } .wing-urdu .wing-label, .wing-urdu .chip-role { color: var(--accent); } .wing-urdu .btn-primary { background-color: var(--accent); color: #000; }
         .wing-english .wing-icon { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: var(--primary); } .wing-english::after { background: linear-gradient(90deg, #00F0FF, #00B8D4, #00F0FF); } .wing-english .wing-label { color: var(--primary); }
         .typing-dots { display: flex; gap: 3px; position: absolute; top: 15px; right: 15px; z-index: 4; } .typing-dots span { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; animation: dotBounce 1.4s ease-in-out infinite; } .typing-dots span:nth-child(2) { animation-delay: 0.2s; } .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes dotBounce { 0%,60%,100%{opacity:0.3;transform:translateY(0);} 30%{opacity:1;transform:translateY(-8px);} }
-        .wing-arabic .wing-icon { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; animation: crescentGlow 2.5s ease-in-out infinite; } .wing-arabic::after { background: linear-gradient(90deg, #FFD700, #FFB800, #FFD700); } .wing-arabic .wing-label, .wing-arabic .chip-role { color: #FFD700; } .wing-arabic .btn-primary { background-color: #FFD700; color: #000; }
-        @keyframes crescentGlow { 0%,100%{box-shadow:0 8px 25px rgba(255,215,0,0.25);} 50%{box-shadow:0 15px 45px rgba(255,215,0,0.55);} }
-        .wing-malayalam .wing-icon { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; animation: waveFloat 3s ease-in-out infinite; } .wing-malayalam::after { background: linear-gradient(90deg, #00C864, #00E676, #00C864); } .wing-malayalam .wing-label, .wing-malayalam .chip-role { color: #00C864; }
-        @keyframes waveFloat { 0%,100%{transform:translateY(0)rotate(0deg);} 25%{transform:translateY(-6px)rotate(3deg);} 75%{transform:translateY(4px)rotate(-3deg);} }
+        .wing-arabic .wing-icon { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; } .wing-arabic::after { background: linear-gradient(90deg, #FFD700, #FFB800, #FFD700); } .wing-arabic .wing-label, .wing-arabic .chip-role { color: #FFD700; } .wing-arabic .btn-primary { background-color: #FFD700; color: #000; }
+        .wing-malayalam .wing-icon { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; } .wing-malayalam::after { background: linear-gradient(90deg, #00C864, #00E676, #00C864); } .wing-malayalam .wing-label, .wing-malayalam .chip-role { color: #00C864; }
         .wing-song .wing-icon { background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.05)); color: var(--secondary); } .wing-song::after { background: linear-gradient(90deg, #FF3366, #FF6B9D, #FF3366); } .wing-song .wing-label { color: var(--secondary); }
         .eq-bars { display: flex; gap: 2px; align-items: flex-end; position: absolute; top: 12px; right: 12px; z-index: 4; height: 25px; } .eq-bars span { width: 3px; background: var(--secondary); border-radius: 2px; animation: eqJump 0.8s ease-in-out infinite; } .eq-bars span:nth-child(1) { height: 12px; } .eq-bars span:nth-child(2) { height: 20px; animation-delay: 0.15s; } .eq-bars span:nth-child(3) { height: 15px; animation-delay: 0.3s; } .eq-bars span:nth-child(4) { height: 22px; animation-delay: 0.45s; }
         @keyframes eqJump { 0%,100%{transform:scaleY(0.5);opacity:0.6;} 50%{transform:scaleY(1);opacity:1;} }
@@ -152,36 +150,31 @@
         .wing-art .wing-icon { background: linear-gradient(135deg, rgba(255,100,150,0.2), rgba(255,200,50,0.1)); color: #FF6496; } .wing-art::after { background: linear-gradient(90deg, #FF6496, #FFB800, #00F0FF, #FF6496); } .wing-art .wing-label { color: #FF6496; }
         .paint-dots { position: absolute; top: 8px; right: 10px; z-index: 4; } .paint-dots span { position: absolute; border-radius: 50%; animation: paintPop 2s ease-in-out infinite; } .paint-dots span:nth-child(1) { width: 9px; height: 9px; background: #FF6496; top: 0; left: 5px; } .paint-dots span:nth-child(2) { width: 7px; height: 7px; background: #FFB800; top: 10px; left: 15px; animation-delay: 0.4s; } .paint-dots span:nth-child(3) { width: 6px; height: 6px; background: #00F0FF; top: 3px; left: 20px; animation-delay: 0.8s; }
         @keyframes paintPop { 0%,100%{transform:scale(0.5);opacity:0.4;} 50%{transform:scale(1.4);opacity:1;} }
-        .wing-library .wing-icon { background: linear-gradient(135deg, rgba(180,140,100,0.2), rgba(180,140,100,0.05)); color: #B48C64; animation: bookOpen 3s ease-in-out infinite; } .wing-library::after { background: linear-gradient(90deg, #B48C64, #D4A574, #B48C64); } .wing-library .wing-label, .wing-library .chip-role { color: #B48C64; }
-        @keyframes bookOpen { 0%,100%{transform:perspective(100px)rotateY(0deg);} 50%{transform:perspective(100px)rotateY(20deg);} }
-        .wing-geography .wing-icon { background: linear-gradient(135deg, rgba(0,180,220,0.2), rgba(0,180,220,0.05)); color: #00B4DC; animation: gearRotate 6s linear infinite; } .wing-geography::after { background: linear-gradient(90deg, #00B4DC, #4FC3F7, #00B4DC); } .wing-geography .wing-label, .wing-geography .chip-role { color: #00B4DC; }
-        .wing-gk .wing-icon { background: linear-gradient(135deg, rgba(255,200,50,0.25), rgba(255,200,50,0.05)); color: #FFC832; animation: bulbFlicker 1.5s ease-in-out infinite; } .wing-gk::after { background: linear-gradient(90deg, #FFC832, #FFE082, #FFC832); } .wing-gk .wing-label, .wing-gk .chip-role { color: #FFC832; }
-        @keyframes bulbFlicker { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+        .wing-library .wing-icon { background: linear-gradient(135deg, rgba(180,140,100,0.2), rgba(180,140,100,0.05)); color: #B48C64; } .wing-library::after { background: linear-gradient(90deg, #B48C64, #D4A574, #B48C64); } .wing-library .wing-label, .wing-library .chip-role { color: #B48C64; }
+        .wing-geography .wing-icon { background: linear-gradient(135deg, rgba(0,180,220,0.2), rgba(0,180,220,0.05)); color: #00B4DC; } .wing-geography::after { background: linear-gradient(90deg, #00B4DC, #4FC3F7, #00B4DC); } .wing-geography .wing-label, .wing-geography .chip-role { color: #00B4DC; }
+        .wing-gk .wing-icon { background: linear-gradient(135deg, rgba(255,200,50,0.25), rgba(255,200,50,0.05)); color: #FFC832; } .wing-gk::after { background: linear-gradient(90deg, #FFC832, #FFE082, #FFC832); } .wing-gk .wing-label, .wing-gk .chip-role { color: #FFC832; }
         .wing-science .wing-icon { background: linear-gradient(135deg, rgba(0,220,130,0.2), rgba(0,220,130,0.05)); color: #00DC82; } .wing-science::after { background: linear-gradient(90deg, #00DC82, #69F0AE, #00DC82); } .wing-science .wing-label, .wing-science .chip-role { color: #00DC82; }
         .atom-ring { position: absolute; top: -6px; left: -6px; width: 67px; height: 67px; border: 2px dashed rgba(0,220,130,0.4); border-radius: 50%; animation: gearRotate 3s linear infinite; pointer-events: none; } .atom-dot { position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; background: #00DC82; border-radius: 50%; box-shadow: 0 0 10px #00DC82; }
-        .wing-publication .wing-icon { background: linear-gradient(135deg, rgba(200,160,255,0.2), rgba(200,160,255,0.05)); color: #C8A0FF; animation: bookOpen 3s ease-in-out infinite; } .wing-publication::after { background: linear-gradient(90deg, #C8A0FF, #E1BEE7, #C8A0FF); } .wing-publication .wing-label, .wing-publication .chip-role { color: #C8A0FF; }
-        .wing-media .wing-icon { background: linear-gradient(135deg, rgba(255,80,80,0.2), rgba(255,80,80,0.05)); color: #FF5050; animation: shutterClick 2s ease-in-out infinite; } .wing-media::after { background: linear-gradient(90deg, #FF5050, #FF8A80, #FF5050); } .wing-media .wing-label, .wing-media .chip-role { color: #FF5050; }
-        @keyframes shutterClick { 0%,90%,100%{transform:scale(1);} 95%{transform:scale(0.85);} }
+        .wing-publication .wing-icon { background: linear-gradient(135deg, rgba(200,160,255,0.2), rgba(200,160,255,0.05)); color: #C8A0FF; } .wing-publication::after { background: linear-gradient(90deg, #C8A0FF, #E1BEE7, #C8A0FF); } .wing-publication .wing-label, .wing-publication .chip-role { color: #C8A0FF; }
+        .wing-media .wing-icon { background: linear-gradient(135deg, rgba(255,80,80,0.2), rgba(255,80,80,0.05)); color: #FF5050; } .wing-media::after { background: linear-gradient(90deg, #FF5050, #FF8A80, #FF5050); } .wing-media .wing-label, .wing-media .chip-role { color: #FF5050; }
         .wing-medical .wing-icon { background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.05)); color: var(--secondary); animation: heartBeat 1.2s ease-in-out infinite; } .wing-medical::after { background: linear-gradient(90deg, #FF3366, #FF6B9D, #FF3366); } .wing-medical .wing-label { color: var(--secondary); }
         @keyframes heartBeat { 0%,100%{transform:scale(1);} 15%{transform:scale(1.2);} 30%{transform:scale(1);} 45%{transform:scale(1.15);} }
         .wing-sports .wing-icon { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: var(--primary); animation: ballBounce 0.8s ease-in-out infinite; } .wing-sports::after { background: linear-gradient(90deg, #00F0FF, #FFB800, #00F0FF); } .wing-sports .wing-label { color: var(--primary); }
         @keyframes ballBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
         .sport-sparks { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 1; overflow: hidden; } .sport-sparks span { position: absolute; width: 3px; height: 3px; background: var(--primary); border-radius: 50%; animation: sparkFloat 3s ease-in-out infinite; } .sport-sparks span:nth-child(1) { left: 20%; } .sport-sparks span:nth-child(2) { left: 50%; animation-delay: 0.8s; background: var(--accent); } .sport-sparks span:nth-child(3) { left: 75%; animation-delay: 1.6s; background: var(--secondary); }
         @keyframes sparkFloat { 0%{bottom:-5px;opacity:0;transform:translateX(0)scale(0);} 20%{opacity:0.8;} 50%{opacity:0.4;transform:translateX(15px)scale(1);} 100%{bottom:100%;opacity:0;transform:translateX(-15px)scale(0);} }
-        .wing-foreign .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(0,240,255,0.1)); color: var(--accent); animation: flagWave 2s ease-in-out infinite; } .wing-foreign::after { background: linear-gradient(90deg, #FFB800, #00F0FF, #FF3366, #FFB800); } .wing-foreign .wing-label { color: var(--accent); }
+        .wing-foreign .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(0,240,255,0.1)); color: var(--accent); } .wing-foreign::after { background: linear-gradient(90deg, #FFB800, #00F0FF, #FF3366, #FFB800); } .wing-foreign .wing-label { color: var(--accent); }
         .flag-stripes { position: absolute; top: 8px; right: 12px; display: flex; gap: 2px; z-index: 4; } .flag-stripes span { width: 3px; height: 18px; border-radius: 2px; animation: stripeWave 1.5s ease-in-out infinite; } .flag-stripes span:nth-child(1) { background: #FFB800; } .flag-stripes span:nth-child(2) { background: #00F0FF; animation-delay: 0.2s; } .flag-stripes span:nth-child(3) { background: #FF3366; animation-delay: 0.4s; }
-        @keyframes flagWave { 0%,100%{transform:rotate(0deg);} 25%{transform:rotate(5deg);} 75%{transform:rotate(-5deg);} } @keyframes stripeWave { 0%,100%{transform:scaleY(0.6);} 50%{transform:scaleY(1);} }
+        @keyframes stripeWave { 0%,100%{transform:scaleY(0.6);} 50%{transform:scaleY(1);} }
 
-        /* ===== HISTORY SECTIONS ===== */
         .history-section { padding: 4rem 0; }
         .history-section.alt-bg { background-color: var(--bg-secondary); }
         .history-section.main-bg { background-color: var(--bg-primary); }
         .history-period { margin-bottom: 2.5rem; animation: fadeSlideUp 0.6s ease both; }
         .history-period:nth-child(2) { animation-delay: 0.15s; }
         .history-period:nth-child(3) { animation-delay: 0.3s; }
-        .history-period:nth-child(4) { animation-delay: 0.45s; }
         @keyframes fadeSlideUp { from { opacity:0; transform:translateY(25px); } to { opacity:1; transform:translateY(0); } }
-        .history-period-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; margin-bottom: 1rem; padding: 0.8rem 1.2rem; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .history-period-title { font-size: 1.25rem; margin-bottom: 1rem; padding: 0.8rem 1.2rem; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-weight: 700; }
         .history-period-title.union-accent { color: var(--accent); background: linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,184,0,0.02)); border-left: 4px solid var(--accent); }
         .history-period-title.artsfest-accent { color: var(--secondary); background: linear-gradient(135deg, rgba(255,51,102,0.08), rgba(255,51,102,0.02)); border-left: 4px solid var(--secondary); }
         .history-period-title.sem-accent { color: var(--primary); background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(0,240,255,0.02)); border-left: 4px solid var(--primary); font-size: 1.05rem; margin-top: 1rem; }
@@ -189,12 +182,8 @@
         .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.9rem; }
         .history-card { background: var(--bg-tertiary); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem 1.1rem; text-align: center; transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275); position: relative; overflow: hidden; }
         .history-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-        .history-card.union-card { border-color: rgba(255,184,0,0.12); }
-        .history-card.union-card::before { background: linear-gradient(90deg, #FFD700, #FFB800); }
-        .history-card.union-card:hover { border-color: var(--accent); box-shadow: 0 8px 25px rgba(255,184,0,0.12); transform: translateY(-6px); }
-        .history-card.artsfest-card { border-color: rgba(255,51,102,0.12); }
-        .history-card.artsfest-card::before { background: linear-gradient(90deg, #FF3366, #FF6B9D); }
-        .history-card.artsfest-card:hover { border-color: var(--secondary); box-shadow: 0 8px 25px rgba(255,51,102,0.12); transform: translateY(-6px); }
+        .history-card.union-card { border-color: rgba(255,184,0,0.12); } .history-card.union-card::before { background: linear-gradient(90deg, #FFD700, #FFB800); } .history-card.union-card:hover { border-color: var(--accent); box-shadow: 0 8px 25px rgba(255,184,0,0.12); transform: translateY(-6px); }
+        .history-card.artsfest-card { border-color: rgba(255,51,102,0.12); } .history-card.artsfest-card::before { background: linear-gradient(90deg, #FF3366, #FF6B9D); } .history-card.artsfest-card:hover { border-color: var(--secondary); box-shadow: 0 8px 25px rgba(255,51,102,0.12); transform: translateY(-6px); }
         .history-role { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 0.3rem; }
         .history-card.union-card .history-role { color: var(--accent); }
         .history-card.artsfest-card .history-role { color: var(--secondary); }
@@ -276,7 +265,7 @@
         .dash-action-btn:hover { border-color:var(--primary); background:rgba(0,240,255,0.05); transform:translateX(4px); }
         .dash-action-btn i { color:var(--primary); width:20px; text-align:center; }
 
-        /* ===== ADMIN PANEL ===== */
+        /* ADMIN */
         .admin-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-primary); z-index:4000; overflow-y:auto; }
         .admin-overlay.active { display:block; }
         .admin-topbar { background:var(--bg-secondary); border-bottom:1px solid rgba(0,240,255,0.15); padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
@@ -284,15 +273,11 @@
         .admin-close-btn { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#EF4444; padding:8px 16px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:0.3s; font-family:'Space Grotesk',sans-serif; }
         .admin-close-btn:hover { background:#EF4444; color:white; }
         .admin-body { padding:1.5rem; max-width:1100px; margin:0 auto; }
-
-        /* Admin Tabs */
         .admin-tabs { display:flex; gap:0.5rem; margin-bottom:2rem; background:var(--bg-secondary); border-radius:12px; padding:5px; border:1px solid rgba(0,240,255,0.1); }
         .admin-tab-btn { flex:1; padding:12px 20px; text-align:center; border-radius:9px; cursor:pointer; font-weight:600; font-size:0.9rem; color:var(--gray); border:none; background:none; font-family:'Space Grotesk',sans-serif; transition:0.3s; display:flex; align-items:center; justify-content:center; gap:8px; }
         .admin-tab-btn:hover { color:var(--dark); background:rgba(0,240,255,0.05); }
         .admin-tab-btn.active { background:var(--primary); color:var(--bg-primary); }
-        .admin-tab-content { display:none; }
-        .admin-tab-content.active { display:block; }
-
+        .admin-tab-content { display:none; } .admin-tab-content.active { display:block; }
         .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:2rem; }
         .stat-card { background:var(--bg-tertiary); border:1px solid rgba(0,240,255,0.1); border-radius:var(--border-radius); padding:1.5rem; text-align:center; }
         .stat-card .stat-icon { font-size:2rem; color:var(--primary); margin-bottom:0.5rem; }
@@ -305,15 +290,28 @@
         .add-user-form h4 { color:#10B981; margin-bottom:1rem; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
         .add-form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-bottom:1.2rem; }
         .add-form-grid .form-group { margin-bottom:0; }
+        .pw-gen-row { display:flex; gap:0.5rem; align-items:center; }
+        .pw-gen-btn { padding:8px 14px; background:rgba(0,240,255,0.1); border:1px solid rgba(0,240,255,0.2); color:var(--primary); border-radius:8px; cursor:pointer; font-size:0.78rem; font-weight:600; transition:0.3s; white-space:nowrap; font-family:'Space Grotesk',sans-serif; }
+        .pw-gen-btn:hover { background:var(--primary); color:var(--bg-primary); }
 
-        /* Students Table */
+        /* Credentials Display */
+        .credentials-display { background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(0,240,255,0.05)); border:2px solid rgba(16,185,129,0.3); border-radius:var(--border-radius-lg); padding:2rem; margin-bottom:2rem; text-align:center; animation:fadeSlideUp 0.4s ease; display:none; }
+        .credentials-display.active { display:block; }
+        .credentials-display h4 { color:#10B981; margin-bottom:0.5rem; font-size:1.1rem; }
+        .credentials-display p { color:var(--gray); font-size:0.85rem; margin-bottom:1.5rem; }
+        .cred-box { background:var(--bg-secondary); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:1.5rem; display:inline-block; text-align:left; min-width:300px; }
+        .cred-row { display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+        .cred-row:last-child { border-bottom:none; }
+        .cred-label { color:var(--gray); font-size:0.85rem; font-weight:600; }
+        .cred-value { color:var(--dark); font-size:1rem; font-weight:700; font-family:'Space Grotesk',sans-serif; }
+        .cred-actions { margin-top:1.2rem; display:flex; gap:0.6rem; justify-content:center; }
+
         .students-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem; }
         .students-toolbar h3 { color:var(--dark); margin:0; font-size:1.1rem; }
         .search-box { display:flex; align-items:center; background:var(--bg-tertiary); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:0 14px; transition:0.3s; }
         .search-box:focus-within { border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,240,255,0.1); }
         .search-box i { color:var(--gray); margin-right:8px; }
         .search-box input { background:none; border:none; color:var(--dark); padding:10px 0; font-size:0.9rem; outline:none; width:200px; font-family:'Inter',sans-serif; }
-
         .admin-table { width:100%; border-collapse:collapse; margin-top:1rem; }
         .admin-table th { text-align:left; padding:12px; background:var(--bg-secondary); color:var(--primary); font-size:0.8rem; text-transform:uppercase; border-bottom:2px solid rgba(0,240,255,0.2); white-space:nowrap; }
         .admin-table td { padding:12px; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--dark); font-size:0.9rem; vertical-align:middle; }
@@ -323,9 +321,12 @@
         .role-badge.core { background:rgba(255,215,0,0.15); color:#FFD700; }
         .role-badge.wing { background:rgba(0,240,255,0.15); color:var(--primary); }
         .role-badge.member { background:rgba(16,185,129,0.15); color:#10B981; }
+        .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
+        .status-dot.active { background:#10B981; box-shadow:0 0 6px #10B981; }
+        .status-dot.pending { background:var(--accent); box-shadow:0 0 6px var(--accent); }
         .delete-btn { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#EF4444; padding:6px 14px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.78rem; transition:0.3s; font-family:'Space Grotesk',sans-serif; white-space:nowrap; }
         .delete-btn:hover { background:#EF4444; color:white; transform:scale(1.05); }
-        .table-actions { display:flex; gap:0.4rem; align-items:center; }
+        .table-actions { display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap; }
         .no-users-msg { text-align:center; padding:3rem 1rem; color:var(--gray); }
         .no-users-msg i { font-size:3rem; margin-bottom:1rem; display:block; opacity:0.3; }
 
@@ -339,7 +340,6 @@
         @keyframes toastIn { from{opacity:0;transform:translateX(100px);} to{opacity:1;transform:translateX(0);} }
         @keyframes toastOut { from{opacity:1;} to{opacity:0;transform:translateX(100px);} }
 
-        /* Confirm Modal */
         .confirm-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(5px); z-index:5000; justify-content:center; align-items:center; }
         .confirm-modal.active { display:flex; }
         .confirm-card { background:var(--bg-tertiary); padding:2rem; border-radius:var(--border-radius-lg); max-width:420px; width:90%; text-align:center; border:1px solid rgba(239,68,68,0.3); box-shadow:0 20px 60px rgba(0,0,0,0.5); }
@@ -348,6 +348,12 @@
         .confirm-card p { color:var(--gray); font-size:0.9rem; margin-bottom:1.5rem; }
         .confirm-card .confirm-name { color:var(--secondary); font-weight:700; }
         .confirm-btns { display:flex; gap:0.8rem; justify-content:center; }
+
+        /* Login info box */
+        .login-info-box { background:rgba(0,240,255,0.05); border:1px solid rgba(0,240,255,0.15); border-radius:var(--border-radius); padding:1.2rem; margin-bottom:1.5rem; }
+        .login-info-box h4 { color:var(--primary); font-size:0.95rem; margin-bottom:0.6rem; display:flex; align-items:center; gap:8px; }
+        .login-info-box p { color:var(--gray); font-size:0.82rem; line-height:1.6; }
+        .login-info-box code { background:rgba(0,240,255,0.1); padding:2px 8px; border-radius:4px; color:var(--primary); font-size:0.82rem; }
 
         @media (max-width: 768px) {
             .mobile-menu-btn { display: flex; position: relative; z-index: 1002; }
@@ -368,6 +374,7 @@
             .search-box input { width: 150px; }
             .admin-table { font-size: 0.8rem; }
             .admin-table th, .admin-table td { padding: 8px 6px; }
+            .cred-box { min-width: auto; width: 100%; }
         }
     </style>
 </head>
@@ -375,7 +382,6 @@
     <div class="toast-container" id="toastContainer"></div>
     <div class="overlay-dim" id="overlayDim" onclick="closeDashboards()"></div>
 
-    <!-- Confirm Delete Modal -->
     <div class="confirm-modal" id="confirmModal">
         <div class="confirm-card">
             <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
@@ -383,7 +389,7 @@
             <p>You are about to permanently remove <span class="confirm-name" id="confirmUserName"></span> from the system. This cannot be undone.</p>
             <div class="confirm-btns">
                 <button class="btn btn-outline btn-sm" onclick="cancelDelete()">Cancel</button>
-                <button class="btn btn-danger btn-sm" id="confirmDeleteBtn" onclick="confirmDeleteUser()">Yes, Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser()">Yes, Delete</button>
             </div>
         </div>
     </div>
@@ -401,7 +407,7 @@
 
     <section class="hero" id="home"><div class="container"><h1>United for Professional Growth & Excellence</h1><p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p><div class="hero-btns"><a href="#about" class="btn">Discover More</a><a href="#committee" class="btn btn-primary">Meet Our Leadership</a></div></div></section>
     <section class="features" id="about"><div class="container"><h2 class="section-title">Cultivating <span>Intelligent</span> and <span>Qualified</span> Professional Networks</h2><div class="features-grid"><div class="feature-card"><div class="feature-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration.</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change.</p></div><div class="feature-card"><div class="feature-icon"><i class="fas fa-trophy"></i></div><h3>Our Achievements</h3><p>Recognized with the Best Union Award and featured in Mission-20 Publication.</p></div></div></div></section>
-    <section class="about-cards"><div class="container"><h2 class="section-title">ITQAN <span>Union</span> Initiatives</h2><div class="about-cards-container"><div class="about-card" onclick="window.location.href='publication.html'"><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div><div class="about-card" onclick="window.location.href='achievement.html'"><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div><div class="about-card" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival – where talent meets glory.</p><div style="margin-top:1rem;"><span class="btn btn-sm btn-outline" style="pointer-events:none;">Live Event Hub</span></div></div></div></div></section>
+    <section class="about-cards"><div class="container"><h2 class="section-title">ITQAN <span>Union</span> Initiatives</h2><div class="about-cards-container"><div class="about-card" onclick="window.location.href='publication.html'"><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div><div class="about-card" onclick="window.location.href='achievement.html'"><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div><div class="about-card" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:1rem;"><span class="btn btn-sm btn-outline" style="pointer-events:none;">Live Event Hub</span></div></div></div></div></section>
 
     <section class="committee-section" id="committee">
         <div class="container">
@@ -443,119 +449,26 @@
         </div>
     </section>
 
-    <!-- ===== UNION HISTORY ===== -->
+    <!-- UNION HISTORY -->
     <section class="history-section alt-bg" id="history">
         <div class="container">
             <div class="committee-header" id="historyHeader" style="border-color:rgba(255,184,0,0.3);"><h2 style="color:var(--accent);"><i class="fas fa-history"></i> Union Committee History</h2><div class="toggle-icon" style="color:var(--accent);"><i class="fas fa-chevron-down"></i></div></div>
             <div class="committee-grid active" id="historyGrid" style="display:none;">
-
-                <div class="history-period">
-                    <div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 1st Class Committee <span class="history-subtitle">Founding Year</span></div>
-                    <div class="history-grid">
-                        <div class="history-card union-card"><div class="history-role">President</div><div class="history-name">Burhan</div></div>
-                        <div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Hudaif</div></div>
-                        <div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Razin</div></div>
-                        <div class="history-card union-card"><div class="history-role">Treasurer</div><div class="history-name">Rafan</div></div>
-                    </div>
-                </div>
-
-                <div class="history-period">
-                    <div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 2nd Class Committee <span class="history-subtitle">Expansion Phase</span></div>
-                    <div class="history-grid">
-                        <div class="history-card union-card"><div class="history-role">President</div><div class="history-name">S. Burhan</div></div>
-                        <div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Hudaif</div></div>
-                        <div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Zidan</div></div>
-                        <div class="history-card union-card"><div class="history-role">Joint Secretary</div><div class="history-name">Naseem</div></div>
-                        <div class="history-card union-card"><div class="history-role">Treasurer</div><div class="history-name">V.K</div></div>
-                        <div class="history-card union-card"><div class="history-role">Financial Manager</div><div class="history-name">Rashad</div></div>
-                    </div>
-                </div>
-
-                <div class="history-period">
-                    <div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 3rd Class Committee <span class="history-subtitle">Current Era</span></div>
-                    <div class="history-grid">
-                        <div class="history-card union-card"><div class="history-role">President</div><div class="history-name">S. Hudaif</div></div>
-                        <div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Burhan</div></div>
-                        <div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Moidu</div></div>
-                        <div class="history-card union-card"><div class="history-role">Joint Secretary</div><div class="history-name">Shahzad</div></div>
-                    </div>
-                    <div class="history-period-title sem-accent" style="margin-top:1.2rem;"><i class="fas fa-exchange-alt"></i> Second Semester Change</div>
-                    <div class="history-grid">
-                        <div class="history-card union-card"><div class="history-role">Secretary (Changed)</div><div class="history-name">Zidan</div></div>
-                    </div>
-                </div>
-
+                <div class="history-period"><div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 1st Class Committee <span class="history-subtitle">Founding Year</span></div><div class="history-grid"><div class="history-card union-card"><div class="history-role">President</div><div class="history-name">Burhan</div></div><div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Hudaif</div></div><div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Razin</div></div><div class="history-card union-card"><div class="history-role">Treasurer</div><div class="history-name">Rafan</div></div></div></div>
+                <div class="history-period"><div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 2nd Class Committee <span class="history-subtitle">Expansion Phase</span></div><div class="history-grid"><div class="history-card union-card"><div class="history-role">President</div><div class="history-name">S. Burhan</div></div><div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Hudaif</div></div><div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Zidan</div></div><div class="history-card union-card"><div class="history-role">Joint Secretary</div><div class="history-name">Naseem</div></div><div class="history-card union-card"><div class="history-role">Treasurer</div><div class="history-name">V.K</div></div><div class="history-card union-card"><div class="history-role">Financial Manager</div><div class="history-name">Rashad</div></div></div></div>
+                <div class="history-period"><div class="history-period-title union-accent"><i class="fas fa-bookmark"></i> 3rd Class Committee <span class="history-subtitle">Current Era</span></div><div class="history-grid"><div class="history-card union-card"><div class="history-role">President</div><div class="history-name">S. Hudaif</div></div><div class="history-card union-card"><div class="history-role">Vice President</div><div class="history-name">S. Burhan</div></div><div class="history-card union-card"><div class="history-role">Secretary</div><div class="history-name">Moidu</div></div><div class="history-card union-card"><div class="history-role">Joint Secretary</div><div class="history-name">Shahzad</div></div></div><div class="history-period-title sem-accent" style="margin-top:1.2rem;"><i class="fas fa-exchange-alt"></i> Second Semester Change</div><div class="history-grid"><div class="history-card union-card"><div class="history-role">Secretary (Changed)</div><div class="history-name">Zidan</div></div></div></div>
             </div>
         </div>
     </section>
 
-    <!-- ===== ARTSFEST HISTORY ===== -->
+    <!-- ARTSFEST HISTORY -->
     <section class="history-section main-bg">
         <div class="container">
             <div class="committee-header" id="artsfestHeader" style="border-color:rgba(255,51,102,0.3);"><h2 style="color:var(--secondary);"><i class="fas fa-palette"></i> Artsfest Leadership History</h2><div class="toggle-icon" style="color:var(--secondary);"><i class="fas fa-chevron-down"></i></div></div>
             <div class="committee-grid active" id="artsfestGrid" style="display:none;">
-
-                <div class="history-period">
-                    <div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 1st Class Artsfest <span class="history-subtitle">Inaugural Edition</span></div>
-                    <div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Ranif</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Naseem</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Muzzammil</div></div>
-                    </div>
-                    <div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Zidan</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Hisham</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Moidu</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">V.K</div></div>
-                    </div>
-                </div>
-
-                <div class="history-period">
-                    <div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 2nd Class Artsfest <span class="history-subtitle">Growth Edition</span></div>
-                    <div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Zidan</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Burhan</div></div>
-                    </div>
-                    <div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Mirsad</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Razin</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Ranif</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Shahzad</div></div>
-                    </div>
-                    <div class="history-period-title sem-accent" style="margin-top:1.5rem;"><i class="fas fa-exchange-alt"></i> Second Semester</div>
-                    <div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Rashad</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Moidu</div></div>
-                    </div>
-                    <div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Naseem</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Nuhman</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">M.A</div></div>
-                    </div>
-                </div>
-
-                <div class="history-period">
-                    <div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 3rd Class Artsfest <span class="history-subtitle">ZENITH Era</span></div>
-                    <div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Shahzad</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Aslah</div></div>
-                    </div>
-                    <div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div>
-                    <div class="history-grid">
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Rabeeh</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Ridan</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Salah</div></div>
-                        <div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Adnan</div></div>
-                    </div>
-                </div>
-
+                <div class="history-period"><div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 1st Class Artsfest <span class="history-subtitle">Inaugural Edition</span></div><div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Ranif</div></div><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Naseem</div></div><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Muzzammil</div></div></div><div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Zidan</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Hisham</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Moidu</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">V.K</div></div></div></div>
+                <div class="history-period"><div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 2nd Class Artsfest <span class="history-subtitle">Growth Edition</span></div><div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Zidan</div></div><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Burhan</div></div></div><div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Mirsad</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Razin</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Ranif</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Shahzad</div></div></div><div class="history-period-title sem-accent" style="margin-top:1.5rem;"><i class="fas fa-exchange-alt"></i> Second Semester</div><div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Rashad</div></div><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Moidu</div></div></div><div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Naseem</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Nuhman</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">M.A</div></div></div></div>
+                <div class="history-period"><div class="history-period-title artsfest-accent"><i class="fas fa-star"></i> 3rd Class Artsfest <span class="history-subtitle">ZENITH Era</span></div><div class="history-group-label artsfest-label"><i class="fas fa-headset"></i> Controllers</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Shahzad</div></div><div class="history-card artsfest-card"><div class="history-role">Controller</div><div class="history-name">Aslah</div></div></div><div class="history-group-label artsfest-label" style="margin-top:1rem;"><i class="fas fa-flag"></i> Captains</div><div class="history-grid"><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Rabeeh</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Ridan</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Salah</div></div><div class="history-card artsfest-card"><div class="history-role">Captain</div><div class="history-name">Adnan</div></div></div></div>
             </div>
         </div>
     </section>
@@ -566,7 +479,9 @@
     <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button><div class="modal-header-with-photo"><div class="profile-photo-container"><img id="modalPhoto" src="" alt="Profile" class="profile-photo" style="display:none;"><div class="photo-placeholder" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="profile-header-info"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wing-badges" id="modalBadges"></div></div></div><div class="modal-body"><p id="modalDescription"></p><div class="details-section" id="modalDetails"></div><div class="contact-info" id="modalContactInfo"></div></div><div class="modal-footer"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div></div></div>
     
     <!-- Auth Modal -->
-    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div>
+    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p>
+        <div class="login-info-box"><h4><i class="fas fa-info-circle"></i> How to Login</h4><p>If an admin created your account, use the <strong>username</strong> and <strong>password</strong> they gave you. If not, click <strong>Register</strong> to create your own account with a username of your choice.</p></div>
+        <div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div>
         <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
             <div class="form-group"><label>Username</label><input type="text" class="form-input" id="loginUsername" required placeholder="e.g., hudaif or mujeeb" autocomplete="off"></div>
             <div class="form-group"><label>Password</label><input type="password" class="form-input" id="loginPassword" required placeholder="--------"></div>
@@ -581,18 +496,13 @@
         </form>
     </div></div>
 
-    <!-- Dashboard Panel -->
+    <!-- Dashboard -->
     <div class="dashboard-panel" id="userDashboard"><div class="dash-header"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button class="dash-close" onclick="closeDashboards()"><i class="fas fa-times"></i></button></div><div class="dash-body" id="dashBody"></div></div>
 
     <!-- Admin Panel -->
     <div class="admin-overlay" id="adminPanel">
-        <div class="admin-topbar">
-            <h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3>
-            <button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button>
-        </div>
+        <div class="admin-topbar"><h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3><button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button></div>
         <div class="admin-body">
-
-            <!-- Admin Tabs -->
             <div class="admin-tabs">
                 <button class="admin-tab-btn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button>
                 <button class="admin-tab-btn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button>
@@ -623,8 +533,24 @@
                 <div class="students-toolbar">
                     <h3><i class="fas fa-user-graduate" style="color:var(--primary);margin-right:8px;"></i> Manage Students</h3>
                     <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
-                        <div class="search-box"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search students..." oninput="filterStudents()"></div>
+                        <div class="search-box"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search..." oninput="filterStudents()"></div>
                         <button class="btn btn-sm btn-success" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add Student</button>
+                    </div>
+                </div>
+
+                <!-- Credentials Display (shown after adding) -->
+                <div class="credentials-display" id="credentialsDisplay">
+                    <h4><i class="fas fa-check-circle"></i> Student Account Created Successfully!</h4>
+                    <p>Share these login credentials with the student. They can log in at the website using the Login button.</p>
+                    <div class="cred-box">
+                        <div class="cred-row"><span class="cred-label">Name</span><span class="cred-value" id="credName"></span></div>
+                        <div class="cred-row"><span class="cred-label">Username</span><span class="cred-value" id="credUsername"></span></div>
+                        <div class="cred-row"><span class="cred-label">Password</span><span class="cred-value" id="credPassword"></span></div>
+                        <div class="cred-row"><span class="cred-label">Role</span><span class="cred-value" id="credRole"></span></div>
+                    </div>
+                    <div class="cred-actions">
+                        <button class="btn btn-sm btn-primary" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy All</button>
+                        <button class="btn btn-sm btn-outline" onclick="closeCredDisplay()">Close</button>
                     </div>
                 </div>
 
@@ -633,39 +559,32 @@
                     <h4><i class="fas fa-user-plus"></i> Add New Student</h4>
                     <div class="add-form-grid">
                         <div class="form-group"><label>Full Name *</label><input type="text" class="form-input" id="addName" required placeholder="e.g., Ahmed Khan"></div>
-                        <div class="form-group"><label>Username *</label><input type="text" class="form-input" id="addUsername" required placeholder="e.g., ahmedkhan (no spaces)"></div>
-                        <div class="form-group"><label>Password *</label><input type="password" class="form-input" id="addPassword" required placeholder="Min 6 characters"></div>
+                        <div class="form-group"><label>Username * <span style="color:var(--gray);font-weight:400;font-size:0.7rem;">(no spaces, lowercase)</span></label><input type="text" class="form-input" id="addUsername" required placeholder="e.g., ahmedkhan" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9]/g,'')"></div>
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <div class="pw-gen-row">
+                                <input type="text" class="form-input" id="addPassword" required placeholder="Min 6 characters" style="flex:1;">
+                                <button type="button" class="pw-gen-btn" onclick="generatePassword()"><i class="fas fa-random"></i> Generate</button>
+                            </div>
+                        </div>
                         <div class="form-group"><label>Role</label><select class="form-input form-select" id="addRole"><option value="member">Student</option><option value="wing">Wing Leader</option><option value="core">Core Committee</option><option value="admin">Admin</option></select></div>
                         <div class="form-group"><label>Wing</label><select class="form-input form-select" id="addWing"><option value="">-- None --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option><option>Core Committee</option></select></div>
                     </div>
                     <div style="display:flex;gap:0.6rem;">
-                        <button class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Add Student</button>
-                        <button class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Create Account</button>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button>
                     </div>
                 </div>
 
                 <!-- Students Table -->
                 <div style="overflow-x:auto;">
                     <table class="admin-table" id="studentsTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Username</th>
-                                <th>Role</th>
-                                <th>Wing</th>
-                                <th>Change Role</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Role</th><th>Wing</th><th>Change Role</th><th>Action</th></tr></thead>
                         <tbody id="studentsTableBody"></tbody>
                     </table>
-                    <div class="no-users-msg" id="noStudentsMsg" style="display:none;">
-                        <i class="fas fa-user-slash"></i>
-                        <p>No students found. Click "Add Student" to get started.</p>
-                    </div>
+                    <div class="no-users-msg" id="noStudentsMsg" style="display:none;"><i class="fas fa-user-slash"></i><p>No students found. Click "Add Student" to get started.</p></div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -687,7 +606,15 @@
         const db = firebase.firestore();
 
         // ==========================================
-        // PREDEFINED CARD MEMBERS
+        // SECONDARY FIREBASE APP for creating users
+        // without logging out the admin
+        // ==========================================
+        let secondaryApp;
+        try { secondaryApp = firebase.app("SecondaryCreator"); }
+        catch(e) { secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryCreator"); }
+
+        // ==========================================
+        // CARD MEMBERS
         // ==========================================
         const cardMembers = {
             "hudaif": { name: "Sayed Hudaif", role: "core", wing: "Core Committee" },
@@ -727,7 +654,7 @@
         };
 
         // ==========================================
-        // UI HELPERS
+        // HELPERS
         // ==========================================
         function showToast(message, type = 'info') {
             const c = document.getElementById('toastContainer');
@@ -745,17 +672,13 @@
             mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
         document.querySelectorAll('#navLinks a, #navLinks .auth-btn').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
+            link.addEventListener('click', () => { navLinks.classList.remove('active'); mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>'; });
         });
 
-        // Toggle sections
         document.getElementById('committeeHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('committeeGrid').classList.toggle('active'); });
         document.getElementById('subwingsHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('subwingsGrid').classList.toggle('active'); });
-        document.getElementById('historyHeader').addEventListener('click', function() { this.classList.toggle('active'); const g = document.getElementById('historyGrid'); if(g.style.display === 'none' || !g.style.display) { g.style.display = 'block'; } else { g.style.display = 'none'; } });
-        document.getElementById('artsfestHeader').addEventListener('click', function() { this.classList.toggle('active'); const g = document.getElementById('artsfestGrid'); if(g.style.display === 'none' || !g.style.display) { g.style.display = 'block'; } else { g.style.display = 'none'; } });
+        document.getElementById('historyHeader').addEventListener('click', function() { this.classList.toggle('active'); const g = document.getElementById('historyGrid'); g.style.display = (g.style.display === 'none' || !g.style.display) ? 'block' : 'none'; });
+        document.getElementById('artsfestHeader').addEventListener('click', function() { this.classList.toggle('active'); const g = document.getElementById('artsfestGrid'); g.style.display = (g.style.display === 'none' || !g.style.display) ? 'block' : 'none'; });
 
         function showProfile(name, position, description, photoUrl = '') {
             document.getElementById('modalTitle').textContent = name;
@@ -769,10 +692,10 @@
             document.getElementById('modalContactInfo').innerHTML = `<h4>Contact</h4><div class="contact-item"><i class="fas fa-at"></i><span>@${name.toLowerCase().replace(/\s+/g, '')}</span></div>`;
             document.getElementById('profileModal').classList.add('active');
         }
-        function showAbout(wingName, department, description) {
+        function showAbout(wingName, dept, desc) {
             document.getElementById('modalTitle').textContent = wingName;
-            document.getElementById('modalSubtitle').textContent = department;
-            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalSubtitle').textContent = dept;
+            document.getElementById('modalDescription').textContent = desc;
             document.getElementById('modalPhoto').style.display = 'none';
             document.getElementById('photoPlaceholder').style.display = 'flex';
             document.getElementById('photoPlaceholder').innerHTML = '<i class="fas fa-users"></i>';
@@ -784,7 +707,7 @@
         function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
 
         // ==========================================
-        // AUTH LOGIC
+        // AUTH
         // ==========================================
         let currentUserData = null;
         let allUsersCache = [];
@@ -806,54 +729,30 @@
             const regWing = document.getElementById('regWing').value || 'General';
             const errorEl = document.getElementById('authError');
             errorEl.classList.remove('show');
-
             if(username.length < 3) { errorEl.innerText = "Username must be at least 3 characters."; errorEl.classList.add('show'); return; }
             if(regPassword.length < 6) { errorEl.innerText = "Password must be at least 6 characters."; errorEl.classList.add('show'); return; }
-
             const email = `${username}@itqan.org`;
-
             try {
-                // Check if admin pre-created this user
                 const existingSnap = await db.collection('users').where('username', '==', username).limit(1).get();
-
                 const usersSnapshot = await db.collection('users').limit(1).get();
                 const isFirstUser = usersSnapshot.empty;
-
                 const cred = await auth.createUserWithEmailAndPassword(email, regPassword);
-
                 let role = 'member', name = regName, wing = regWing;
-
-                // Priority: pre-created admin entry > card member > first user > general
                 if (!existingSnap.empty) {
-                    const existingData = existingSnap.docs[0].data();
-                    role = existingData.role || role;
-                    name = existingData.name || name;
-                    wing = existingData.wing || wing;
-                    // Delete the old pre-created doc and create proper one with auth UID
+                    const ed = existingSnap.docs[0].data();
+                    role = ed.role || role; name = ed.name || name; wing = ed.wing || wing;
                     await existingSnap.docs[0].ref.delete();
                     showToast(`Welcome ${name}! Pre-created profile linked.`, 'success');
                 } else if (cardMembers[username]) {
-                    role = cardMembers[username].role;
-                    name = cardMembers[username].name;
-                    wing = cardMembers[username].wing;
+                    role = cardMembers[username].role; name = cardMembers[username].name; wing = cardMembers[username].wing;
                     showToast(`Welcome ${name}! Card profile linked.`, 'success');
                 } else if (isFirstUser) {
-                    role = 'admin';
-                    wing = 'All';
+                    role = 'admin'; wing = 'All';
                     showToast('First user! You are now Admin.', 'info');
                 }
-
-                await db.collection('users').doc(cred.user.uid).set({
-                    name, username, email, role, wing,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                closeAuthModal();
-                showToast('Registration Successful!', 'success');
-            } catch (err) {
-                errorEl.innerText = err.message;
-                errorEl.classList.add('show');
-            }
+                await db.collection('users').doc(cred.user.uid).set({ name, username, email, role, wing, hasAuth: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                closeAuthModal(); showToast('Registration Successful!', 'success');
+            } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); }
         }
 
         async function handleLogin(e) {
@@ -863,15 +762,8 @@
             const errorEl = document.getElementById('authError');
             errorEl.classList.remove('show');
             const email = `${username}@itqan.org`;
-
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                closeAuthModal();
-                showToast('Logged in!', 'success');
-            } catch (err) {
-                errorEl.innerText = "Invalid username or password.";
-                errorEl.classList.add('show');
-            }
+            try { await auth.signInWithEmailAndPassword(email, password); closeAuthModal(); showToast('Logged in!', 'success'); }
+            catch (err) { errorEl.innerText = "Invalid username or password."; errorEl.classList.add('show'); }
         }
 
         function handleLogout() { auth.signOut(); closeDashboards(); closeAdminPanel(); showToast('Logged out.', 'info'); }
@@ -880,22 +772,12 @@
             const authArea = document.getElementById('authArea');
             if (user) {
                 let userData = null;
-                // Try to find user doc by UID first
                 let doc = await db.collection('users').doc(user.uid).get();
-                if (doc.exists) {
-                    userData = doc.data();
-                } else {
-                    // Fallback: find by custom uid field (for admin-added users)
-                    const q = await db.collection('users').where('uid', '==', user.uid).limit(1).get();
-                    if (!q.empty) {
-                        const foundDoc = q.docs[0];
-                        userData = foundDoc.data();
-                        // Migrate to proper doc ID
-                        await foundDoc.ref.delete();
-                        await db.collection('users').doc(user.uid).set(userData);
-                    }
+                if (doc.exists) { userData = doc.data(); }
+                else {
+                    const q = await db.collection('users').where('username', '==', user.email.replace('@itqan.org','')).limit(1).get();
+                    if (!q.empty) { userData = q.docs[0].data(); await q.docs[0].ref.delete(); await db.collection('users').doc(user.uid).set({...userData, hasAuth:true}); }
                 }
-
                 if (userData) {
                     currentUserData = userData;
                     const initials = currentUserData.name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -916,27 +798,13 @@
             if(!currentUserData) return;
             document.getElementById('userDashboard').classList.add('open');
             document.getElementById('overlayDim').classList.add('active');
-            const data = currentUserData;
-            const initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase();
-            const isAdmin = data.role === 'admin';
-            const roleLabel = data.role === 'admin' ? 'Administrator' : (data.role === 'core' ? 'Core Committee' : (data.role === 'wing' ? 'Wing Leader' : 'Student Member'));
+            const d = currentUserData, initials = d.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+            const isAdmin = d.role === 'admin';
+            const rl = d.role==='admin'?'Administrator':(d.role==='core'?'Core Committee':(d.role==='wing'?'Wing Leader':'Student Member'));
             document.getElementById('dashBody').innerHTML = `
-                <div class="dash-profile-card">
-                    <div class="dash-avatar">${initials}</div>
-                    <div class="dash-name">${data.name}</div>
-                    <div class="dash-position">${roleLabel}</div>
-                    ${data.wing ? `<div class="dash-wing-tag">${data.wing}</div>` : ''}
-                </div>
-                <div class="dash-section">
-                    <h4><i class="fas fa-id-card"></i> Profile Details</h4>
-                    <div class="dash-info-row"><span class="dash-info-label">Username</span><span class="dash-info-value">@${data.username || 'N/A'}</span></div>
-                    <div class="dash-info-row"><span class="dash-info-label">Role</span><span class="dash-info-value">${roleLabel}</span></div>
-                    <div class="dash-info-row"><span class="dash-info-label">Wing</span><span class="dash-info-value">${data.wing || 'N/A'}</span></div>
-                </div>
-                <div class="dash-actions">
-                    ${isAdmin ? `<button class="dash-action-btn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Open Admin Panel</button>` : ''}
-                    <button class="dash-action-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444;"></i> Logout</button>
-                </div>`;
+                <div class="dash-profile-card"><div class="dash-avatar">${initials}</div><div class="dash-name">${d.name}</div><div class="dash-position">${rl}</div>${d.wing?`<div class="dash-wing-tag">${d.wing}</div>`:''}</div>
+                <div class="dash-section"><h4><i class="fas fa-id-card"></i> Profile</h4><div class="dash-info-row"><span class="dash-info-label">Username</span><span class="dash-info-value">@${d.username||'N/A'}</span></div><div class="dash-info-row"><span class="dash-info-label">Role</span><span class="dash-info-value">${rl}</span></div><div class="dash-info-row"><span class="dash-info-label">Wing</span><span class="dash-info-value">${d.wing||'N/A'}</span></div></div>
+                <div class="dash-actions">${isAdmin?`<button class="dash-action-btn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Open Admin Panel</button>`:''}<button class="dash-action-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444;"></i> Logout</button></div>`;
         }
         function closeDashboards() { document.getElementById('userDashboard').classList.remove('open'); document.getElementById('overlayDim').classList.remove('active'); }
 
@@ -949,253 +817,166 @@
         function switchAdminTab(tab) {
             document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-            if(tab === 'overview') {
-                document.querySelectorAll('.admin-tab-btn')[0].classList.add('active');
-                document.getElementById('adminTabOverview').classList.add('active');
-            } else {
-                document.querySelectorAll('.admin-tab-btn')[1].classList.add('active');
-                document.getElementById('adminTabStudents').classList.add('active');
-            }
+            if(tab==='overview') { document.querySelectorAll('.admin-tab-btn')[0].classList.add('active'); document.getElementById('adminTabOverview').classList.add('active'); }
+            else { document.querySelectorAll('.admin-tab-btn')[1].classList.add('active'); document.getElementById('adminTabStudents').classList.add('active'); }
         }
 
         async function loadAdminData() {
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
-                let users = [];
-                snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+                const snapshot = await db.collection('users').orderBy('createdAt','desc').get();
+                let users = []; snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
                 allUsersCache = users;
-
-                // Stats
                 document.getElementById('totalUsers').innerText = users.length;
-                document.getElementById('totalCore').innerText = users.filter(u => u.role === 'core' || u.role === 'admin').length;
-                document.getElementById('totalWings').innerText = users.filter(u => u.role === 'wing').length;
-                document.getElementById('totalMembers').innerText = users.filter(u => u.role === 'member').length;
-
-                // Overview table (recent 10)
-                const overviewTbody = document.getElementById('overviewUserTable');
-                overviewTbody.innerHTML = '';
-                users.slice(0, 10).forEach(u => {
-                    const roleClass = u.role === 'admin' ? 'admin' : (u.role === 'core' ? 'core' : (u.role === 'wing' ? 'wing' : 'member'));
-                    const roleName = u.role === 'admin' ? 'Admin' : (u.role === 'core' ? 'Core' : (u.role === 'wing' ? 'Wing L.' : 'Student'));
-                    overviewTbody.innerHTML += `<tr><td>${u.name}</td><td>@${u.username || 'N/A'}</td><td><span class="role-badge ${roleClass}">${roleName}</span></td><td>${u.wing || 'N/A'}</td></tr>`;
+                document.getElementById('totalCore').innerText = users.filter(u => u.role==='core'||u.role==='admin').length;
+                document.getElementById('totalWings').innerText = users.filter(u => u.role==='wing').length;
+                document.getElementById('totalMembers').innerText = users.filter(u => u.role==='member').length;
+                const ot = document.getElementById('overviewUserTable'); ot.innerHTML = '';
+                users.slice(0,10).forEach(u => {
+                    const rc = u.role==='admin'?'admin':(u.role==='core'?'core':(u.role==='wing'?'wing':'member'));
+                    const rn = u.role==='admin'?'Admin':(u.role==='core'?'Core':(u.role==='wing'?'Wing L.':'Student'));
+                    ot.innerHTML += `<tr><td>${u.name}</td><td>@${u.username||'N/A'}</td><td><span class="role-badge ${rc}">${rn}</span></td><td>${u.wing||'N/A'}</td></tr>`;
                 });
-
-                // Students table (full)
                 renderStudentsTable(users);
-            } catch (err) {
-                console.error(err);
-                showToast('Failed to load admin data.', 'error');
-            }
+            } catch(err) { console.error(err); showToast('Failed to load data.','error'); }
         }
 
         function renderStudentsTable(users) {
             const tbody = document.getElementById('studentsTableBody');
             const noMsg = document.getElementById('noStudentsMsg');
-            const searchVal = (document.getElementById('studentSearchInput').value || '').toLowerCase();
-            const filtered = users.filter(u =>
-                (u.name || '').toLowerCase().includes(searchVal) ||
-                (u.username || '').toLowerCase().includes(searchVal) ||
-                (u.wing || '').toLowerCase().includes(searchVal)
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '';
-                noMsg.style.display = 'block';
-                return;
-            }
-            noMsg.style.display = 'none';
-            tbody.innerHTML = '';
-
+            const sv = (document.getElementById('studentSearchInput').value||'').toLowerCase();
+            const filtered = users.filter(u => (u.name||'').toLowerCase().includes(sv)||(u.username||'').toLowerCase().includes(sv)||(u.wing||'').toLowerCase().includes(sv));
+            if(filtered.length===0) { tbody.innerHTML=''; noMsg.style.display='block'; return; }
+            noMsg.style.display='none'; tbody.innerHTML='';
             filtered.forEach(u => {
-                const roleClass = u.role === 'admin' ? 'admin' : (u.role === 'core' ? 'core' : (u.role === 'wing' ? 'wing' : 'member'));
-                const roleName = u.role === 'admin' ? 'Admin' : (u.role === 'core' ? 'Core' : (u.role === 'wing' ? 'Wing L.' : 'Student'));
-                const isCurrentUser = currentUserData && u.id === auth.currentUser?.uid;
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${u.name}</strong></td>
-                        <td>@${u.username || 'N/A'}</td>
-                        <td><span class="role-badge ${roleClass}">${roleName}</span></td>
-                        <td>${u.wing || 'N/A'}</td>
-                        <td>
-                            <select class="form-input form-select" onchange="updateRole('${u.id}', this.value)" style="font-size:0.8rem;padding:5px 30px 5px 8px;width:110px;">
-                                <option value="member" ${u.role==='member'?'selected':''}>Student</option>
-                                <option value="wing" ${u.role==='wing'?'selected':''}>Wing Leader</option>
-                                <option value="core" ${u.role==='core'?'selected':''}>Core</option>
-                                <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="table-actions">
-                                ${isCurrentUser ? '<span style="color:var(--gray);font-size:0.75rem;">You</span>' : `<button class="delete-btn" onclick="promptDelete('${u.id}','${u.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash-alt"></i> Delete</button>`}
-                            </div>
-                        </td>
-                    </tr>`;
+                const rc = u.role==='admin'?'admin':(u.role==='core'?'core':(u.role==='wing'?'wing':'member'));
+                const rn = u.role==='admin'?'Admin':(u.role==='core'?'Core':(u.role==='wing'?'Wing L.':'Student'));
+                const hasAuth = u.hasAuth === true;
+                const isMe = currentUserData && u.id === auth.currentUser?.uid;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${u.name}</strong></td>
+                    <td>@${u.username||'N/A'}</td>
+                    <td><span class="status-dot ${hasAuth?'active':'pending'}"></span>${hasAuth?'Can Login':'Needs Register'}</td>
+                    <td><span class="role-badge ${rc}">${rn}</span></td>
+                    <td>${u.wing||'N/A'}</td>
+                    <td><select class="form-input form-select" onchange="updateRole('${u.id}',this.value)" style="font-size:0.8rem;padding:5px 30px 5px 8px;width:110px;"><option value="member" ${u.role==='member'?'selected':''}>Student</option><option value="wing" ${u.role==='wing'?'selected':''}>Wing Leader</option><option value="core" ${u.role==='core'?'selected':''}>Core</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select></td>
+                    <td><div class="table-actions">${isMe?'<span style="color:var(--gray);font-size:0.75rem;">You</span>':`<button class="delete-btn" onclick="promptDelete('${u.id}','${u.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i> Delete</button>`}</div></td>
+                </tr>`;
             });
         }
 
         function filterStudents() { renderStudentsTable(allUsersCache); }
 
-        // Add Student
+        // ==========================================
+        // ADD STUDENT (uses secondary app - admin stays logged in!)
+        // ==========================================
         function toggleAddForm() {
-            const form = document.getElementById('addUserForm');
-            form.classList.toggle('active');
-            if (form.classList.contains('active')) {
-                document.getElementById('addName').value = '';
-                document.getElementById('addUsername').value = '';
-                document.getElementById('addPassword').value = '';
-                document.getElementById('addRole').value = 'member';
-                document.getElementById('addWing').value = '';
-                document.getElementById('addName').focus();
-            }
+            const f = document.getElementById('addUserForm');
+            f.classList.toggle('active');
+            if(f.classList.contains('active')) { document.getElementById('addName').value=''; document.getElementById('addUsername').value=''; document.getElementById('addPassword').value=''; document.getElementById('addRole').value='member'; document.getElementById('addWing').value=''; document.getElementById('addName').focus(); }
+            document.getElementById('credentialsDisplay').classList.remove('active');
+        }
+
+        function generatePassword() {
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+            let pw = '';
+            for(let i=0; i<10; i++) pw += chars.charAt(Math.floor(Math.random()*chars.length));
+            document.getElementById('addPassword').value = pw;
         }
 
         async function addNewStudent() {
             const name = document.getElementById('addName').value.trim();
-            let username = document.getElementById('addUsername').value.trim().toLowerCase().replace(/\s+/g, '');
+            let username = document.getElementById('addUsername').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
             const password = document.getElementById('addPassword').value;
             const role = document.getElementById('addRole').value;
             const wing = document.getElementById('addWing').value || '';
 
-            if (!name) { showToast('Please enter a name.', 'error'); return; }
-            if (username.length < 3) { showToast('Username must be at least 3 characters.', 'error'); return; }
-            if (password.length < 6) { showToast('Password must be at least 6 characters.', 'error'); return; }
+            if(!name) { showToast('Please enter a name.','error'); return; }
+            if(username.length<3) { showToast('Username must be at least 3 characters.','error'); return; }
+            if(password.length<6) { showToast('Password must be at least 6 characters.','error'); return; }
 
-            // Check if username already exists
-            const existing = await db.collection('users').where('username', '==', username).limit(1).get();
-            if (!existing.empty) { showToast('Username already exists!', 'error'); return; }
+            // Check if username exists
+            const existing = await db.collection('users').where('username','==',username).limit(1).get();
+            if(!existing.empty) { showToast('Username already exists!','error'); return; }
 
             const email = `${username}@itqan.org`;
 
             try {
-                // Create auth account
-                const cred = await auth.createUserWithEmailAndPassword(email, password);
+                // KEY FIX: Use secondary app's auth to create the user
+                // This does NOT affect the main app's logged-in admin session
+                const secondaryAuth = secondaryApp.auth();
+                const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
+                
+                // Immediately sign out from secondary to clean up
+                await secondaryAuth.signOut();
 
-                // Save to Firestore
+                // Save to Firestore under the new user's UID
                 await db.collection('users').doc(cred.user.uid).set({
                     name, username, email, role, wing,
+                    hasAuth: true,  // Marks that this user has a login account
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // Sign back in as admin
-                // Re-authenticate the admin by signing out and back in
-                // Actually, createUserWithEmailAndPassword changes the current user
-                // We need to re-sign in as admin
-                if (currentUserData && currentUserData.username) {
-                    const adminEmail = `${currentUserData.username}@itqan.org`;
-                    try {
-                        // We don't have admin password stored, so we'll just reload
-                        // The new user was created successfully
-                        showToast(`Student "${name}" added successfully!`, 'success');
-                        toggleAddForm();
-                        loadAdminData();
-                    } catch(e) {
-                        showToast(`Student "${name}" added! Please log in again.`, 'success');
-                    }
-                } else {
-                    showToast(`Student "${name}" added successfully!`, 'success');
-                    toggleAddForm();
-                    loadAdminData();
-                }
+                // Show credentials to admin so they can share with student
+                const roleNames = {member:'Student', wing:'Wing Leader', core:'Core Committee', admin:'Admin'};
+                document.getElementById('credName').textContent = name;
+                document.getElementById('credUsername').textContent = '@' + username;
+                document.getElementById('credPassword').textContent = password;
+                document.getElementById('credRole').textContent = roleNames[role] || role;
+                document.getElementById('credentialsDisplay').classList.add('active');
+                document.getElementById('addUserForm').classList.remove('active');
 
-                // Re-authenticate as original admin
-                // Since we can't store password, we just notify
-                showToast('Note: You may need to re-login as admin.', 'info');
-
-            } catch (err) {
-                if (err.code === 'auth/email-already-in-use') {
-                    // Email exists in auth but maybe not in our Firestore
-                    // Save to Firestore using a different approach
-                    const emailDoc = await db.collection('users').where('email', '==', email).limit(1).get();
-                    if (emailDoc.empty) {
-                        // User exists in Auth but not Firestore - add to Firestore
-                        const adminDocId = `admin_${Date.now()}`;
-                        await db.collection('users').doc(adminDocId).set({
-                            name, username, email, role, wing, preCreated: true,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        showToast(`Student "${name}" added (profile only - auth account exists).`, 'success');
-                        toggleAddForm();
-                        loadAdminData();
-                    } else {
-                        showToast('This username is already registered!', 'error');
-                    }
+                showToast(`Account created for "${name}"! Share the credentials.`, 'success');
+                loadAdminData();
+            } catch(err) {
+                if(err.code === 'auth/email-already-in-use') {
+                    showToast('This username already has an auth account! They need to Register, not be added here.','error');
                 } else {
                     showToast('Error: ' + err.message, 'error');
                 }
             }
         }
 
-        // Delete Student
+        function copyCredentials() {
+            const text = `ITQAN Union Login Credentials:\nName: ${document.getElementById('credName').textContent}\nUsername: ${document.getElementById('credUsername').textContent}\nPassword: ${document.getElementById('credPassword').textContent}\nRole: ${document.getElementById('credRole').textContent}\nLogin at: ${window.location.href}`;
+            navigator.clipboard.writeText(text).then(() => showToast('Credentials copied to clipboard!','success')).catch(() => {
+                // Fallback
+                const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                showToast('Credentials copied!','success');
+            });
+        }
+        function closeCredDisplay() { document.getElementById('credentialsDisplay').classList.remove('active'); }
+
+        // ==========================================
+        // DELETE STUDENT
+        // ==========================================
         let pendingDeleteId = null;
-        function promptDelete(docId, userName) {
-            pendingDeleteId = docId;
-            document.getElementById('confirmUserName').textContent = userName;
-            document.getElementById('confirmModal').classList.add('active');
-        }
-        function cancelDelete() {
-            pendingDeleteId = null;
-            document.getElementById('confirmModal').classList.remove('active');
-        }
+        function promptDelete(docId, userName) { pendingDeleteId = docId; document.getElementById('confirmUserName').textContent = userName; document.getElementById('confirmModal').classList.add('active'); }
+        function cancelDelete() { pendingDeleteId = null; document.getElementById('confirmModal').classList.remove('active'); }
         async function confirmDeleteUser() {
-            if (!pendingDeleteId) return;
-            try {
-                await db.collection('users').doc(pendingDeleteId).delete();
-                showToast('User deleted successfully.', 'success');
-                cancelDelete();
-                loadAdminData();
-            } catch (err) {
-                showToast('Error deleting user: ' + err.message, 'error');
-                cancelDelete();
-            }
+            if(!pendingDeleteId) return;
+            try { await db.collection('users').doc(pendingDeleteId).delete(); showToast('User deleted.','success'); cancelDelete(); loadAdminData(); }
+            catch(err) { showToast('Error: '+err.message,'error'); cancelDelete(); }
         }
+        document.getElementById('confirmModal').addEventListener('click', function(e) { if(e.target===this) cancelDelete(); });
 
-        async function updateRole(uid, newRole) {
-            try {
-                await db.collection('users').doc(uid).update({ role: newRole });
-                showToast('User role updated!', 'success');
-                loadAdminData();
-            } catch(err) {
-                showToast('Error updating role.', 'error');
-            }
-        }
-
-        async function claimAdminRole() {
-            if(!auth.currentUser) return;
-            try {
-                await db.collection('users').doc(auth.currentUser.uid).update({ role: 'admin' });
-                showToast('You are now an Admin! Refreshing...', 'success');
-                setTimeout(() => location.reload(), 1500);
-            } catch(err) {
-                showToast('Error: ' + err.message, 'error');
-            }
-        }
+        async function updateRole(uid, newRole) { try { await db.collection('users').doc(uid).update({role:newRole}); showToast('Role updated!','success'); loadAdminData(); } catch(err) { showToast('Error.','error'); } }
+        async function claimAdminRole() { if(!auth.currentUser) return; try { await db.collection('users').doc(auth.currentUser.uid).update({role:'admin'}); showToast('You are now Admin! Refreshing...','success'); setTimeout(()=>location.reload(),1500); } catch(err) { showToast('Error: '+err.message,'error'); } }
 
         async function seedCardMembers() {
-            if(!confirm('Create 34 profiles for members listed on website cards?')) return;
+            if(!confirm('Create 34 profiles for members listed on website cards?\n\nNote: These will NOT have login accounts. Students must REGISTER with their exact username to claim their profile.')) return;
             try {
-                const batch = db.batch();
-                let count = 0;
-                for (const [username, data] of Object.entries(cardMembers)) {
+                const batch = db.batch(); let count = 0;
+                for(const [username,data] of Object.entries(cardMembers)) {
                     const email = `${username}@itqan.org`;
                     const docRef = db.collection('users').doc(email);
-                    batch.set(docRef, {
-                        ...data, username, email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
+                    batch.set(docRef, { ...data, username, email, hasAuth: false, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
                     count++;
                 }
                 await batch.commit();
-                showToast(`Synced ${count} members!`, 'success');
+                showToast(`Synced ${count} members! They need to Register to claim.`, 'success');
                 loadAdminData();
-            } catch (err) {
-                showToast('Error syncing.', 'error');
-            }
+            } catch(err) { showToast('Error syncing.','error'); }
         }
-
-        // Close confirm modal on outside click
-        document.getElementById('confirmModal').addEventListener('click', function(e) {
-            if (e.target === this) cancelDelete();
-        });
     </script>
 </body>
 </html>
