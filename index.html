@@ -140,22 +140,22 @@
         .wing-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
         .wing-btns .btn { flex: 1; min-width: 70px; padding: 8px 10px; font-size: 0.73rem; text-align: center; }
 
-        .wing-urdu .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: var(--accent); animation: penMove 3s ease-in-out infinite; } .wing-urdu::after { background: linear-gradient(90deg, #FFB800, #FF6B35, #FFB800); } .wing-urdu .wing-label, .wing-urdu .chip-role { color: var(--accent); } .wing-urdu .btn-primary { background-color: var(--accent); color: #000; } .wing-urdu .btn-outline { border-color: var(--accent); color: var(--accent); }
+        .wing-urdu .wing-icon { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: var(--accent); animation: penMove 3s ease-in-out infinite; } .wing-urdu::after { background: linear-gradient(90deg, #FFB800, #FF6B35, #FFB800); } .wing-urdu .wing-label, .wing-urdu .chip-role { color: var(--accent); } .wing-urdu .btn-primary { background-color: var(--accent); color: #000; }
         .wing-english .wing-icon { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: var(--primary); } .wing-english::after { background: linear-gradient(90deg, #00F0FF, #00B8D4, #00F0FF); } .wing-english .wing-label { color: var(--primary); }
         .typing-dots { display: flex; gap: 3px; position: absolute; top: 15px; right: 15px; z-index: 4; } .typing-dots span { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; animation: dotBounce 1.4s ease-in-out infinite; } .typing-dots span:nth-child(2) { animation-delay: 0.2s; } .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes dotBounce { 0%,60%,100%{opacity:0.3;transform:translateY(0);} 30%{opacity:1;transform:translateY(-8px);} }
-        .wing-arabic .wing-icon { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; animation: crescentGlow 2.5s ease-in-out infinite; } .wing-arabic::after { background: linear-gradient(90deg, #FFD700, #FFB800, #FFD700); } .wing-arabic .wing-label, .wing-arabic .chip-role { color: #FFD700; } .wing-arabic .btn-primary { background-color: #FFD700; color: #000; } .wing-arabic .btn-outline { border-color: #FFD700; color: #FFD700; }
+        .wing-arabic .wing-icon { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; animation: crescentGlow 2.5s ease-in-out infinite; } .wing-arabic::after { background: linear-gradient(90deg, #FFD700, #FFB800, #FFD700); } .wing-arabic .wing-label, .wing-arabic .chip-role { color: #FFD700; } .wing-arabic .btn-primary { background-color: #FFD700; color: #000; }
         @keyframes crescentGlow { 0%,100%{box-shadow:0 8px 25px rgba(255,215,0,0.25);} 50%{box-shadow:0 15px 45px rgba(255,215,0,0.55);} }
-        .wing-malayalam .wing-icon { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; animation: waveFloat 3s ease-in-out infinite; } .wing-malayalam::after { background: linear-gradient(90deg, #00C864, #00E676, #00C864); } .wing-malayalam .wing-label, .wing-malayalam .chip-role { color: #00C864; } .wing-malayalam .btn-primary { background-color: #00C864; color: #000; } .wing-malayalam .btn-outline { border-color: #00C864; color: #00C864; }
+        .wing-malayalam .wing-icon { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; animation: waveFloat 3s ease-in-out infinite; } .wing-malayalam::after { background: linear-gradient(90deg, #00C864, #00E676, #00C864); } .wing-malayalam .wing-label, .wing-malayalam .chip-role { color: #00C864; }
         @keyframes waveFloat { 0%,100%{transform:translateY(0)rotate(0deg);} 25%{transform:translateY(-6px)rotate(3deg);} 75%{transform:translateY(4px)rotate(-3deg);} }
         .wing-song .wing-icon { background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(255,51,102,0.05)); color: var(--secondary); } .wing-song::after { background: linear-gradient(90deg, #FF3366, #FF6B9D, #FF3366); } .wing-song .wing-label { color: var(--secondary); }
         .eq-bars { display: flex; gap: 2px; align-items: flex-end; position: absolute; top: 12px; right: 12px; z-index: 4; height: 25px; } .eq-bars span { width: 3px; background: var(--secondary); border-radius: 2px; animation: eqJump 0.8s ease-in-out infinite; } .eq-bars span:nth-child(1) { height: 12px; } .eq-bars span:nth-child(2) { height: 20px; animation-delay: 0.15s; } .eq-bars span:nth-child(3) { height: 15px; animation-delay: 0.3s; } .eq-bars span:nth-child(4) { height: 22px; animation-delay: 0.45s; }
         @keyframes eqJump { 0%,100%{transform:scaleY(0.5);opacity:0.6;} 50%{transform:scaleY(1);opacity:1;} }
-        .wing-maths .wing-icon { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; animation: gearRotate 4s linear infinite; } .wing-maths::after { background: linear-gradient(90deg, #8250FF, #A78BFA, #8250FF); } .wing-maths .wing-label, .wing-maths .chip-role { color: #8250FF; } .wing-maths .btn-primary { background-color: #8250FF; } .wing-maths .btn-outline { border-color: #8250FF; color: #8250FF; }
+        .wing-maths .wing-icon { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; animation: gearRotate 4s linear infinite; } .wing-maths::after { background: linear-gradient(90deg, #8250FF, #A78BFA, #8250FF); } .wing-maths .wing-label, .wing-maths .chip-role { color: #8250FF; } .wing-maths .btn-primary { background-color: #8250FF; }
         .wing-art .wing-icon { background: linear-gradient(135deg, rgba(255,100,150,0.2), rgba(255,200,50,0.1)); color: #FF6496; } .wing-art::after { background: linear-gradient(90deg, #FF6496, #FFB800, #00F0FF, #FF6496); } .wing-art .wing-label { color: #FF6496; }
         .paint-dots { position: absolute; top: 8px; right: 10px; z-index: 4; } .paint-dots span { position: absolute; border-radius: 50%; animation: paintPop 2s ease-in-out infinite; } .paint-dots span:nth-child(1) { width: 9px; height: 9px; background: #FF6496; top: 0; left: 5px; } .paint-dots span:nth-child(2) { width: 7px; height: 7px; background: #FFB800; top: 10px; left: 15px; animation-delay: 0.4s; } .paint-dots span:nth-child(3) { width: 6px; height: 6px; background: #00F0FF; top: 3px; left: 20px; animation-delay: 0.8s; }
         @keyframes paintPop { 0%,100%{transform:scale(0.5);opacity:0.4;} 50%{transform:scale(1.4);opacity:1;} }
-        .wing-library .wing-icon { background: linear-gradient(135deg, rgba(180,140,100,0.2), rgba(180,140,100,0.05)); color: #B48C64; animation: bookOpen 3s ease-in-out infinite; } .wing-library::after { background: linear-gradient(90deg, #B48C64, #D4A574, #B48C64); } .wing-library .wing-label, .wing-library .chip-role { color: #B48C64; } .wing-library .btn-primary { background-color: #B48C64; color: #fff; }
+        .wing-library .wing-icon { background: linear-gradient(135deg, rgba(180,140,100,0.2), rgba(180,140,100,0.05)); color: #B48C64; animation: bookOpen 3s ease-in-out infinite; } .wing-library::after { background: linear-gradient(90deg, #B48C64, #D4A574, #B48C64); } .wing-library .wing-label, .wing-library .chip-role { color: #B48C64; }
         @keyframes bookOpen { 0%,100%{transform:perspective(100px)rotateY(0deg);} 50%{transform:perspective(100px)rotateY(20deg);} }
         .wing-geography .wing-icon { background: linear-gradient(135deg, rgba(0,180,220,0.2), rgba(0,180,220,0.05)); color: #00B4DC; animation: gearRotate 6s linear infinite; } .wing-geography::after { background: linear-gradient(90deg, #00B4DC, #4FC3F7, #00B4DC); } .wing-geography .wing-label, .wing-geography .chip-role { color: #00B4DC; }
         .wing-gk .wing-icon { background: linear-gradient(135deg, rgba(255,200,50,0.25), rgba(255,200,50,0.05)); color: #FFC832; animation: bulbFlicker 1.5s ease-in-out infinite; } .wing-gk::after { background: linear-gradient(90deg, #FFC832, #FFE082, #FFC832); } .wing-gk .wing-label, .wing-gk .chip-role { color: #FFC832; }
@@ -281,34 +281,17 @@
         @keyframes toastIn { from{opacity:0;transform:translateX(100px);} to{opacity:1;transform:translateX(0);} }
         @keyframes toastOut { from{opacity:1;} to{opacity:0;transform:translateX(100px);} }
 
-        /* ==========================================
-           FIXED MOBILE RESPONSIVE LAYOUT
-           ========================================== */
         @media (max-width: 768px) {
             .mobile-menu-btn { display: flex; position: relative; z-index: 1002; }
-            .logo-tagline { display: none; } /* Hide tagline to save space */
-            
-            /* Force mobile menu to be a fullscreen overlay */
-            .nav-links { 
-                display: none; 
-                position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
-                background-color: rgba(11,13,23,0.98); backdrop-filter: blur(20px); 
-                flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; z-index: 1001; padding: 2rem; 
-            }
+            .logo-tagline { display: none; }
+            .nav-links { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: rgba(11,13,23,0.98); backdrop-filter: blur(20px); flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; z-index: 1001; padding: 2rem; }
             .nav-links.active { display: flex; }
             .nav-links li { width: 100%; text-align: center; }
             .nav-links a { font-size: 1.2rem; display: block; padding: 10px; }
-            
-            /* Center Auth buttons nicely inside mobile menu */
             .auth-area { flex-direction: column; width: 80%; gap: 1rem; margin-top: 1rem; }
             .auth-btn { width: 100%; font-size: 1rem; padding: 12px; text-align: center; }
             .auth-user-btn { width: 80%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 1rem; }
-
-            /* Other responsive fixes */
-            .hero h1 { font-size: 2rem; } 
-            .hero { padding: 5rem 1rem; } 
-            .footer-container, .about-cards-container { grid-template-columns: 1fr; } 
-            .committee-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; } .hero { padding: 5rem 1rem; } .footer-container, .about-cards-container { grid-template-columns: 1fr; } .committee-grid { grid-template-columns: 1fr; }
             .modal-header-with-photo { flex-direction: column; text-align: center; }
         }
     </style>
@@ -336,13 +319,13 @@
         <div class="container">
             <div class="committee-header" id="committeeHeader"><h2><i class="fas fa-user-tie"></i> Executive Core Committee</h2><div class="toggle-icon"><i class="fas fa-chevron-down"></i></div></div>
             <div class="committee-grid" id="committeeGrid">
-                <div class="card-anim card-president"><div class="card-inner"><div class="card-icon"><i class="fas fa-crown"></i></div><div class="card-role">👑 President</div><h3 class="card-name">Sayed Hudaif</h3><p class="card-desc">Leads strategic planning and represents the union in all high-level external engagements.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Sayed Hudaif','President','Provides strategic direction and acts as the primary representative.','profiles/Hudaif.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Office of the President','Executive Leadership','Defines strategic vision and represents membership.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-vp"><div class="card-inner"><div class="card-icon"><i class="fas fa-shield-alt"></i></div><div class="card-role">🛡️ Vice President</div><h3 class="card-name">Sayed Burhan</h3><p class="card-desc">Supports the President and oversees the operational efficiency of the union.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Sayed Burhan','Vice President','Assists the President and ensures seamless daily operations.','profiles/Sayyid-Burhan.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Office of the Vice President','Executive Operations','Aids in strategic decision-making and manages internal workflows.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-secretary"><div class="card-inner"><div class="card-icon"><i class="fas fa-pen-alt"></i></div><div class="card-role">✍️ Secretary</div><h3 class="card-name">Zidan</h3><p class="card-desc">Manages official records, correspondence, and documentation of proceedings.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Zidan','Secretary','Oversees all administrative records and official communications.','profiles/Zidan.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Office of the Secretary','Administration & Records','Responsible for accurate record-keeping and managing correspondence.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-js"><div class="card-inner"><div class="card-icon"><i class="fas fa-cog"></i></div><div class="card-role">⚙️ Joint Secretary</div><h3 class="card-name">Muhyudheen</h3><p class="card-desc">Provides administrative support to the Secretary and manages specific portfolios.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Muhyudheen','Joint Secretary','Handles designated administrative functions.','profiles/Muhyudheen.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Office of the Joint Secretary','Administrative Support','Assists with high-volume tasks and event logistics.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-treasurer"><div class="card-inner"><div class="card-icon"><i class="fas fa-coins"></i></div><div class="card-role">💰 Treasurer</div><h3 class="card-name">Mirsad</h3><p class="card-desc">Manages all financial assets, budgets, and reporting for the union.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Mirsad','Treasurer','Responsible for financial stewardship.','profiles/Mirsad.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Treasury Office','Financial Management','Ensures fiscal discipline and maintains accurate accounts.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-finance"><div class="card-inner"><div class="card-icon"><i class="fas fa-chart-bar"></i></div><div class="card-role">📊 Financial Manager</div><h3 class="card-name">Thanzeeh</h3><p class="card-desc">Oversees financial operations and ensures compliance with internal policies.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Thanzeeh','Financial Manager','Manages day-to-day financial operations.','profiles/Thanzeeh.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Financial Management','Operations & Compliance','Oversees transactions and ensures policy adherence.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
-                <div class="card-anim card-pro"><div class="card-inner"><div class="card-icon"><i class="fas fa-bullhorn"></i></div><div class="card-role">📢 P.R.O</div><h3 class="card-name">Shahzad</h3><p class="card-desc">Manages external communications, media relations, and public engagement.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Shahzad','Public Relations Officer','Cultivates the union\'s public image.','profiles/Shahzad.png')"><i class="fas fa-user"></i> Profile</button><button class="btn btn-outline btn-sm" onclick="showAbout('Public Relations Office','Communications & Outreach','Acts as spokesperson and manages media relations.')"><i class="fas fa-info-circle"></i> Office</button></div></div></div>
+                <div class="card-anim card-president"><div class="card-inner"><div class="card-icon"><i class="fas fa-crown"></i></div><div class="card-role">👑 President</div><h3 class="card-name">Sayed Hudaif</h3><p class="card-desc">Leads strategic planning and represents the union in all high-level external engagements.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Sayed Hudaif','President','Provides strategic direction and acts as the primary representative.','profiles/Hudaif.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-vp"><div class="card-inner"><div class="card-icon"><i class="fas fa-shield-alt"></i></div><div class="card-role">🛡️ Vice President</div><h3 class="card-name">Sayed Burhan</h3><p class="card-desc">Supports the President and oversees the operational efficiency of the union.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Sayed Burhan','Vice President','Assists the President and ensures seamless daily operations.','profiles/Sayyid-Burhan.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-secretary"><div class="card-inner"><div class="card-icon"><i class="fas fa-pen-alt"></i></div><div class="card-role">✍️ Secretary</div><h3 class="card-name">Zidan</h3><p class="card-desc">Manages official records, correspondence, and documentation of proceedings.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Zidan','Secretary','Oversees all administrative records and official communications.','profiles/Zidan.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-js"><div class="card-inner"><div class="card-icon"><i class="fas fa-cog"></i></div><div class="card-role">⚙️ Joint Secretary</div><h3 class="card-name">Muhyudheen</h3><p class="card-desc">Provides administrative support to the Secretary and manages specific portfolios.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Muhyudheen','Joint Secretary','Handles designated administrative functions.','profiles/Muhyudheen.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-treasurer"><div class="card-inner"><div class="card-icon"><i class="fas fa-coins"></i></div><div class="card-role">💰 Treasurer</div><h3 class="card-name">Mirsad</h3><p class="card-desc">Manages all financial assets, budgets, and reporting for the union.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Mirsad','Treasurer','Responsible for financial stewardship.','profiles/Mirsad.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-finance"><div class="card-inner"><div class="card-icon"><i class="fas fa-chart-bar"></i></div><div class="card-role">📊 Financial Manager</div><h3 class="card-name">Thanzeeh</h3><p class="card-desc">Oversees financial operations and ensures compliance with internal policies.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Thanzeeh','Financial Manager','Manages day-to-day financial operations.','profiles/Thanzeeh.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
+                <div class="card-anim card-pro"><div class="card-inner"><div class="card-icon"><i class="fas fa-bullhorn"></i></div><div class="card-role">📢 P.R.O</div><h3 class="card-name">Shahzad</h3><p class="card-desc">Manages external communications, media relations, and public engagement.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Shahzad','Public Relations Officer','Cultivates the union\'s public image.','profiles/Shahzad.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
                 <div class="card-anim card-audit"><div class="card-inner" style="text-align:center;"><div class="card-icon" style="margin:0 auto 0.8rem;"><i class="fas fa-shield-virus"></i></div><div class="card-role">🔍 Auditing Board</div><div class="audit-members-mini"><div class="audit-person-mini"><div class="audit-role-sm">Chairman</div><div class="audit-name-sm">Adnan</div></div><div class="audit-divider-sm"></div><div class="audit-person-mini"><div class="audit-role-sm">Convener</div><div class="audit-name-sm">Rashad</div></div></div><p class="card-desc">Ensures financial integrity and transparency through independent audits.</p><div class="card-btns-row"><button class="btn btn-primary btn-sm" onclick="showProfile('Adnan','Auditing Board Chair','Oversees financial audits.','profiles/Adnan.png')"><i class="fas fa-user"></i> Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Rashad','Auditing Board Convener','Supports audit procedures.','profiles/Rashad.png')"><i class="fas fa-user"></i> Convener</button></div></div></div>
             </div>
         </div>
@@ -352,8 +335,8 @@
         <div class="container">
             <div class="committee-header" id="subwingsHeader"><h2><i class="fas fa-sitemap"></i> Specialized Sub-Wings</h2><div class="toggle-icon"><i class="fas fa-chevron-down"></i></div></div>
             <div class="committee-grid" id="subwingsGrid">
-                <div class="wing-anim wing-urdu"><div class="wing-inner"><div class="wing-icon"><i class="fas fa-pen-fancy"></i></div><div class="wing-label">📝 Language & Literature</div><h3 class="wing-title">Urdu Wing</h3><p class="wing-info">Promotes Urdu literature and cultural heritage through workshops and poetic events.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Muhammed V.K</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Hisham</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Muhammed V.K','Urdu Wing Chairman','Leads Urdu language initiatives.','profiles/Muhammed V.K.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Hisham','Urdu Wing Convener','Coordinates events.','profiles/Hisham.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('Urdu Wing','Language & Culture','Promotes Urdu language and literary tradition.')">About</button></div></div></div>
-                <div class="wing-anim wing-english"><div class="typing-dots"><span></span><span></span><span></span></div><div class="wing-inner"><div class="wing-icon"><i class="fas fa-keyboard"></i></div><div class="wing-label">💬 Communication Skills</div><h3 class="wing-title">English Wing</h3><p class="wing-info">Enhances professional communication skills through English language development.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Mujeeb</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Zameen</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Mujeeb','English Wing Chairman','Oversees English programs.','profiles/Mujeeb.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Zameen','English Wing Convener','Coordinates workshops.','profiles/Zameen.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('English Wing','Language & Communication','Improves English for academic and professional advancement.')">About</button></div></div></div>
+                <div class="wing-anim wing-urdu"><div class="wing-inner"><div class="wing-icon"><i class="fas fa-pen-fancy"></i></div><div class="wing-label">📝 Language & Literature</div><h3 class="wing-title">Urdu Wing</h3><p class="wing-info">Promotes Urdu literature and cultural heritage.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Muhammed V.K</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Hisham</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Muhammed V.K','Urdu Wing Chairman','Leads Urdu language initiatives.','profiles/Muhammed V.K.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Hisham','Urdu Wing Convener','Coordinates events.','profiles/Hisham.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('Urdu Wing','Language & Culture','Promotes Urdu language and literary tradition.')">About</button></div></div></div>
+                <div class="wing-anim wing-english"><div class="typing-dots"><span></span><span></span><span></span></div><div class="wing-inner"><div class="wing-icon"><i class="fas fa-keyboard"></i></div><div class="wing-label">💬 Communication Skills</div><h3 class="wing-title">English Wing</h3><p class="wing-info">Enhances professional communication skills.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Mujeeb</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Zameen</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Mujeeb','English Wing Chairman','Oversees English programs.','profiles/Mujeeb.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Zameen','English Wing Convener','Coordinates workshops.','profiles/Zameen.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('English Wing','Language & Communication','Improves English for academic and professional advancement.')">About</button></div></div></div>
                 <div class="wing-anim wing-arabic"><div class="wing-inner"><div class="wing-icon"><i class="fas fa-moon"></i></div><div class="wing-label">🌙 Language & Heritage</div><h3 class="wing-title">Arabic Wing</h3><p class="wing-info">Facilitates the study of Arabic language and appreciation of Islamic heritage.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Naseem</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Razeen</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Naseem','Arabic Wing Chairman','Leads Arabic programs.','profiles/Naseem.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Razeen','Arabic Wing Convener','Organizes events.','profiles/Razeen.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('Arabic Wing','Language & Cultural Studies','Promotes Arabic and Islamic culture.')">About</button></div></div></div>
                 <div class="wing-anim wing-malayalam"><div class="wing-inner"><div class="wing-icon"><i class="fas fa-water"></i></div><div class="wing-label">🌊 Regional Heritage</div><h3 class="wing-title">Malayalam Wing</h3><p class="wing-info">Champions regional linguistic heritage and cultural exchange programs.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Rabeeh</span></div><div class="wing-leader-chip"><span class="chip-role">Convener</span><span class="chip-name">Muzzammil</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Rabeeh','Malayalam Wing Chairman','Leads regional activities.','profiles/Rabeeh.png')">Chair</button><button class="btn btn-primary btn-sm" onclick="showProfile('Muzzammil','Malayalam Wing Convener','Assists events.','profiles/Muzzammil.png')">Convener</button><button class="btn btn-outline btn-sm" onclick="showAbout('Malayalam Wing','Regional Language & Culture','Promotes Malayalam language and cultural identity.')">About</button></div></div></div>
                 <div class="wing-anim wing-song"><div class="eq-bars"><span></span><span></span><span></span><span></span></div><div class="wing-inner"><div class="wing-icon"><i class="fas fa-music"></i></div><div class="wing-label">🎵 Performing Arts</div><h3 class="wing-title">Song & Recitation</h3><p class="wing-info">Nurtures artistic talent through musical and recitation events.</p><div class="wing-leaders"><div class="wing-leader-chip"><span class="chip-role">Chairman</span><span class="chip-name">Ridhan</span></div></div><div class="wing-btns"><button class="btn btn-primary btn-sm" onclick="showProfile('Ridhan','Song & Recitation Chairman','Directs musical programs.','profiles/Ridhan.png')">Chair</button><button class="btn btn-outline btn-sm" onclick="showAbout('Song & Recitation Wing','Performing Arts','Organizes nasheed and recitation programs.')">About</button></div></div></div>
@@ -372,77 +355,158 @@
         </div>
     </section>
 
-    <footer id="contact"><div class="container"><div class="footer-container"><div class="footer-column"><h3>Events</h3><ul class="footer-links"><li><a href="https://itqan-artfeast.vercel.app/">🎭 ZENITH Arts Fest 2K26</a></li><li><a href="#">📸 Media Gallery</a></li></ul></div><div class="footer-column"><h3>ITQAN UNION</h3><p class="footer-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="social-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div><div class="footer-column"><h3>Contact Information</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2025 ITQAN Union. All Rights Reserved. | Built with Unity & Excellence</p></div></div></footer>
+    <footer id="contact"><div class="container"><div class="footer-container"><div class="footer-column"><h3>Events</h3><ul class="footer-links"><li><a href="https://itqan-artfeast.vercel.app/">🎭 ZENITH Arts Fest 2K26</a></li><li><a href="#">📸 Media Gallery</a></li></ul></div><div class="footer-column"><h3>ITQAN UNION</h3><p class="footer-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="social-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div><div class="footer-column"><h3>Contact Information</h3><ul class="footer-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2025 ITQAN Union. All Rights Reserved.</p></div></div></footer>
 
-    <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button><div class="modal-header-with-photo"><div class="profile-photo-container"><img id="modalPhoto" src="" alt="Profile" class="profile-photo" style="display:none;"><div class="photo-placeholder" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="profile-header-info"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wing-badges" id="modalBadges"></div></div></div><div class="modal-body"><p id="modalDescription"></p><div class="details-section" id="modalDetails"></div><div class="contact-info" id="modalContactInfo"></div></div><div class="modal-footer"><button class="btn btn-outline btn-sm" onclick="closeModal()"><i class="fas fa-times"></i> Close</button></div></div></div>
-    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div><form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="form-group"><label>Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Login</button></form><form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="form-group"><label>Full Name</label><input type="password" class="form-input" id="regName" required placeholder="Your Name"></div><div class="form-group"><label>Email</label><input type="email" class="form-input" id="regEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password (min 6 chars)</label><input type="password" class="form-input" id="regPassword" required placeholder="••••••••"></div><div class="form-group"><label>Select your Wing (Optional)</label><select class="form-input form-select" id="regWing"><option value="">-- General Member --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option></select></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Register</button></form></div></div>
+    <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button><div class="modal-header-with-photo"><div class="profile-photo-container"><img id="modalPhoto" src="" alt="Profile" class="profile-photo" style="display:none;"><div class="photo-placeholder" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="profile-header-info"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wing-badges" id="modalBadges"></div></div></div><div class="modal-body"><p id="modalDescription"></p><div class="details-section" id="modalDetails"></div><div class="contact-info" id="modalContactInfo"></div></div><div class="modal-footer"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div></div></div>
+    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()">&times;</button><h2>ITQAN Portal</h2><p class="auth-subtitle">Login or Register to join the network</p><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-error"></div><form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="form-group"><label>Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Login</button></form><form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="form-group"><label>Full Name</label><input type="text" class="form-input" id="regName" required placeholder="Your Name"></div><div class="form-group"><label>Email</label><input type="email" class="form-input" id="regEmail" required placeholder="you@example.com"></div><div class="form-group"><label>Password (min 6 chars)</label><input type="password" class="form-input" id="regPassword" required placeholder="••••••••"></div><div class="form-group"><label>Select your Wing (Optional)</label><select class="form-input form-select" id="regWing"><option value="">-- General Member --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option></select></div><button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Register</button></form></div></div>
     <div class="dashboard-panel" id="userDashboard"><div class="dash-header"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button class="dash-close" onclick="closeDashboards()"><i class="fas fa-times"></i></button></div><div class="dash-body" id="dashBody"></div></div>
-    <div class="admin-overlay" id="adminPanel"><div class="admin-topbar"><h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3><button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button></div><div class="admin-body"><div class="stat-grid"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Total Users</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-tie"></i></div><div class="stat-value" id="totalCore">0</div><div class="stat-label">Core Committee</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-plane"></i></div><div class="stat-value" id="totalWings">0</div><div class="stat-label">Wing Leaders</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-value" id="totalMembers">0</div><div class="stat-label">Students</div></div></div><h3 style="color:var(--dark); margin-bottom:1rem;">Registered Members</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Wing</th><th>Action</th></tr></thead><tbody id="adminUserTable"></tbody></table></div></div></div>
+    <div class="admin-overlay" id="adminPanel"><div class="admin-topbar"><h3><i class="fas fa-user-shield"></i> Admin Control Panel</h3><button class="admin-close-btn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit Admin</button></div><div class="admin-body">
+        <div class="stat-grid"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Total Users</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-tie"></i></div><div class="stat-value" id="totalCore">0</div><div class="stat-label">Core Committee</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-plane"></i></div><div class="stat-value" id="totalWings">0</div><div class="stat-label">Wing Leaders</div></div><div class="stat-card"><div class="stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-value" id="totalMembers">0</div><div class="stat-label">Students</div></div></div>
+        
+        <!-- SPECIAL ADMIN TOOL -->
+        <div style="background: rgba(255,184,0,0.08); border: 1px dashed rgba(255,184,0,0.4); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-magic"></i> Quick Setup Tool</h3>
+            <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 1rem;">Create profiles for all 34 members listed on the website cards. They can claim their account later by registering with <code>firstname@itqan.org</code>.</p>
+            <button onclick="seedCardMembers()" class="btn btn-sm" style="background-color: var(--accent); color: #000;"><i class="fas fa-download"></i> Sync 34 Card Members to Database</button>
+        </div>
+
+        <h3 style="color:var(--dark); margin-bottom:1rem;">Registered Members</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Wing</th><th>Action</th></tr></thead><tbody id="adminUserTable"></tbody></table></div>
+    </div></div>
 
     <script>
         // ==========================================
-        // 🛑 STOP! READ THIS! 🛑
-        // You MUST paste your real Firebase Config below. 
-        // Go to Firebase Console > Project Settings > Your Apps > Config.
-        // If you leave "YOUR_API_KEY" as is, the login WILL NOT WORK.
+        // 1. FIREBASE CONFIG (REPLACE WITH YOURS!)
         // ==========================================
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
-  authDomain: "zenith-artsfest.firebaseapp.com",
-  projectId: "zenith-artsfest",
-  storageBucket: "zenith-artsfest.firebasestorage.app",
-  messagingSenderId: "506898514611",
-  appId: "1:506898514611:web:0ea13ddd075a020062e6c6",
-  measurementId: "G-MER952XSYP"
-};
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY", 
+            authDomain: "YOUR_PROJECT.firebaseapp.com", 
+            projectId: "YOUR_PROJECT_ID", 
+            storageBucket: "YOUR_PROJECT.appspot.com", 
+            messagingSenderId: "YOUR_SENDER_ID", 
+            appId: "YOUR_APP_ID"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         // ==========================================
-        // UI HELPERS & MOBILE MENU FIX
+        // 2. PREDEFINED CARD MEMBERS LIST
+        // ==========================================
+        const cardMembers = {
+            "hudaif@itqan.org": { name: "Sayed Hudaif", role: "core", wing: "Core Committee" },
+            "burhan@itqan.org": { name: "Sayed Burhan", role: "core", wing: "Core Committee" },
+            "zidan@itqan.org": { name: "Zidan", role: "core", wing: "Core Committee" },
+            "muhyudheen@itqan.org": { name: "Muhyudheen", role: "core", wing: "Core Committee" },
+            "mirsad@itqan.org": { name: "Mirsad", role: "core", wing: "Core Committee" },
+            "thanzeeh@itqan.org": { name: "Thanzeeh", role: "core", wing: "Core Committee" },
+            "shahzad@itqan.org": { name: "Shahzad", role: "core", wing: "Core Committee" },
+            "adnan@itqan.org": { name: "Adnan", role: "core", wing: "Core Committee" },
+            "rashad@itqan.org": { name: "Rashad", role: "core", wing: "Core Committee" },
+            "muhammedvk@itqan.org": { name: "Muhammed V.K", role: "wing", wing: "Urdu Wing" },
+            "hisham@itqan.org": { name: "Hisham", role: "wing", wing: "Urdu Wing" },
+            "mujeeb@itqan.org": { name: "Mujeeb", role: "wing", wing: "English Wing" },
+            "zameen@itqan.org": { name: "Zameen", role: "wing", wing: "English Wing" },
+            "naseem@itqan.org": { name: "Naseem", role: "wing", wing: "Arabic Wing" },
+            "razeen@itqan.org": { name: "Razeen", role: "wing", wing: "Arabic Wing" },
+            "rabeeh@itqan.org": { name: "Rabeeh", role: "wing", wing: "Malayalam Wing" },
+            "muzzammil@itqan.org": { name: "Muzzammil", role: "wing", wing: "Malayalam Wing" },
+            "ridhan@itqan.org": { name: "Ridhan", role: "wing", wing: "Song & Recitation" },
+            "muhammedu@itqan.org": { name: "Muhammed U", role: "wing", wing: "Maths Wing" },
+            "muhammedpp@itqan.org": { name: "Muhammed PP", role: "wing", wing: "Maths Wing" },
+            "ranif@itqan.org": { name: "Ranif", role: "wing", wing: "Art Wing" },
+            "razin@itqan.org": { name: "Razin", role: "wing", wing: "Library Wing" },
+            "zayin@itqan.org": { name: "Zayin", role: "wing", wing: "Geography Wing" },
+            "salah@itqan.org": { name: "Salah", role: "wing", wing: "Geography Wing" },
+            "fuadma@itqan.org": { name: "Fuad M.A", role: "wing", wing: "G.K Wing" },
+            "aslah@itqan.org": { name: "Aslah", role: "wing", wing: "G.K Wing" },
+            "shabeel@itqan.org": { name: "Shabeel", role: "wing", wing: "Science Wing" },
+            "muhaimin@itqan.org": { name: "Muhaimin", role: "wing", wing: "Science Wing" },
+            "fidyan@itqan.org": { name: "Fidyan", role: "wing", wing: "Publication Wing" },
+            "zarhan@itqan.org": { name: "Zarhan", role: "wing", wing: "Publication Wing" },
+            "muhammedsm@itqan.org": { name: "Muhammed S.M", role: "wing", wing: "Media Wing" },
+            "nuhman@itqan.org": { name: "Nuhman", role: "wing", wing: "Medical Wing" },
+            "abdurehman@itqan.org": { name: "Abdu Rahman", role: "wing", wing: "Medical Wing" },
+            "fuadhabeeb@itqan.org": { name: "Fuad Habeeb", role: "wing", wing: "Sports Wing" }
+        };
+
+        // ==========================================
+        // 3. UI HELPERS
         // ==========================================
         function showToast(message, type = 'info') { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerText = message; c.appendChild(t); setTimeout(() => t.remove(), 3500); }
-        
-        // Fixed Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('#navLinks a, #navLinks .auth-btn').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn'), navLinks = document.getElementById('navLinks');
+        mobileMenuBtn.addEventListener('click', () => { navLinks.classList.toggle('active'); mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>'; });
+        document.querySelectorAll('#navLinks a, #navLinks .auth-btn').forEach(link => { link.addEventListener('click', () => { navLinks.classList.remove('active'); mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>'; }); });
         document.getElementById('committeeHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('committeeGrid').classList.toggle('active'); });
         document.getElementById('subwingsHeader').addEventListener('click', function() { this.classList.toggle('active'); document.getElementById('subwingsGrid').classList.toggle('active'); });
 
-        function showProfile(name, position, description, photoUrl = '') { document.getElementById('modalTitle').textContent = name; document.getElementById('modalSubtitle').textContent = position; document.getElementById('modalDescription').textContent = description; const p = document.getElementById('modalPhoto'), pl = document.getElementById('photoPlaceholder'); if(photoUrl) { p.src = photoUrl; p.style.display = 'block'; pl.style.display = 'none'; } else { p.style.display = 'none'; pl.style.display = 'flex'; } document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${position.includes('Wing') ? 'Wing Leader' : 'Core Committee'}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Key Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li><li>Team management</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Contact</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
-        function showAbout(wingName, department, description) { document.getElementById('modalTitle').textContent = wingName; document.getElementById('modalSubtitle').textContent = department; document.getElementById('modalDescription').textContent = description; document.getElementById('modalPhoto').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'flex'; document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${wingName}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Key Activities</h4><ul><li>Regular meetings and workshops</li><li>Skill development programs</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Wing Info</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqanunion.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
+        function showProfile(name, position, description, photoUrl = '') { document.getElementById('modalTitle').textContent = name; document.getElementById('modalSubtitle').textContent = position; document.getElementById('modalDescription').textContent = description; const p = document.getElementById('modalPhoto'), pl = document.getElementById('photoPlaceholder'); if(photoUrl) { p.src = photoUrl; p.style.display = 'block'; pl.style.display = 'none'; } else { p.style.display = 'none'; pl.style.display = 'flex'; pl.innerHTML = '<span>' + name.split(' ').map(n => n[0]).join('').toUpperCase() + '</span>'; } document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${position.includes('Wing') ? 'Wing Leader' : 'Core Committee'}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li><li>Team management</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Contact</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${name.toLowerCase().replace(/\s+/g, '.')}@itqan.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
+        function showAbout(wingName, department, description) { document.getElementById('modalTitle').textContent = wingName; document.getElementById('modalSubtitle').textContent = department; document.getElementById('modalDescription').textContent = description; document.getElementById('modalPhoto').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'flex'; document.getElementById('photoPlaceholder').innerHTML = '<i class="fas fa-users"></i>'; document.getElementById('modalBadges').innerHTML = `<span class="wing-badge">${wingName}</span>`; document.getElementById('modalDetails').innerHTML = `<h4>Activities</h4><ul><li>Regular meetings</li><li>Skill development</li></ul>`; document.getElementById('modalContactInfo').innerHTML = `<h4>Wing Info</h4><div class="contact-item"><i class="fas fa-envelope"></i><span>${wingName.toLowerCase().replace(/\s+/g, '.')}@itqan.org</span></div>`; document.getElementById('profileModal').classList.add('active'); }
         function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
 
         // ==========================================
-        // AUTHENTICATION LOGIC
+        // 4. AUTH LOGIC (FIXED ADMIN BUG)
         // ==========================================
         let currentUserData = null;
         function openAuthModal(tab) { document.getElementById('authModal').classList.add('active'); document.getElementById('authError').classList.remove('show'); switchAuthTab(tab); }
         function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
         function switchAuthTab(tab) { document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active')); if(tab==='login'){ document.querySelectorAll('.auth-tab')[0].classList.add('active'); document.getElementById('loginForm').classList.add('active'); } else { document.querySelectorAll('.auth-tab')[1].classList.add('active'); document.getElementById('registerForm').classList.add('active'); } }
 
-        async function handleRegister(e) { e.preventDefault(); const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, password = document.getElementById('regPassword').value, wing = document.getElementById('regWing').value; const errorEl = document.getElementById('authError'); try { const cred = await auth.createUserWithEmailAndPassword(email, password); await db.collection('users').doc(cred.user.uid).set({ name, email, role: 'member', wing: wing || 'General', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); closeAuthModal(); showToast('Registration Successful! Welcome to ITQAN.', 'success'); } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); } }
+        async function handleRegister(e) {
+            e.preventDefault();
+            const regName = document.getElementById('regName').value;
+            const regEmail = document.getElementById('regEmail').value;
+            const regPassword = document.getElementById('regPassword').value;
+            const regWing = document.getElementById('regWing').value || 'General';
+            const errorEl = document.getElementById('authError');
+            
+            try {
+                // 1. Check if this is the first user BEFORE creating the auth account
+                const usersSnapshot = await db.collection('users').limit(1).get();
+                const isFirstUser = usersSnapshot.empty;
+                
+                // 2. Create Auth Account
+                const cred = await auth.createUserWithEmailAndPassword(regEmail, regPassword);
+                
+                // 3. Determine Role & Name
+                let role = 'member';
+                let name = regName;
+                let wing = regWing;
+                
+                // Check if they registered with a predefined "Card Member" email
+                const emailKey = regEmail.toLowerCase();
+                if (cardMembers[emailKey]) {
+                    role = cardMembers[emailKey].role;
+                    name = cardMembers[emailKey].name;
+                    wing = cardMembers[emailKey].wing;
+                    showToast(`Welcome ${name}! Your card profile has been linked.`, 'success');
+                } 
+                // Override to Admin if they are the very first user
+                else if (isFirstUser) {
+                    role = 'admin';
+                    wing = 'All';
+                    showToast('First user detected! You are now the Admin.', 'info');
+                }
+                
+                // 4. Save to Firestore securely
+                await db.collection('users').doc(cred.user.uid).set({
+                    name, email: regEmail, role, wing, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                closeAuthModal();
+                showToast('Registration Successful!', 'success');
+            } catch (err) {
+                errorEl.innerText = err.message;
+                errorEl.classList.add('show');
+            }
+        }
+
         async function handleLogin(e) { e.preventDefault(); const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value, errorEl = document.getElementById('authError'); try { await auth.signInWithEmailAndPassword(email, password); closeAuthModal(); showToast('Logged in successfully!', 'success'); } catch (err) { errorEl.innerText = err.message; errorEl.classList.add('show'); } }
         function handleLogout() { auth.signOut(); closeDashboards(); closeAdminPanel(); showToast('You have been logged out.', 'info'); }
 
         auth.onAuthStateChanged(async (user) => { const authArea = document.getElementById('authArea'); if (user) { const doc = await db.collection('users').doc(user.uid).get(); if (doc.exists) { currentUserData = doc.data(); const initials = currentUserData.name.split(' ').map(n => n[0]).join('').toUpperCase(); authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="user-avatar-sm">${initials}</div>${currentUserData.name.split(' ')[0]}</button>`; } else { authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><i class="fas fa-user"></i> Account</button>`; } } else { currentUserData = null; authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`; } });
 
         // ==========================================
-        // USER DASHBOARD & ADMIN LOGIC
+        // 5. DASHBOARD & ADMIN LOGIC
         // ==========================================
         function openDashboard() { if(!currentUserData) return showToast('Error loading profile data.', 'error'); document.getElementById('userDashboard').classList.add('open'); document.getElementById('overlayDim').classList.add('active'); const data = currentUserData, initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase(), isAdmin = data.role === 'admin'; const roleLabel = data.role === 'admin' ? 'Administrator' : (data.role === 'core' ? 'Core Committee' : (data.role === 'wing' ? 'Wing Leader' : 'Student Member')); document.getElementById('dashBody').innerHTML = `<div class="dash-profile-card"><div class="dash-avatar">${initials}</div><div class="dash-name">${data.name}</div><div class="dash-position">${roleLabel}</div>${data.wing ? `<div class="dash-wing-tag">${data.wing}</div>` : ''}</div><div class="dash-section"><h4><i class="fas fa-id-card"></i> Profile Details</h4><div class="dash-info-row"><span class="dash-info-label">Email</span><span class="dash-info-value">${data.email}</span></div><div class="dash-info-row"><span class="dash-info-label">Role</span><span class="dash-info-value">${roleLabel}</span></div><div class="dash-info-row"><span class="dash-info-label">Wing</span><span class="dash-info-value">${data.wing || 'N/A'}</span></div></div><div class="dash-actions">${isAdmin ? `<button class="dash-action-btn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Open Admin Panel</button>` : ''}<button class="dash-action-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444;"></i> Logout</button></div>`; }
         function closeDashboards() { document.getElementById('userDashboard').classList.remove('open'); document.getElementById('overlayDim').classList.remove('active'); }
@@ -452,8 +516,24 @@ const firebaseConfig = {
         async function loadAdminData() { try { const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get(); let users = []; snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() })); document.getElementById('totalUsers').innerText = users.length; document.getElementById('totalCore').innerText = users.filter(u => u.role === 'core' || u.role === 'admin').length; document.getElementById('totalWings').innerText = users.filter(u => u.role === 'wing').length; document.getElementById('totalMembers').innerText = users.filter(u => u.role === 'member').length; const tbody = document.getElementById('adminUserTable'); tbody.innerHTML = ''; users.forEach(u => { const roleClass = u.role === 'admin' ? 'admin' : (u.role === 'core' ? 'core' : (u.role === 'wing' ? 'wing' : 'member')); const roleName = u.role === 'admin' ? 'Admin' : (u.role === 'core' ? 'Core' : (u.role === 'wing' ? 'Wing L.' : 'Student')); tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="role-badge ${roleClass}">${roleName}</span></td><td>${u.wing || 'N/A'}</td><td><select class="form-input form-select" onchange="updateRole('${u.id}', this.value)" style="font-size:0.8rem; padding:5px; width:110px;"><option value="member" ${u.role==='member'?'selected':''}>Student</option><option value="wing" ${u.role==='wing'?'selected':''}>Wing Leader</option><option value="core" ${u.role==='core'?'selected':''}>Core</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select></td></tr>`; }); } catch (err) { console.error(err); showToast('Failed to load admin data.', 'error'); } }
         async function updateRole(uid, newRole) { try { await db.collection('users').doc(uid).update({ role: newRole }); showToast('User role updated!', 'success'); loadAdminData(); } catch(err) { showToast('Error updating role.', 'error'); } }
         
-        // Auto-make first user Admin
-        auth.onAuthStateChanged(async (user) => { if (user) { const docRef = db.collection('users').doc(user.uid); const doc = await docRef.get(); if (!doc.exists) { const snapshot = await db.collection('users').get(); if(snapshot.size === 0) { await db.collection('users').doc(user.uid).set({ name: user.email.split('@')[0], email: user.email, role: 'admin', wing: 'All', createdAt: firebase.firestore.FieldValue.serverTimestamp() }); showToast('First user detected! You are now Admin.', 'info'); } } } });
+        // SPECIAL ADMIN TOOL: Sync Card Members
+        async function seedCardMembers() {
+            if(!confirm('This will create 34 profiles for the members listed on your website cards. Continue?')) return;
+            try {
+                const batch = db.batch();
+                let count = 0;
+                for (const [email, data] of Object.entries(cardMembers)) {
+                    const docRef = db.collection('users').doc(email); // Use email as ID for easy lookup
+                    batch.set(docRef, { ...data, email: email, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                    count++;
+                }
+                await batch.commit();
+                showToast(`Successfully synced ${count} card member profiles!`, 'success');
+                loadAdminData();
+            } catch (err) {
+                showToast('Error syncing members: ' + err.message, 'error');
+            }
+        }
     </script>
 </body>
 </html>
