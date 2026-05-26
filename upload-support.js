@@ -53,8 +53,31 @@
     const stamp = Date.now();
     const name = slug(file.name);
     const ref = getStorage().ref(`${folder}/${stamp}-${name}`);
-    const task = await ref.put(file, { contentType: file.type });
-    return task.ref.getDownloadURL();
+    const task = ref.put(file, { contentType: file.type });
+
+    const snapshot = await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        try {
+          task.cancel();
+        } catch (error) {}
+        reject(new Error("Upload timed out. Check Firebase Storage rules and bucket setup."));
+      }, 45000);
+
+      task.on(
+        "state_changed",
+        null,
+        (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        },
+        () => {
+          clearTimeout(timeout);
+          resolve(task.snapshot);
+        }
+      );
+    });
+
+    return snapshot.ref.getDownloadURL();
   }
 
   function setBusy(selector, busy, text) {
