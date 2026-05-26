@@ -709,6 +709,8 @@
     async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
     </script>
+    
     <script src="upload-support.js"></script>
+    <script src="login-state-fix.js"></script>
 </body>
 </html>
