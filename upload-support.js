@@ -1,58 +1,21 @@
-/*
-  ITQAN upload support
-  Include this file after your existing page script, and add the
-  firebase-storage-compat.js script before your page script.
-*/
-(function () {
-  if (!window.firebase || !firebase.storage) {
-    console.error("Firebase Storage is not loaded. Add firebase-storage-compat.js first.");
-    return;
-  }
-
-  const storage = firebase.storage();
-  const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
-  const MAX_PDF_SIZE = 30 * 1024 * 1024;
-
-  function slug(value) {
-    return String(value || "file")
-      .toLowerCase()
-      .replace(/[^a-z0-9._-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-
-  function replaceUrlInput(id, label, accept) {
-    const oldInput = document.getElementById(id);
-    if (!oldInput) return null;
-
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.className = oldInput.className;
-    fileInput.id = id;
-    fileInput.accept = accept;
-    if (oldInput.required) fileInput.required = true;
-    fileInput.setAttribute("aria-label", label);
-    oldInput.replaceWith(fileInput);
-    return fileInput;
-  }
-
-  function setLabelText(inputId, text) {
-    const input = document.getElementById(inputId);
-    const label = input && input.closest(".fg") && input.closest(".fg").querySelector("label");
-    if (label) label.textContent = text;
-  }
-
-  async function uploadFile(file, folder, maxSize, allowedTypes) {
-    if (!file) throw new Error("Please choose a file.");
-    if (file.size > maxSize) throw new Error("File is too large.");
-    if (allowedTypes && !allowedTypes.some((type) => file.type.startsWith(type))) {
-      throw new Error("Unsupported file type.");
-    }
-
     const stamp = Date.now();
     const name = slug(file.name);
     const ref = storage.ref(`${folder}/${stamp}-${name}`);
     const task = await ref.put(file, { contentType: file.type });
     return task.ref.getDownloadURL();
+  }
+
+  function setBusy(selector, busy, text) {
+    const button = document.querySelector(selector);
+    if (!button) return;
+    if (busy) {
+      button.dataset.oldText = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+    } else {
+      button.disabled = false;
+      if (button.dataset.oldText) button.innerHTML = button.dataset.oldText;
+    }
   }
 
   function installUploadFields() {
@@ -66,11 +29,12 @@
     replaceUrlInput("magPdfUrl", "Upload publication file", "application/pdf,image/*");
   }
 
-  window.addGalleryItem = async function addGalleryItem() {
+  async function addGalleryUploadItem() {
     const file = document.getElementById("galImageUrl")?.files?.[0];
     const cap = document.getElementById("galCaption")?.value.trim() || "";
 
     try {
+      setBusy("#addGalleryForm .btn", true, "Uploading...");
       const imageUrl = await uploadFile(file, "gallery", MAX_IMAGE_SIZE, ["image/"]);
       await db.collection("gallery").add({
         imageUrl,
@@ -85,11 +49,14 @@
       loadAdminGallery();
       loadPublicGallery();
     } catch (e) {
-      showToast(e.message || "Upload failed.", "error");
+      console.error("Gallery upload failed:", e);
+      showToast(e.message || e.code || "Upload failed.", "error");
+    } finally {
+      setBusy("#addGalleryForm .btn", false);
     }
-  };
+  }
 
-  window.addMagItem = async function addMagItem() {
+  async function addMagazineUploadItem() {
     const type = document.getElementById("magType").value;
     const title = document.getElementById("magTitle").value.trim();
     const coverFile = document.getElementById("magCover")?.files?.[0];
@@ -102,6 +69,7 @@
     }
 
     try {
+      setBusy("#addMagForm .btn", true, "Uploading...");
       const coverUrl = await uploadFile(coverFile, "publication-covers", MAX_IMAGE_SIZE, ["image/"]);
       const pdfUrl = pubFile
         ? await uploadFile(pubFile, "publications", MAX_PDF_SIZE, ["application/pdf", "image/"])
@@ -125,9 +93,12 @@
       loadAdminMags();
       loadPublicMags();
     } catch (e) {
-      showToast(e.message || "Upload failed.", "error");
+      console.error("Publication upload failed:", e);
+      showToast(e.message || e.code || "Upload failed.", "error");
+    } finally {
+      setBusy("#addMagForm .btn", false);
     }
-  };
+  }
 
   const originalRenderPublicGallery = window.renderPublicGallery;
   window.renderPublicGallery = function renderPublicGallery() {
@@ -164,6 +135,19 @@
   };
 
   function boot() {
+    window.addGalleryItem = addGalleryUploadItem;
+    window.addMagItem = addMagazineUploadItem;
+
+    const galleryButton = document.querySelector("#addGalleryForm .btn");
+    if (galleryButton) {
+      galleryButton.onclick = addGalleryUploadItem;
+    }
+
+    const magButton = document.querySelector("#addMagForm .btn");
+    if (magButton) {
+      magButton.onclick = addMagazineUploadItem;
+    }
+
     installUploadFields();
     if (typeof loadPublicGallery === "function") loadPublicGallery();
     if (typeof loadPublicMags === "function") loadPublicMags();
