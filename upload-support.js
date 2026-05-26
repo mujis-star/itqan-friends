@@ -61,11 +61,17 @@
           task.cancel();
         } catch (error) {}
         reject(new Error("Upload timed out. Check Firebase Storage rules and bucket setup."));
-      }, 45000);
+      }, 20000);
 
       task.on(
         "state_changed",
-        null,
+        (snapshot) => {
+          const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          const galleryButton = document.querySelector("#addGalleryForm .btn");
+          const magButton = document.querySelector("#addMagForm .btn");
+          const activeButton = galleryButton?.disabled ? galleryButton : magButton?.disabled ? magButton : null;
+          if (activeButton) activeButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Uploading ${percent}%`;
+        },
         (error) => {
           clearTimeout(timeout);
           reject(error);
