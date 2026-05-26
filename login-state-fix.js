@@ -47,14 +47,36 @@
       hasAuth: true,
     };
 
-    if (!window.db) return fallback;
+    if (typeof db === "undefined") return fallback;
 
     try {
-      const doc = await db.collection("users").doc(user.uid).get();
-      if (doc.exists) return { ...fallback, ...doc.data() };
+      const userRef = db.collection("users").doc(user.uid);
+      const doc = await userRef.get();
+      if (doc.exists) return { ...fallback, ...doc.data(), hasAuth: true };
 
       const query = await db.collection("users").where("username", "==", username).limit(1).get();
-      if (!query.empty) return { ...fallback, ...query.docs[0].data() };
+      if (!query.empty) {
+        const linkedProfile = { ...fallback, ...query.docs[0].data(), hasAuth: true };
+        await userRef.set(linkedProfile, { merge: true });
+        return linkedProfile;
+      }
+
+      const adminQuery = await db.collection("users").where("role", "==", "admin").limit(1).get();
+      const firstAdminProfile = {
+        ...fallback,
+        name: fallback.name.charAt(0).toUpperCase() + fallback.name.slice(1),
+        role: adminQuery.empty ? "admin" : "member",
+        wing: adminQuery.empty ? "All" : "General",
+        hasAuth: true,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      await userRef.set(firstAdminProfile, { merge: true });
+      if (adminQuery.empty && typeof showToast === "function") {
+        showToast("First logged-in user is now Admin.", "success");
+      }
+
+      return firstAdminProfile;
     } catch (error) {
       console.error("Could not read user profile:", error);
       if (typeof showToast === "function") {
