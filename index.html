@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <style>
         :root{--cyan:#00F0FF;--cyan-d:#00B8D4;--pink:#FF3366;--pink-d:#E62E5C;--gold:#FFB800;--text:#E8ECF4;--muted:#8892A8;--dim:#3A4055;--s0:#060810;--s1:#0C0F1A;--s2:#121626;--s3:#1A1F33;--s4:#232940;--glass:rgba(255,255,255,.03);--glass-b:rgba(255,255,255,.06);--glass-h:rgba(255,255,255,.09);--br:14px;--br-lg:20px;--tr:all .45s cubic-bezier(.22,1,.36,1)}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -708,5 +709,6 @@
     async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
     </script>
+    <script src="upload-support.js"></script>
 </body>
 </html>
