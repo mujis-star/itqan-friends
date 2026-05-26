@@ -710,7 +710,7 @@
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
     </script>
     
-    <script src="upload-support.js?v=4"></script>
+    <script src="upload-support.js?v=5"></script>
     <script src="login-state-fix.js"></script>
 </body>
 </html>
