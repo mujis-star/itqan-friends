@@ -22,6 +22,33 @@
       .replace(/^-+|-+$/g, "");
   }
 
+  function imageFileToDataUrl(file, maxWidth = 1600, quality = 0.78) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Could not read image file."));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("Could not load image file."));
+        img.onload = () => {
+          const scale = Math.min(1, maxWidth / img.width);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL("image/jpeg", quality);
+          if (dataUrl.length > 950000) {
+            reject(new Error("Image is too large. Please choose a smaller image."));
+            return;
+          }
+          resolve(dataUrl);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   function replaceUrlInput(id, label, accept) {
     const oldInput = document.getElementById(id);
     if (!oldInput) return null;
@@ -48,6 +75,14 @@
     if (file.size > maxSize) throw new Error("File is too large.");
     if (allowedTypes && !allowedTypes.some((type) => file.type.startsWith(type))) {
       throw new Error("Unsupported file type.");
+    }
+
+    if (file.type.startsWith("image/")) {
+      return imageFileToDataUrl(file);
+    }
+
+    if (folder === "publications") {
+      throw new Error("PDF upload needs Firebase Storage. For now, use an online PDF link.");
     }
 
     const stamp = Date.now();
