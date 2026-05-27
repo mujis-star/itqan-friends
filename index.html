@@ -35,6 +35,17 @@
         .amb-3{width:400px;height:400px;background:rgba(255,184,0,.025);top:50%;left:40%;animation:ambDrift 35s ease-in-out infinite 5s}
         @keyframes ambDrift{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,50px)}}
 
+        /* Simple CSS for the scroll animation */
+.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid, .sec-title {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
 
 /* Ensure smooth scrolling on desktop */
 html {
@@ -1034,18 +1045,24 @@ section {
     async function addMagItem(){const type=document.getElementById('magType').value,title=document.getElementById('magTitle').value.trim(),cover=document.getElementById('magCover').value.trim(),pdf=document.getElementById('magPdfUrl').value.trim(),desc=document.getElementById('magDesc').value.trim();if(!title||!cover){showToast('Title and Cover Image are required.','error');return}try{await db.collection('magazines').add({type,title,coverUrl:cover,pdfUrl:pdf,description:desc,uploadedBy:currentUserData?.name||'Admin',createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('magTitle').value='';document.getElementById('magCover').value='';document.getElementById('magPdfUrl').value='';document.getElementById('magDesc').value='';showToast('Publication added!','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error: '+e.message,'error')}}
     async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
-    
-    // ===== SIMPLE SCROLL ANIMATIONS - NO STUTTERING =====
+    // ===== LIGHTWEIGHT SCROLL ANIMATION - NO STUTTER =====
 (function initScrollAnimations() {
-    // Simple fade-in on scroll - lightweight
-    const elements = document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item, .sec-title, .media-tabs, .ft-col');
+    // Select only the main elements, not every card
+    const elements = document.querySelectorAll('.sec-title, .feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid');
     
-    // Add initial class
-    elements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    });
+    // Simple Intersection Observer with a larger threshold
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add a simple class instead of inline styles
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target); // Stop observing once animated
+            }
+        });
+    }, { threshold: 0.2 }); // Only animate when 20% is visible
+
+    elements.forEach(el => observer.observe(el));
+})();
     
     // Intersection Observer with larger threshold for smoother trigger
     const observer = new IntersectionObserver((entries) => {
