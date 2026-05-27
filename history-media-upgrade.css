@@ -1,0 +1,298 @@
+/* ITQAN Media Hub modal + History redesign */
+
+.media-hub {
+  padding: 5rem 0 4rem;
+}
+
+.media-hub.itqan-media-upgraded .media-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 720px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.media-hub.itqan-media-upgraded .media-tab {
+  min-height: 94px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(18, 22, 38, 0.96), rgba(6, 8, 16, 0.9));
+  color: var(--text);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.media-hub.itqan-media-upgraded .media-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 0%, rgba(0, 240, 255, 0.18), transparent 44%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.media-hub.itqan-media-upgraded .media-tab:hover::before {
+  opacity: 1;
+}
+
+.media-hub.itqan-media-upgraded .media-tab i,
+.media-hub.itqan-media-upgraded .media-tab span {
+  position: relative;
+  z-index: 1;
+}
+
+.media-hub.itqan-media-upgraded .media-tab.active {
+  color: var(--text);
+}
+
+.media-hub.itqan-media-upgraded .media-panel {
+  display: none !important;
+}
+
+.itqan-media-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5800;
+  background: rgba(0, 0, 0, 0.84);
+  backdrop-filter: blur(14px);
+  padding: 28px;
+}
+
+.itqan-media-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itqan-media-shell {
+  width: min(1120px, 96vw);
+  max-height: min(84vh, 860px);
+  background: linear-gradient(145deg, rgba(18, 22, 38, 0.98), rgba(6, 8, 16, 0.98));
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58);
+}
+
+.itqan-media-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.itqan-media-head h3 {
+  margin: 0;
+  color: var(--cyan);
+  font-size: 1.05rem;
+}
+
+.itqan-media-close {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  transition: 0.25s ease;
+}
+
+.itqan-media-close:hover {
+  color: #fff;
+  background: var(--pink);
+}
+
+.itqan-media-body {
+  max-height: calc(min(84vh, 860px) - 72px);
+  overflow: auto;
+  padding: 1.25rem;
+}
+
+.itqan-history-wrap {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.itqan-history-hero {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 1rem;
+  padding: 1.35rem;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(0, 240, 255, 0.12), transparent 36%),
+    linear-gradient(135deg, rgba(18, 22, 38, 0.95), rgba(6, 8, 16, 0.92));
+  border: 1px solid rgba(0, 240, 255, 0.16);
+}
+
+.itqan-history-kicker {
+  color: var(--gold);
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.itqan-history-hero h3 {
+  margin: 0.35rem 0 0.4rem;
+  color: var(--text);
+  font-size: clamp(1.25rem, 3vw, 2rem);
+}
+
+.itqan-history-hero p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  max-width: 62ch;
+}
+
+.itqan-history-stat {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.12);
+}
+
+.itqan-history-stat strong {
+  color: var(--cyan);
+  font-size: 2rem;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.itqan-history-stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.itqan-year-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(18, 22, 38, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.itqan-year-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  background: linear-gradient(90deg, rgba(255, 184, 0, 0.12), rgba(0, 240, 255, 0.04));
+  border-left: 4px solid var(--gold);
+}
+
+.itqan-year-head h4 {
+  margin: 0;
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.itqan-pill {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--s0);
+  background: var(--cyan);
+}
+
+.itqan-pill.previous {
+  color: var(--gold);
+  background: rgba(255, 184, 0, 0.1);
+  border: 1px solid rgba(255, 184, 0, 0.18);
+}
+
+.itqan-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.itqan-role-card {
+  min-height: 86px;
+  padding: 0.9rem;
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(35, 41, 64, 0.82), rgba(18, 22, 38, 0.86));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.itqan-role-card span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cyan);
+  font-size: 0.62rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.itqan-role-card strong {
+  color: var(--text);
+  font-size: 0.96rem;
+}
+
+.itqan-history-subhead {
+  margin: 0 1rem 0.75rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  color: var(--cyan);
+  font-weight: 800;
+  background: rgba(0, 240, 255, 0.06);
+  border-left: 3px solid var(--cyan);
+}
+
+.itqan-achievements {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+  padding: 0 1rem 1rem;
+}
+
+.itqan-achievement {
+  padding: 0.9rem;
+  border-radius: 14px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 768px) {
+  .media-hub.itqan-media-upgraded .media-tabs,
+  .itqan-history-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .itqan-media-modal {
+    padding: 12px;
+  }
+
+  .itqan-media-shell {
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 16px;
+  }
+
+  .itqan-media-body {
+    max-height: calc(90vh - 70px);
+    padding: 1rem;
+  }
+
+  .itqan-year-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
