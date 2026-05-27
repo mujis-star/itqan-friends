@@ -959,11 +959,31 @@ section {
     <div class="admin-ov" id="adminPanel">
         <div class="admin-tb"><h3><i class="fas fa-user-shield"></i> Admin Panel</h3><button class="admin-xbtn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
         <div class="admin-bd">
-            <div class="admin-tabs"><button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button><button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button><button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button><button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button></div>
+            <div class="admin-tabs"><button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button><button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button><button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button><button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button> <button class="admin-tbtn" onclick="switchAdminTab('cards')"><i class="fas fa-edit"></i> Edit Cards</button></div>
             <div class="admin-tc active" id="adminTabOverview"><div class="stat-grid"><div class="stat-card"><div class="si"><i class="fas fa-users"></i></div><div class="sv" id="totalUsers">0</div><div class="sl">Total</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-tie"></i></div><div class="sv" id="totalCore">0</div><div class="sl">Core</div></div><div class="stat-card"><div class="si"><i class="fas fa-plane"></i></div><div class="sv" id="totalWings">0</div><div class="sl">Wings</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-graduate"></i></div><div class="sv" id="totalMembers">0</div><div class="sl">Students</div></div></div><div style="background:rgba(255,184,0,.04);border:1px dashed rgba(255,184,0,.2);border-radius:10px;padding:1.2rem;margin-bottom:1.5rem"><h3 style="color:var(--gold);font-size:.95rem;margin-bottom:.4rem"><i class="fas fa-magic"></i> Quick Tools</h3><p style="color:var(--muted);font-size:.78rem;margin-bottom:.8rem">Sync 34 card members or promote yourself.</p><div style="display:flex;gap:.8rem;flex-wrap:wrap"><button onclick="seedCardMembers()" class="btn btn-sm btn-warning"><i class="fas fa-download"></i> Sync 34 Members</button><button onclick="claimAdminRole()" class="btn btn-sm btn-danger"><i class="fas fa-user-shield"></i> Make Me Admin</button></div></div><h3 style="color:var(--text);margin-bottom:.8rem;font-size:.95rem">Recent Members</h3><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Wing</th></tr></thead><tbody id="overviewUserTable"></tbody></table></div></div>
             <div class="admin-tc" id="adminTabStudents"><div class="stu-tb"><h3><i class="fas fa-user-graduate" style="color:var(--cyan);margin-right:6px"></i> Manage Students</h3><div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><div class="sbox"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search..." oninput="filterStudents()"></div><button class="btn btn-sm btn-success" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add</button></div></div><div class="cred-disp" id="credentialsDisplay"><h4><i class="fas fa-check-circle"></i> Account Created!</h4><p>Share these credentials with the student.</p><div class="cred-box"><div class="cred-row"><span class="cred-lbl">Name</span><span class="cred-val" id="credName"></span></div><div class="cred-row"><span class="cred-lbl">Username</span><span class="cred-val" id="credUsername"></span></div><div class="cred-row"><span class="cred-lbl">Password</span><span class="cred-val" id="credPassword"></span></div><div class="cred-row"><span class="cred-lbl">Role</span><span class="cred-val" id="credRole"></span></div></div><div class="cred-acts"><button class="btn btn-sm btn-cyan" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy All</button><button class="btn btn-sm btn-outline" onclick="closeCredDisplay()">Close</button></div></div><div class="add-form" id="addUserForm"><h4><i class="fas fa-user-plus"></i> Add Student</h4><div class="afg"><div class="fg"><label>Full Name *</label><input type="text" class="fi" id="addName" required placeholder="e.g., Ahmed Khan"></div><div class="fg"><label>Username *</label><input type="text" class="fi" id="addUsername" required placeholder="e.g., ahmedkhan" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9]/g,'')"></div><div class="fg"><label>Password *</label><div class="pw-row"><input type="text" class="fi" id="addPassword" required placeholder="Min 6 chars" style="flex:1"><button type="button" class="pw-btn" onclick="generatePassword()"><i class="fas fa-random"></i> Gen</button></div></div><div class="fg"><label>Role</label><select class="fi fsel" id="addRole"><option value="member">Student</option><option value="wing">Wing Leader</option><option value="core">Core</option><option value="admin">Admin</option></select></div><div class="fg"><label>Wing</label><select class="fi fsel" id="addWing"><option value="">-- None --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option><option>Core Committee</option></select></div></div><div style="display:flex;gap:.5rem"><button type="button" class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Create</button><button type="button" class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button></div></div><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Role</th><th>Wing</th><th>Change Role</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody>追赶<div class="no-users" id="noStudentsMsg" style="display:none"><i class="fas fa-user-slash"></i><p>No students found.</p></div></div></div>
             <div class="admin-tc" id="adminTabGallery"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-images" style="color:var(--cyan);margin-right:8px"></i> Manage Gallery</h3><div class="add-form active" id="addGalleryForm" style="display:block;border-color:rgba(0,240,255,.15)"><h4 style="color:var(--cyan)"><i class="fas fa-cloud-upload-alt"></i> Add Photo</h4><div class="afg"><div class="fg"><label>Image URL *</label><input type="url" class="fi" id="galImageUrl" required placeholder="https://i.imgur.com/..."></div><div class="fg"><label>Caption</label><input type="text" class="fi" id="galCaption" placeholder="Describe the photo"></div></div><button type="button" class="btn btn-sm btn-cyan" onclick="addGalleryItem()"><i class="fas fa-plus"></i> Add Photo</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--cyan);margin-right:6px"></i> Existing Photos (<span id="galCount">0</span>)</h4><div class="adm-il" id="adminGalleryList"></div></div>
             <div class="admin-tc" id="adminTabMagazines"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-newspaper" style="color:var(--pink);margin-right:8px"></i> Manage Magazines & Tabloids</h3><div class="add-form active" id="addMagForm" style="display:block;border-color:rgba(255,51,102,.15)"><h4 style="color:var(--pink)"><i class="fas fa-plus-circle"></i> Add Publication</h4><div class="afg"><div class="fg"><label>Type</label><select class="fi fsel" id="magType"><option value="magazine">Magazine</option><option value="tabloid">Tabloid</option></select></div><div class="fg"><label>Title *</label><input type="text" class="fi" id="magTitle" required placeholder="e.g., ITQAN Monthly Issue 1"></div><div class="fg"><label>Cover Image URL *</label><input type="url" class="fi" id="magCover" required placeholder="https://..."></div><div class="fg"><label>PDF / View URL</label><input type="url" class="fi" id="magPdfUrl" placeholder="Link to view online (optional)"></div><div class="fg"><label>Description</label><textarea class="fi" id="magDesc" placeholder="Brief description..." rows="2" style="resize:vertical"></textarea></div></div><button type="button" class="btn btn-sm btn-pink" onclick="addMagItem()"><i class="fas fa-plus"></i> Add Publication</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--pink);margin-right:6px"></i> Publications (<span id="magCount">0</span>)</h4><div class="adm-il" id="adminMagList"></div></div>
+            <div class="admin-tc" id="adminTabCards">
+    <h3 style="color:var(--text); margin-bottom:1rem">
+        <i class="fas fa-edit" style="color:var(--gold); margin-right:8px"></i> 
+        Edit Cards (Core Committee & Wings)
+    </h3>
+    
+    <!-- Core Committee Cards -->
+    <div style="margin-bottom: 2rem;">
+        <h4 style="color:var(--cyan); margin-bottom: 1rem;"><i class="fas fa-user-tie"></i> Executive Core Committee</h4>
+        <div id="coreCardsList" class="adm-il"></div>
+        <button class="btn btn-sm btn-cyan" onclick="addCoreCard()" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> Add Core Member</button>
+    </div>
+    
+    <!-- Wings Cards -->
+    <div style="margin-bottom: 2rem;">
+        <h4 style="color:var(--pink); margin-bottom: 1rem;"><i class="fas fa-sitemap"></i> Specialized Sub-Wings</h4>
+        <div id="wingsCardsList" class="adm-il"></div>
+        <button class="btn btn-sm btn-pink" onclick="addWingCard()" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> Add Wing</button>
+    </div>
+</div>
         </div>
     </div>
 
@@ -1477,6 +1497,314 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+        // ===== MOUSE GLOW EFFECT FOR CARDS =====
+(function initMouseGlow() {
+    // Target all cards that should have the glow effect
+    const cards = document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card');
+    
+    function updateGlow(e, card) {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+    }
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            updateGlow(e, card);
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--mouse-x', '50%');
+            card.style.setProperty('--mouse-y', '50%');
+        });
+    });
+})();
+
+
+
+        // ===== CARD MANAGEMENT SYSTEM =====
+let coreCardsData = [];
+let wingsCardsData = [];
+
+// Load cards from Firestore
+async function loadCardsData() {
+    try {
+        // Load core cards
+        const coreSnapshot = await db.collection('coreCards').orderBy('order', 'asc').get();
+        coreCardsData = [];
+        coreSnapshot.forEach(doc => coreCardsData.push({ id: doc.id, ...doc.data() }));
+        
+        // Load wing cards
+        const wingsSnapshot = await db.collection('wingCards').orderBy('order', 'asc').get();
+        wingsCardsData = [];
+        wingsSnapshot.forEach(doc => wingsCardsData.push({ id: doc.id, ...doc.data() }));
+        
+        renderCoreCardsList();
+        renderWingsCardsList();
+        renderCoreCardsHTML();
+        renderWingsCardsHTML();
+    } catch (e) {
+        console.error('Load cards error:', e);
+        // If no data, use default data
+        if (coreCardsData.length === 0) seedDefaultCards();
+    }
+}
+
+// Render admin list for core cards
+function renderCoreCardsList() {
+    const container = document.getElementById('coreCardsList');
+    if (!container) return;
+    
+    if (coreCardsData.length === 0) {
+        container.innerHTML = '<div class="gallery-empty"><i class="fas fa-user-slash"></i><p>No core members yet. Click "Add Core Member" to create one.</p></div>';
+        return;
+    }
+    
+    container.innerHTML = coreCardsData.map(card => `
+        <div class="adm-ir" style="justify-content: space-between;">
+            <div class="adm-ii">
+                <h4><strong>${card.name}</strong> - ${card.role}</h4>
+                <p>${card.description || 'No description'}</p>
+                <small style="color: var(--muted);">Icon: ${card.icon || 'fa-user'}</small>
+            </div>
+            <div class="adm-ia">
+                <button class="btn btn-sm btn-cyan" onclick="editCoreCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-edit"></i></button>
+                <button class="del-btn" onclick="deleteCoreCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Render admin list for wing cards
+function renderWingsCardsList() {
+    const container = document.getElementById('wingsCardsList');
+    if (!container) return;
+    
+    if (wingsCardsData.length === 0) {
+        container.innerHTML = '<div class="gallery-empty"><i class="fas fa-layer-group"></i><p>No wings yet. Click "Add Wing" to create one.</p></div>';
+        return;
+    }
+    
+    container.innerHTML = wingsCardsData.map(card => `
+        <div class="adm-ir" style="justify-content: space-between;">
+            <div class="adm-ii">
+                <h4><strong>${card.name}</strong> (${card.type || 'Wing'})</h4>
+                <p>${card.description || 'No description'}</p>
+                <small style="color: var(--muted);">Chair: ${card.chairman || 'N/A'} | Convener: ${card.convener || 'N/A'}</small>
+            </div>
+            <div class="adm-ia">
+                <button class="btn btn-sm btn-pink" onclick="editWingCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-edit"></i></button>
+                <button class="del-btn" onclick="deleteWingCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Add Core Card Modal
+function addCoreCard() {
+    const name = prompt('Enter member name:');
+    if (!name) return;
+    const role = prompt('Enter role (e.g., President, Secretary):');
+    if (!role) return;
+    const description = prompt('Enter description:');
+    const icon = prompt('Enter icon class (e.g., fa-crown, fa-user-tie):', 'fa-user');
+    
+    db.collection('coreCards').add({
+        name: name,
+        role: role,
+        description: description || 'No description',
+        icon: icon || 'fa-user',
+        order: coreCardsData.length,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        showToast('Core member added!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+function editCoreCard(id) {
+    const card = coreCardsData.find(c => c.id === id);
+    if (!card) return;
+    
+    const name = prompt('Edit name:', card.name);
+    if (!name) return;
+    const role = prompt('Edit role:', card.role);
+    const description = prompt('Edit description:', card.description);
+    const icon = prompt('Edit icon class:', card.icon);
+    
+    db.collection('coreCards').doc(id).update({
+        name: name,
+        role: role || card.role,
+        description: description || card.description,
+        icon: icon || card.icon
+    }).then(() => {
+        showToast('Core member updated!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+function deleteCoreCard(id) {
+    if (!confirm('Delete this core member?')) return;
+    db.collection('coreCards').doc(id).delete().then(() => {
+        showToast('Deleted!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+// Wing management functions
+function addWingCard() {
+    const name = prompt('Enter wing name (e.g., Urdu Wing):');
+    if (!name) return;
+    const chairman = prompt('Enter Chairman name:');
+    const convener = prompt('Enter Convener name:');
+    const description = prompt('Enter description:');
+    const icon = prompt('Enter icon class (e.g., fa-pen-fancy):', 'fa-users');
+    
+    db.collection('wingCards').add({
+        name: name,
+        type: 'wing',
+        chairman: chairman || 'TBD',
+        convener: convener || 'TBD',
+        description: description || 'No description',
+        icon: icon || 'fa-users',
+        order: wingsCardsData.length,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        showToast('Wing added!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+function editWingCard(id) {
+    const card = wingsCardsData.find(c => c.id === id);
+    if (!card) return;
+    
+    const name = prompt('Edit wing name:', card.name);
+    if (!name) return;
+    const chairman = prompt('Edit Chairman:', card.chairman);
+    const convener = prompt('Edit Convener:', card.convener);
+    const description = prompt('Edit description:', card.description);
+    
+    db.collection('wingCards').doc(id).update({
+        name: name,
+        chairman: chairman || card.chairman,
+        convener: convener || card.convener,
+        description: description || card.description
+    }).then(() => {
+        showToast('Wing updated!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+function deleteWingCard(id) {
+    if (!confirm('Delete this wing?')) return;
+    db.collection('wingCards').doc(id).delete().then(() => {
+        showToast('Deleted!', 'success');
+        loadCardsData();
+        location.reload();
+    }).catch(e => showToast('Error: ' + e.message, 'error'));
+}
+
+// Render Core Cards on main page
+function renderCoreCardsHTML() {
+    const container = document.querySelector('.core-grid');
+    if (!container || coreCardsData.length === 0) return;
+    
+    container.innerHTML = coreCardsData.map(card => `
+        <div class="cc cc-${card.role?.toLowerCase().replace(/\s/g, '-') || 'member'}">
+            <div class="cc-in">
+                <div class="cc-ic"><i class="fas ${card.icon || 'fa-user'}"></i></div>
+                <div class="cc-role">${card.role || 'Member'}</div>
+                <h3 class="cc-name">${card.name}</h3>
+                <p class="cc-desc">${card.description || 'No description'}</p>
+                <div class="cc-btns">
+                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.name}', '${card.role}', '${card.description}', '')">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Render Wings on main page
+function renderWingsCardsHTML() {
+    const container = document.querySelector('.wgrid');
+    if (!container || wingsCardsData.length === 0) return;
+    
+    container.innerHTML = wingsCardsData.map(card => `
+        <div class="wc w-${card.name?.toLowerCase().replace(/\s/g, '-') || 'custom'}">
+            <div class="w-in">
+                <div class="w-ic"><i class="fas ${card.icon || 'fa-users'}"></i></div>
+                <div class="w-lab">${card.type === 'wing' ? 'Wing' : 'Division'}</div>
+                <h3 class="w-ttl">${card.name}</h3>
+                <p class="w-info">${card.description || 'No description'}</p>
+                <div class="w-leads">
+                    <div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${card.chairman || 'TBD'}</span></div>
+                    <div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">${card.convener || 'TBD'}</span></div>
+                </div>
+                <div class="w-btns">
+                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.chairman || ''}', 'Chairman of ${card.name}', '', '')">Chair</button>
+                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.convener || ''}', 'Convener of ${card.name}', '', '')">Conv</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Seed default cards if Firestore is empty
+function seedDefaultCards() {
+    const defaultCore = [
+        { name: "Sayed Hudaif", role: "President", description: "Leads strategic planning and represents the union externally.", icon: "fa-crown", order: 0 },
+        { name: "Sayed Burhan", role: "Vice President", description: "Supports the President and oversees operations.", icon: "fa-shield-alt", order: 1 },
+        { name: "Zidan", role: "Secretary", description: "Manages official records and documentation.", icon: "fa-pen-alt", order: 2 },
+        { name: "Muhyudheen", role: "Joint Secretary", description: "Administrative support and portfolio management.", icon: "fa-cog", order: 3 },
+        { name: "Mirsad", role: "Treasurer", description: "Manages financial assets and budgets.", icon: "fa-coins", order: 4 },
+        { name: "Thanzeeh", role: "Financial Manager", description: "Oversees financial operations and compliance.", icon: "fa-chart-bar", order: 5 },
+        { name: "Shahzad", role: "P.R.O", description: "External communications and media relations.", icon: "fa-bullhorn", order: 6 }
+    ];
+    
+    const defaultWings = [
+        { name: "Urdu Wing", type: "wing", chairman: "Muhammed V.K", convener: "Hisham", description: "Urdu literature and heritage.", icon: "fa-pen-fancy", order: 0 },
+        { name: "English Wing", type: "wing", chairman: "Mujeeb", convener: "Zameen", description: "Professional communication.", icon: "fa-keyboard", order: 1 },
+        { name: "Arabic Wing", type: "wing", chairman: "Naseem", convener: "Razeen", description: "Arabic language and heritage.", icon: "fa-moon", order: 2 },
+        { name: "Malayalam Wing", type: "wing", chairman: "Rabeeh", convener: "Muzzammil", description: "Regional linguistic heritage.", icon: "fa-water", order: 3 },
+        { name: "Maths Wing", type: "wing", chairman: "Muhammed U", convener: "Muhammed PP", description: "Analytical thinking and competitions.", icon: "fa-calculator", order: 4 },
+        { name: "Science Wing", type: "wing", chairman: "Shabeel", convener: "Muhaimin", description: "Science fairs and tech demos.", icon: "fa-atom", order: 5 },
+        { name: "Media Wing", type: "wing", chairman: "Muhammed S.M", convener: "Shahzad", description: "Photography and videography.", icon: "fa-camera-retro", order: 6 }
+    ];
+    
+    const batch = db.batch();
+    defaultCore.forEach(card => {
+        const ref = db.collection('coreCards').doc();
+        batch.set(ref, card);
+    });
+    defaultWings.forEach(card => {
+        const ref = db.collection('wingCards').doc();
+        batch.set(ref, card);
+    });
+    batch.commit().then(() => {
+        console.log('Default cards seeded');
+        loadCardsData();
+    }).catch(e => console.error('Seed error:', e));
+}
+
+// Update switchAdminTab to include cards
+const originalSwitchAdminTab = window.switchAdminTab;
+window.switchAdminTab = function(tab) {
+    if (originalSwitchAdminTab) originalSwitchAdminTab(tab);
+    if (tab === 'cards') {
+        loadCardsData();
+    }
+};
 </script>
     
     <script src="cursor-polish.js?v=1"></script>
