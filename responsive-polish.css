@@ -83,7 +83,36 @@ html, body {
     transform: translateY(-10px) scale(1.02) !important;
     transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
+/* ===== BIGGER HEADER ON MOBILE ===== */
+header {
+    padding: 0.8rem 0 !important;
+}
 
+.logo-img {
+    height: 40px !important;
+}
+
+.logo-name {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+}
+
+.auth-user-btn {
+    padding: 6px 14px !important;
+    font-size: 0.8rem !important;
+}
+
+.avatar-sm {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.65rem !important;
+}
+
+.mob-btn {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.2rem !important;
+}
 /* Button hover effects */
 .btn {
     transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
