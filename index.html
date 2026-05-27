@@ -1069,28 +1069,50 @@ if (mobileBtn && mobileNav) {
     });
 }
 
-// ===== MOBILE MENU - BOTTOM SHEET STYLE =====
+// ===== MOBILE MENU - BOTTOM NAVIGATION WITH ICONS =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
     if (!menuBtn || !navLinks) return;
     
-    // Add icons to menu items if not present
-    const menuItems = [
-        { text: 'Home', icon: 'fa-home' },
-        { text: 'About', icon: 'fa-info-circle' },
-        { text: 'Media', icon: 'fa-images' },
-        { text: 'Team', icon: 'fa-users' },
-        { text: 'Contact', icon: 'fa-envelope' }
+    // Define menu items with icons and labels
+    const menuConfig = [
+        { href: '#home', icon: 'fas fa-home', label: 'Home' },
+        { href: '#about', icon: 'fas fa-info-circle', label: 'About' },
+        { href: '#media', icon: 'fas fa-images', label: 'Media' },
+        { href: '#team', icon: 'fas fa-users', label: 'Team' },
+        { href: '#contact', icon: 'fas fa-envelope', label: 'Contact' }
     ];
     
-    const links = navLinks.querySelectorAll('a');
-    links.forEach((link, index) => {
-        if (index < menuItems.length && !link.querySelector('i')) {
-            const icon = document.createElement('i');
-            icon.className = `fas ${menuItems[index].icon}`;
-            link.insertBefore(icon, link.firstChild);
+    // Get existing li elements
+    const listItems = navLinks.querySelectorAll('li');
+    
+    // Update each menu item with icon + text
+    listItems.forEach((li, index) => {
+        if (index < menuConfig.length) {
+            const link = li.querySelector('a');
+            if (link) {
+                const config = menuConfig[index];
+                // Set href
+                link.href = config.href;
+                // Clear existing content
+                link.innerHTML = '';
+                // Add icon
+                const icon = document.createElement('i');
+                icon.className = config.icon;
+                // Add text
+                const text = document.createTextNode(config.label);
+                link.appendChild(icon);
+                link.appendChild(text);
+                // Style for better visibility
+                link.style.display = 'flex';
+                link.style.flexDirection = 'column';
+                link.style.alignItems = 'center';
+                link.style.gap = '4px';
+                link.style.fontSize = '0.7rem';
+                link.style.padding = '8px 12px';
+            }
         }
     });
     
@@ -1105,7 +1127,7 @@ if (mobileBtn && mobileNav) {
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-times';
         
-        // Auto close after 3 seconds (optional)
+        // Auto close after 3 seconds
         setTimeout(() => {
             if (navLinks.classList.contains('active')) {
                 closeMenu();
@@ -1131,7 +1153,7 @@ if (mobileBtn && mobileNav) {
         });
     });
     
-    // Close menu when clicking outside (only for bottom menu)
+    // Close menu when clicking outside
     document.addEventListener('click', function(e) {
         if (navLinks.classList.contains('active')) {
             if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
@@ -1147,70 +1169,7 @@ if (mobileBtn && mobileNav) {
         }
     });
 })();
-
-// ===== SCROLL ANIMATIONS =====
-(function initScrollAnimations() {
-    const elementsToAnimate = [
-        { selector: '.sec-title', class: 'scroll-animate scroll-up' },
-        { selector: '.feat-card', class: 'scroll-animate scroll-up' },
-        { selector: '.about-card', class: 'scroll-animate scroll-left' },
-        { selector: '.cc', class: 'scroll-animate scroll-scale' },
-        { selector: '.wc', class: 'scroll-animate scroll-right' },
-        { selector: '.mag-card', class: 'scroll-animate scroll-up' },
-        { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
-        { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
-        { selector: '.ft-col', class: 'scroll-animate scroll-up' },
-    ];
-    
-    elementsToAnimate.forEach(item => {
-        document.querySelectorAll(item.selector).forEach(el => {
-            if (!el.classList.contains('scroll-animate')) {
-                el.classList.add(...item.class.split(' '));
-            }
-        });
-    });
-    
-    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
-        if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
-            grid.classList.add('stagger-children');
-        }
-    });
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    
-    document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
-        observer.observe(el);
-    });
-    
-    document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
-        observer.observe(card);
-    });
-})();
-
-// ===== TOUCH FEEDBACK =====
-if ('ontouchstart' in window) {
-    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn, .mob-btn').forEach(el => {
-        el.addEventListener('touchstart', function() {
-            this.style.opacity = '0.7';
-            this.style.transition = 'opacity 0.05s';
-        }, { passive: true });
         
-        el.addEventListener('touchend', function() {
-            this.style.opacity = '1';
-        });
-        
-        el.addEventListener('touchcancel', function() {
-            this.style.opacity = '1';
-        });
-    });
-}        
     </script>
     <script src="cursor-polish.js?v=1"></script>
    <script src="history-media-upgrade.js?v=3"></script>
