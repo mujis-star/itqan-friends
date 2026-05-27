@@ -318,3 +318,29 @@ section {
         display: none !important;
     }
 }
+
+/* ===== CUSTOM CURSOR STYLES ===== */
+.custom-cursor,
+.custom-cursor-follower,
+.custom-cursor-glow {
+    will-change: left, top, width, height, transform;
+    pointer-events: none;
+}
+
+/* Hide custom cursor on mobile devices */
+@media (max-width: 768px) {
+    .custom-cursor,
+    .custom-cursor-follower,
+    .custom-cursor-glow {
+        display: none !important;
+    }
+}
+
+/* Ensure cursor doesn't cause layout issues */
+body {
+    cursor: default;
+}
+
+a, button, .btn, .feat-card, .about-card, .cc, .wc, .media-tab, .acc-hdr {
+    cursor: pointer;
+}
