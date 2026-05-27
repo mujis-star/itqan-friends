@@ -71,6 +71,7 @@
         .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px;transition:width .3s}
         .nav-links a:hover::after{width:100%}
         .mob-btn{display:none;font-size:1.3rem;background:none;border:none;color:var(--cyan);cursor:pointer;z-index:1002}
+        .auth-area{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
         .auth-area{display:flex;align-items:center;gap:.5rem}
         .auth-btn{padding:7px 18px;border-radius:25px;font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--tr);font-family:'Space Grotesk',sans-serif;border:none}
         .auth-btn-login{background:transparent;border:1.5px solid rgba(0,240,255,.4);color:var(--cyan)}.auth-btn-login:hover{background:var(--cyan);color:var(--s0);border-color:var(--cyan)}
@@ -78,6 +79,10 @@
         .auth-user-btn{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;background:var(--glass-b);border:1px solid rgba(0,240,255,.15);border-radius:50px;cursor:pointer;transition:.3s;color:var(--text);font-weight:600;font-size:.82rem}
         .auth-user-btn:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,240,255,.15);background:rgba(0,240,255,.06)}
         .avatar-sm{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--pink));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700}
+
+        /* Improved about section spacing */
+        .about{padding:3rem 0 5rem}
+        .about .sec-title,.about .sec-line-c{display:block}
 
         /* ===== HERO ===== */
         .hero{position:relative;overflow:hidden;padding:7rem 1rem 5rem;text-align:center;color:#fff}
@@ -467,9 +472,8 @@
             .nav-links.active{display:flex}
             .nav-links li{width:100%;text-align:center}
             .nav-links a{font-size:1.1rem;display:block;padding:8px}
-            .auth-area{flex-direction:column;width:80%;gap:.8rem;margin-top:1rem}
-            .auth-btn{width:100%;font-size:.88rem;padding:10px;text-align:center}
-            .auth-user-btn{width:80%;justify-content:center;padding:10px;font-size:.88rem;margin-top:1rem}
+            .auth-area{gap:.3rem}
+            .auth-btn{font-size:.7rem;padding:6px 10px}
             .feat-grid,.about-grid{grid-template-columns:1fr}
             .wgrid,.gallery-grid,
             .mag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
@@ -483,7 +487,7 @@
             .atable{font-size:.72rem}.atable th,.atable td{padding:6px 4px}
             .cred-box{min-width:auto;width:100%}
             .htabs{overflow-x:auto}
-            .media-tabs{flex-direction:column;max-width:100%}
+            .media-tabs{overflow-x:auto;max-width:100%;white-space:nowrap}
             .adm-ir{flex-direction:column;align-items:flex-start}
             .adm-it{width:100%;height:100px}
             .amb{display:none}
@@ -502,9 +506,9 @@
             <a href="#" class="logo"><img src="logo.png" alt="ITQAN" class="logo-img"><div><div class="logo-name">ITQAN UNION</div><div class="logo-tag">Intelligent Trainees for Qualified and Networked Professionals</div></div></a>
             <button class="mob-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#media">Media</a></li><li><a href="#team">Team</a></li><li><a href="#contact">Contact</a></li>
-                <li><div class="auth-area" id="authArea"><button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button></div></li>
+                <li><a href="#home">Home</a></li><li><a href="#mission">About</a></li><li><a href="#media">Media</a></li><li><a href="#team">Team</a></li><li><a href="#contact">Contact</a></li>
             </ul>
+            <div class="auth-area" id="authArea"><button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button></div>
         </div>
     </header>
 
@@ -515,13 +519,13 @@
             <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
             <h1>United for Professional Growth & Excellence</h1>
             <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
-            <div class="hero-btns"><a href="#about" class="btn btn-pink">Discover More</a><a href="#team" class="btn btn-cyan">Meet Our Leadership</a></div>
+            <div class="hero-btns"><a href="#mission" class="btn btn-pink">Discover More</a><a href="#team" class="btn btn-cyan">Meet Our Leadership</a></div>
         </div>
         <div class="scroll-hint"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
         <div class="hero-line"></div>
     </section>
 
-    <section class="features" id="about">
+    <section class="features" id="mission">
         <div class="container">
             <div class="sec-title rv">Cultivating <span style="color:var(--cyan)">Intelligent</span> & <span style="color:var(--pink)">Qualified</span> Networks</div>
             <div class="sec-line-c rv"><span></span></div>
@@ -533,8 +537,10 @@
         </div>
     </section>
 
-    <section class="about">
+    <section class="about" id="about">
         <div class="container">
+            <div class="sec-title rv">Explore <span style="color:var(--cyan)">ITQAN</span></div>
+            <div class="sec-line-c rv"><span></span></div>
             <div class="about-grid">
                 <div class="about-card rv rv-d1" onclick="window.location.href='publication.html'"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
                 <div class="about-card rv rv-d2" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
@@ -579,7 +585,7 @@
                 <div class="wc w-engl"><div class="tdots"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-keyboard"></i></div><div class="w-lab">Communication</div><h3 class="w-ttl">English Wing</h3><p class="w-info">Professional communication.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Mujeeb</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Zameen</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Mujeeb','English Chairman','English programs.','profiles/Mujeeb.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Zameen','English Convener','Workshops.','profiles/Zameen.png')">Conv</button></div></div></div>
                 <div class="wc w-arab"><div class="w-in"><div class="w-ic"><i class="fas fa-moon"></i></div><div class="w-lab">Heritage</div><h3 class="w-ttl">Arabic Wing</h3><p class="w-info">Arabic language and heritage.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Naseem</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Razeen</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Naseem','Arabic Chairman','Arabic programs.','profiles/Naseem.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Razeen','Arabic Convener','Events.','profiles/Razeen.png')">Conv</button></div></div></div>
                 <div class="wc w-mala"><div class="w-in"><div class="w-ic"><i class="fas fa-water"></i></div><div class="w-lab">Regional</div><h3 class="w-ttl">Malayalam Wing</h3><p class="w-info">Regional linguistic heritage.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Rabeeh</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Muzzammil</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Rabeeh','Malayalam Chairman','Regional activities.','profiles/Rabeeh.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muzzammil','Malayalam Convener','Assists.','profiles/Muzzammil.png')">Conv</button></div></div></div>
-                <div class="wc w-song"><div class="eqb"><span></span><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-music"></i></div><div class="w-lab">Arts</div><h3 class="w-ttl">Song & Recitation</h3><p class="w-info">Musical and recitation events.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Ridhan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Ridhan','Song Chairman','Musical programs.','profiles/Ridhan.png')">Chair</button></div></div></div>
+                <div class="wc w-song"><div class="eqb"><span></span><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-music"></i></div><div class="w-lab">Arts</div><h3 class="w-ttl">Song & Recitation</h3><p class="w-info">Musical and recitation events.</p><div class="w-leads"><div class="w-chip" style="flex:0 0 auto"><span class="ch-role">Chairman</span><span class="ch-name">Ridhan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Ridhan','Song Chairman','Musical programs.','profiles/Ridhan.png')">Chair</button></div></div></div>
                 <div class="wc w-math"><div class="w-in"><div class="w-ic"><i class="fas fa-calculator"></i></div><div class="w-lab">Academic</div><h3 class="w-ttl">Maths Wing</h3><p class="w-info">Analytical thinking and competitions.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Muhammed U</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Muhammed PP</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed U','Maths Chairman','Math activities.','profiles/muhammed U.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed PP','Maths Convener','Workshops.','profiles/muhamemd.png')">Conv</button></div></div></div>
                 <div class="wc w-art"><div class="pdots"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-paint-brush"></i></div><div class="w-lab">Creative</div><h3 class="w-ttl">Art Wing</h3><p class="w-info">Visual arts and exhibitions.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Ranif</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Rashad</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Ranif','Art Chairman','Creative initiatives.','profiles/Ranif.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Rashad','Art Convener','Exhibitions.','profiles/Rashad.png')">Conv</button></div></div></div>
                 <div class="wc w-lib"><div class="w-in"><div class="w-ic"><i class="fas fa-book-open"></i></div><div class="w-lab">Knowledge</div><h3 class="w-ttl">Library Wing</h3><p class="w-info">Knowledge resources and reading culture.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Razin</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Adnan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Razin','Library Chairman','Library ops.','profiles/Razin.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Adnan','Library Convener','Management.','profiles/Adnan.png')">Conv</button></div></div></div>
@@ -589,7 +595,7 @@
                 <div class="wc w-pub"><div class="w-in"><div class="w-ic"><i class="fas fa-newspaper"></i></div><div class="w-lab">Editorial</div><h3 class="w-ttl">Publication Wing</h3><p class="w-info">Newsletters and digital content.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Fidyan</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Zarhan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fidyan','Publication Chairman','Editorial.','profiles/Fidyan.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Zarhan','Publication Convener','Production.','profiles/Zarhan.png')">Conv</button></div></div></div>
                 <div class="wc w-media"><div class="w-in"><div class="w-ic"><i class="fas fa-camera-retro"></i></div><div class="w-lab">Visual</div><h3 class="w-ttl">Media Wing</h3><p class="w-info">Photography and videography.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Muhammed S.M</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Shahzad</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed S.M','Media Chairman','Media production.','profiles/Muhammed S.M.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Shahzad','Media Convener','Content.','profiles/Shahzad.png')">Conv</button></div></div></div>
                 <div class="wc w-med"><div class="w-in"><div class="w-ic"><i class="fas fa-heartbeat"></i></div><div class="w-lab">Health</div><h3 class="w-ttl">Medical Wing</h3><p class="w-info">Health awareness and camps.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Nuhman</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Abdu Rahman</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Nuhman','Medical Chairman','Health campaigns.','profiles/Nuhman.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Abdu Rahman','Medical Convener','Camps.','profiles/abdu-rahman.png')">Conv</button></div></div></div>
-                <div class="wc w-sport"><div class="ssparks"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-futbol"></i></div><div class="w-lab">Athletics</div><h3 class="w-ttl">Sports Wing</h3><p class="w-info">Tournaments and sports events.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Fuad Habeeb</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fuad Habeeb','Sports Chairman','Athletics.','profiles/Habeeb.png')">Chair</button></div></div></div>
+                <div class="wc w-sport"><div class="ssparks"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-futbol"></i></div><div class="w-lab">Athletics</div><h3 class="w-ttl">Sports Wing</h3><p class="w-info">Tournaments and sports events.</p><div class="w-leads"><div class="w-chip" style="flex:0 0 auto"><span class="ch-role">Chairman</span><span class="ch-name">Fuad Habeeb</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fuad Habeeb','Sports Chairman','Athletics.','profiles/Habeeb.png')">Chair</button></div></div></div>
                 <div class="wc w-for"><div class="fstripes"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-language"></i></div><div class="w-lab">Multilingual</div><h3 class="w-ttl">Foreign Language Wing</h3><p class="w-info">German and French instruction.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">German</span><span class="ch-name">Zameen</span></div><div class="w-chip"><span class="ch-role">French Ch.</span><span class="ch-name">Muhyudheen</span></div><div class="w-chip"><span class="ch-role">French Cv.</span><span class="ch-name">Muhammed PP</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Zameen','German Chairman','German.','profiles/Zameen.png')">DE</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhyudheen','French Chairman','French.','profiles/Muhyudheen.png')">FR</button></div></div></div>
             </div></div>
         </div>
@@ -611,7 +617,7 @@
         </div>
     </section>
 
-    <footer id="contact"><div class="container"><div class="ft-grid"><div class="ft-col"><h3>Events</h3><ul class="ft-links"><li><a href="https://itqan-artfeast.vercel.app/">ZENITH Arts Fest 2K26</a></li></ul></div><div class="ft-col"><h3>ITQAN UNION</h3><p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="soc-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div><div class="ft-col"><h3>Contact</h3><ul class="ft-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2025 ITQAN Union. All Rights Reserved.</p></div></div></footer>
+    <footer id="contact"><div class="container"><div class="ft-grid"><div class="ft-col"><h3>ITQAN UNION</h3><p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="soc-icons"><a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a></div></div><div class="ft-col"><h3>Quick Links</h3><ul class="ft-links"><li><a href="#mission">About ITQAN</a></li><li><a href="#media">Media Hub</a></li><li><a href="#team">Our Team</a></li><li><a href="https://itqan-artfeast.vercel.app/" target="_blank" rel="noopener">ZENITH Arts Fest 2K26</a></li></ul></div><div class="ft-col"><h3>Contact</h3><ul class="ft-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2026 ITQAN Union. All Rights Reserved.</p></div></div></footer>
 
     <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button><div class="mhwp"><div class="ppc"><img id="modalPhoto" src="" alt="" style="display:none"><div class="pph" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="phi"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wbadges" id="modalBadges"></div></div></div><div class="mbody"><p id="modalDescription"></p><div class="det-sec" id="modalDetails"></div><div class="ct-info" id="modalContactInfo"></div></div><div class="mfooter"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div></div></div>
     <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button><h2>ITQAN Portal</h2><p class="auth-sub">Login or Register to join the network</p><div class="li-box"><h4><i class="fas fa-info-circle"></i> How to Login</h4><p>If an admin created your account, use the <strong>username</strong> and <strong>password</strong> they gave you. Otherwise, click <strong>Register</strong>.</p></div><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-err"></div>
@@ -694,9 +700,9 @@
     async function seedCardMembers(){if(!confirm('Sync 34 card members?\n\nThey must REGISTER to claim.'))return;try{const b=db.batch();let c=0;for(const[u,d]of Object.entries(cardMembers)){b.set(db.collection('users').doc(`${u}@itqan.org`),{...d,username:u,email:`${u}@itqan.org`,hasAuth:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});c++}await b.commit();showToast(`Synced ${c} members!`,'success');loadAdminData()}catch(e){showToast('Error.','error')}}
 
     async function loadPublicGallery(){try{const sn=await db.collection('gallery').orderBy('createdAt','desc').get();galleryCache=[];sn.forEach(d=>galleryCache.push({id:d.id,...d.data()}));renderPublicGallery()}catch(e){console.error(e)}}
-    function renderPublicGallery(){const g=document.getElementById('publicGallery'),em=document.getElementById('galleryEmpty');if(!galleryCache.length){g.innerHTML='';em.style.display='block';return}em.style.display='none';g.innerHTML='';galleryCache.forEach((item,i)=>{g.innerHTML+=`<div class="gallery-item" onclick="openLightbox(${i})"><img src="${item.imageUrl}" alt="${item.caption||''}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1a1a2a/1a1a2a?text=${encodeURIComponent(item.caption||'Photo')}'"><div class="gallery-ov"><h4>${item.caption||''}</h4></div></div>`})}
+    function renderPublicGallery(){const g=document.getElementById('publicGalleryGrid'),em=document.getElementById('galleryEmpty');if(!galleryCache.length){g.innerHTML='';em.style.display='block';return}em.style.display='none';g.innerHTML='';galleryCache.forEach((item,i)=>{g.innerHTML+=`<div class="gallery-item" onclick="openLightbox(${i})"><img src="${item.imageUrl}" alt="${item.caption||''}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1a1a2a/1a1a2a?text=${encodeURIComponent(item.caption||'Photo')}'"><div class="gallery-ov"><h4>${item.caption||''}</h4></div></div>`})}
     let lbIdx=0;
-    function openLightbox(i){lbIdx=i;const items=galleryCache;if(!items.length)return;document.getElementById('lightboxImg').src=items[i].imageUrl;document.getElementById('lightboxCaption').textContent=items[i].caption||'';document.getElementById('lightbox').classList.add('active');document.getElementById('lightboxPrev').style.display=items.length>1?'flex':'none';document.getElementById('lightbox-next').style.display=items.length>1?'flex':'none'}
+    function openLightbox(i){lbIdx=i;const items=galleryCache;if(!items.length)return;document.getElementById('lightboxImg').src=items[i].imageUrl;document.getElementById('lightboxCaption').textContent=items[i].caption||'';document.getElementById('lightbox').classList.add('active');const showNav=items.length>1;document.querySelector('.lightbox-prev').style.display=showNav?'flex':'none';document.querySelector('.lightbox-next').style.display=showNav?'flex':'none'}
     function closeLightbox(){document.getElementById('lightbox').classList.remove('active')}
     function lightboxNav(dir){lbIdx=(lbIdx+dir+galleryCache.length)%galleryCache.length;openLightbox(lbIdx)}
 
