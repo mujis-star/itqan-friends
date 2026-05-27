@@ -702,7 +702,67 @@
             }
         }
     </style>
-    
+        </section> <!-- Closes media-hub -->
+
+    <!-- ===== RECENT PUBLICATIONS SECTION ===== -->
+    <section style="padding: 4rem 0; background: linear-gradient(135deg, var(--s1), var(--s0));">
+        <div class="container">
+            <div class="sec-title rv">Recent <span style="color:var(--gold)">Publications</span></div>
+            <div class="sec-line-c rv"><span></span></div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                
+                <!-- Publication Card 1 -->
+                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: inline-block; padding: 4px 12px; background: rgba(255,184,0,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-bottom: 1rem;">
+                            📄 ANNUAL REPORT
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Annual Report 2025</h3>
+                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Committee achievements, financial summary, and future roadmap.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> April 2026</span>
+                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--gold); color: var(--gold);">Read PDF →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publication Card 2 -->
+                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: inline-block; padding: 4px 12px; background: rgba(0,240,255,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--cyan); font-weight: 700; margin-bottom: 1rem;">
+                            📰 MAGAZINE
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Quarterly - Issue 03</h3>
+                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Student spotlights, wing activities, and upcoming events.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> March 2026</span>
+                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--cyan); color: var(--cyan);">Read Online →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publication Card 3 -->
+                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: inline-block; padding: 4px 12px; background: rgba(255,51,102,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--pink); font-weight: 700; margin-bottom: 1rem;">
+                            📧 NEWSLETTER
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">Summer 2026 Newsletter</h3>
+                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">ZENITH recap, new members, achievements, and community updates.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> June 2026</span>
+                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--pink); color: var(--pink);">View Newsletter →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a href="#media" class="btn btn-cyan" onclick="switchMediaTab('magazines')"><i class="fas fa-archive"></i> View All Publications</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="acc-zone" id="team">
     <section class="acc-zone" id="team">
         <div class="acc-item">
             <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)"><h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2><span class="a-arr"><i class="fas fa-chevron-down"></i></span></div>
