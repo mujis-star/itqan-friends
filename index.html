@@ -1047,6 +1047,156 @@ if (mobileBtn && mobileNav) {
     });
 }
 
+        // ===== MOBILE MENU: SLIDE-IN FROM RIGHT =====
+(function initMobileMenu() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (!menuBtn || !navLinks) return;
+    
+    // Function to close menu
+    function closeMenu() {
+        navLinks.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+        const icon = menuBtn.querySelector('i');
+        if (icon) icon.className = 'fas fa-bars';
+    }
+    
+    // Function to open menu
+    function openMenu() {
+        navLinks.classList.add('active');
+        document.body.classList.add('menu-open');
+        document.body.style.overflow = 'hidden';
+        const icon = menuBtn.querySelector('i');
+        if (icon) icon.className = 'fas fa-times';
+    }
+    
+    // Toggle menu on button click
+    menuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (navLinks.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+    
+    // Close menu when clicking the X button (::before pseudo-element)
+    // We need to detect click on the menu area
+    navLinks.addEventListener('click', function(e) {
+        // Check if click is on the X area (top-right corner of menu)
+        const rect = navLinks.getBoundingClientRect();
+        const isTopRight = e.clientX > rect.right - 50 && e.clientY < 60;
+        
+        if (isTopRight || e.target === navLinks) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+            closeMenu();
+        });
+    });
+    
+    // Close menu when clicking outside (on the overlay)
+    document.body.addEventListener('click', function(e) {
+        if (document.body.classList.contains('menu-open')) {
+            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                closeMenu();
+            }
+        }
+    });
+    
+    // Handle escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu on window resize (if screen becomes larger)
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+})();
+
+// ===== SCROLL ANIMATIONS =====
+(function initScrollAnimations() {
+    // Add animation classes to elements
+    const elementsToAnimate = [
+        { selector: '.sec-title', class: 'scroll-animate scroll-up' },
+        { selector: '.feat-card', class: 'scroll-animate scroll-up stagger-child' },
+        { selector: '.about-card', class: 'scroll-animate scroll-left stagger-child' },
+        { selector: '.cc', class: 'scroll-animate scroll-scale' },
+        { selector: '.wc', class: 'scroll-animate scroll-right' },
+        { selector: '.mag-card', class: 'scroll-animate scroll-up' },
+        { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
+        { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
+        { selector: '.hero-badge, .hero h1, .hero p, .hero-btns', class: 'scroll-animate scroll-up' },
+        { selector: '.ft-col', class: 'scroll-animate scroll-up' },
+    ];
+    
+    // Apply classes
+    elementsToAnimate.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+            if (!el.classList.contains('scroll-animate')) {
+                el.classList.add(...item.class.split(' '));
+            }
+        });
+    });
+    
+    // Stagger children for grids
+    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
+        if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
+            grid.classList.add('stagger-children');
+        }
+    });
+    
+    // Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    // Observe all animated elements
+    document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Also observe individual cards
+    document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
+        observer.observe(card);
+    });
+})();
+
+// ===== TOUCH FEEDBACK FOR MOBILE =====
+if ('ontouchstart' in window) {
+    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.opacity = '0.7';
+            this.style.transition = 'opacity 0.05s';
+        }, { passive: true });
+        
+        el.addEventListener('touchend', function() {
+            this.style.opacity = '1';
+        });
+        
+        el.addEventListener('touchcancel', function() {
+            this.style.opacity = '1';
+        });
+    });
+}
         
     </script>
     <script src="cursor-polish.js?v=1"></script>
