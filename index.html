@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="responsive-polish.css?v=1">
-    <link rel="stylesheet" href="history-media-upgrade.css?v=2">
+    <link rel="stylesheet" href="responsive-polish.css?v=2">
+<link rel="stylesheet" href="history-media-upgrade.css?v=3">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -712,7 +712,7 @@
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
     </script>
     <script src="cursor-polish.js?v=1"></script>
-    <script src="history-media-upgrade.js?v=2"></script>
+   <script src="history-media-upgrade.js?v=3"></script>
     <script src="upload-support.js?v=5"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=1"></script>
