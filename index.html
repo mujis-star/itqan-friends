@@ -35,6 +35,27 @@
         .amb-3{width:400px;height:400px;background:rgba(255,184,0,.025);top:50%;left:40%;animation:ambDrift 35s ease-in-out infinite 5s}
         @keyframes ambDrift{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,50px)}}
 
+
+/* Ensure smooth scrolling on desktop */
+html {
+    scroll-behavior: smooth;
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure all sections are visible */
+section {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+        
         /* Reveal system */
         .rv{opacity:0;transform:translateY(50px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}.rv.v{opacity:1;transform:translateY(0)}
         .rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}.rv-d5{transition-delay:.4s}
