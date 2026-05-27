@@ -1047,14 +1047,23 @@ if (mobileBtn && mobileNav) {
     });
 }
 
-        // ===== MOBILE MENU: SLIDE-IN FROM RIGHT =====
+// ===== MOBILE MENU: SLIDE-IN FROM RIGHT (60% width, Single X) =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
     if (!menuBtn || !navLinks) return;
     
-    // Function to close menu
+    // Remove any existing close button first
+    const existingCloseBtn = navLinks.querySelector('.close-menu-btn');
+    if (existingCloseBtn) existingCloseBtn.remove();
+    
+    // Create single close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.className = 'close-menu-btn';
+    closeBtn.setAttribute('aria-label', 'Close menu');
+    
     function closeMenu() {
         navLinks.classList.remove('active');
         document.body.classList.remove('menu-open');
@@ -1063,14 +1072,24 @@ if (mobileBtn && mobileNav) {
         if (icon) icon.className = 'fas fa-bars';
     }
     
-    // Function to open menu
     function openMenu() {
         navLinks.classList.add('active');
         document.body.classList.add('menu-open');
         document.body.style.overflow = 'hidden';
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-times';
+        
+        // Add close button if not already there
+        if (!navLinks.querySelector('.close-menu-btn')) {
+            navLinks.appendChild(closeBtn);
+        }
     }
+    
+    // Close button click
+    closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeMenu();
+    });
     
     // Toggle menu on button click
     menuBtn.addEventListener('click', function(e) {
@@ -1081,18 +1100,6 @@ if (mobileBtn && mobileNav) {
             closeMenu();
         } else {
             openMenu();
-        }
-    });
-    
-    // Close menu when clicking the X button (::before pseudo-element)
-    // We need to detect click on the menu area
-    navLinks.addEventListener('click', function(e) {
-        // Check if click is on the X area (top-right corner of menu)
-        const rect = navLinks.getBoundingClientRect();
-        const isTopRight = e.clientX > rect.right - 50 && e.clientY < 60;
-        
-        if (isTopRight || e.target === navLinks) {
-            closeMenu();
         }
     });
     
@@ -1119,7 +1126,7 @@ if (mobileBtn && mobileNav) {
         }
     });
     
-    // Close menu on window resize (if screen becomes larger)
+    // Close menu on window resize
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
             closeMenu();
@@ -1129,21 +1136,18 @@ if (mobileBtn && mobileNav) {
 
 // ===== SCROLL ANIMATIONS =====
 (function initScrollAnimations() {
-    // Add animation classes to elements
     const elementsToAnimate = [
         { selector: '.sec-title', class: 'scroll-animate scroll-up' },
-        { selector: '.feat-card', class: 'scroll-animate scroll-up stagger-child' },
-        { selector: '.about-card', class: 'scroll-animate scroll-left stagger-child' },
+        { selector: '.feat-card', class: 'scroll-animate scroll-up' },
+        { selector: '.about-card', class: 'scroll-animate scroll-left' },
         { selector: '.cc', class: 'scroll-animate scroll-scale' },
         { selector: '.wc', class: 'scroll-animate scroll-right' },
         { selector: '.mag-card', class: 'scroll-animate scroll-up' },
         { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
         { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
-        { selector: '.hero-badge, .hero h1, .hero p, .hero-btns', class: 'scroll-animate scroll-up' },
         { selector: '.ft-col', class: 'scroll-animate scroll-up' },
     ];
     
-    // Apply classes
     elementsToAnimate.forEach(item => {
         document.querySelectorAll(item.selector).forEach(el => {
             if (!el.classList.contains('scroll-animate')) {
@@ -1152,14 +1156,12 @@ if (mobileBtn && mobileNav) {
         });
     });
     
-    // Stagger children for grids
     document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
         if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
             grid.classList.add('stagger-children');
         }
     });
     
-    // Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1169,20 +1171,18 @@ if (mobileBtn && mobileNav) {
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     
-    // Observe all animated elements
     document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
         observer.observe(el);
     });
     
-    // Also observe individual cards
     document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
         observer.observe(card);
     });
 })();
 
-// ===== TOUCH FEEDBACK FOR MOBILE =====
+// ===== TOUCH FEEDBACK =====
 if ('ontouchstart' in window) {
-    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn').forEach(el => {
+    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn, .close-menu-btn').forEach(el => {
         el.addEventListener('touchstart', function() {
             this.style.opacity = '0.7';
             this.style.transition = 'opacity 0.05s';
@@ -1197,6 +1197,7 @@ if ('ontouchstart' in window) {
         });
     });
 }
+        
         
     </script>
     <script src="cursor-polish.js?v=1"></script>
