@@ -915,6 +915,94 @@
     async function addMagItem(){const type=document.getElementById('magType').value,title=document.getElementById('magTitle').value.trim(),cover=document.getElementById('magCover').value.trim(),pdf=document.getElementById('magPdfUrl').value.trim(),desc=document.getElementById('magDesc').value.trim();if(!title||!cover){showToast('Title and Cover Image are required.','error');return}try{await db.collection('magazines').add({type,title,coverUrl:cover,pdfUrl:pdf,description:desc,uploadedBy:currentUserData?.name||'Admin',createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('magTitle').value='';document.getElementById('magCover').value='';document.getElementById('magPdfUrl').value='';document.getElementById('magDesc').value='';showToast('Publication added!','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error: '+e.message,'error')}}
     async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
+    
+    // ===== SCROLL ANIMATIONS =====
+(function initScrollAnimations() {
+    // Add animation classes to elements
+    const elementsToAnimate = [
+        { selector: '.sec-title', class: 'scroll-animate scroll-up' },
+        { selector: '.feat-card', class: 'scroll-animate scroll-up stagger-child' },
+        { selector: '.about-card', class: 'scroll-animate scroll-left stagger-child' },
+        { selector: '.cc', class: 'scroll-animate scroll-scale' },
+        { selector: '.wc', class: 'scroll-animate scroll-right' },
+        { selector: '.mag-card', class: 'scroll-animate scroll-up' },
+        { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
+        { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
+        { selector: '.hero-badge, .hero h1, .hero p, .hero-btns', class: 'scroll-animate scroll-up' },
+        { selector: '.ft-col', class: 'scroll-animate scroll-up' },
+    ];
+    
+    // Apply classes
+    elementsToAnimate.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+            if (!el.classList.contains('scroll-animate')) {
+                el.classList.add(...item.class.split(' '));
+            }
+        });
+    });
+    
+    // Stagger children for grids
+    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
+        if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
+            grid.classList.add('stagger-children');
+        }
+    });
+    
+    // Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Unobserve after animation
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    // Observe all animated elements
+    document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Also observe individual cards for staggering
+    document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
+        observer.observe(card);
+    });
+})();
+
+// ===== MOBILE MENU TOUCH OPTIMIZATION =====
+if ('ontouchstart' in window) {
+    // Add active state for tap feedback
+    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.opacity = '0.7';
+        }, { passive: true });
+        el.addEventListener('touchend', function() {
+            this.style.opacity = '1';
+        });
+        el.addEventListener('touchcancel', function() {
+            this.style.opacity = '1';
+        });
+    });
+}
+
+// ===== FIX: Close menu when clicking outside on mobile =====
+document.addEventListener('click', function(e) {
+    const navLinks = document.getElementById('navLinks');
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    if (navLinks && navLinks.classList.contains('active')) {
+        if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+            navLinks.classList.remove('active');
+            if (menuBtn) {
+                const icon = menuBtn.querySelector('i');
+                if (icon) icon.className = 'fas fa-bars';
+            }
+            document.body.style.overflow = '';
+        }
+    }
+});
+
+        
     </script>
     <script src="cursor-polish.js?v=1"></script>
    <script src="history-media-upgrade.js?v=3"></script>
