@@ -1,3 +1,4 @@
+
 /* ============================================
    responsive-polish.css - ITQAN FRIENDS
    DESKTOP + MOBILE FIXES
@@ -102,33 +103,38 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
+/* ===== SIMPLIFIED SCROLL ANIMATIONS ===== */
 .scroll-animate {
     opacity: 0;
-    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.scroll-animate.visible { opacity: 1; }
-.scroll-up { transform: translateY(40px); }
-.scroll-up.visible { transform: translateY(0); }
-.scroll-left { transform: translateX(-30px); }
-.scroll-left.visible { transform: translateX(0); }
-.scroll-right { transform: translateX(30px); }
-.scroll-right.visible { transform: translateX(0); }
-.scroll-scale { transform: scale(0.95); }
-.scroll-scale.visible { transform: scale(1); }
+.scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
+/* Remove complex staggered animations that cause stutter */
 .stagger-children > * {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.stagger-children.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
-.stagger-children.visible > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Individual delays for staggering */
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.05s; }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.1s; }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.15s; }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 0.25s; }
+
 
 /* ===== TABLET (max-width: 1024px) ===== */
 @media (max-width: 1024px) {
@@ -517,4 +523,44 @@ body {
     .nav-links .auth-area {
         display: none !important;
     }
+}
+
+
+
+/* ===== FIX SCROLLING STUTTER ===== */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Disable problematic transitions on scroll */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Ensure no element blocks scrolling */
+.nav-links.active {
+    pointer-events: auto;
+}
+
+.nav-links:not(.active) {
+    pointer-events: none;
+}
+
+/* Fix for sticky header scrolling */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: none;
 }
