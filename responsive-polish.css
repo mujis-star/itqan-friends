@@ -1,9 +1,80 @@
+/* ============================================
+   responsive-polish.css - ITQAN FRIENDS
+   FIXED MOBILE HEADER - SAME LINE
+   ============================================ */
+
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.scroll-animate {
+    opacity: 0;
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-animate.visible { opacity: 1; }
+.scroll-up { transform: translateY(40px); }
+.scroll-up.visible { transform: translateY(0); }
+.scroll-left { transform: translateX(-30px); }
+.scroll-left.visible { transform: translateX(0); }
+.scroll-right { transform: translateX(30px); }
+.scroll-right.visible { transform: translateX(0); }
+.scroll-scale { transform: scale(0.95); }
+.scroll-scale.visible { transform: scale(1); }
+
+.stagger-children > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .container { padding: 0 20px; }
+    .feat-grid, .about-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+}
+
 /* Mobile */
 @media (max-width: 768px) {
     body { overflow-x: hidden !important; }
     .container { padding: 0 16px !important; width: 100% !important; }
     
-    /* ===== HEADER - IMPROVED LAYOUT ===== */
+    /* ===== HEADER - LOGO LEFT, USERNAME + MENU RIGHT ON SAME LINE ===== */
     .h-wrap {
         display: flex !important;
         justify-content: space-between !important;
@@ -12,22 +83,39 @@
         flex-wrap: nowrap !important;
         gap: 0.5rem !important;
         padding: 0.5rem 0 !important;
+        width: 100% !important;
     }
     
     .logo {
         display: flex !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: 6px !important;
         flex-shrink: 1 !important;
         min-width: 0 !important;
     }
     
-    .logo-img { height: 32px !important; width: auto !important; }
-    .logo-name { font-size: 0.85rem !important; font-weight: 700 !important; white-space: nowrap !important; }
+    .logo-img { 
+        height: 32px !important; 
+        width: auto !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .logo-text {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .logo-name { 
+        font-size: 0.85rem !important; 
+        font-weight: 700 !important; 
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
+    }
+    
     .logo-tag { display: none !important; }
     
-    /* Right side container */
-    .header-right {
+    /* Right side: username + menu button side by side */
+    .header-controls {
         display: flex !important;
         align-items: center !important;
         gap: 0.5rem !important;
@@ -36,7 +124,6 @@
     
     .auth-area {
         display: flex !important;
-        flex-direction: row !important;
         align-items: center !important;
         margin: 0 !important;
     }
@@ -59,11 +146,15 @@
         height: 22px !important;
         font-size: 0.6rem !important;
         background: linear-gradient(135deg, #00F0FF, #FF3366) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
     }
     
     .auth-btn-login, .auth-btn-register { display: none !important; }
     
-    /* Menu button - right aligned */
+    /* Menu button - circle on the right */
     .mob-btn {
         display: flex !important;
         background: rgba(0, 240, 255, 0.1) !important;
@@ -78,6 +169,7 @@
         cursor: pointer !important;
         z-index: 1002 !important;
         padding: 0 !important;
+        margin: 0 !important;
     }
     
     /* ===== BOTTOM NAVIGATION MENU ===== */
@@ -226,10 +318,10 @@
 @media (max-width: 480px) {
     .container { padding: 0 12px !important; }
     .hero h1 { font-size: 1.3rem !important; }
-    .logo-name { font-size: 0.75rem !important; }
-    .logo-img { height: 28px !important; }
-    .auth-user-btn { padding: 3px 8px !important; font-size: 0.7rem !important; }
-    .avatar-sm { width: 20px !important; height: 20px !important; font-size: 0.55rem !important; }
+    .logo-name { font-size: 0.7rem !important; }
+    .logo-img { height: 26px !important; }
+    .auth-user-btn { padding: 3px 8px !important; font-size: 0.65rem !important; }
+    .avatar-sm { width: 18px !important; height: 18px !important; font-size: 0.5rem !important; }
     .mob-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
     
     .nav-links.active a {
