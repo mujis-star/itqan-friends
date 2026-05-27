@@ -1047,51 +1047,50 @@ if (mobileBtn && mobileNav) {
     });
 }
 
-// ===== MOBILE MENU: SLIDE-IN FROM RIGHT (60% width, Single X) =====
+// ===== MOBILE MENU - BOTTOM SHEET STYLE =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
     if (!menuBtn || !navLinks) return;
     
-    // Remove any existing close button first
-    const existingCloseBtn = navLinks.querySelector('.close-menu-btn');
-    if (existingCloseBtn) existingCloseBtn.remove();
+    // Add icons to menu items if not present
+    const menuItems = [
+        { text: 'Home', icon: 'fa-home' },
+        { text: 'About', icon: 'fa-info-circle' },
+        { text: 'Media', icon: 'fa-images' },
+        { text: 'Team', icon: 'fa-users' },
+        { text: 'Contact', icon: 'fa-envelope' }
+    ];
     
-    // Create single close button
-    const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = '✕';
-    closeBtn.className = 'close-menu-btn';
-    closeBtn.setAttribute('aria-label', 'Close menu');
+    const links = navLinks.querySelectorAll('a');
+    links.forEach((link, index) => {
+        if (index < menuItems.length && !link.querySelector('i')) {
+            const icon = document.createElement('i');
+            icon.className = `fas ${menuItems[index].icon}`;
+            link.insertBefore(icon, link.firstChild);
+        }
+    });
     
     function closeMenu() {
         navLinks.classList.remove('active');
-        document.body.classList.remove('menu-open');
-        document.body.style.overflow = '';
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-bars';
     }
     
     function openMenu() {
         navLinks.classList.add('active');
-        document.body.classList.add('menu-open');
-        document.body.style.overflow = 'hidden';
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-times';
         
-        // Add close button if not already there
-        if (!navLinks.querySelector('.close-menu-btn')) {
-            navLinks.appendChild(closeBtn);
-        }
+        // Auto close after 3 seconds (optional)
+        setTimeout(() => {
+            if (navLinks.classList.contains('active')) {
+                closeMenu();
+            }
+        }, 3000);
     }
     
-    // Close button click
-    closeBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        closeMenu();
-    });
-    
-    // Toggle menu on button click
     menuBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -1110,9 +1109,9 @@ if (mobileBtn && mobileNav) {
         });
     });
     
-    // Close menu when clicking outside (on the overlay)
-    document.body.addEventListener('click', function(e) {
-        if (document.body.classList.contains('menu-open')) {
+    // Close menu when clicking outside (only for bottom menu)
+    document.addEventListener('click', function(e) {
+        if (navLinks.classList.contains('active')) {
             if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
                 closeMenu();
             }
@@ -1122,13 +1121,6 @@ if (mobileBtn && mobileNav) {
     // Handle escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navLinks.classList.contains('active')) {
-            closeMenu();
-        }
-    });
-    
-    // Close menu on window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
             closeMenu();
         }
     });
@@ -1182,7 +1174,7 @@ if (mobileBtn && mobileNav) {
 
 // ===== TOUCH FEEDBACK =====
 if ('ontouchstart' in window) {
-    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn, .close-menu-btn').forEach(el => {
+    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn, .mob-btn').forEach(el => {
         el.addEventListener('touchstart', function() {
             this.style.opacity = '0.7';
             this.style.transition = 'opacity 0.05s';
@@ -1196,9 +1188,7 @@ if ('ontouchstart' in window) {
             this.style.opacity = '1';
         });
     });
-}
-        
-        
+}        
     </script>
     <script src="cursor-polish.js?v=1"></script>
    <script src="history-media-upgrade.js?v=3"></script>
