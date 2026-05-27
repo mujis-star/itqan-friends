@@ -1,4 +1,4 @@
-/*
+    /*
   ITQAN Media Hub popup + Union & Artsfest History redesign.
   Include after the main page script and helper scripts.
 */
@@ -76,7 +76,7 @@
   const artsYears = [
     {
       year: "2026-27",
-      title: "Arts Fest Controllers",
+      title: "Arts Fest",
       status: "Current",
       roles: [
         ["Controller", "Zidan"],
@@ -87,41 +87,41 @@
     },
     {
       year: "2025-26",
-      title: "Arts Fest Leaders",
+      title: "Arts Fest",
       status: "Previous Year",
       roles: [
-        ["Captain", "Mirsad"],
-        ["Captain", "Razin"],
-        ["Captain", "Ranif"],
-        ["Captain", "Shahzad"],
+        ["Leader", "Mirsad"],
+        ["Leader", "Razin"],
+        ["Leader", "Ranif"],
+        ["Leader", "Shahzad"],
       ],
-      notes: [],
+      notes: ["The PPT marks this year as Arts Fest Leaders. Controller names were not readable as text in the deck."],
     },
     {
       year: "2024-25",
-      title: "Arts Fest Leaders",
+      title: "Arts Fest",
       status: "Past",
       roles: [
         ["Controller", "Zidan"],
         ["Controller", "Burhan"],
-        ["Captain", "Naseem"],
-        ["Captain", "Nuhman"],
-        ["Captain", "Fuad MA"],
+        ["Leader", "Naseem"],
+        ["Leader", "Nuhman"],
+        ["Leader", "Fuad MA"],
       ],
       notes: [],
     },
     {
       year: "2023-24",
-      title: "Arts Fest Leaders",
+      title: "Arts Fest",
       status: "Inaugural",
       roles: [
         ["Controller", "Ranif"],
         ["Controller", "Naseem"],
         ["Controller", "Muzzammil"],
-        ["Captain", "Zidan"],
-        ["Captain", "Hisham"],
-        ["Captain", "Muhyudheen"],
-        ["Captain", "Muhammed VK"],
+        ["Leader", "Zidan"],
+        ["Leader", "Hisham"],
+        ["Leader", "Muhyudheen"],
+        ["Leader", "Muhammed VK"],
       ],
       notes: [],
     },
@@ -165,10 +165,10 @@
         <section class="itqan-history-hero">
           <div>
             <div class="itqan-history-kicker">${isUnion ? "Union Records" : "Arts Fest Records"}</div>
-            <h3>${isUnion ? "Committee Timeline" : "Controllers & Leaders Timeline"}</h3>
+            <h3>${isUnion ? "Committee Timeline" : "Arts Fest Timeline"}</h3>
             <p>${isUnion
               ? "Corrected from the class portfolio: 2026-27 is the current committee, while 2025-26 is now the previous year."
-              : "Arts Fest leadership has been reorganized by year using the portfolio data, with 2026-27 marked current."}</p>
+              : "Rebuilt from the portfolio data. Controllers and leaders are separated by role, and uncertain missing controller text is not guessed."}</p>
           </div>
           <div class="itqan-history-stat">
             <div><strong>${data.length}</strong><span>Recorded Years</span></div>
@@ -210,6 +210,10 @@
     const mediaHub = document.querySelector(".media-hub");
     if (!mediaHub) return;
     mediaHub.classList.add("itqan-media-upgraded");
+    mediaHub.style.display = "none";
+
+    const mediaTitle = mediaHub.querySelector(".sec-title");
+    if (mediaTitle) mediaTitle.innerHTML = 'Publications <span style="color:var(--pink)">& Media</span>';
 
     document.querySelectorAll(".media-tab").forEach((tab) => {
       if (!tab.querySelector("span")) tab.innerHTML = tab.innerHTML.replace(/([^>]+)$/, "<span>$1</span>");
@@ -221,6 +225,29 @@
     if (magButton) magButton.onclick = () => openItqanMediaModal("magazines");
 
     ensureMediaModal();
+    connectPublicationsCard();
+  }
+
+  function connectPublicationsCard() {
+    const cards = Array.from(document.querySelectorAll(".about-card"));
+    const card = cards.find((item) => {
+      const title = item.querySelector("h3");
+      return title && title.textContent.trim().toLowerCase().includes("publications");
+    });
+
+    if (!card) return;
+    card.onclick = (event) => {
+      event.preventDefault();
+      openItqanMediaModal("gallery");
+    };
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openItqanMediaModal("gallery");
+      }
+    });
   }
 
   window.openItqanMediaModal = function openItqanMediaModal(type) {
@@ -234,6 +261,7 @@
       ? '<i class="fas fa-newspaper"></i> Magazines & Tabloids'
       : '<i class="fas fa-images"></i> Photo Gallery';
     body.innerHTML = source ? source.innerHTML : "<p>No media found.</p>";
+    body.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
     modal.classList.add("active");
   };
 
