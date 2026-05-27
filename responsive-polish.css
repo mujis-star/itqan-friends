@@ -344,3 +344,27 @@ body {
 a, button, .btn, .feat-card, .about-card, .cc, .wc, .media-tab, .acc-hdr {
     cursor: pointer;
 }
+
+/* Mouse glow effect on cards */
+.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.feat-card::before, .about-card::before, .cc::before, .wc::before, .mag-card::before, .pub-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.feat-card:hover::before, .about-card:hover::before, .cc:hover::before, .wc:hover::before, .mag-card:hover::before, .pub-card:hover::before {
+    opacity: 1;
+}
