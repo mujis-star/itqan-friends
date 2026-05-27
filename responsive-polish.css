@@ -90,13 +90,16 @@
 
   .nav-links {
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: auto;
+    right: 0;
+    width: min(82vw, 390px);
     height: 100svh;
     padding: 6rem 28px 2rem;
     justify-content: flex-start;
     gap: 0.35rem;
     background: rgba(6, 8, 16, 0.96);
+    border-left: 1px solid rgba(0, 240, 255, 0.16);
+    box-shadow: -28px 0 80px rgba(0, 0, 0, 0.62);
   }
 
   .nav-links::before {
@@ -112,7 +115,7 @@
   .nav-links li {
     position: relative;
     z-index: 1;
-    width: min(100%, 330px);
+    width: 100%;
   }
 
   .nav-links a {
@@ -136,7 +139,7 @@
   }
 
   .auth-area {
-    width: min(100%, 330px);
+    width: 100%;
     margin: 1.1rem auto 0;
   }
 
@@ -234,26 +237,10 @@
 
   .nav-links {
     padding-top: 5.5rem;
+    width: min(86vw, 340px);
   }
 
   .hero h1 {
     font-size: clamp(2rem, 12vw, 3.2rem);
-  }
-}
-@media (max-width: 768px) {
-  .nav-links {
-    left: auto;
-    right: 0;
-    width: 50vw;
-    height: 100svh;
-    padding: 5.5rem 22px 2rem;
-    align-items: center;
-    justify-content: flex-start;
-    border-left: 1px solid rgba(0, 240, 255, 0.14);
-    box-shadow: -24px 0 70px rgba(0, 0, 0, 0.55);
-  }
-
-  .nav-links.active {
-    display: flex;
   }
 }
