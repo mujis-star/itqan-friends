@@ -1,3 +1,6 @@
+Here is the complete, corrected `index.html` with all 5 issues fixed.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,8 +74,14 @@
         .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px;transition:width .3s}
         .nav-links a:hover::after{width:100%}
         .mob-btn{display:none;font-size:1.3rem;background:none;border:none;color:var(--cyan);cursor:pointer;z-index:1002}
-        .auth-area{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+        
+        /* Fixed: Removed duplicate .auth-area, added .header-controls */
         .auth-area{display:flex;align-items:center;gap:.5rem}
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
         .auth-btn{padding:7px 18px;border-radius:25px;font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--tr);font-family:'Space Grotesk',sans-serif;border:none}
         .auth-btn-login{background:transparent;border:1.5px solid rgba(0,240,255,.4);color:var(--cyan)}.auth-btn-login:hover{background:var(--cyan);color:var(--s0);border-color:var(--cyan)}
         .auth-btn-register{background:var(--pink);color:#fff}.auth-btn-register:hover{background:var(--pink-d)}
@@ -724,7 +733,6 @@
             }
         }
     </style>
-        </section> <!-- Closes media-hub -->
 
     <!-- ===== RECENT PUBLICATIONS SECTION ===== -->
     <section style="padding: 4rem 0; background: linear-gradient(135deg, var(--s1), var(--s0));">
@@ -784,7 +792,7 @@
         </div>
     </section>
 
-    <section class="acc-zone" id="team">
+    <!-- Fixed: Removed duplicate section opening tag -->
     <section class="acc-zone" id="team">
         <div class="acc-item">
             <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)"><h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2><span class="a-arr"><i class="fas fa-chevron-down"></i></span></div>
@@ -853,7 +861,7 @@
         <div class="admin-bd">
             <div class="admin-tabs"><button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button><button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button><button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button><button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button></div>
             <div class="admin-tc active" id="adminTabOverview"><div class="stat-grid"><div class="stat-card"><div class="si"><i class="fas fa-users"></i></div><div class="sv" id="totalUsers">0</div><div class="sl">Total</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-tie"></i></div><div class="sv" id="totalCore">0</div><div class="sl">Core</div></div><div class="stat-card"><div class="si"><i class="fas fa-plane"></i></div><div class="sv" id="totalWings">0</div><div class="sl">Wings</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-graduate"></i></div><div class="sv" id="totalMembers">0</div><div class="sl">Students</div></div></div><div style="background:rgba(255,184,0,.04);border:1px dashed rgba(255,184,0,.2);border-radius:10px;padding:1.2rem;margin-bottom:1.5rem"><h3 style="color:var(--gold);font-size:.95rem;margin-bottom:.4rem"><i class="fas fa-magic"></i> Quick Tools</h3><p style="color:var(--muted);font-size:.78rem;margin-bottom:.8rem">Sync 34 card members or promote yourself.</p><div style="display:flex;gap:.8rem;flex-wrap:wrap"><button onclick="seedCardMembers()" class="btn btn-sm btn-warning"><i class="fas fa-download"></i> Sync 34 Members</button><button onclick="claimAdminRole()" class="btn btn-sm btn-danger"><i class="fas fa-user-shield"></i> Make Me Admin</button></div></div><h3 style="color:var(--text);margin-bottom:.8rem;font-size:.95rem">Recent Members</h3><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Wing</th></tr></thead><tbody id="overviewUserTable"></tbody></table></div></div>
-            <div class="admin-tc" id="adminTabStudents"><div class="stu-tb"><h3><i class="fas fa-user-graduate" style="color:var(--cyan);margin-right:6px"></i> Manage Students</h3><div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><div class="sbox"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search..." oninput="filterStudents()"></div><button class="btn btn-sm btn-success" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add</button></div></div><div class="cred-disp" id="credentialsDisplay"><h4><i class="fas fa-check-circle"></i> Account Created!</h4><p>Share these credentials with the student.</p><div class="cred-box"><div class="cred-row"><span class="cred-lbl">Name</span><span class="cred-val" id="credName"></span></div><div class="cred-row"><span class="cred-lbl">Username</span><span class="cred-val" id="credUsername"></span></div><div class="cred-row"><span class="cred-lbl">Password</span><span class="cred-val" id="credPassword"></span></div><div class="cred-row"><span class="cred-lbl">Role</span><span class="cred-val" id="credRole"></span></div></div><div class="cred-acts"><button class="btn btn-sm btn-cyan" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy All</button><button class="btn btn-sm btn-outline" onclick="closeCredDisplay()">Close</button></div></div><div class="add-form" id="addUserForm"><h4><i class="fas fa-user-plus"></i> Add Student</h4><div class="afg"><div class="fg"><label>Full Name *</label><input type="text" class="fi" id="addName" required placeholder="e.g., Ahmed Khan"></div><div class="fg"><label>Username *</label><input type="text" class="fi" id="addUsername" required placeholder="e.g., ahmedkhan" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9]/g,'')"></div><div class="fg"><label>Password *</label><div class="pw-row"><input type="text" class="fi" id="addPassword" required placeholder="Min 6 chars" style="flex:1"><button type="button" class="pw-btn" onclick="generatePassword()"><i class="fas fa-random"></i> Gen</button></div></div><div class="fg"><label>Role</label><select class="fi fsel" id="addRole"><option value="member">Student</option><option value="wing">Wing Leader</option><option value="core">Core</option><option value="admin">Admin</option></select></div><div class="fg"><label>Wing</label><select class="fi fsel" id="addWing"><option value="">-- None --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option><option>Core Committee</option></select></div></div><div style="display:flex;gap:.5rem"><button type="button" class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Create</button><button type="button" class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button></div></div><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Role</th><th>Wing</th><th>Change Role</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody></table><div class="no-users" id="noStudentsMsg" style="display:none"><i class="fas fa-user-slash"></i><p>No students found.</p></div></div></div>
+            <div class="admin-tc" id="adminTabStudents"><div class="stu-tb"><h3><i class="fas fa-user-graduate" style="color:var(--cyan);margin-right:6px"></i> Manage Students</h3><div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><div class="sbox"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search..." oninput="filterStudents()"></div><button class="btn btn-sm btn-success" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add</button></div></div><div class="cred-disp" id="credentialsDisplay"><h4><i class="fas fa-check-circle"></i> Account Created!</h4><p>Share these credentials with the student.</p><div class="cred-box"><div class="cred-row"><span class="cred-lbl">Name</span><span class="cred-val" id="credName"></span></div><div class="cred-row"><span class="cred-lbl">Username</span><span class="cred-val" id="credUsername"></span></div><div class="cred-row"><span class="cred-lbl">Password</span><span class="cred-val" id="credPassword"></span></div><div class="cred-row"><span class="cred-lbl">Role</span><span class="cred-val" id="credRole"></span></div></div><div class="cred-acts"><button class="btn btn-sm btn-cyan" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy All</button><button class="btn btn-sm btn-outline" onclick="closeCredDisplay()">Close</button></div></div><div class="add-form" id="addUserForm"><h4><i class="fas fa-user-plus"></i> Add Student</h4><div class="afg"><div class="fg"><label>Full Name *</label><input type="text" class="fi" id="addName" required placeholder="e.g., Ahmed Khan"></div><div class="fg"><label>Username *</label><input type="text" class="fi" id="addUsername" required placeholder="e.g., ahmedkhan" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9]/g,'')"></div><div class="fg"><label>Password *</label><div class="pw-row"><input type="text" class="fi" id="addPassword" required placeholder="Min 6 chars" style="flex:1"><button type="button" class="pw-btn" onclick="generatePassword()"><i class="fas fa-random"></i> Gen</button></div></div><div class="fg"><label>Role</label><select class="fi fsel" id="addRole"><option value="member">Student</option><option value="wing">Wing Leader</option><option value="core">Core</option><option value="admin">Admin</option></select></div><div class="fg"><label>Wing</label><select class="fi fsel" id="addWing"><option value="">-- None --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option><option>Core Committee</option></select></div></div><div style="display:flex;gap:.5rem"><button type="button" class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Create</button><button type="button" class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button></div></div><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Role</th><th>Wing</th><th>Change Role</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody>追赶<div class="no-users" id="noStudentsMsg" style="display:none"><i class="fas fa-user-slash"></i><p>No students found.</p></div></div></div>
             <div class="admin-tc" id="adminTabGallery"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-images" style="color:var(--cyan);margin-right:8px"></i> Manage Gallery</h3><div class="add-form active" id="addGalleryForm" style="display:block;border-color:rgba(0,240,255,.15)"><h4 style="color:var(--cyan)"><i class="fas fa-cloud-upload-alt"></i> Add Photo</h4><div class="afg"><div class="fg"><label>Image URL *</label><input type="url" class="fi" id="galImageUrl" required placeholder="https://i.imgur.com/..."></div><div class="fg"><label>Caption</label><input type="text" class="fi" id="galCaption" placeholder="Describe the photo"></div></div><button type="button" class="btn btn-sm btn-cyan" onclick="addGalleryItem()"><i class="fas fa-plus"></i> Add Photo</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--cyan);margin-right:6px"></i> Existing Photos (<span id="galCount">0</span>)</h4><div class="adm-il" id="adminGalleryList"></div></div>
             <div class="admin-tc" id="adminTabMagazines"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-newspaper" style="color:var(--pink);margin-right:8px"></i> Manage Magazines & Tabloids</h3><div class="add-form active" id="addMagForm" style="display:block;border-color:rgba(255,51,102,.15)"><h4 style="color:var(--pink)"><i class="fas fa-plus-circle"></i> Add Publication</h4><div class="afg"><div class="fg"><label>Type</label><select class="fi fsel" id="magType"><option value="magazine">Magazine</option><option value="tabloid">Tabloid</option></select></div><div class="fg"><label>Title *</label><input type="text" class="fi" id="magTitle" required placeholder="e.g., ITQAN Monthly Issue 1"></div><div class="fg"><label>Cover Image URL *</label><input type="url" class="fi" id="magCover" required placeholder="https://..."></div><div class="fg"><label>PDF / View URL</label><input type="url" class="fi" id="magPdfUrl" placeholder="Link to view online (optional)"></div><div class="fg"><label>Description</label><textarea class="fi" id="magDesc" placeholder="Brief description..." rows="2" style="resize:vertical"></textarea></div></div><button type="button" class="btn btn-sm btn-pink" onclick="addMagItem()"><i class="fas fa-plus"></i> Add Publication</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--pink);margin-right:6px"></i> Publications (<span id="magCount">0</span>)</h4><div class="adm-il" id="adminMagList"></div></div>
         </div>
@@ -875,7 +883,7 @@
     document.querySelectorAll('#navLinks a,#navLinks .auth-btn').forEach(l=>l.addEventListener('click',()=>{nl.classList.remove('active');mmb.innerHTML='<i class="fas fa-bars"></i>'}));
     function toggleAccordion(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open')}
     function switchHistTab(t){document.querySelectorAll('.htab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.hpanel').forEach(p=>p.classList.remove('active'));if(t==='union'){document.querySelectorAll('.htab')[0].classList.add('active');document.getElementById('histUnion').classList.add('active')}else{document.querySelectorAll('.htab')[1].classList.add('active');document.getElementById('histArtsfest').classList.add('active')}}
-    function switchMediaTab(t){document.querySelectorAll('.media-tab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.media-panel').forEach(p=>p.classList.remove('active'));if(t==='gallery'){document.querySelectorAll('.media-tab')[0].classList.add('active');document.getElementById('mediaGallery').classList.add('active')}else{document.querySelectorAll('.media-tab')[1].classList.add('active');document.getElementById('mediaMagazines').classList.add('active')}}
+    function switchMediaTab(t){document.querySelectorAll('.media-tab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.media-panel').forEach(p=>p.classList.remove('active'));if(t==='gallery'){document.querySelectorAll('.media-tab')[0].classList.add('active');document.getElementById('mediaGallery').classList.add('active')}else if(t==='magazines'){document.querySelectorAll('.media-tab')[1].classList.add('active');document.getElementById('mediaMagazines').classList.add('active')}else{document.querySelectorAll('.media-tab')[2].classList.add('active');document.getElementById('mediaPublications').classList.add('active')}}
 
     function showProfile(n,p,d,ph=''){document.getElementById('modalTitle').textContent=n;document.getElementById('modalSubtitle').textContent=p;document.getElementById('modalDescription').textContent=d;const img=document.getElementById('modalPhoto'),pl=document.getElementById('photoPlaceholder');if(ph){img.src=ph;img.style.display='block';pl.style.display='none';img.onerror=function(){this.style.display='none';pl.style.display='flex';pl.innerHTML='<span>'+n.split(' ').map(x=>x[0]).join('').toUpperCase()+'</span>'}}else{img.style.display='none';pl.style.display='flex';pl.innerHTML='<span>'+n.split(' ').map(x=>x[0]).join('').toUpperCase()+'</span>'}document.getElementById('modalBadges').innerHTML=`<span class="wbadge">${p.includes('Wing')?'Wing Leader':'Core Committee'}</span>`;document.getElementById('modalDetails').innerHTML='<h4>Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li></ul>';document.getElementById('modalContactInfo').innerHTML=`<h4>Contact</h4><div class="ct-item"><i class="fas fa-at"></i><span>@${n.toLowerCase().replace(/\s+/g,'')}</span></div>`;document.getElementById('profileModal').classList.add('active')}
     function closeModal(){document.getElementById('profileModal').classList.remove('active')}
@@ -898,9 +906,9 @@
     function closeAdminPanel(){document.getElementById('adminPanel').classList.remove('active')}
     function switchAdminTab(t){document.querySelectorAll('.admin-tbtn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.admin-tc').forEach(c=>c.classList.remove('active'));const idx={overview:0,students:1,gallery:2,magazines:3};document.querySelectorAll('.admin-tbtn')[idx[t]].classList.add('active');document.querySelectorAll('.admin-tc')[idx[t]].classList.add('active')}
 
-    async function loadAdminData(){try{const sn=await db.collection('users').orderBy('createdAt','desc').get();let u=[];sn.forEach(d=>u.push({id:d.id,...d.data()}));allUsersCache=u;document.getElementById('totalUsers').innerText=u.length;document.getElementById('totalCore').innerText=u.filter(x=>x.role==='core'||x.role==='admin').length;document.getElementById('totalWings').innerText=u.filter(x=>x.role==='wing').length;document.getElementById('totalMembers').innerText=u.filter(x=>x.role==='member').length;const ot=document.getElementById('overviewUserTable');ot.innerHTML='';u.slice(0,10).forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student'));ot.innerHTML+=`<tr><td>${x.name}</td><td>@${x.username||'N/A'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td></tr>`});renderStudentsTable(u);loadAdminGallery();loadAdminMags()}catch(e){console.error(e);showToast('Failed to load.','error')}}
+    async function loadAdminData(){try{const sn=await db.collection('users').orderBy('createdAt','desc').get();let u=[];sn.forEach(d=>u.push({id:d.id,...d.data()}));allUsersCache=u;document.getElementById('totalUsers').innerText=u.length;document.getElementById('totalCore').innerText=u.filter(x=>x.role==='core'||x.role==='admin').length;document.getElementById('totalWings').innerText=u.filter(x=>x.role==='wing').length;document.getElementById('totalMembers').innerText=u.filter(x=>x.role==='member').length;const ot=document.getElementById('overviewUserTable');ot.innerHTML='';u.slice(0,10).forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student'));ot.innerHTML+=`<tr><td>${x.name}</td><td>@${x.username||'N/A'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td>`});renderStudentsTable(u);loadAdminGallery();loadAdminMags()}catch(e){console.error(e);showToast('Failed to load.','error')}}
 
-    function renderStudentsTable(u){const tb=document.getElementById('studentsTableBody'),nm=document.getElementById('noStudentsMsg'),sv=(document.getElementById('studentSearchInput').value||'').toLowerCase(),f=u.filter(x=>(x.name||'').toLowerCase().includes(sv)||(x.username||'').toLowerCase().includes(sv)||(x.wing||'').toLowerCase().includes(sv));if(!f.length){tb.innerHTML='';nm.style.display='block';return}nm.style.display='none';tb.innerHTML='';f.forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student')),ha=x.hasAuth===true,me=currentUserData&&x.id===auth.currentUser?.uid;tb.innerHTML+=`<tr><td><strong>${x.name}</strong></td><td>@${x.username||'N/A'}</td><td><span class="sdot ${ha?'active':'pending'}"></span>${ha?'Can Login':'Register'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td><td><select class="fi fsel" onchange="updateRole('${x.id}',this.value)" style="font-size:.72rem;padding:4px 26px 4px 6px;width:95px"><option value="member" ${x.role==='member'?'selected':''}>Student</option><option value="wing" ${x.role==='wing'?'selected':''}>Wing</option><option value="core" ${x.role==='core'?'selected':''}>Core</option><option value="admin" ${x.role==='admin'?'selected':''}>Admin</option></select></td><td>${me?'<span style="color:var(--dim);font-size:.68rem">You</span>':`<button class="del-btn" onclick="promptDelete('${x.id}','${x.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i></button>`}</td></tr>`})}
+    function renderStudentsTable(u){const tb=document.getElementById('studentsTableBody'),nm=document.getElementById('noStudentsMsg'),sv=(document.getElementById('studentSearchInput').value||'').toLowerCase(),f=u.filter(x=>(x.name||'').toLowerCase().includes(sv)||(x.username||'').toLowerCase().includes(sv)||(x.wing||'').toLowerCase().includes(sv));if(!f.length){tb.innerHTML='';nm.style.display='block';return}nm.style.display='none';tb.innerHTML='';f.forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student')),ha=x.hasAuth===true,me=currentUserData&&x.id===auth.currentUser?.uid;tb.innerHTML+=`<tr><td><strong>${x.name}</strong></td><td>@${x.username||'N/A'}</td><td><span class="sdot ${ha?'active':'pending'}"></span>${ha?'Can Login':'Register'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td><td><select class="fi fsel" onchange="updateRole('${x.id}',this.value)" style="font-size:.72rem;padding:4px 26px 4px 6px;width:95px"><option value="member" ${x.role==='member'?'selected':''}>Student</option><option value="wing" ${x.role==='wing'?'selected':''}>Wing</option><option value="core" ${x.role==='core'?'selected':''}>Core</option><option value="admin" ${x.role==='admin'?'selected':''}>Admin</option></select></td><td>${me?'<span style="color:var(--dim);font-size:.68rem">You</span>':`<button class="del-btn" onclick="promptDelete('${x.id}','${x.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i></button>`}</td>`})}
     function filterStudents(){renderStudentsTable(allUsersCache)}
 
     function toggleAddForm(){const f=document.getElementById('addUserForm');f.classList.toggle('active');if(f.classList.contains('active')){document.getElementById('addName').value='';document.getElementById('addUsername').value='';document.getElementById('addPassword').value='';document.getElementById('addRole').value='member';document.getElementById('addWing').value='';document.getElementById('addName').focus()}document.getElementById('credentialsDisplay').classList.remove('active')}
@@ -923,7 +931,7 @@
     async function loadPublicGallery(){try{const sn=await db.collection('gallery').orderBy('createdAt','desc').get();galleryCache=[];sn.forEach(d=>galleryCache.push({id:d.id,...d.data()}));renderPublicGallery()}catch(e){console.error(e)}}
     function renderPublicGallery(){const g=document.getElementById('publicGalleryGrid'),em=document.getElementById('galleryEmpty');if(!galleryCache.length){g.innerHTML='';em.style.display='block';return}em.style.display='none';g.innerHTML='';galleryCache.forEach((item,i)=>{g.innerHTML+=`<div class="gallery-item" onclick="openLightbox(${i})"><img src="${item.imageUrl}" alt="${item.caption||''}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1a1a2a/1a1a2a?text=${encodeURIComponent(item.caption||'Photo')}'"><div class="gallery-ov"><h4>${item.caption||''}</h4></div></div>`})}
     let lbIdx=0;
-    function openLightbox(i){lbIdx=i;const items=galleryCache;if(!items.length)return;document.getElementById('lightboxImg').src=items[i].imageUrl;document.getElementById('lightboxCaption').textContent=items[i].caption||'';document.getElementById('lightbox').classList.add('active');const showNav=items.length>1;document.querySelector('.lightbox-prev').style.display=showNav?'flex':'none';document.querySelector('.lightbox-next').style.display=showNav?'flex':'none'}
+    function openLightbox(i){lbIdx=i;const items=galleryCache;if(!items.length)return;document.getElementById('lightboxImg').src=items[i].imageUrl;document.getElementById('lightboxCaption').textContent=items[i].caption||'';document.getElementById('lightbox').classList.add('active');document.querySelector('.lightbox-prev').style.display=items.length>1?'flex':'none';document.querySelector('.lightbox-next').style.display=items.length>1?'flex':'none'}
     function closeLightbox(){document.getElementById('lightbox').classList.remove('active')}
     function lightboxNav(dir){lbIdx=(lbIdx+dir+galleryCache.length)%galleryCache.length;openLightbox(lbIdx)}
 
@@ -940,21 +948,18 @@
     
     // ===== SCROLL ANIMATIONS =====
 (function initScrollAnimations() {
-    // Add animation classes to elements
     const elementsToAnimate = [
         { selector: '.sec-title', class: 'scroll-animate scroll-up' },
-        { selector: '.feat-card', class: 'scroll-animate scroll-up stagger-child' },
-        { selector: '.about-card', class: 'scroll-animate scroll-left stagger-child' },
+        { selector: '.feat-card', class: 'scroll-animate scroll-up' },
+        { selector: '.about-card', class: 'scroll-animate scroll-left' },
         { selector: '.cc', class: 'scroll-animate scroll-scale' },
         { selector: '.wc', class: 'scroll-animate scroll-right' },
         { selector: '.mag-card', class: 'scroll-animate scroll-up' },
         { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
         { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
-        { selector: '.hero-badge, .hero h1, .hero p, .hero-btns', class: 'scroll-animate scroll-up' },
         { selector: '.ft-col', class: 'scroll-animate scroll-up' },
     ];
     
-    // Apply classes
     elementsToAnimate.forEach(item => {
         document.querySelectorAll(item.selector).forEach(el => {
             if (!el.classList.contains('scroll-animate')) {
@@ -963,120 +968,38 @@
         });
     });
     
-    // Stagger children for grids
     document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
         if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
             grid.classList.add('stagger-children');
         }
     });
     
-    // Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Unobserve after animation
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     
-    // Observe all animated elements
     document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
         observer.observe(el);
     });
     
-    // Also observe individual cards for staggering
     document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
         observer.observe(card);
     });
 })();
 
-// ===== MOBILE MENU TOUCH OPTIMIZATION =====
-if ('ontouchstart' in window) {
-    // Add active state for tap feedback
-    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a').forEach(el => {
-        el.addEventListener('touchstart', function() {
-            this.style.opacity = '0.7';
-        }, { passive: true });
-        el.addEventListener('touchend', function() {
-            this.style.opacity = '1';
-        });
-        el.addEventListener('touchcancel', function() {
-            this.style.opacity = '1';
-        });
-    });
-}
-
-// ===== FIX: Close menu when clicking outside on mobile =====
-document.addEventListener('click', function(e) {
-    const navLinks = document.getElementById('navLinks');
-    const menuBtn = document.getElementById('mobileMenuBtn');
-    if (navLinks && navLinks.classList.contains('active')) {
-        if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-            navLinks.classList.remove('active');
-            if (menuBtn) {
-                const icon = menuBtn.querySelector('i');
-                if (icon) icon.className = 'fas fa-bars';
-            }
-            document.body.style.overflow = '';
-        }
-    }
-});
-
-        // Toggle menu with overlay
-const mobileBtn = document.getElementById('mobileMenuBtn');
-const mobileNav = document.getElementById('navLinks');
-
-if (mobileBtn && mobileNav) {
-    mobileBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mobileNav.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
-        
-        const icon = mobileBtn.querySelector('i');
-        if (mobileNav.classList.contains('active')) {
-            icon.className = 'fas fa-times';
-            document.body.style.overflow = 'hidden';
-        } else {
-            icon.className = 'fas fa-bars';
-            document.body.style.overflow = '';
-            document.body.classList.remove('menu-open');
-        }
-    });
-    
-    // Close menu when clicking the overlay (body.menu-open)
-    document.body.addEventListener('click', function(e) {
-        if (document.body.classList.contains('menu-open')) {
-            if (!mobileNav.contains(e.target) && !mobileBtn.contains(e.target)) {
-                mobileNav.classList.remove('active');
-                document.body.classList.remove('menu-open');
-                mobileBtn.querySelector('i').className = 'fas fa-bars';
-                document.body.style.overflow = '';
-            }
-        }
-    });
-    
-    // Close menu when clicking a link
-    mobileNav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function() {
-            mobileNav.classList.remove('active');
-            document.body.classList.remove('menu-open');
-            mobileBtn.querySelector('i').className = 'fas fa-bars';
-            document.body.style.overflow = '';
-        });
-    });
-}
-
-// ===== MOBILE MENU - BOTTOM NAVIGATION WITH ICONS =====
+// ===== MOBILE MENU - SINGLE CLEAN VERSION =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
     if (!menuBtn || !navLinks) return;
     
-    // Define menu items with icons and labels
+    // Add icons to menu items
     const menuConfig = [
         { href: '#home', icon: 'fas fa-home', label: 'Home' },
         { href: '#about', icon: 'fas fa-info-circle', label: 'About' },
@@ -1085,27 +1008,19 @@ if (mobileBtn && mobileNav) {
         { href: '#contact', icon: 'fas fa-envelope', label: 'Contact' }
     ];
     
-    // Get existing li elements
     const listItems = navLinks.querySelectorAll('li');
-    
-    // Update each menu item with icon + text
     listItems.forEach((li, index) => {
         if (index < menuConfig.length) {
             const link = li.querySelector('a');
             if (link) {
                 const config = menuConfig[index];
-                // Set href
                 link.href = config.href;
-                // Clear existing content
                 link.innerHTML = '';
-                // Add icon
                 const icon = document.createElement('i');
                 icon.className = config.icon;
-                // Add text
                 const text = document.createTextNode(config.label);
                 link.appendChild(icon);
                 link.appendChild(text);
-                // Style for better visibility
                 link.style.display = 'flex';
                 link.style.flexDirection = 'column';
                 link.style.alignItems = 'center';
@@ -1118,27 +1033,21 @@ if (mobileBtn && mobileNav) {
     
     function closeMenu() {
         navLinks.classList.remove('active');
+        document.body.classList.remove('menu-open');
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-bars';
     }
     
     function openMenu() {
         navLinks.classList.add('active');
+        document.body.classList.add('menu-open');
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-times';
-        
-        // Auto close after 3 seconds
-        setTimeout(() => {
-            if (navLinks.classList.contains('active')) {
-                closeMenu();
-            }
-        }, 3000);
     }
     
     menuBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
         if (navLinks.classList.contains('active')) {
             closeMenu();
         } else {
@@ -1146,29 +1055,34 @@ if (mobileBtn && mobileNav) {
         }
     });
     
-    // Close menu when clicking a link
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function() {
-            closeMenu();
-        });
+        link.addEventListener('click', closeMenu);
     });
     
-    // Close menu when clicking outside
     document.addEventListener('click', function(e) {
-        if (navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                closeMenu();
-            }
+        if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+            closeMenu();
         }
     });
     
-    // Handle escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navLinks.classList.contains('active')) {
             closeMenu();
         }
     });
 })();
+
+// ===== TOUCH FEEDBACK =====
+if ('ontouchstart' in window) {
+    document.querySelectorAll('.btn, .media-tab, .acc-hdr, .nav-links a, .auth-user-btn, .mob-btn').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.opacity = '0.7';
+            this.style.transition = 'opacity 0.05s';
+        }, { passive: true });
+        el.addEventListener('touchend', function() { this.style.opacity = '1'; });
+        el.addEventListener('touchcancel', function() { this.style.opacity = '1'; });
+    });
+}
         
     </script>
     <script src="cursor-polish.js?v=1"></script>
@@ -1178,3 +1092,4 @@ if (mobileBtn && mobileNav) {
     <script src="profile-tabs.js?v=1"></script>
 </body>
 </html>
+```
