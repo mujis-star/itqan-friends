@@ -275,3 +275,20 @@ header {
         display: flex !important;
     }
 }
+/* Prevent blank screen during scroll */
+body {
+    background: #060810;
+    min-height: 100vh;
+}
+
+section {
+    background: transparent;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure cards are visible */
+.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card {
+    background: #121626;
+    will-change: transform;
+}
