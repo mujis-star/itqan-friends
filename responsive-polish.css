@@ -1,17 +1,84 @@
 /* ============================================
    responsive-polish.css - ITQAN FRIENDS
-   COMPLETE FIX - HEADER, SCROLLING, ANIMATIONS
+   DESKTOP + MOBILE FIXES
    ============================================ */
 
-* {
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
+/* ===== BASE DESKTOP STYLES - NO SCROLLING ISSUES ===== */
 html, body {
     overflow-x: hidden;
     width: 100%;
     position: relative;
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+}
+
+/* Ensure all content is scrollable normally */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+/* ===== DESKTOP HOVER ANIMATIONS ===== */
+.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card, .gallery-item {
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.feat-card:hover, .about-card:hover, .cc:hover, .wc:hover, .mag-card:hover, .pub-card:hover {
+    transform: translateY(-10px) scale(1.02) !important;
+    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn {
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+.media-tab {
+    transition: all 0.3s ease !important;
+}
+
+.media-tab:hover {
+    transform: translateY(-2px) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.acc-hdr {
+    transition: all 0.3s ease !important;
+}
+
+.acc-hdr:hover {
+    transform: translateX(5px) !important;
+    border-color: rgba(0, 240, 255, 0.2) !important;
+}
+
+.soc-icons a {
+    transition: all 0.3s ease !important;
+}
+
+.soc-icons a:hover {
+    transform: translateY(-5px) scale(1.1) !important;
+    background: #00F0FF !important;
+    color: #060810 !important;
+}
+
+.nav-links a {
+    transition: all 0.3s ease !important;
+}
+
+.nav-links a:hover {
+    color: #00F0FF !important;
+    transform: translateY(-2px) !important;
 }
 
 /* ===== SCROLL ANIMATIONS ===== */
@@ -33,16 +100,6 @@ html, body {
 @keyframes scaleIn {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes glow {
-    0%, 100% { box-shadow: 0 0 5px rgba(0,240,255,0.2); }
-    50% { box-shadow: 0 0 20px rgba(0,240,255,0.5); }
 }
 
 .scroll-animate {
@@ -73,111 +130,15 @@ html, body {
 .stagger-children.visible > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
 .stagger-children.visible > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
 
-/* ===== DESKTOP HOVER ANIMATIONS ===== */
-/* Card hover effects */
-.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card, .gallery-item {
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
-}
-
-.feat-card:hover, .about-card:hover, .cc:hover, .wc:hover, .mag-card:hover, .pub-card:hover {
-    transform: translateY(-10px) scale(1.02) !important;
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
-}
-/* ===== BIGGER HEADER ON MOBILE ===== */
-header {
-    padding: 0.8rem 0 !important;
-}
-
-.logo-img {
-    height: 40px !important;
-}
-
-.logo-name {
-    font-size: 1rem !important;
-    font-weight: 700 !important;
-}
-
-.auth-user-btn {
-    padding: 6px 14px !important;
-    font-size: 0.8rem !important;
-}
-
-.avatar-sm {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 0.65rem !important;
-}
-
-.mob-btn {
-    width: 42px !important;
-    height: 42px !important;
-    font-size: 1.2rem !important;
-}
-/* Button hover effects */
-.btn {
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn:hover {
-    transform: translateY(-3px) scale(1.02) !important;
-}
-
-.btn:active {
-    transform: translateY(0) scale(0.98) !important;
-}
-
-/* Media tab hover */
-.media-tab {
-    transition: all 0.3s ease !important;
-}
-
-.media-tab:hover {
-    transform: translateY(-2px) !important;
-    background: rgba(255,255,255,0.05) !important;
-}
-
-/* Accordion header hover */
-.acc-hdr {
-    transition: all 0.3s ease !important;
-}
-
-.acc-hdr:hover {
-    transform: translateX(5px) !important;
-    border-color: rgba(0,240,255,0.2) !important;
-}
-
-/* Social icons hover */
-.soc-icons a {
-    transition: all 0.3s ease !important;
-}
-
-.soc-icons a:hover {
-    transform: translateY(-5px) scale(1.1) !important;
-    background: var(--cyan) !important;
-    color: var(--s0) !important;
-}
-
-/* Nav links hover */
-.nav-links a {
-    transition: all 0.3s ease !important;
-}
-
-.nav-links a:hover {
-    color: var(--cyan) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* Tablet */
+/* ===== TABLET (max-width: 1024px) ===== */
 @media (max-width: 1024px) {
     .container { padding: 0 20px; }
     .feat-grid, .about-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 }
 
-/* ===== MOBILE FIXES ===== */
+/* ===== MOBILE (max-width: 768px) - ONLY AFFECTS MOBILE ===== */
 @media (max-width: 768px) {
-    /* Prevent body from overflowing and allow scrolling */
+    /* Prevent horizontal scroll, allow vertical scroll */
     body {
         overflow-x: hidden !important;
         overflow-y: auto !important;
@@ -188,16 +149,11 @@ header {
     .container {
         padding: 0 16px !important;
         width: 100% !important;
-        box-sizing: border-box !important;
     }
     
-    /* ===== HEADER FIX - PROPER ALIGNMENT ===== */
+    /* ===== HEADER - BIGGER ON MOBILE ===== */
     header {
-        padding: 0.5rem 0 !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-        background: rgba(6, 8, 16, 0.95) !important;
+        padding: 0.8rem 0 !important;
     }
     
     .h-wrap {
@@ -207,29 +163,22 @@ header {
         flex-direction: row !important;
         flex-wrap: nowrap !important;
         gap: 0.5rem !important;
-        width: 100% !important;
     }
     
-    /* Logo section */
     .logo {
         display: flex !important;
         align-items: center !important;
-        gap: 6px !important;
+        gap: 8px !important;
         flex-shrink: 0 !important;
     }
     
     .logo-img {
-        height: 32px !important;
+        height: 38px !important;
         width: auto !important;
     }
     
-    .logo-text {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-    
     .logo-name {
-        font-size: 0.8rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
         white-space: nowrap !important;
     }
@@ -238,7 +187,6 @@ header {
         display: none !important;
     }
     
-    /* Right side controls */
     .header-controls {
         display: flex !important;
         align-items: center !important;
@@ -246,32 +194,23 @@ header {
         flex-shrink: 0 !important;
     }
     
-    .auth-area {
-        display: flex !important;
-        align-items: center !important;
-        margin: 0 !important;
-    }
-    
     .auth-user-btn {
-        padding: 4px 10px !important;
-        font-size: 0.7rem !important;
+        padding: 5px 12px !important;
+        font-size: 0.75rem !important;
         font-weight: 600 !important;
         white-space: nowrap !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;
         background: rgba(0, 240, 255, 0.08) !important;
         border-radius: 30px !important;
         border: 1px solid rgba(0, 240, 255, 0.2) !important;
     }
     
     .avatar-sm {
-        width: 20px !important;
-        height: 20px !important;
-        font-size: 0.55rem !important;
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.6rem !important;
     }
     
-    /* Hide login/register in header */
+    /* Hide login/register buttons in header */
     .auth-btn-login, 
     .auth-btn-register {
         display: none !important;
@@ -283,8 +222,8 @@ header {
         background: rgba(0, 240, 255, 0.1) !important;
         border: 1px solid rgba(0, 240, 255, 0.2) !important;
         border-radius: 50% !important;
-        width: 34px !important;
-        height: 34px !important;
+        width: 38px !important;
+        height: 38px !important;
         align-items: center !important;
         justify-content: center !important;
         color: #00F0FF !important;
@@ -295,27 +234,20 @@ header {
         margin: 0 !important;
     }
     
-    /* ===== MOBILE MENU - DOESN'T BLOCK SCROLLING ===== */
+    /* ===== MOBILE MENU - DROPDOWN ===== */
     .nav-links {
         display: none !important;
-        position: fixed !important;
-        top: 60px !important;
+        position: absolute !important;
+        top: 70px !important;
         left: 0 !important;
         right: 0 !important;
-        bottom: auto !important;
         width: 100% !important;
-        max-height: calc(100vh - 60px) !important;
-        overflow-y: auto !important;
-        background: rgba(6, 8, 16, 0.98) !important;
-        backdrop-filter: blur(20px) !important;
+        background: #0C0F1A !important;
+        border-bottom: 1px solid rgba(0, 240, 255, 0.1) !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
         align-items: center !important;
-        gap: 0.5rem !important;
-        z-index: 1001 !important;
-        margin: 0 !important;
         padding: 1rem !important;
-        border-top: 1px solid rgba(0, 240, 255, 0.1) !important;
+        z-index: 1001 !important;
     }
     
     .nav-links.active {
@@ -325,17 +257,16 @@ header {
     .nav-links li {
         width: 100% !important;
         text-align: center !important;
-        list-style: none !important;
+        padding: 0.5rem 0 !important;
+        margin: 0 !important;
     }
     
     .nav-links a {
-        font-size: 1.1rem !important;
-        font-weight: 500 !important;
         display: block !important;
-        padding: 12px 20px !important;
+        padding: 10px !important;
+        font-size: 1rem !important;
         color: #E8ECF4 !important;
         text-decoration: none !important;
-        border-radius: 40px !important;
     }
     
     .nav-links a:active {
@@ -343,35 +274,28 @@ header {
         color: #00F0FF !important;
     }
     
-    /* Auth buttons in menu */
+    /* Auth buttons inside mobile menu */
     .nav-links .auth-area {
         display: flex !important;
         flex-direction: column !important;
         width: 80% !important;
-        margin-top: 1rem !important;
-        gap: 0.8rem !important;
+        margin-top: 0.5rem !important;
+        gap: 0.5rem !important;
     }
     
     .nav-links .auth-btn-login,
     .nav-links .auth-btn-register {
         display: block !important;
         width: 100% !important;
-        padding: 10px !important;
-        font-size: 0.9rem !important;
+        padding: 8px !important;
+        font-size: 0.85rem !important;
         text-align: center !important;
     }
     
-    /* ===== HERO SECTION - FIX SCROLLING ===== */
+    /* ===== HERO SECTION ===== */
     .hero {
         padding: 2rem 1rem 2rem !important;
         min-height: auto !important;
-        position: relative !important;
-        overflow: hidden !important;
-    }
-    
-    .hero-inner {
-        position: relative !important;
-        z-index: 2 !important;
     }
     
     .hero-badge {
@@ -381,16 +305,17 @@ header {
     }
     
     .hero h1 {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
         line-height: 1.3 !important;
         margin-bottom: 0.6rem !important;
     }
     
     .hero p {
-        font-size: 0.78rem !important;
+        font-size: 0.8rem !important;
         padding: 0 0.5rem !important;
         margin-bottom: 1.2rem !important;
         line-height: 1.5 !important;
+        word-break: break-word !important;
     }
     
     .hero-btns {
@@ -400,7 +325,7 @@ header {
     }
     
     .hero-btns .btn {
-        width: 70% !important;
+        width: 80% !important;
         text-align: center !important;
         justify-content: center !important;
         padding: 8px 16px !important;
@@ -411,9 +336,9 @@ header {
         display: none !important;
     }
     
-    /* ===== SECTIONS - PROPER SPACING FOR SCROLLING ===== */
+    /* ===== SECTIONS ===== */
     .features, .about, .media-hub, .acc-zone {
-        padding: 2.5rem 0 !important;
+        padding: 2rem 0 !important;
     }
     
     .sec-title {
@@ -421,11 +346,7 @@ header {
         margin-bottom: 0.3rem !important;
     }
     
-    .sec-sub {
-        font-size: 0.75rem !important;
-    }
-    
-    /* ===== GRIDS ===== */
+    /* ===== GRIDS - SINGLE COLUMN ===== */
     .feat-grid, .about-grid, .wgrid, .gallery-grid,
     .mag-grid, .core-grid {
         grid-template-columns: 1fr !important;
@@ -438,11 +359,19 @@ header {
     }
     
     .feat-card h3, .about-card h3 {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
     }
     
     .feat-card p, .about-card p {
-        font-size: 0.8rem !important;
+        font-size: 0.78rem !important;
+    }
+    
+    .cc-name, .w-ttl {
+        font-size: 0.9rem !important;
+    }
+    
+    .cc-desc, .w-info {
+        font-size: 0.75rem !important;
     }
     
     /* ===== HIDE AMBIENT EFFECTS ===== */
@@ -453,7 +382,7 @@ header {
     /* ===== FOOTER ===== */
     .ft-grid {
         grid-template-columns: 1fr !important;
-        gap: 1.2rem !important;
+        gap: 1rem !important;
         text-align: center !important;
     }
     
@@ -475,37 +404,33 @@ header {
     .media-tab {
         width: 100% !important;
         justify-content: center !important;
-        padding: 10px !important;
-        font-size: 0.8rem !important;
+        padding: 8px !important;
+        font-size: 0.75rem !important;
     }
     
     /* ===== ACCORDION ===== */
     .acc-hdr {
-        padding: 0.7rem 1rem !important;
+        padding: 0.6rem 1rem !important;
     }
     
     .acc-hdr h2 {
-        font-size: 0.8rem !important;
-        gap: 8px !important;
+        font-size: 0.75rem !important;
+        gap: 6px !important;
     }
     
     .acc-hdr .a-ic {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 0.8rem !important;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.7rem !important;
     }
     
-    /* ===== PUBLICATIONS SECTION ===== */
+    /* ===== PUBLICATIONS GRID ===== */
     .publications-grid {
         grid-template-columns: 1fr !important;
         gap: 1rem !important;
     }
     
-    .pub-card {
-        margin-bottom: 0 !important;
-    }
-    
-    /* ===== TOUCH-FRIENDLY HOVER (tap feedback) ===== */
+    /* ===== TOUCH FEEDBACK ===== */
     .feat-card:active, .about-card:active, .cc:active, 
     .wc:active, .mag-card:active, .pub-card:active,
     .btn:active, .media-tab:active, .acc-hdr:active {
@@ -514,14 +439,14 @@ header {
     }
 }
 
-/* ===== SMALL MOBILE ===== */
+/* ===== SMALL MOBILE (max-width: 480px) ===== */
 @media (max-width: 480px) {
     .container {
         padding: 0 12px !important;
     }
     
     .hero h1 {
-        font-size: 1.1rem !important;
+        font-size: 1.2rem !important;
     }
     
     .hero p {
@@ -529,52 +454,67 @@ header {
     }
     
     .logo-name {
-        font-size: 0.65rem !important;
+        font-size: 0.75rem !important;
     }
     
     .logo-img {
-        height: 26px !important;
+        height: 32px !important;
     }
     
     .auth-user-btn {
-        padding: 3px 6px !important;
-        font-size: 0.6rem !important;
+        padding: 4px 8px !important;
+        font-size: 0.65rem !important;
     }
     
     .avatar-sm {
-        width: 16px !important;
-        height: 16px !important;
-        font-size: 0.45rem !important;
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 0.5rem !important;
     }
     
     .mob-btn {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 0.85rem !important;
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 0.9rem !important;
     }
     
     .sec-title {
-        font-size: 1.1rem !important;
-    }
-    
-    .btn {
-        padding: 6px 12px !important;
-        font-size: 0.7rem !important;
+        font-size: 1rem !important;
     }
 }
 
-/* ===== MOBILE TOUCH ANIMATIONS ===== */
-@media (hover: none) and (pointer: coarse) {
-    .feat-card, .about-card, .cc, .wc, .mag-card, .pub-card {
-        transition: transform 0.1s ease !important;
+/* ===== ENSURE DESKTOP SCROLLING WORKS ===== */
+@media (min-width: 769px) {
+    body {
+        overflow-y: auto !important;
+        height: auto !important;
     }
     
-    .feat-card:active, .about-card:active, .cc:active, 
-    .wc:active, .mag-card:active, .pub-card:active {
-        transform: scale(0.97) !important;
+    /* Desktop menu - horizontal */
+    .nav-links {
+        display: flex !important;
+        position: static !important;
+        flex-direction: row !important;
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
     }
     
-    .btn:active {
-        transform: scale(0.95) !important;
+    .mob-btn {
+        display: none !important;
+    }
+    
+    .nav-links li {
+        width: auto !important;
+        padding: 0 !important;
+    }
+    
+    .nav-links a {
+        padding: 8px 16px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .nav-links .auth-area {
+        display: none !important;
     }
 }
