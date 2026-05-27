@@ -72,6 +72,70 @@
         .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px;transition:width .3s}
         .nav-links a:hover::after{width:100%}
         .mob-btn{display:none;font-size:1.3rem;background:none;border:none;color:var(--cyan);cursor:pointer;z-index:1002}
+        /* Header controls wrapper */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* Mobile menu button - always visible on mobile */
+.mob-btn {
+    display: none;
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    color: #00F0FF;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mob-btn:hover {
+    background: rgba(0, 240, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* Mobile navigation - hidden by default */
+@media (max-width: 768px) {
+    .mob-btn {
+        display: flex !important;
+    }
+    
+    .nav-links {
+        display: none !important;
+        position: fixed !important;
+        top: 70px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #0C0F1A !important;
+        border-bottom: 1px solid rgba(0, 240, 255, 0.1) !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 1rem !important;
+        z-index: 999 !important;
+    }
+    
+    .nav-links.active {
+        display: flex !important;
+    }
+    
+    .nav-links li {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 0.5rem 0 !important;
+    }
+    
+    .nav-links a {
+        display: block !important;
+        padding: 10px !important;
+        font-size: 1rem !important;
+    }
+}
         
         /* Fixed: Removed duplicate .auth-area, added .header-controls */
         .auth-area{display:flex;align-items:center;gap:.5rem}
@@ -519,7 +583,7 @@
             </div>
         </a>
         
-        <!-- RIGHT: Username + Menu Button (side by side) -->
+        <!-- RIGHT: Username + Menu Button -->
         <div class="header-controls">
             <div class="auth-area" id="authArea">
                 <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
@@ -531,13 +595,13 @@
         </div>
         
         <!-- Navigation Menu -->
-<ul class="nav-links" id="navLinks">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#media">Media</a></li>
-    <li><a href="#team">Team</a></li>
-    <li><a href="#contact">Contact</a></li>
-</ul>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </div>
 </header>
     
