@@ -1164,6 +1164,20 @@ function switchAuthTab(tab) {
     resizeCanvas();
     initParticles();
     animate();
+
+    // Add throttle to canvas mouse move
+let canvasTicking = false;
+canvas.parentElement.addEventListener('mousemove', (e) => {
+    if (!canvasTicking) {
+        requestAnimationFrame(() => {
+            const rect = canvas.getBoundingClientRect();
+            ms.x = e.clientX - rect.left;
+            ms.y = e.clientY - rect.top;
+            canvasTicking = false;
+        });
+        canvasTicking = true;
+    }
+});
 })();
 
 // ===== TOAST NOTIFICATION =====
@@ -1414,6 +1428,16 @@ function openLightbox(imageUrl, caption) {
     if (lightbox) lightbox.classList.add('active');
 }
 
+function openDashboard() {
+    if (!currentUserData) {
+        openAuthModal('login');
+        return;
+    }
+    const dashboard = document.getElementById('userDashboard');
+    const overlay = document.getElementById('overlayDim');
+    if (dashboard) dashboard.classList.add('open');
+    if (overlay) overlay.classList.add('active');
+}
 function closeLightbox() {
     const lightbox = document.getElementById('lightbox');
     if (lightbox) lightbox.classList.remove('active');
@@ -1436,7 +1460,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const userData = doc.data();
                     const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
                     authArea.innerHTML = `
-                        <button class="auth-user-btn" onclick="alert('Dashboard coming soon')">
+    <button class="auth-user-btn" onclick="openDashboard()">
                             <div class="avatar-sm">${initials}</div>
                             ${userData.name.split(' ')[0]}
                         </button>
