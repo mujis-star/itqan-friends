@@ -968,205 +968,493 @@ section {
     </div>
 
     <script>
-    (function(){const c=document.getElementById('heroCanvas'),x=c.getContext('2d');let w,h,ps=[],ms={x:-999,y:-999};function rs(){const r=c.parentElement;w=c.width=r.offsetWidth;h=c.height=r.offsetHeight}rs();window.addEventListener('resize',rs);c.parentElement.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();ms.x=e.clientX-r.left;ms.y=e.clientY-r.top});c.parentElement.addEventListener('mouseleave',()=>{ms.x=-999;ms.y=-999});class P{constructor(){this.rs()}rs(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-.5)*.35;this.vy=(Math.random()-.5)*.35;this.r=Math.random()*1.8+.4;this.a=Math.random()*.35+.08;this.cl=Math.random()>.5?'0,240,255':'255,51,102'}up(){this.x+=this.vx;this.y+=this.vy;const dx=ms.x-this.x,dy=ms.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){const f=(130-d)/130*.018;this.vx-=dx*f;this.vy-=dy*f}this.vx*=.99;this.vy*=.99;if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1;this.x=Math.max(0,Math.min(w,this.x));this.y=Math.max(0,Math.min(h,this.y))}dr(){x.beginPath();x.arc(this.x,this.y,Math.max(.4,this.r),0,Math.PI*2);x.fillStyle=`rgba(${this.cl},${this.a})`;x.fill()}}const n=Math.min(70,Math.floor(w*h/9000));for(let i=0;i<n;i++)ps.push(new P());function ln(){for(let i=0;i<ps.length;i++){for(let j=i+1;j<ps.length;j++){const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=dx*dx+dy*dy;if(d<16000){const a=(1-d/16000)*.12;x.beginPath();x.moveTo(ps[i].x,ps[i].y);x.lineTo(ps[j].x,ps[j].y);x.strokeStyle=`rgba(0,240,255,${a})`;x.lineWidth=.4;x.stroke()}}}for(let p of ps){const dx=ms.x-p.x,dy=ms.y-p.y,d=dx*dx+dy*dy;if(d<18000){const a=(1-d/18000)*.25;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(ms.x,ms.y);x.strokeStyle=`rgba(255,51,102,${a})`;x.lineWidth=.4;x.stroke()}}}function an(){x.clearRect(0,0,w,h);ps.forEach(p=>{p.up();p.dr()});ln();requestAnimationFrame(an)}an()})();
-    const rO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');rO.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});document.querySelectorAll('.rv').forEach(e=>rO.observe(e));
-    document.addEventListener('mousemove',e=>{document.querySelectorAll('.feat-card,.cc,.wc').forEach(c=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')})});
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+    apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
+    authDomain: "zenith-artsfest.firebaseapp.com",
+    projectId: "zenith-artsfest",
+    storageBucket: "zenith-artsfest.firebasestorage.app",
+    messagingSenderId: "506898514611",
+    appId: "1:506898514611:web:0ea13ddd075a020062e6c6",
+    measurementId: "G-MER952XSYP"
+};
 
-    const firebaseConfig={apiKey:"AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",authDomain:"zenith-artsfest.firebaseapp.com",projectId:"zenith-artsfest",storageBucket:"zenith-artsfest.firebasestorage.app",messagingSenderId:"506898514611",appId:"1:506898514611:web:0ea13ddd075a020062e6c6",measurementId:"G-MER952XSYP"};
-    firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.firestore();
-    let secondaryApp;try{secondaryApp=firebase.app("Sec")}catch(e){secondaryApp=firebase.initializeApp(firebaseConfig,"Sec")}
-    const cardMembers={"hudaif":{name:"Sayed Hudaif",role:"core",wing:"Core Committee"},"burhan":{name:"Sayed Burhan",role:"core",wing:"Core Committee"},"zidan":{name:"Zidan",role:"core",wing:"Core Committee"},"muhyudheen":{name:"Muhyudheen",role:"core",wing:"Core Committee"},"mirsad":{name:"Mirsad",role:"core",wing:"Core Committee"},"thanzeeh":{name:"Thanzeeh",role:"core",wing:"Core Committee"},"shahzad":{name:"Shahzad",role:"core",wing:"Core Committee"},"adnan":{name:"Adnan",role:"core",wing:"Core Committee"},"rashad":{name:"Rashad",role:"core",wing:"Core Committee"},"muhammedvk":{name:"Muhammed V.K",role:"wing",wing:"Urdu Wing"},"hisham":{name:"Hisham",role:"wing",wing:"Urdu Wing"},"mujeeb":{name:"Mujeeb",role:"wing",wing:"English Wing"},"zameen":{name:"Zameen",role:"wing",wing:"English Wing"},"naseem":{name:"Naseem",role:"wing",wing:"Arabic Wing"},"razeen":{name:"Razeen",role:"wing",wing:"Arabic Wing"},"rabeeh":{name:"Rabeeh",role:"wing",wing:"Malayalam Wing"},"muzzammil":{name:"Muzzammil",role:"wing",wing:"Malayalam Wing"},"ridhan":{name:"Ridhan",role:"wing",wing:"Song & Recitation"},"muhammedu":{name:"Muhammed U",role:"wing",wing:"Maths Wing"},"muhammedpp":{name:"Muhammed PP",role:"wing",wing:"Maths Wing"},"ranif":{name:"Ranif",role:"wing",wing:"Art Wing"},"razin":{name:"Razin",role:"wing",wing:"Library Wing"},"zayin":{name:"Zayin",role:"wing",wing:"Geography Wing"},"salah":{name:"Salah",role:"wing",wing:"Geography Wing"},"fuadma":{name:"Fuad M.A",role:"wing",wing:"G.K Wing"},"aslah":{name:"Aslah",role:"wing",wing:"G.K Wing"},"shabeel":{name:"Shabeel",role:"wing",wing:"Science Wing"},"muhaimin":{name:"Muhaimin",role:"wing",wing:"Science Wing"},"fidyan":{name:"Fidyan",role:"wing",wing:"Publication Wing"},"zarhan":{name:"Zarhan",role:"wing",wing:"Publication Wing"},"muhammedsm":{name:"Muhammed S.M",role:"wing",wing:"Media Wing"},"nuhman":{name:"Nuhman",role:"wing",wing:"Medical Wing"},"abdurehman":{name:"Abdu Rahman",role:"wing",wing:"Medical Wing"},"fuadhabeeb":{name:"Fuad Habeeb",role:"wing",wing:"Sports Wing"}};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-    function showToast(m,t='info'){const c=document.getElementById('toastContainer'),e=document.createElement('div');e.className=`toast toast-${t}`;e.innerText=m;c.appendChild(e);setTimeout(()=>e.remove(),3500)}
-    const mmb=document.getElementById('mobileMenuBtn'),nl=document.getElementById('navLinks');
-    mmb.addEventListener('click',()=>{nl.classList.toggle('active');mmb.innerHTML=nl.classList.contains('active')?'<i class="fas fa-times"></i>':'<i class="fas fa-bars"></i>'});
-    document.querySelectorAll('#navLinks a,#navLinks .auth-btn').forEach(l=>l.addEventListener('click',()=>{nl.classList.remove('active');mmb.innerHTML='<i class="fas fa-bars"></i>'}));
-    function toggleAccordion(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open')}
-    function switchHistTab(t){document.querySelectorAll('.htab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.hpanel').forEach(p=>p.classList.remove('active'));if(t==='union'){document.querySelectorAll('.htab')[0].classList.add('active');document.getElementById('histUnion').classList.add('active')}else{document.querySelectorAll('.htab')[1].classList.add('active');document.getElementById('histArtsfest').classList.add('active')}}
-    function switchMediaTab(t){document.querySelectorAll('.media-tab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.media-panel').forEach(p=>p.classList.remove('active'));if(t==='gallery'){document.querySelectorAll('.media-tab')[0].classList.add('active');document.getElementById('mediaGallery').classList.add('active')}else if(t==='magazines'){document.querySelectorAll('.media-tab')[1].classList.add('active');document.getElementById('mediaMagazines').classList.add('active')}else{document.querySelectorAll('.media-tab')[2].classList.add('active');document.getElementById('mediaPublications').classList.add('active')}}
-
-    function showProfile(n,p,d,ph=''){document.getElementById('modalTitle').textContent=n;document.getElementById('modalSubtitle').textContent=p;document.getElementById('modalDescription').textContent=d;const img=document.getElementById('modalPhoto'),pl=document.getElementById('photoPlaceholder');if(ph){img.src=ph;img.style.display='block';pl.style.display='none';img.onerror=function(){this.style.display='none';pl.style.display='flex';pl.innerHTML='<span>'+n.split(' ').map(x=>x[0]).join('').toUpperCase()+'</span>'}}else{img.style.display='none';pl.style.display='flex';pl.innerHTML='<span>'+n.split(' ').map(x=>x[0]).join('').toUpperCase()+'</span>'}document.getElementById('modalBadges').innerHTML=`<span class="wbadge">${p.includes('Wing')?'Wing Leader':'Core Committee'}</span>`;document.getElementById('modalDetails').innerHTML='<h4>Responsibilities</h4><ul><li>Leadership & coordination</li><li>Strategic planning</li></ul>';document.getElementById('modalContactInfo').innerHTML=`<h4>Contact</h4><div class="ct-item"><i class="fas fa-at"></i><span>@${n.toLowerCase().replace(/\s+/g,'')}</span></div>`;document.getElementById('profileModal').classList.add('active')}
-    function closeModal(){document.getElementById('profileModal').classList.remove('active')}
-
-    let currentUserData=null,allUsersCache=[],galleryCache=[],magCache=[];
-    function openAuthModal(t){document.getElementById('authModal').classList.add('active');document.getElementById('authError').classList.remove('show');switchAuthTab(t)}
-    function closeAuthModal(){document.getElementById('authModal').classList.remove('active')}
-    function switchAuthTab(t){document.querySelectorAll('.auth-tab').forEach(a=>a.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(t==='login'){document.querySelectorAll('.auth-tab')[0].classList.add('active');document.getElementById('loginForm').classList.add('active')}else{document.querySelectorAll('.auth-tab')[1].classList.add('active');document.getElementById('registerForm').classList.add('active')}}
-
-    async function handleRegister(e){e.preventDefault();const rn=document.getElementById('regName').value.trim();let u=document.getElementById('regUsername').value.trim().toLowerCase().replace(/\s+/g,'');const pw=document.getElementById('regPassword').value,w=document.getElementById('regWing').value||'General',er=document.getElementById('authError');er.classList.remove('show');if(u.length<3){er.innerText="Username: min 3 chars.";er.classList.add('show');return}if(pw.length<6){er.innerText="Password: min 6 chars.";er.classList.add('show');return}const em=`${u}@itqan.org`;try{const ex=await db.collection('users').where('username','==',u).limit(1).get();const first=(await db.collection('users').limit(1).get()).empty;const cr=await auth.createUserWithEmailAndPassword(em,pw);let role='member',name=rn,wing=w;if(!ex.empty){const ed=ex.docs[0].data();role=ed.role||role;name=ed.name||name;wing=ed.wing||wing;await ex.docs[0].ref.delete();showToast(`Welcome ${name}! Profile linked.`,'success')}else if(cardMembers[u]){role=cardMembers[u].role;name=cardMembers[u].name;wing=cardMembers[u].wing;showToast(`Welcome ${name}! Card linked.`,'success')}else if(first){role='admin';wing='All';showToast('First user = Admin!','info')}await db.collection('users').doc(cr.user.uid).set({name,username:u,email:em,role,wing,hasAuth:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()});closeAuthModal();showToast('Registered!','success')}catch(err){er.innerText=err.message;er.classList.add('show')}}
-
-    async function handleLogin(e){e.preventDefault();let u=document.getElementById('loginUsername').value.trim().toLowerCase().replace(/\s+/g,'');const pw=document.getElementById('loginPassword').value,er=document.getElementById('authError');er.classList.remove('show');try{await auth.signInWithEmailAndPassword(`${u}@itqan.org`,pw);closeAuthModal();showToast('Logged in!','success')}catch(err){er.innerText="Invalid username or password.";er.classList.add('show')}}
-    function handleLogout(){auth.signOut();closeDashboards();closeAdminPanel();showToast('Logged out.','info')}
-
-    auth.onAuthStateChanged(async user=>{const aa=document.getElementById('authArea');if(user){let ud=null;let doc=await db.collection('users').doc(user.uid).get();if(doc.exists)ud=doc.data();else{const q=await db.collection('users').where('username','==',user.email.replace('@itqan.org','')).limit(1).get();if(!q.empty){ud=q.docs[0].data();await q.docs[0].ref.delete();await db.collection('users').doc(user.uid).set({...ud,hasAuth:true})}}if(ud){currentUserData=ud;const ini=ud.name.split(' ').map(n=>n[0]).join('').toUpperCase();aa.innerHTML=`<button class="auth-user-btn" onclick="openDashboard()"><div class="avatar-sm">${ini}</div>${ud.name.split(' ')[0]}</button>`}else aa.innerHTML=`<button class="auth-user-btn" onclick="openDashboard()"><i class="fas fa-user"></i> Account</button>`}else{currentUserData=null;aa.innerHTML=`<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`}});
-
-    function openDashboard(){if(!currentUserData)return;document.getElementById('userDashboard').classList.add('open');document.getElementById('overlayDim').classList.add('active');const d=currentUserData,i=d.name.split(' ').map(n=>n[0]).join('').toUpperCase(),ia=d.role==='admin',rl=d.role==='admin'?'Admin':(d.role==='core'?'Core':(d.role==='wing'?'Wing Leader':'Student'));document.getElementById('dashBody').innerHTML=`<div class="dash-pc"><div class="dash-av">${i}</div><div class="dash-nm">${d.name}</div><div class="dash-pos">${rl}</div>${d.wing?`<div class="dash-wt">${d.wing}</div>`:''}</div><div class="dash-sec"><h4><i class="fas fa-id-card"></i> Profile</h4><div class="dash-row"><span class="dash-lbl">Username</span><span class="dash-val">@${d.username||'N/A'}</span></div><div class="dash-row"><span class="dash-lbl">Role</span><span class="dash-val">${rl}</span></div><div class="dash-row"><span class="dash-lbl">Wing</span><span class="dash-val">${d.wing||'N/A'}</span></div></div><div class="dash-acts">${ia?`<button class="dash-abtn" onclick="openAdminPanel()"><i class="fas fa-user-shield"></i> Admin Panel</button>`:''}<button class="dash-abtn" onclick="handleLogout()"><i class="fas fa-sign-out-alt" style="color:#EF4444"></i> Logout</button></div>`}
-    function closeDashboards(){document.getElementById('userDashboard').classList.remove('open');document.getElementById('overlayDim').classList.remove('active')}
-    function openAdminPanel(){closeDashboards();document.getElementById('adminPanel').classList.add('active');loadAdminData()}
-    function closeAdminPanel(){document.getElementById('adminPanel').classList.remove('active')}
-    function switchAdminTab(t){document.querySelectorAll('.admin-tbtn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.admin-tc').forEach(c=>c.classList.remove('active'));const idx={overview:0,students:1,gallery:2,magazines:3};document.querySelectorAll('.admin-tbtn')[idx[t]].classList.add('active');document.querySelectorAll('.admin-tc')[idx[t]].classList.add('active')}
-
-    async function loadAdminData(){try{const sn=await db.collection('users').orderBy('createdAt','desc').get();let u=[];sn.forEach(d=>u.push({id:d.id,...d.data()}));allUsersCache=u;document.getElementById('totalUsers').innerText=u.length;document.getElementById('totalCore').innerText=u.filter(x=>x.role==='core'||x.role==='admin').length;document.getElementById('totalWings').innerText=u.filter(x=>x.role==='wing').length;document.getElementById('totalMembers').innerText=u.filter(x=>x.role==='member').length;const ot=document.getElementById('overviewUserTable');ot.innerHTML='';u.slice(0,10).forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student'));ot.innerHTML+=`<tr><td>${x.name}</td><td>@${x.username||'N/A'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td>`});renderStudentsTable(u);loadAdminGallery();loadAdminMags()}catch(e){console.error(e);showToast('Failed to load.','error')}}
-
-    function renderStudentsTable(u){const tb=document.getElementById('studentsTableBody'),nm=document.getElementById('noStudentsMsg'),sv=(document.getElementById('studentSearchInput').value||'').toLowerCase(),f=u.filter(x=>(x.name||'').toLowerCase().includes(sv)||(x.username||'').toLowerCase().includes(sv)||(x.wing||'').toLowerCase().includes(sv));if(!f.length){tb.innerHTML='';nm.style.display='block';return}nm.style.display='none';tb.innerHTML='';f.forEach(x=>{const rc=x.role==='admin'?'admin':(x.role==='core'?'core':(x.role==='wing'?'wing':'member')),rn=x.role==='admin'?'Admin':(x.role==='core'?'Core':(x.role==='wing'?'Wing':'Student')),ha=x.hasAuth===true,me=currentUserData&&x.id===auth.currentUser?.uid;tb.innerHTML+=`<tr><td><strong>${x.name}</strong></td><td>@${x.username||'N/A'}</td><td><span class="sdot ${ha?'active':'pending'}"></span>${ha?'Can Login':'Register'}</td><td><span class="rbadge ${rc}">${rn}</span></td><td>${x.wing||'N/A'}</td><td><select class="fi fsel" onchange="updateRole('${x.id}',this.value)" style="font-size:.72rem;padding:4px 26px 4px 6px;width:95px"><option value="member" ${x.role==='member'?'selected':''}>Student</option><option value="wing" ${x.role==='wing'?'selected':''}>Wing</option><option value="core" ${x.role==='core'?'selected':''}>Core</option><option value="admin" ${x.role==='admin'?'selected':''}>Admin</option></select></td><td>${me?'<span style="color:var(--dim);font-size:.68rem">You</span>':`<button class="del-btn" onclick="promptDelete('${x.id}','${x.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i></button>`}</td>`})}
-    function filterStudents(){renderStudentsTable(allUsersCache)}
-
-    function toggleAddForm(){const f=document.getElementById('addUserForm');f.classList.toggle('active');if(f.classList.contains('active')){document.getElementById('addName').value='';document.getElementById('addUsername').value='';document.getElementById('addPassword').value='';document.getElementById('addRole').value='member';document.getElementById('addWing').value='';document.getElementById('addName').focus()}document.getElementById('credentialsDisplay').classList.remove('active')}
-    function generatePassword(){const c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';let p='';for(let i=0;i<10;i++)p+=c.charAt(Math.floor(Math.random()*c.length));document.getElementById('addPassword').value=p}
-
-    async function addNewStudent(){const n=document.getElementById('addName').value.trim(),u=document.getElementById('addUsername').value.trim().toLowerCase().replace(/[^a-z0-9]/g,''),pw=document.getElementById('addPassword').value,r=document.getElementById('addRole').value,w=document.getElementById('addWing').value||'';if(!n){showToast('Enter a name.','error');return}if(u.length<3){showToast('Username: min 3 chars.','error');return}if(pw.length<6){showToast('Password: min 6 chars.','error');return}const ex=await db.collection('users').where('username','==',u).limit(1).get();if(!ex.empty){showToast('Username exists!','error');return}const em=`${u}@itqan.org`;try{const sa=secondaryApp.auth(),cr=await sa.createUserWithEmailAndPassword(em,pw);await sa.signOut();await db.collection('users').doc(cr.user.uid).set({name:n,username:u,email:em,role:r,wing:w,hasAuth:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()});const rn={member:'Student',wing:'Wing Leader',core:'Core Committee',admin:'Admin'};document.getElementById('credName').textContent=n;document.getElementById('credUsername').textContent='@'+u;document.getElementById('credPassword').textContent=pw;document.getElementById('credRole').textContent=rn[r]||r;document.getElementById('credentialsDisplay').classList.add('active');document.getElementById('addUserForm').classList.remove('active');showToast(`"${n}" created!`,'success');loadAdminData()}catch(err){if(err.code==='auth/email-already-in-use')showToast('Username has auth. They need to Register.','error');else showToast('Error: '+err.message,'error')}}
-
-    function copyCredentials(){const t=`ITQAN Login:\nName: ${document.getElementById('credName').textContent}\nUsername: ${document.getElementById('credUsername').textContent}\nPassword: ${document.getElementById('credPassword').textContent}\nRole: ${document.getElementById('credRole').textContent}`;navigator.clipboard.writeText(t).then(()=>showToast('Copied!','success')).catch(()=>showToast('Copy failed.','error'))}
-    function closeCredDisplay(){document.getElementById('credentialsDisplay').classList.remove('active')}
-
-    let pendingDeleteId=null;
-    function promptDelete(id,n){pendingDeleteId=id;document.getElementById('confirmUserName').textContent=n;document.getElementById('confirmModal').classList.add('active')}
-    function cancelDelete(){pendingDeleteId=null;document.getElementById('confirmModal').classList.remove('active')}
-    async function confirmDeleteUser(){if(!pendingDeleteId)return;try{await db.collection('users').doc(pendingDeleteId).delete();showToast('Deleted.','success');cancelDelete();loadAdminData()}catch(e){showToast('Error.','error');cancelDelete()}}
-    document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)cancelDelete()});
-    async function updateRole(id,r){try{await db.collection('users').doc(id).update({role:r});showToast('Updated!','success');loadAdminData()}catch(e){showToast('Error.','error')}}
-    async function claimAdminRole(){if(!auth.currentUser)return;try{await db.collection('users').doc(auth.currentUser.uid).update({role:'admin'});showToast('You are Admin!','success');setTimeout(()=>location.reload(),1500)}catch(e){showToast('Error.','error')}}
-    async function seedCardMembers(){if(!confirm('Sync 34 card members?\n\nThey must REGISTER to claim.'))return;try{const b=db.batch();let c=0;for(const[u,d]of Object.entries(cardMembers)){b.set(db.collection('users').doc(`${u}@itqan.org`),{...d,username:u,email:`${u}@itqan.org`,hasAuth:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});c++}await b.commit();showToast(`Synced ${c} members!`,'success');loadAdminData()}catch(e){showToast('Error.','error')}}
-
-    async function loadPublicGallery(){try{const sn=await db.collection('gallery').orderBy('createdAt','desc').get();galleryCache=[];sn.forEach(d=>galleryCache.push({id:d.id,...d.data()}));renderPublicGallery()}catch(e){console.error(e)}}
-    function renderPublicGallery(){const g=document.getElementById('publicGalleryGrid'),em=document.getElementById('galleryEmpty');if(!galleryCache.length){g.innerHTML='';em.style.display='block';return}em.style.display='none';g.innerHTML='';galleryCache.forEach((item,i)=>{g.innerHTML+=`<div class="gallery-item" onclick="openLightbox(${i})"><img src="${item.imageUrl}" alt="${item.caption||''}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1a1a2a/1a1a2a?text=${encodeURIComponent(item.caption||'Photo')}'"><div class="gallery-ov"><h4>${item.caption||''}</h4></div></div>`})}
-    let lbIdx=0;
-    function openLightbox(i){lbIdx=i;const items=galleryCache;if(!items.length)return;document.getElementById('lightboxImg').src=items[i].imageUrl;document.getElementById('lightboxCaption').textContent=items[i].caption||'';document.getElementById('lightbox').classList.add('active');document.querySelector('.lightbox-prev').style.display=items.length>1?'flex':'none';document.querySelector('.lightbox-next').style.display=items.length>1?'flex':'none'}
-    function closeLightbox(){document.getElementById('lightbox').classList.remove('active')}
-    function lightboxNav(dir){lbIdx=(lbIdx+dir+galleryCache.length)%galleryCache.length;openLightbox(lbIdx)}
-
-    async function loadPublicMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();magCache=[];sn.forEach(d=>magCache.push({id:d.id,...d.data()}));renderPublicMags()}catch(e){console.error(e)}}
-    function renderPublicMags(){const g=document.getElementById('publicMagGrid'),em=document.getElementById('magEmpty');if(!magCache.length){g.innerHTML='';em.style.display='block';return}em.style.display='none';g.innerHTML='';magCache.forEach(item=>{const bc=item.type==='tabloid'?'tabloid':'magazine';const bl=item.pdfUrl?'Read Now':'View Details';const bcl=item.pdfUrl?'btn-cyan':'btn-outline';g.innerHTML+=`<div class="mag-card"><img class="mag-cover" src="${item.coverUrl}" alt="${item.title}" loading="lazy" onerror="this.src='https://placehold.co/260x360/1a1a2a/1a1a2a?text=${encodeURIComponent(item.title)}'"><div class="mag-body"><span class="mag-badge ${bc}">${item.type==='tabloid'?'Tabloid':'Magazine'}</span><h3>${item.title}</h3><p>${item.description||'No description available.'}</p><button class="btn ${bcl} btn-sm" ${item.pdfUrl?`onclick="window.open('${item.pdfUrl}','_blank')"`:``}>${bl}</button></div></div>`})}
-
-    async function addGalleryItem(){const url=document.getElementById('galImageUrl').value.trim(),cap=document.getElementById('galCaption').value.trim();if(!url){showToast('Please enter an image URL.','error');return}try{await db.collection('gallery').add({imageUrl:url,caption:cap,uploadedBy:currentUserData?.name||'Admin',createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('galImageUrl').value='';document.getElementById('galCaption').value='';showToast('Photo added!','success');loadAdminGallery();loadPublicGallery()}catch(e){showToast('Error: '+e.message,'error')}}
-    async function loadAdminGallery(){try{const sn=await db.collection('gallery').orderBy('createdAt','desc').get();const list=document.getElementById('adminGalleryList');const cnt=document.getElementById('galCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="gallery-empty"><i class="fas fa-images"></i><p>No photos yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.imageUrl}" alt="" onerror="this.src='https://placehold.co/56x56/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.caption||'Untitled'}</h4><p>${(data.uploadedBy||'Admin')} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteGalleryItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load gallery.','error')}}
-    async function deleteGalleryItem(id){if(!confirm('Delete this photo?'))return;try{await db.collection('gallery').doc(id).delete();showToast('Photo deleted.','success');loadAdminGallery();loadPublicGallery()}catch(e){showToast('Error.','error')}}
-
-    async function addMagItem(){const type=document.getElementById('magType').value,title=document.getElementById('magTitle').value.trim(),cover=document.getElementById('magCover').value.trim(),pdf=document.getElementById('magPdfUrl').value.trim(),desc=document.getElementById('magDesc').value.trim();if(!title||!cover){showToast('Title and Cover Image are required.','error');return}try{await db.collection('magazines').add({type,title,coverUrl:cover,pdfUrl:pdf,description:desc,uploadedBy:currentUserData?.name||'Admin',createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('magTitle').value='';document.getElementById('magCover').value='';document.getElementById('magPdfUrl').value='';document.getElementById('magDesc').value='';showToast('Publication added!','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error: '+e.message,'error')}}
-    async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
-    async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
-    // ===== LIGHTWEIGHT SCROLL ANIMATION - NO STUTTER =====
-(function initScrollAnimations() {
-    // Select only the main elements, not every card
-    const elements = document.querySelectorAll('.sec-title, .feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid');
-    
-    // Simple Intersection Observer with a larger threshold
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Add a simple class instead of inline styles
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target); // Stop observing once animated
-            }
-        });
-    }, { threshold: 0.2 }); // Only animate when 20% is visible
-
-    elements.forEach(el => observer.observe(el));
-})();
-    
-    // Intersection Observer with larger threshold for smoother trigger
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target); // Unobserve after animation
-            }
-        });
-    }, { 
-        threshold: 0.15,  // Trigger when 15% visible
-        rootMargin: '0px 0px -20px 0px'  // Slight offset to trigger before fully visible
-    });
-    
-    elements.forEach(el => observer.observe(el));
-    
-    // Handle grid children separately
-    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
-        const children = Array.from(grid.children);
-        children.forEach((child, index) => {
-            child.style.opacity = '0';
-            child.style.transform = 'translateY(20px)';
-            child.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
-            observer.observe(child);
-        });
-    });
-})();
-
+// ===== SIMPLE SCROLL ANIMATION - NO LAG =====
+(function initSimpleScroll() {
+    // Wait for page to load
+    window.addEventListener('load', function() {
+        // Get all cards and sections
+        const elements = document.querySelectorAll(
+            '.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card, .gallery-item, .sec-title, .media-tabs'
+        );
         
-// ===== MOBILE MENU - CLEAN VERSION =====
+        // Set initial state
+        elements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(15px)';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        });
+        
+        // Simple Intersection Observer - one at a time
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        elements.forEach(el => observer.observe(el));
+    });
+})();
+
+// ===== FIXED AUTH MODAL FUNCTIONS =====
+function openAuthModal(type) {
+    console.log('Opening auth modal:', type);
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.classList.add('active');
+        switchAuthTab(type);
+    } else {
+        console.error('Auth modal not found');
+        alert('Please refresh the page and try again.');
+    }
+}
+
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.classList.remove('active');
+    const errorDiv = document.getElementById('authError');
+    if (errorDiv) errorDiv.classList.remove('show');
+}
+
+function switchAuthTab(tab) {
+    const tabs = document.querySelectorAll('.auth-tab');
+    const forms = document.querySelectorAll('.auth-form');
+    
+    tabs.forEach(t => t.classList.remove('active'));
+    forms.forEach(f => f.classList.remove('active'));
+    
+    if (tab === 'login') {
+        if (tabs[0]) tabs[0].classList.add('active');
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) loginForm.classList.add('active');
+    } else {
+        if (tabs[1]) tabs[1].classList.add('active');
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) registerForm.classList.add('active');
+    }
+}
+
+// ===== SIMPLIFIED MOBILE MENU =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
     if (!menuBtn || !navLinks) return;
     
-    // Add icons to menu items for mobile
-    if (window.innerWidth <= 768) {
-        const menuItems = [
-            { href: '#home', icon: 'fas fa-home', label: 'Home' },
-            { href: '#about', icon: 'fas fa-info-circle', label: 'About' },
-            { href: '#media', icon: 'fas fa-images', label: 'Media' },
-            { href: '#team', icon: 'fas fa-users', label: 'Team' },
-            { href: '#contact', icon: 'fas fa-envelope', label: 'Contact' }
-        ];
-        
-        const links = navLinks.querySelectorAll('li a');
-        links.forEach((link, index) => {
-            if (index < menuItems.length && !link.querySelector('i')) {
-                const icon = document.createElement('i');
-                icon.className = menuItems[index].icon;
-                link.insertBefore(icon, link.firstChild);
-                link.style.gap = '8px';
-            }
-        });
-    }
-    
-    function closeMenu() {
-        navLinks.classList.remove('active');
-        const icon = menuBtn.querySelector('i');
-        if (icon) icon.className = 'fas fa-bars';
-        document.body.style.overflow = '';
-    }
-    
-    function openMenu() {
-        navLinks.classList.add('active');
-        const icon = menuBtn.querySelector('i');
-        if (icon) icon.className = 'fas fa-times';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    menuBtn.addEventListener('click', (e) => {
+    menuBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
+        navLinks.classList.toggle('active');
+        
+        const icon = menuBtn.querySelector('i');
         if (navLinks.classList.contains('active')) {
-            closeMenu();
+            icon.className = 'fas fa-times';
+            document.body.style.overflow = 'hidden';
         } else {
-            openMenu();
+            icon.className = 'fas fa-bars';
+            document.body.style.overflow = '';
         }
     });
     
     // Close menu when clicking a link
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', closeMenu);
+        link.addEventListener('click', function() {
+            navLinks.classList.remove('active');
+            const icon = menuBtn.querySelector('i');
+            if (icon) icon.className = 'fas fa-bars';
+            document.body.style.overflow = '';
+        });
     });
     
     // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-            closeMenu();
-        }
-    });
-    
-    // Close on escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
-            closeMenu();
+    document.addEventListener('click', function(e) {
+        if (navLinks.classList.contains('active')) {
+            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                const icon = menuBtn.querySelector('i');
+                if (icon) icon.className = 'fas fa-bars';
+                document.body.style.overflow = '';
+            }
         }
     });
 })();
 
+// ===== SIMPLIFIED HERO CANVAS (Lighter) =====
+(function initHeroCanvas() {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let mouseX = -999, mouseY = -999;
+    
+    function resizeCanvas() {
+        const container = canvas.parentElement;
+        width = canvas.width = container.offsetWidth;
+        height = canvas.height = container.offsetHeight;
+    }
+    
+    function initParticles() {
+        particles = [];
+        const count = Math.min(40, Math.floor(width * height / 15000));
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: Math.random() * 1.5 + 0.5,
+                color: Math.random() > 0.5 ? '0,240,255' : '255,51,102'
+            });
+        }
+    }
+    
+    function animate() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, width, height);
         
-    </script>
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            p.x = Math.max(0, Math.min(width, p.x));
+            p.y = Math.max(0, Math.min(height, p.y));
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${p.color}, 0.3)`;
+            ctx.fill();
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles();
+    });
+    
+    canvas.parentElement.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+    });
+    
+    resizeCanvas();
+    initParticles();
+    animate();
+})();
+
+// ===== TOAST NOTIFICATION =====
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerText = message;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.remove) toast.remove();
+    }, 3500);
+}
+
+// ===== HANDLE LOGIN/REGISTER =====
+async function handleLogin(event) {
+    event.preventDefault();
+    let username = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('authError');
+    
+    errorDiv.classList.remove('show');
+    
+    try {
+        await auth.signInWithEmailAndPassword(`${username}@itqan.org`, password);
+        closeAuthModal();
+        showToast('Logged in successfully!', 'success');
+        setTimeout(() => location.reload(), 1000);
+    } catch (err) {
+        errorDiv.innerText = 'Invalid username or password.';
+        errorDiv.classList.add('show');
+    }
+}
+
+async function handleRegister(event) {
+    event.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    let username = document.getElementById('regUsername').value.trim().toLowerCase();
+    const password = document.getElementById('regPassword').value;
+    const wing = document.getElementById('regWing').value || 'General';
+    const errorDiv = document.getElementById('authError');
+    
+    errorDiv.classList.remove('show');
+    
+    if (username.length < 3) {
+        errorDiv.innerText = 'Username must be at least 3 characters.';
+        errorDiv.classList.add('show');
+        return;
+    }
+    
+    if (password.length < 6) {
+        errorDiv.innerText = 'Password must be at least 6 characters.';
+        errorDiv.classList.add('show');
+        return;
+    }
+    
+    const email = `${username}@itqan.org`;
+    
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await db.collection('users').doc(userCredential.user.uid).set({
+            name: name,
+            username: username,
+            email: email,
+            role: 'member',
+            wing: wing,
+            hasAuth: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeAuthModal();
+        showToast('Registration successful! Please login.', 'success');
+    } catch (err) {
+        errorDiv.innerText = err.message;
+        errorDiv.classList.add('show');
+    }
+}
+
+// ===== OTHER FUNCTIONS (Placeholders for now) =====
+function closeModal() {
+    const modal = document.getElementById('profileModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function toggleAccordion(element) {
+    element.classList.toggle('open');
+    const body = element.nextElementSibling;
+    if (body) body.classList.toggle('open');
+}
+
+function switchHistTab(tab) {
+    const unionPanel = document.getElementById('histUnion');
+    const artsfestPanel = document.getElementById('histArtsfest');
+    const unionTab = document.querySelector('.htab.t-u');
+    const artsfestTab = document.querySelector('.htab.t-a');
+    
+    if (tab === 'union') {
+        if (unionTab) unionTab.classList.add('active');
+        if (artsfestTab) artsfestTab.classList.remove('active');
+        if (unionPanel) unionPanel.classList.add('active');
+        if (artsfestPanel) artsfestPanel.classList.remove('active');
+    } else {
+        if (artsfestTab) artsfestTab.classList.add('active');
+        if (unionTab) unionTab.classList.remove('active');
+        if (artsfestPanel) artsfestPanel.classList.add('active');
+        if (unionPanel) unionPanel.classList.remove('active');
+    }
+}
+
+function switchMediaTab(tab) {
+    const galleryPanel = document.getElementById('mediaGallery');
+    const magPanel = document.getElementById('mediaMagazines');
+    const pubPanel = document.getElementById('mediaPublications');
+    const galleryTab = document.querySelector('.media-tab.t-gal');
+    const magTab = document.querySelector('.media-tab.t-mag');
+    const pubTab = document.querySelector('.media-tab:last-child');
+    
+    if (tab === 'gallery') {
+        if (galleryTab) galleryTab.classList.add('active');
+        if (magTab) magTab.classList.remove('active');
+        if (pubTab) pubTab.classList.remove('active');
+        if (galleryPanel) galleryPanel.classList.add('active');
+        if (magPanel) magPanel.classList.remove('active');
+        if (pubPanel) pubPanel.classList.remove('active');
+    } else if (tab === 'magazines') {
+        if (magTab) magTab.classList.add('active');
+        if (galleryTab) galleryTab.classList.remove('active');
+        if (pubTab) pubTab.classList.remove('active');
+        if (magPanel) magPanel.classList.add('active');
+        if (galleryPanel) galleryPanel.classList.remove('active');
+        if (pubPanel) pubPanel.classList.remove('active');
+    } else {
+        if (pubTab) pubTab.classList.add('active');
+        if (galleryTab) galleryTab.classList.remove('active');
+        if (magTab) magTab.classList.remove('active');
+        if (pubPanel) pubPanel.classList.add('active');
+        if (galleryPanel) galleryPanel.classList.remove('active');
+        if (magPanel) magPanel.classList.remove('active');
+    }
+}
+
+function showProfile(name, position, description, photoUrl) {
+    const modal = document.getElementById('profileModal');
+    const title = document.getElementById('modalTitle');
+    const subtitle = document.getElementById('modalSubtitle');
+    const desc = document.getElementById('modalDescription');
+    const img = document.getElementById('modalPhoto');
+    const placeholder = document.getElementById('photoPlaceholder');
+    
+    if (title) title.textContent = name;
+    if (subtitle) subtitle.textContent = position;
+    if (desc) desc.textContent = description;
+    
+    if (img && placeholder) {
+        if (photoUrl) {
+            img.src = photoUrl;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+        } else {
+            img.style.display = 'none';
+            placeholder.style.display = 'flex';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            placeholder.innerHTML = `<span>${initials}</span>`;
+        }
+    }
+    
+    if (modal) modal.classList.add('active');
+}
+
+// ===== LOAD PUBLIC DATA =====
+async function loadPublicGallery() {
+    try {
+        const snapshot = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+        const grid = document.getElementById('publicGalleryGrid');
+        const emptyMsg = document.getElementById('galleryEmpty');
+        
+        if (!grid) return;
+        
+        if (snapshot.empty) {
+            if (emptyMsg) emptyMsg.style.display = 'block';
+            grid.innerHTML = '';
+            return;
+        }
+        
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        grid.innerHTML = '';
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            grid.innerHTML += `
+                <div class="gallery-item" onclick="openLightbox('${data.imageUrl}', '${data.caption || ''}')">
+                    <img src="${data.imageUrl}" alt="${data.caption || 'Gallery image'}" loading="lazy">
+                    <div class="gallery-ov"><h4>${data.caption || ''}</h4></div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error('Gallery load error:', e);
+    }
+}
+
+async function loadPublicMags() {
+    try {
+        const snapshot = await db.collection('magazines').orderBy('createdAt', 'desc').get();
+        const grid = document.getElementById('publicMagGrid');
+        const emptyMsg = document.getElementById('magEmpty');
+        
+        if (!grid) return;
+        
+        if (snapshot.empty) {
+            if (emptyMsg) emptyMsg.style.display = 'block';
+            grid.innerHTML = '';
+            return;
+        }
+        
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        grid.innerHTML = '';
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const badgeClass = data.type === 'tabloid' ? 'tabloid' : 'magazine';
+            grid.innerHTML += `
+                <div class="mag-card">
+                    <img class="mag-cover" src="${data.coverUrl}" alt="${data.title}" loading="lazy">
+                    <div class="mag-body">
+                        <span class="mag-badge ${badgeClass}">${data.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
+                        <h3>${data.title}</h3>
+                        <p>${data.description || 'No description available.'}</p>
+                        <button class="btn btn-cyan btn-sm" onclick="window.open('${data.pdfUrl || '#'}', '_blank')">Read Now</button>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error('Magazines load error:', e);
+    }
+}
+
+function openLightbox(imageUrl, caption) {
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    const captionEl = document.getElementById('lightboxCaption');
+    
+    if (img) img.src = imageUrl;
+    if (captionEl) captionEl.textContent = caption;
+    if (lightbox) lightbox.classList.add('active');
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox) lightbox.classList.remove('active');
+}
+
+// ===== INITIALIZE ON PAGE LOAD =====
+document.addEventListener('DOMContentLoaded', function() {
+    loadPublicGallery();
+    loadPublicMags();
+    
+    // Set up auth state listener
+    auth.onAuthStateChanged(async (user) => {
+        const authArea = document.getElementById('authArea');
+        if (!authArea) return;
+        
+        if (user) {
+            try {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    authArea.innerHTML = `
+                        <button class="auth-user-btn" onclick="alert('Dashboard coming soon')">
+                            <div class="avatar-sm">${initials}</div>
+                            ${userData.name.split(' ')[0]}
+                        </button>
+                    `;
+                }
+            } catch (e) {
+                console.error('Auth state error:', e);
+            }
+        } else {
+            authArea.innerHTML = `
+                <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
+                <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>
+            `;
+        }
+    });
+});
+</script>
+    
     <script src="cursor-polish.js?v=1"></script>
    <script src="history-media-upgrade.js?v=3"></script>
     <script src="upload-support.js?v=5"></script>
