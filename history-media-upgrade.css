@@ -5,23 +5,23 @@
 }
 
 .media-hub.itqan-media-upgraded .media-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  max-width: 720px;
-  background: transparent;
-  border: 0;
-  padding: 0;
+  display: flex;
+  gap: 0.75rem;
+  max-width: 560px;
+  background: rgba(18, 22, 38, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.45rem;
+  border-radius: 18px;
 }
 
 .media-hub.itqan-media-upgraded .media-tab {
-  min-height: 94px;
-  border-radius: 18px;
+  min-height: 58px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: linear-gradient(135deg, rgba(18, 22, 38, 0.96), rgba(6, 8, 16, 0.9));
   color: var(--text);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
-  font-size: 1rem;
+  box-shadow: none;
+  font-size: 0.9rem;
   position: relative;
   overflow: hidden;
 }
@@ -47,6 +47,8 @@
 
 .media-hub.itqan-media-upgraded .media-tab.active {
   color: var(--text);
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.92), rgba(0, 184, 212, 0.86));
+  color: var(--s0);
 }
 
 .media-hub.itqan-media-upgraded .media-panel {
@@ -58,7 +60,7 @@
   position: fixed;
   inset: 0;
   z-index: 5800;
-  background: rgba(0, 0, 0, 0.84);
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(14px);
   padding: 28px;
 }
@@ -70,13 +72,26 @@
 }
 
 .itqan-media-shell {
-  width: min(1120px, 96vw);
-  max-height: min(84vh, 860px);
+  width: min(980px, 92vw);
+  max-height: min(78vh, 760px);
   background: linear-gradient(145deg, rgba(18, 22, 38, 0.98), rgba(6, 8, 16, 0.98));
   border: 1px solid rgba(0, 240, 255, 0.16);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58);
+}
+
+.itqan-media-modal .gallery-grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.itqan-media-modal .gallery-item {
+  aspect-ratio: 1 / 1;
+}
+
+.itqan-media-modal .gallery-item img {
+  object-fit: contain;
+  background: #05070d;
 }
 
 .itqan-media-head {
@@ -110,7 +125,7 @@
 }
 
 .itqan-media-body {
-  max-height: calc(min(84vh, 860px) - 72px);
+  max-height: calc(min(78vh, 760px) - 72px);
   overflow: auto;
   padding: 1.25rem;
 }
@@ -276,18 +291,23 @@
     grid-template-columns: 1fr;
   }
 
+  .media-hub.itqan-media-upgraded .media-tabs {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
   .itqan-media-modal {
     padding: 12px;
   }
 
   .itqan-media-shell {
     width: 100%;
-    max-height: 90vh;
+    max-height: 82vh;
     border-radius: 16px;
   }
 
   .itqan-media-body {
-    max-height: calc(90vh - 70px);
+    max-height: calc(82vh - 70px);
     padding: 1rem;
   }
 
