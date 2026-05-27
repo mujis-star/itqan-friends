@@ -1035,104 +1035,119 @@ section {
     async function loadAdminMags(){try{const sn=await db.collection('magazines').orderBy('createdAt','desc').get();const list=document.getElementById('adminMagList');const cnt=document.getElementById('magCount');cnt.textContent=sn.size;list.innerHTML='';if(!sn.size){list.innerHTML='<div class="mag-empty"><i class="fas fa-book-open"></i><p>No publications yet.</p></div>';return}sn.forEach(d=>{const data=d.data();list.innerHTML+=`<div class="adm-ir"><img class="adm-it" src="${data.coverUrl}" alt="" onerror="this.src='https://placehold.co/56x75/1a1a2a/1a1a2a'"><div class="adm-ii"><h4>${data.title}</h4><p><span class="mag-badge ${data.type==='tabloid'?'tabloid':'magazine'}">${data.type==='tabloid'?'Tabloid':'Magazine'}</span> · ${data.uploadedBy||'Admin'} · ${data.createdAt?.toDate().toLocaleDateString()||''}</p></div><div class="adm-ia"><button class="del-btn" onclick="deleteMagItem('${d.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`})}catch(e){console.error(e);showToast('Failed to load magazines.','error')}}
     async function deleteMagItem(id){if(!confirm('Delete this publication?'))return;try{await db.collection('magazines').doc(id).delete();showToast('Publication deleted.','success');loadAdminMags();loadPublicMags()}catch(e){showToast('Error.','error')}}
     
-    // ===== SCROLL ANIMATIONS =====
+    // ===== SIMPLE SCROLL ANIMATIONS - NO STUTTERING =====
 (function initScrollAnimations() {
-    const elementsToAnimate = [
-        { selector: '.sec-title', class: 'scroll-animate scroll-up' },
-        { selector: '.feat-card', class: 'scroll-animate scroll-up' },
-        { selector: '.about-card', class: 'scroll-animate scroll-left' },
-        { selector: '.cc', class: 'scroll-animate scroll-scale' },
-        { selector: '.wc', class: 'scroll-animate scroll-right' },
-        { selector: '.mag-card', class: 'scroll-animate scroll-up' },
-        { selector: '.gallery-item', class: 'scroll-animate scroll-scale' },
-        { selector: '.media-tabs', class: 'scroll-animate scroll-up' },
-        { selector: '.ft-col', class: 'scroll-animate scroll-up' },
-    ];
+    // Simple fade-in on scroll - lightweight
+    const elements = document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item, .sec-title, .media-tabs, .ft-col');
     
-    elementsToAnimate.forEach(item => {
-        document.querySelectorAll(item.selector).forEach(el => {
-            if (!el.classList.contains('scroll-animate')) {
-                el.classList.add(...item.class.split(' '));
-            }
-        });
+    // Add initial class
+    elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
     
-    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
-        if (grid.children.length > 0 && !grid.classList.contains('stagger-children')) {
-            grid.classList.add('stagger-children');
-        }
-    });
-    
+    // Intersection Observer with larger threshold for smoother trigger
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target); // Unobserve after animation
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    
-    document.querySelectorAll('.scroll-animate, .stagger-children').forEach(el => {
-        observer.observe(el);
+    }, { 
+        threshold: 0.15,  // Trigger when 15% visible
+        rootMargin: '0px 0px -20px 0px'  // Slight offset to trigger before fully visible
     });
     
-    document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .gallery-item').forEach(card => {
-        observer.observe(card);
+    elements.forEach(el => observer.observe(el));
+    
+    // Handle grid children separately
+    document.querySelectorAll('.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid').forEach(grid => {
+        const children = Array.from(grid.children);
+        children.forEach((child, index) => {
+            child.style.opacity = '0';
+            child.style.transform = 'translateY(20px)';
+            child.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
+            observer.observe(child);
+        });
     });
 })();
 
-// ===== MOBILE MENU - SIMPLE FIX =====
-(function() {
+        
+// ===== MOBILE MENU - CLEAN VERSION =====
+(function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
     
-    if (!menuBtn || !navLinks) {
-        console.log('Mobile menu elements not found');
-        return;
+    if (!menuBtn || !navLinks) return;
+    
+    // Add icons to menu items for mobile
+    if (window.innerWidth <= 768) {
+        const menuItems = [
+            { href: '#home', icon: 'fas fa-home', label: 'Home' },
+            { href: '#about', icon: 'fas fa-info-circle', label: 'About' },
+            { href: '#media', icon: 'fas fa-images', label: 'Media' },
+            { href: '#team', icon: 'fas fa-users', label: 'Team' },
+            { href: '#contact', icon: 'fas fa-envelope', label: 'Contact' }
+        ];
+        
+        const links = navLinks.querySelectorAll('li a');
+        links.forEach((link, index) => {
+            if (index < menuItems.length && !link.querySelector('i')) {
+                const icon = document.createElement('i');
+                icon.className = menuItems[index].icon;
+                link.insertBefore(icon, link.firstChild);
+                link.style.gap = '8px';
+            }
+        });
     }
     
-    console.log('Mobile menu initialized');
+    function closeMenu() {
+        navLinks.classList.remove('active');
+        const icon = menuBtn.querySelector('i');
+        if (icon) icon.className = 'fas fa-bars';
+        document.body.style.overflow = '';
+    }
     
-    // Toggle menu on button click
-    menuBtn.addEventListener('click', function(e) {
+    function openMenu() {
+        navLinks.classList.add('active');
+        const icon = menuBtn.querySelector('i');
+        if (icon) icon.className = 'fas fa-times';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    menuBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
-        console.log('Menu button clicked');
-        
-        // Toggle active class
-        navLinks.classList.toggle('active');
-        
-        // Change icon
-        const icon = menuBtn.querySelector('i');
         if (navLinks.classList.contains('active')) {
-            icon.className = 'fas fa-times';
+            closeMenu();
         } else {
-            icon.className = 'fas fa-bars';
+            openMenu();
         }
     });
     
     // Close menu when clicking a link
-    const links = navLinks.querySelectorAll('a');
-    links.forEach(function(link) {
-        link.addEventListener('click', function() {
-            navLinks.classList.remove('active');
-            const icon = menuBtn.querySelector('i');
-            if (icon) icon.className = 'fas fa-bars';
-        });
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
     });
     
     // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                navLinks.classList.remove('active');
-                const icon = menuBtn.querySelector('i');
-                if (icon) icon.className = 'fas fa-bars';
-            }
+    document.addEventListener('click', (e) => {
+        if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+            closeMenu();
+        }
+    });
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMenu();
         }
     });
 })();
+
         
     </script>
     <script src="cursor-polish.js?v=1"></script>
