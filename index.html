@@ -1,29 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="canonical" href="https://itqan-friends.vercel.app/" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ITQAN - Intelligent Trainees for Qualified Academic Network</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="history-media-upgrade.css?v=3">
-<link rel="stylesheet" href="responsive-polish.css?v=2">  <!-- This should be LAST -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <link rel="stylesheet" href="history-media-upgrade.css?v=5">
+    <link rel="stylesheet" href="responsive-polish.css?v=5">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <style>
         :root{--cyan:#00F0FF;--cyan-d:#00B8D4;--pink:#FF3366;--pink-d:#E62E5C;--gold:#FFB800;--text:#E8ECF4;--muted:#8892A8;--dim:#3A4055;--s0:#060810;--s1:#0C0F1A;--s2:#121626;--s3:#1A1F33;--s4:#232940;--glass:rgba(255,255,255,.03);--glass-b:rgba(255,255,255,.06);--glass-h:rgba(255,255,255,.09);--br:14px;--br-lg:20px;--tr:all .45s cubic-bezier(.22,1,.36,1)}
         *{margin:0;padding:0;box-sizing:border-box}
-        html{scroll-behavior:smooth}
-        body{font-family:'Inter',sans-serif;line-height:1.7;color:var(--text);background:var(--s0);overflow-x:hidden}
+        html{scroll-behavior:smooth;scroll-padding-top:80px}
+        body{font-family:'Inter',sans-serif;line-height:1.7;color:var(--text);background:var(--s0);overflow-x:hidden;min-height:100vh}
         h1,h2,h3,h4,h5{font-family:'Space Grotesk',sans-serif;font-weight:600;line-height:1.2;margin-bottom:.6rem}
         a{text-decoration:none;color:inherit}
         .container{width:100%;max-width:1200px;margin:0 auto;padding:0 24px}
+        section{display:block;position:relative;width:100%}
+
+        /* Mouse glow effect on cards */
+        .feat-card, .about-card, .cc, .wc, .mag-card, .pub-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .feat-card::before, .about-card::before, .cc::before, .wc::before, .mag-card::before, .pub-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.12), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .feat-card:hover::before, .about-card:hover::before, .cc:hover::before, .wc:hover::before, .mag-card:hover::before, .pub-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Simple scroll animation */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .scroll-animate.visible, .is-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
 
         /* Noise texture */
         body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.6}
@@ -34,42 +67,6 @@
         .amb-2{width:500px;height:500px;background:rgba(255,51,102,.03);bottom:-100px;right:-100px;animation:ambDrift 25s ease-in-out infinite reverse}
         .amb-3{width:400px;height:400px;background:rgba(255,184,0,.025);top:50%;left:40%;animation:ambDrift 35s ease-in-out infinite 5s}
         @keyframes ambDrift{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,50px)}}
-
-        /* Simple CSS for the scroll animation */
-.feat-grid, .about-grid, .core-grid, .wgrid, .mag-grid, .sec-title {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.is-visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
-
-/* Ensure smooth scrolling on desktop */
-html {
-    scroll-behavior: smooth;
-    height: 100%;
-}
-
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Ensure all sections are visible */
-section {
-    display: block;
-    position: relative;
-    width: 100%;
-}
-
-        
-        /* Reveal system */
-        .rv{opacity:0;transform:translateY(50px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}.rv.v{opacity:1;transform:translateY(0)}
-        .rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}.rv-d5{transition-delay:.4s}
 
         /* Buttons */
         .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;border:none;border-radius:50px;font-weight:600;font-size:.92rem;cursor:pointer;transition:var(--tr);font-family:'Space Grotesk',sans-serif;position:relative;overflow:hidden}
@@ -104,84 +101,9 @@ section {
         .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px;transition:width .3s}
         .nav-links a:hover::after{width:100%}
         .mob-btn{display:none;font-size:1.3rem;background:none;border:none;color:var(--cyan);cursor:pointer;z-index:1002}
-        /* Header controls wrapper */
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-/* Mobile menu button - always visible on mobile */
-.mob-btn {
-    display: none;
-    background: rgba(0, 240, 255, 0.1);
-    border: 1px solid rgba(0, 240, 255, 0.2);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    align-items: center;
-    justify-content: center;
-    color: #00F0FF;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.mob-btn:hover {
-    background: rgba(0, 240, 255, 0.2);
-    transform: scale(1.05);
-}
-
-        .hero p {
-    word-break: break-word;
-    white-space: normal;
-    line-height: 1.6;
-    max-width: 100%;
-}
-/* Mobile navigation - hidden by default */
-@media (max-width: 768px) {
-    .mob-btn {
-        display: flex !important;
-    }
-    
-    .nav-links {
-        display: none !important;
-        position: fixed !important;
-        top: 70px !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: #0C0F1A !important;
-        border-bottom: 1px solid rgba(0, 240, 255, 0.1) !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        padding: 1rem !important;
-        z-index: 999 !important;
-    }
-    
-    .nav-links.active {
-        display: flex !important;
-    }
-    
-    .nav-links li {
-        width: 100% !important;
-        text-align: center !important;
-        padding: 0.5rem 0 !important;
-    }
-    
-    .nav-links a {
-        display: block !important;
-        padding: 10px !important;
-        font-size: 1rem !important;
-    }
-}
         
-        /* Fixed: Removed duplicate .auth-area, added .header-controls */
         .auth-area{display:flex;align-items:center;gap:.5rem}
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .header-controls{display:flex;align-items:center;gap:0.8rem}
         .auth-btn{padding:7px 18px;border-radius:25px;font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--tr);font-family:'Space Grotesk',sans-serif;border:none}
         .auth-btn-login{background:transparent;border:1.5px solid rgba(0,240,255,.4);color:var(--cyan)}.auth-btn-login:hover{background:var(--cyan);color:var(--s0);border-color:var(--cyan)}
         .auth-btn-register{background:var(--pink);color:#fff}.auth-btn-register:hover{background:var(--pink-d)}
@@ -189,11 +111,7 @@ section {
         .auth-user-btn:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,240,255,.15);background:rgba(0,240,255,.06)}
         .avatar-sm{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--pink));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700}
 
-        /* Improved about section spacing */
-        .about{padding:3rem 0 5rem}
-        .about .sec-title,.about .sec-line-c{display:block}
-
-        /* ===== HERO ===== */
+        /* Hero */
         .hero{position:relative;overflow:hidden;padding:7rem 1rem 5rem;text-align:center;color:#fff}
         .hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') center/cover;filter:brightness(.3) saturate(.6);transform:scale(1.05)}
         .hero-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,16,.4) 0%,rgba(6,8,16,.7) 50%,var(--s0) 100%)}
@@ -225,10 +143,6 @@ section {
         .features{padding:5rem 0;background:var(--s1);position:relative}
         .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
         .feat-card{background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--glass-b);border-radius:var(--br-lg);padding:2.2rem 1.6rem;text-align:center;transition:var(--tr);position:relative;overflow:hidden}
-        .feat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,240,255,.08),transparent 60%);opacity:0;transition:opacity .4s}
-        .feat-card:hover::before{opacity:1}
-        .feat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .4s}
-        .feat-card:hover::after{opacity:1}
         .feat-card:hover{transform:translateY(-8px);border-color:rgba(0,240,255,.15);box-shadow:0 20px 50px rgba(0,0,0,.3),0 0 40px rgba(0,240,255,.05)}
         .feat-icon{width:64px;height:64px;border-radius:16px;background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.1);display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--cyan);margin-bottom:1.2rem;transition:var(--tr)}
         .feat-card:hover .feat-icon{transform:scale(1.08) rotate(-4deg);background:rgba(0,240,255,.1);box-shadow:0 0 30px rgba(0,240,255,.12)}
@@ -237,8 +151,6 @@ section {
         .about{padding:5rem 0;background:var(--s0)}
         .about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto}
         .about-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--br-lg);padding:2rem;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden}
-        .about-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,240,255,.04),rgba(255,51,102,.04));opacity:0;transition:opacity .4s}
-        .about-card:hover::after{opacity:1}
         .about-card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(255,51,102,.2);box-shadow:0 20px 50px rgba(0,0,0,.3)}
         .about-ic{width:50px;height:50px;border-radius:14px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.12);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--pink);margin-bottom:1rem;transition:var(--tr)}
         .about-card:hover .about-ic{transform:scale(1.1);box-shadow:0 0 20px rgba(255,51,102,.15)}
@@ -289,7 +201,7 @@ section {
         .mag-body p{color:var(--muted);font-size:.82rem;margin-bottom:1rem;line-height:1.5}
         .mag-body .btn{width:100%}
 
-        /* ===== ACCORDION ZONE ===== */
+        /* Accordion Zone */
         .acc-zone{padding:5rem 1rem 4rem;background:var(--s0);position:relative}
         .acc-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 0%,rgba(0,240,255,.025),transparent 50%),radial-gradient(ellipse at 70% 100%,rgba(255,51,102,.02),transparent 50%);pointer-events:none}
         .acc-item{max-width:1200px;margin:0 auto 1rem;position:relative;z-index:1}
@@ -298,53 +210,22 @@ section {
         .acc-hdr .a-ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
         .acc-hdr .a-arr{font-size:.9rem;transition:transform .4s;color:var(--muted)}
         .acc-hdr.open .a-arr{transform:rotate(180deg)}
-        /* Core style */
         .ac-core{background:linear-gradient(135deg,rgba(0,240,255,.04),var(--s2));border-color:rgba(0,240,255,.12)}
         .ac-core .a-ic{background:rgba(0,240,255,.1);color:var(--cyan);border:1px solid rgba(0,240,255,.15)}
         .ac-core h2{color:var(--cyan)}
         .ac-core.open{border-color:rgba(0,240,255,.25);box-shadow:0 0 30px rgba(0,240,255,.06),inset 0 1px 0 rgba(0,240,255,.1)}
-        /* Wings style */
         .ac-wing{background:linear-gradient(135deg,rgba(130,80,255,.04),var(--s2));border-color:rgba(130,80,255,.12)}
         .ac-wing .a-ic{background:rgba(130,80,255,.1);color:#A78BFA;border:1px solid rgba(130,80,255,.15)}
         .ac-wing h2{color:#A78BFA}
         .ac-wing.open{border-color:rgba(130,80,255,.25);box-shadow:0 0 30px rgba(130,80,255,.06),inset 0 1px 0 rgba(130,80,255,.1)}
-        /* History style */
         .ac-hist{background:linear-gradient(135deg,rgba(255,184,0,.04),var(--s2));border-color:rgba(255,184,0,.1)}
         .ac-hist .a-ic{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.15)}
         .ac-hist h2{color:var(--gold)}
         .ac-hist.open{border-color:rgba(255,184,0,.2);box-shadow:0 0 30px rgba(255,184,0,.05),inset 0 1px 0 rgba(255,184,0,.1)}
         .acc-body{display:none;padding:1.6rem 0 .6rem;animation:fadeUp .4s ease}.acc-body.open{display:block}
 
-        /* History tabs */
-        .htabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--s2);border-radius:10px;padding:4px;border:1px solid var(--glass-b)}
-        .htab{flex:1;padding:10px 14px;text-align:center;border-radius:8px;cursor:pointer;font-weight:600;font-size:.82rem;color:var(--muted);border:none;background:none;font-family:'Space Grotesk',sans-serif;transition:.3s;white-space:nowrap}
-        .htab:hover{color:var(--text)}.htab.t-u.active{background:var(--gold);color:var(--s0)}.htab.t-a.active{background:var(--pink)}
-        .hpanel{display:none}.hpanel.active{display:block;animation:fadeUp .35s ease}
-        .hperiod{margin-bottom:1.8rem}.hperiod:last-child{margin-bottom:0}
-        .hperiod-t{font-size:.95rem;margin-bottom:.8rem;padding:.7rem 1rem;border-radius:10px;display:flex;align-items:center;gap:8px;font-weight:700}
-        .hperiod-t.u-a{color:var(--gold);background:rgba(255,184,0,.05);border-left:3px solid var(--gold)}
-        .hperiod-t.a-a{color:var(--pink);background:rgba(255,51,102,.05);border-left:3px solid var(--pink)}
-        .hperiod-t.s-a{color:var(--cyan);background:rgba(0,240,255,.05);border-left:3px solid var(--cyan);font-size:.85rem;margin-top:1rem}
-        .h-sub{font-size:.62rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:1.5px;margin-left:auto}
-        .hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:.6rem}
-        .hcard{background:var(--s2);border:1px solid var(--glass-b);border-radius:10px;padding:.7rem .8rem;text-align:center;transition:all .3s;position:relative;overflow:hidden}
-        .hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-        .hcard.u-c::before{background:linear-gradient(90deg,#FFD700,#FFB800)}
-        .hcard.u-c:hover{border-color:rgba(255,184,0,.2);transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,184,0,.06)}
-        .hcard.a-c::before{background:linear-gradient(90deg,#FF3366,#FF6B9D)}
-        .hcard.a-c:hover{border-color:rgba(255,51,102,.2);transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,51,102,.06)}
-        .hrole{font-size:.52rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:.15rem}
-        .hcard.u-c .hrole{color:var(--gold)}.hcard.a-c .hrole{color:var(--pink)}
-        .hname{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:700;color:var(--text)}
-        .hgroup{font-size:.6rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:.5rem;padding-bottom:.4rem;border-bottom:1px dashed var(--dim)}
-        .hgroup.u-g{color:rgba(255,184,0,.45)}.hgroup.a-g{color:rgba(255,51,102,.45)}
-
-        /* ===== CORE CARDS ===== */
-       .core-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:1.2rem;max-width:920px;margin:0 auto}
+        .core-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:1.2rem;max-width:920px;margin:0 auto}
         .cc{background:var(--s2);border:1px solid var(--glass-b);border-radius:var(--br-lg);overflow:hidden;position:relative;transition:var(--tr);display:flex;flex-direction:column}
-        .cc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:3}
-        .cc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,240,255,.04),transparent 60%);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
-        .cc:hover::before{opacity:1}
         .cc:hover{transform:translateY(-8px);box-shadow:0 25px 60px rgba(0,0,0,.35);border-color:rgba(0,240,255,.12)}
         .cc-in{padding:1.5rem;position:relative;z-index:2;flex-grow:1;display:flex;flex-direction:column}
         .cc-ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:.8rem;font-size:1.2rem;transition:all .4s}
@@ -355,32 +236,8 @@ section {
         .cc-btns{display:flex;gap:.4rem;flex-wrap:wrap}
         .cc-btns .btn{flex:1;min-width:80px;padding:7px 10px;font-size:.72rem}
 
-        /* President */
-        .cc-pres .cc-ic{background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,184,0,.05));color:#FFD700;box-shadow:0 4px 20px rgba(255,215,0,.2);animation:crownP 2s ease-in-out infinite}.cc-pres::after{background:linear-gradient(90deg,#FFD700,#FFB800,#FFD700)}.cc-pres .cc-role{color:#FFD700}.cc-pres .btn-cyan{background:linear-gradient(135deg,#FFD700,#FFB800);color:#000;box-shadow:0 4px 15px rgba(255,215,0,.25)}
-        @keyframes crownP{0%,100%{box-shadow:0 4px 20px rgba(255,215,0,.2)}50%{box-shadow:0 10px 40px rgba(255,215,0,.4)}}
-        .cc-vp .cc-ic{background:linear-gradient(135deg,rgba(192,192,192,.2),rgba(192,192,192,.05));color:#C0C0C0}.cc-vp::after{background:linear-gradient(90deg,#C0C0C0,#E8E8E8,#C0C0C0)}.cc-vp .cc-role{color:#C0C0C0}.cc-vp .btn-cyan{background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#000}
-        .cc-sec .cc-ic{background:linear-gradient(135deg,rgba(0,240,255,.15),rgba(0,240,255,.03));color:var(--cyan);animation:penM 3s ease-in-out infinite}.cc-sec::after{background:linear-gradient(90deg,var(--cyan),var(--cyan-d),var(--cyan))}.cc-sec .cc-role{color:var(--cyan)}
-        @keyframes penM{0%,100%{transform:rotate(0)translateX(0)}25%{transform:rotate(-5deg)translateX(-3px)}75%{transform:rotate(5deg)translateX(3px)}}
-        .cc-js .cc-ic{background:linear-gradient(135deg,rgba(130,80,255,.15),rgba(130,80,255,.03));color:#8250FF;animation:gearR 4s linear infinite}.cc-js::after{background:linear-gradient(90deg,#8250FF,#A78BFA,#8250FF)}.cc-js .cc-role{color:#8250FF}.cc-js .btn-cyan{background:#8250FF;color:#fff}
-        @keyframes gearR{to{transform:rotate(360deg)}}
-        .cc-tres .cc-ic{background:linear-gradient(135deg,rgba(0,220,130,.15),rgba(0,220,130,.03));color:#00DC82;animation:coinF 1s ease-in-out infinite}.cc-tres::after{background:linear-gradient(90deg,#00DC82,#69F0AE,#00DC82)}.cc-tres .cc-role{color:#00DC82}.cc-tres .btn-cyan{background:#00DC82;color:#000}
-        @keyframes coinF{0%,100%{transform:translateY(0)rotateY(0)}50%{transform:translateY(-12px)rotateY(180deg)}}
-        .cc-fin .cc-ic{background:linear-gradient(135deg,rgba(255,100,100,.15),rgba(255,100,100,.03));color:#FF6464;animation:barG 1.5s ease-in-out infinite}.cc-fin::after{background:linear-gradient(90deg,#FF6464,#FF8A80,#FF6464)}.cc-fin .cc-role{color:#FF6464}.cc-fin .btn-cyan{background:#FF6464;color:#fff}
-        @keyframes barG{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(1.2)}}
-        .cc-pro .cc-ic{background:linear-gradient(135deg,rgba(255,184,0,.15),rgba(255,184,0,.03));color:var(--gold);animation:broS 1.8s ease-in-out infinite}.cc-pro::after{background:linear-gradient(90deg,var(--gold),#FFD54F,var(--gold))}.cc-pro .cc-role{color:var(--gold)}.cc-pro .btn-cyan{background:var(--gold);color:#000}
-        @keyframes broS{0%,100%{transform:scale(1)}25%{transform:scale(1.1)rotate(-3deg)}75%{transform:scale(1.06)rotate(3deg)}}
-        .cc-aud{border:1px solid rgba(255,51,102,.15)}.cc-aud .cc-ic{background:linear-gradient(135deg,rgba(255,51,102,.2),rgba(255,51,102,.05));color:var(--pink);animation:scanP 2s ease-in-out infinite}.cc-aud::after{background:linear-gradient(90deg,var(--pink),#FF6B9D,var(--pink))}.cc-aud .cc-role{color:var(--pink)}
-        @keyframes scanP{0%,100%{box-shadow:0 4px 20px rgba(255,51,102,.2)}50%{box-shadow:0 10px 40px rgba(255,51,102,.4)}}
-        .aud-mini{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:.6rem}
-        .aud-p{text-align:center}.aud-r{font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}.aud-n{font-size:.92rem;font-weight:700;color:var(--text)}
-        .aud-div{width:1px;height:28px;background:var(--dim)}
-
-        /* ===== WING CARDS ===== */
-       .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,270px));gap:1.2rem;max-width:1100px;margin:0 auto}
+        .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,270px));gap:1.2rem;max-width:1100px;margin:0 auto}
         .wc{background:var(--s2);border:1px solid var(--glass-b);border-radius:var(--br-lg);overflow:hidden;position:relative;transition:var(--tr);min-height:280px;display:flex;flex-direction:column}
-        .wc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:3}
-        .wc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,240,255,.03),transparent 60%);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
-        .wc:hover::before{opacity:1}
         .wc:hover{transform:translateY(-8px);box-shadow:0 25px 60px rgba(0,0,0,.35);border-color:rgba(0,240,255,.1)}
         .w-in{padding:1.4rem;position:relative;z-index:2;flex-grow:1;display:flex;flex-direction:column}
         .w-ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.7rem;font-size:1.1rem;transition:all .4s}
@@ -396,38 +253,6 @@ section {
         .w-btns{display:flex;gap:.3rem;flex-wrap:wrap}
         .w-btns .btn{flex:1;min-width:55px;padding:6px 8px;font-size:.66rem}
 
-        /* Wing color variants */
-        .w-urdu .w-ic{background:rgba(255,184,0,.12);color:var(--gold)}.w-urdu::after{background:linear-gradient(90deg,#FFB800,#FF6B35,#FFB800)}.w-urdu .w-lab,.w-urdu .ch-role{color:var(--gold)}.w-urdu .btn-cyan{background:var(--gold);color:#000}
-        .w-engl .w-ic{background:rgba(0,240,255,.12);color:var(--cyan)}.w-engl::after{background:linear-gradient(90deg,var(--cyan),var(--cyan-d),var(--cyan))}.w-engl .w-lab{color:var(--cyan)}
-        .tdots{display:flex;gap:2px;position:absolute;top:10px;right:10px;z-index:4}.tdots span{width:3px;height:3px;background:var(--cyan);border-radius:50%;animation:dotB 1.4s ease-in-out infinite}.tdots span:nth-child(2){animation-delay:.2s}.tdots span:nth-child(3){animation-delay:.4s}
-        @keyframes dotB{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-5px)}}
-        .w-arab .w-ic{background:rgba(255,215,0,.12);color:#FFD700}.w-arab::after{background:linear-gradient(90deg,#FFD700,#FFB800,#FFD700)}.w-arab .w-lab,.w-arab .ch-role{color:#FFD700}.w-arab .btn-cyan{background:#FFD700;color:#000}
-        .w-mala .w-ic{background:rgba(0,200,100,.12);color:#00C864}.w-mala::after{background:linear-gradient(90deg,#00C864,#00E676,#00C864)}.w-mala .w-lab,.w-mala .ch-role{color:#00C864}
-        .w-song .w-ic{background:rgba(255,51,102,.12);color:var(--pink)}.w-song::after{background:linear-gradient(90deg,var(--pink),#FF6B9D,var(--pink))}.w-song .w-lab{color:var(--pink)}
-        .eqb{display:flex;gap:2px;align-items:flex-end;position:absolute;top:8px;right:8px;z-index:4;height:18px}.eqb span{width:2px;background:var(--pink);border-radius:2px;animation:eqJ .8s ease-in-out infinite}.eqb span:nth-child(1){height:8px}.eqb span:nth-child(2){height:14px;animation-delay:.15s}.eqb span:nth-child(3){height:10px;animation-delay:.3s}.eqb span:nth-child(4){height:16px;animation-delay:.45s}
-        @keyframes eqJ{0%,100%{transform:scaleY(.5);opacity:.6}50%{transform:scaleY(1);opacity:1}}
-        .w-math .w-ic{background:rgba(130,80,255,.12);color:#8250FF;animation:gearR 4s linear infinite}.w-math::after{background:linear-gradient(90deg,#8250FF,#A78BFA,#8250FF)}.w-math .w-lab,.w-math .ch-role{color:#8250FF}.w-math .btn-cyan{background:#8250FF;color:#fff}
-        .w-art .w-ic{background:rgba(255,100,150,.12);color:#FF6496}.w-art::after{background:linear-gradient(90deg,#FF6496,#FFB800,var(--cyan),#FF6496)}.w-art .w-lab{color:#FF6496}
-        .pdots{position:absolute;top:6px;right:8px;z-index:4}.pdots span{position:absolute;border-radius:50%;animation:pPop 2s ease-in-out infinite}.pdots span:nth-child(1){width:6px;height:6px;background:#FF6496;top:0;left:3px}.pdots span:nth-child(2){width:4px;height:4px;background:#FFB800;top:7px;left:10px;animation-delay:.4s}.pdots span:nth-child(3){width:4px;height:4px;background:var(--cyan);top:1px;left:14px;animation-delay:.8s}
-        @keyframes pPop{0%,100%{transform:scale(.5);opacity:.4}50%{transform:scale(1.2);opacity:1}}
-        .w-lib .w-ic{background:rgba(180,140,100,.12);color:#B48C64}.w-lib::after{background:linear-gradient(90deg,#B48C64,#D4A574,#B48C64)}.w-lib .w-lab,.w-lib .ch-role{color:#B48C64}
-        .w-geo .w-ic{background:rgba(0,180,220,.12);color:#00B4DC;animation:gearR 6s linear infinite}.w-geo::after{background:linear-gradient(90deg,#00B4DC,#4FC3F7,#00B4DC)}.w-geo .w-lab,.w-geo .ch-role{color:#00B4DC}
-        .w-gk .w-ic{background:rgba(255,200,50,.12);color:#FFC832}.w-gk::after{background:linear-gradient(90deg,#FFC832,#FFE082,#FFC832)}.w-gk .w-lab,.w-gk .ch-role{color:#FFC832}
-        .w-sci .w-ic{background:rgba(0,220,130,.12);color:#00DC82}.w-sci::after{background:linear-gradient(90deg,#00DC82,#69F0AE,#00DC82)}.w-sci .w-lab,.w-sci .ch-role{color:#00DC82}
-        .aring{position:absolute;top:-4px;left:-4px;width:50px;height:50px;border:2px dashed rgba(0,220,130,.35);border-radius:50%;animation:gearR 3s linear infinite;pointer-events:none}.adot{position:absolute;top:-2px;left:50%;width:5px;height:5px;background:#00DC82;border-radius:50%;box-shadow:0 0 6px #00DC82}
-        .w-pub .w-ic{background:rgba(200,160,255,.12);color:#C8A0FF}.w-pub::after{background:linear-gradient(90deg,#C8A0FF,#E1BEE7,#C8A0FF)}.w-pub .w-lab,.w-pub .ch-role{color:#C8A0FF}
-        .w-med .w-ic{background:rgba(255,51,102,.12);color:var(--pink);animation:hBeat 1.2s ease-in-out infinite}.w-med::after{background:linear-gradient(90deg,var(--pink),#FF6B9D,var(--pink))}.w-med .w-lab{color:var(--pink)}
-        @keyframes hBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
-        .w-media .w-ic{background:rgba(255,80,80,.12);color:#FF5050;animation:shutC 2s ease-in-out infinite}.w-media::after{background:linear-gradient(90deg,#FF5050,#FF8A80,#FF5050)}.w-media .w-lab,.w-media .ch-role{color:#FF5050}
-        @keyframes shutC{0%,90%,100%{transform:scale(1)}95%{transform:scale(.85)}}
-        .w-sport .w-ic{background:rgba(0,240,255,.12);color:var(--cyan);animation:bBounce .8s ease-in-out infinite}.w-sport::after{background:linear-gradient(90deg,var(--cyan),var(--gold),var(--cyan))}.w-sport .w-lab{color:var(--cyan)}
-        @keyframes bBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        .ssparks{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}.ssparks span{position:absolute;width:2px;height:2px;border-radius:50%;animation:spF 3s ease-in-out infinite}.ssparks span:nth-child(1){left:20%;background:var(--cyan)}.ssparks span:nth-child(2){left:50%;animation-delay:.8s;background:var(--gold)}.ssparks span:nth-child(3){left:75%;animation-delay:1.6s;background:var(--pink)}
-        @keyframes spF{0%{bottom:-5px;opacity:0;transform:scale(0)}20%{opacity:.8}50%{opacity:.3;transform:translateX(10px)scale(1)}100%{bottom:100%;opacity:0;transform:translateX(-10px)scale(0)}}
-        .w-for .w-ic{background:rgba(255,184,0,.12);color:var(--gold)}.w-for::after{background:linear-gradient(90deg,#FFB800,var(--cyan),var(--pink),#FFB800)}.w-for .w-lab{color:var(--gold)}
-        .fstripes{position:absolute;top:6px;right:8px;display:flex;gap:2px;z-index:4}.fstripes span{width:2px;height:12px;border-radius:2px;animation:stW 1.5s ease-in-out infinite}.fstripes span:nth-child(1){background:#FFB800}.fstripes span:nth-child(2){background:var(--cyan);animation-delay:.2s}.fstripes span:nth-child(3){background:var(--pink);animation-delay:.4s}
-        @keyframes stW{0%,100%{transform:scaleY(.6)}50%{transform:scaleY(1)}}
-
         /* Footer */
         footer{background:var(--s0);color:var(--text);padding:3.5rem 0 1.2rem;position:relative}
         footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(0,240,255,.15) 30%,rgba(255,51,102,.15) 50%,rgba(255,184,0,.15) 70%,transparent 95%)}
@@ -441,164 +266,52 @@ section {
         .soc-icons a:hover{background:var(--cyan);color:var(--s0);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,240,255,.25)}
         .copyright{text-align:center;padding-top:1.2rem;border-top:1px solid var(--glass-b);color:var(--dim);font-size:.75rem}
 
-        /* Modals */
+        /* Modal styles */
         .profile-modal,.auth-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:2000;justify-content:center;align-items:center}
         .profile-modal.active,.auth-modal.active{display:flex}
         .modal-content,.auth-card{background:var(--s2);padding:1.8rem;border-radius:var(--br-lg);max-width:480px;width:90%;max-height:85vh;overflow-y:auto;position:relative;border:1px solid var(--glass-b);box-shadow:0 25px 80px rgba(0,0,0,.5);animation:mIn .4s ease}
         @keyframes mIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
         .modal-close,.auth-close{position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:var(--muted);cursor:pointer;transition:.3s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}.modal-close:hover,.auth-close:hover{color:var(--pink);background:rgba(255,51,102,.1);transform:rotate(90deg)}
-        .mhwp{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--dim)}
-        .ppc{width:85px;height:85px;border-radius:50%;overflow:hidden;border:2px solid var(--cyan);box-shadow:0 4px 20px rgba(0,240,255,.2);flex-shrink:0}
-        .ppc img{width:100%;height:100%;object-fit:cover}
-        .pph{width:100%;height:100%;background:linear-gradient(135deg,var(--s3),var(--s2));display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:1.5rem;font-weight:700}
-        .phi h3{font-size:1.3rem;color:var(--text);margin-bottom:.15rem}.phi p{color:var(--pink);font-weight:600;font-size:.85rem;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:1px}
-        .wbadges{display:flex;gap:.3rem;flex-wrap:wrap}.wbadge{background:var(--cyan);color:var(--s0);padding:2px 8px;border-radius:12px;font-size:.68rem;font-weight:600}
-        .mbody{margin-bottom:1rem;color:var(--muted);font-size:.85rem}
-        .det-sec{margin-top:1rem;padding:1rem;background:rgba(0,240,255,.03);border-radius:var(--br);border-left:3px solid var(--pink)}
-        .det-sec h4{color:var(--text);margin-bottom:.5rem;font-size:.95rem}
-        .det-sec ul{list-style:none}.det-sec li{padding:.25rem 0;padding-left:1.2rem;position:relative;color:var(--muted);font-size:.82rem}.det-sec li:before{content:'\2713';position:absolute;left:0;color:var(--pink);font-weight:bold}
-        .ct-info{margin-top:1rem;padding:1rem;background:rgba(255,184,0,.03);border-radius:var(--br);border:1px dashed rgba(255,184,0,.2)}
-        .ct-info h4{color:var(--gold);margin-bottom:.5rem;font-size:.85rem}
-        .ct-item{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;color:var(--muted);font-size:.82rem}.ct-item i{color:var(--cyan);width:16px}
-        .mfooter{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
 
-        /* Auth */
-        .auth-card h2{text-align:center;color:var(--cyan);margin-bottom:.15rem;font-size:1.3rem}
-        .auth-sub{text-align:center;color:var(--muted);font-size:.82rem;margin-bottom:1.2rem}
-        .auth-tabs{display:flex;margin-bottom:1.2rem;background:var(--s3);border-radius:8px;padding:3px}
-        .auth-tab{flex:1;padding:8px;text-align:center;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem;color:var(--muted);border:none;background:none;font-family:'Space Grotesk',sans-serif;transition:.3s}
-        .auth-tab.active{background:var(--cyan);color:var(--s0)}
-        .auth-form{display:none}.auth-form.active{display:block}
-        .fg{margin-bottom:.85rem}.fg label{display:block;font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:.25rem}
-        .fi{width:100%;padding:10px 14px;background:var(--s3);border:1px solid var(--glass-b);border-radius:8px;color:var(--text);font-size:.88rem;outline:none;font-family:'Inter',sans-serif;transition:.3s}
-        .fi:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,240,255,.08)}
-        .fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238892A8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-        .auth-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#EF4444;padding:8px 12px;border-radius:8px;font-size:.8rem;margin-bottom:.8rem;display:none}.auth-err.show{display:block}
-        .li-box{background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.1);border-radius:8px;padding:.85rem;margin-bottom:1.2rem}
-        .li-box h4{color:var(--cyan);font-size:.82rem;margin-bottom:.35rem;display:flex;align-items:center;gap:6px}
-        .li-box p{color:var(--muted);font-size:.76rem;line-height:1.5}
-
-        /* Dashboard */
-        .dash-panel{position:fixed;top:0;right:-440px;width:420px;max-width:95vw;height:100vh;background:var(--s1);z-index:2500;transition:right .4s cubic-bezier(.22,1,.36,1);box-shadow:-10px 0 40px rgba(0,0,0,.5);border-left:1px solid var(--glass-b);overflow-y:auto}
-        .dash-panel.open{right:0}
-        .dash-hdr{padding:1.2rem;background:var(--s2);border-bottom:1px solid var(--glass-b);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-        .dash-hdr h3{color:var(--cyan);margin:0;font-size:1.05rem}
-        .dash-body{padding:1.2rem}
-        .dash-pc{background:linear-gradient(135deg,rgba(0,240,255,.04),rgba(255,51,102,.03));border:1px solid var(--glass-b);border-radius:var(--br-lg);padding:1.2rem;text-align:center;margin-bottom:1.2rem}
-        .dash-av{width:65px;height:65px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--pink));margin:0 auto .7rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
-        .dash-nm{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:.1rem}
-        .dash-pos{font-size:.78rem;color:var(--pink);font-weight:600;text-transform:uppercase;letter-spacing:1px}
-        .dash-wt{display:inline-block;margin-top:.35rem;padding:3px 12px;background:var(--cyan);color:var(--s0);border-radius:16px;font-size:.68rem;font-weight:700}
-        .dash-sec{margin-bottom:1.2rem}
-        .dash-sec h4{color:var(--cyan);font-size:.85rem;margin-bottom:.5rem;padding-bottom:.4rem;border-bottom:1px solid var(--glass-b);display:flex;align-items:center;gap:6px}
-        .dash-row{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.02)}
-        .dash-lbl{color:var(--muted);font-size:.8rem}.dash-val{color:var(--text);font-size:.8rem;font-weight:600;word-break:break-all}
-        .dash-acts{display:flex;flex-direction:column;gap:.4rem}
-        .dash-abtn{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--s2);border:1px solid var(--glass-b);border-radius:8px;color:var(--text);cursor:pointer;transition:.3s;font-size:.82rem;font-weight:500}
-        .dash-abtn:hover{border-color:rgba(0,240,255,.2);background:rgba(0,240,255,.03);transform:translateX(3px)}
-        .dash-abtn i{color:var(--cyan);width:16px;text-align:center}
-
-        /* Admin */
+        /* Admin Panel */
         .admin-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--s0);z-index:4000;overflow-y:auto}
         .admin-ov.active{display:block}
         .admin-tb{background:var(--s1);border-bottom:1px solid var(--glass-b);padding:.8rem 1.2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-        .admin-tb h3{color:var(--cyan);margin:0;display:flex;align-items:center;gap:8px;font-size:1.05rem}
-        .admin-xbtn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#EF4444;padding:6px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.78rem;transition:.3s;font-family:'Space Grotesk',sans-serif}
-        .admin-xbtn:hover{background:#EF4444;color:#fff}
-        .admin-bd{padding:1.2rem;max-width:1100px;margin:0 auto}
         .admin-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--s2);border-radius:10px;padding:4px;border:1px solid var(--glass-b);flex-wrap:wrap}
-        .admin-tbtn{flex:1;padding:10px 12px;text-align:center;border-radius:8px;cursor:pointer;font-weight:600;font-size:.78rem;color:var(--muted);border:none;background:none;font-family:'Space Grotesk',sans-serif;transition:.3s;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}
-        .admin-tbtn:hover{color:var(--text);background:var(--glass)}.admin-tbtn.active{background:var(--cyan);color:var(--s0)}
+        .admin-tbtn{flex:1;padding:10px 12px;text-align:center;border-radius:8px;cursor:pointer;font-weight:600;font-size:.78rem;color:var(--muted);border:none;background:none;transition:.3s}
+        .admin-tbtn.active{background:var(--cyan);color:var(--s0)}
         .admin-tc{display:none}.admin-tc.active{display:block}
-        .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-bottom:1.5rem}
-        .stat-card{background:var(--s2);border:1px solid var(--glass-b);border-radius:var(--br);padding:1.1rem;text-align:center;transition:.3s}
-        .stat-card:hover{transform:translateY(-3px);border-color:rgba(0,240,255,.15)}
-        .stat-card .si{font-size:1.4rem;color:var(--cyan);margin-bottom:.2rem}
-        .stat-card .sv{font-size:1.6rem;font-weight:700;color:var(--text);font-family:'Space Grotesk',sans-serif}
-        .stat-card .sl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-        .add-form{background:var(--s2);border:1px solid rgba(16,185,129,.15);border-radius:var(--br-lg);padding:1.4rem;margin-bottom:1.5rem;display:none;animation:fadeUp .35s ease}
+        .add-form{background:var(--s2);border:1px solid rgba(16,185,129,.15);border-radius:var(--br-lg);padding:1.4rem;margin-bottom:1.5rem;display:none}
         .add-form.active{display:block}
-        .add-form h4{color:#10B981;margin-bottom:.8rem;font-size:.95rem;display:flex;align-items:center;gap:6px}
-        .afg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin-bottom:1rem}
-        .afg .fg{margin-bottom:0}
-        .pw-row{display:flex;gap:.4rem;align-items:center}
-        .pw-btn{padding:7px 12px;background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.15);color:var(--cyan);border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:600;transition:.3s;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
-        .pw-btn:hover{background:var(--cyan);color:var(--s0)}
-        .cred-disp{background:linear-gradient(135deg,rgba(16,185,129,.06),rgba(0,240,255,.03));border:2px solid rgba(16,185,129,.2);border-radius:var(--br-lg);padding:1.5rem;margin-bottom:1.5rem;text-align:center;animation:fadeUp .35s ease;display:none}
-        .cred-disp.active{display:block}
-        .cred-disp h4{color:#10B981;margin-bottom:.4rem;font-size:.95rem}
-        .cred-disp p{color:var(--muted);font-size:.78rem;margin-bottom:1.2rem}
-        .cred-box{background:var(--s3);border:1px solid var(--glass-b);border-radius:10px;padding:1.2rem;display:inline-block;text-align:left;min-width:270px}
-        .cred-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
-        .cred-row:last-child{border-bottom:none}
-        .cred-lbl{color:var(--muted);font-size:.78rem;font-weight:600}
-        .cred-val{color:var(--text);font-size:.92rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
-        .cred-acts{margin-top:1rem;display:flex;gap:.5rem;justify-content:center}
-        .stu-tb{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:.6rem}
-        .stu-tb h3{color:var(--text);margin:0;font-size:.95rem}
-        .sbox{display:flex;align-items:center;background:var(--s2);border:1px solid var(--glass-b);border-radius:8px;padding:0 12px;transition:.3s}
-        .sbox:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,240,255,.06)}
-        .sbox i{color:var(--muted);margin-right:6px;font-size:.8rem}
-        .sbox input{background:none;border:none;color:var(--text);padding:8px 0;font-size:.82rem;outline:none;width:170px;font-family:'Inter',sans-serif}
-        .atable{width:100%;border-collapse:collapse;margin-top:.8rem}
-        .atable th{text-align:left;padding:10px;background:var(--s3);color:var(--cyan);font-size:.7rem;text-transform:uppercase;border-bottom:2px solid rgba(0,240,255,.12);white-space:nowrap}
-        .atable td{padding:10px;border-bottom:1px solid rgba(255,255,255,.02);color:var(--text);font-size:.82rem;vertical-align:middle}
-        .atable tr:hover td{background:rgba(0,240,255,.015)}
-        .rbadge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600}
-        .rbadge.admin{background:rgba(255,51,102,.1);color:var(--pink)}.rbadge.core{background:rgba(255,215,0,.1);color:#FFD700}.rbadge.wing{background:rgba(0,240,255,.1);color:var(--cyan)}.rbadge.member{background:rgba(16,185,129,.1);color:#10B981}
-        .sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px}
-        .sdot.active{background:#10B981;box-shadow:0 0 5px #10B981}.sdot.pending{background:var(--gold);box-shadow:0 0 5px var(--gold)}
-        .del-btn{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#EF4444;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:600;font-size:.7rem;transition:.3s;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
-        .del-btn:hover{background:#EF4444;color:#fff;transform:scale(1.05)}
-        .no-users{text-align:center;padding:2rem 1rem;color:var(--muted)}.no-users i{font-size:2.5rem;margin-bottom:.8rem;display:block;opacity:.15}
-        .ov-dim{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:2400;display:none}.ov-dim.active{display:block}
-        .toast-c{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:.4rem}
-        .toast{padding:12px 18px;border-radius:10px;color:#fff;font-weight:600;font-size:.82rem;animation:tIn .4s ease,tOut .4s ease 3s forwards;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:320px}
-        .toast-success{background:linear-gradient(135deg,#10B981,#059669)}.toast-error{background:linear-gradient(135deg,#EF4444,#DC2626)}.toast-info{background:linear-gradient(135deg,var(--cyan),var(--cyan-d));color:var(--s0)}
-        @keyframes tIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes tOut{from{opacity:1}to{opacity:0;transform:translateX(100px)}}
-        .cfm-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:5000;justify-content:center;align-items:center}
-        .cfm-modal.active{display:flex}
-        .cfm-card{background:var(--s2);padding:1.8rem;border-radius:var(--br-lg);max-width:400px;width:90%;text-align:center;border:1px solid rgba(239,68,68,.2);box-shadow:0 25px 60px rgba(0,0,0,.5);animation:mIn .35s ease}
-        .cfm-card .ci{font-size:2.5rem;color:#EF4444;margin-bottom:.8rem}
-        .cfm-card h3{color:var(--text);margin-bottom:.4rem}
-        .cfm-card p{color:var(--muted);font-size:.82rem;margin-bottom:1.2rem}
-        .cfm-card .cn{color:var(--pink);font-weight:700}
-        .cfm-btns{display:flex;gap:.6rem;justify-content:center}
         .adm-il{display:grid;gap:.8rem}
         .adm-ir{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--s2);border:1px solid var(--glass-b);border-radius:var(--br);transition:.3s}
         .adm-ir:hover{border-color:rgba(0,240,255,.12)}
-        .adm-it{width:56px;height:56px;border-radius:8px;object-fit:cover;background:var(--s3);flex-shrink:0}
-        .adm-ii{flex:1;min-width:0}
-        .adm-ii h4{color:var(--text);font-size:.88rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .adm-ii p{color:var(--muted);font-size:.72rem;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .adm-ia{display:flex;gap:.4rem;flex-shrink:0}
+        .adm-ii{flex:1}
+        .adm-ia{display:flex;gap:.4rem}
+        .del-btn{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#EF4444;padding:5px 12px;border-radius:6px;cursor:pointer}
+        .del-btn:hover{background:#EF4444;color:#fff}
+        .toast-c{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:.4rem}
+        .toast{padding:12px 18px;border-radius:10px;color:#fff;font-weight:600;font-size:.82rem;animation:tIn .4s ease,tOut .4s ease 3s forwards;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+        .toast-success{background:linear-gradient(135deg,#10B981,#059669)}
+        .toast-error{background:linear-gradient(135deg,#EF4444,#DC2626)}
+        .toast-info{background:linear-gradient(135deg,var(--cyan),var(--cyan-d));color:var(--s0)}
+        @keyframes tIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes tOut{from{opacity:1}to{opacity:0;transform:translateX(100px)}}
+        .ov-dim{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:2400;display:none}.ov-dim.active{display:block}
+        .dash-panel{position:fixed;top:0;right:-440px;width:420px;max-width:95vw;height:100vh;background:var(--s1);z-index:2500;transition:right .4s;box-shadow:-10px 0 40px rgba(0,0,0,.5);border-left:1px solid var(--glass-b);overflow-y:auto}
+        .dash-panel.open{right:0}
+        .cfm-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:5000;justify-content:center;align-items:center}
+        .cfm-modal.active{display:flex}
 
         @media(max-width:768px){
-            .mob-btn{display:flex;position:relative;z-index:1002}
+            .mob-btn{display:flex}
             .logo-tag{display:none}
             .nav-links{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(6,8,16,.98);backdrop-filter:blur(20px);flex-direction:column;justify-content:center;align-items:center;gap:1.2rem;z-index:1001;padding:2rem}
             .nav-links.active{display:flex}
-            .nav-links li{width:100%;text-align:center}
-            .nav-links a{font-size:1.1rem;display:block;padding:8px}
-            .auth-area{gap:.3rem}
-            .auth-btn{font-size:.7rem;padding:6px 10px}
             .feat-grid,.about-grid{grid-template-columns:1fr}
-            .wgrid,.gallery-grid,
-            .mag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
-            .hgrid{grid-template-columns:repeat(auto-fill,minmax(115px,1fr))}
+            .wgrid,.gallery-grid,.mag-grid{grid-template-columns:1fr}
             .ft-grid{grid-template-columns:1fr}
-            .mhwp{flex-direction:column;text-align:center}
             .admin-tabs{flex-direction:column}
-            .afg{grid-template-columns:1fr}
-            .stu-tb{flex-direction:column;align-items:flex-start}
-            .sbox input{width:140px}
-            .atable{font-size:.72rem}.atable th,.atable td{padding:6px 4px}
-            .cred-box{min-width:auto;width:100%}
-            .htabs{overflow-x:auto}
-            .media-tabs{overflow-x:auto;max-width:100%;white-space:nowrap}
-            .adm-ir{flex-direction:column;align-items:flex-start}
-            .adm-it{width:100%;height:100px}
             .amb{display:none}
         }
     </style>
@@ -610,39 +323,32 @@ section {
     <div class="cfm-modal" id="confirmModal"><div class="cfm-card"><div class="ci"><i class="fas fa-exclamation-triangle"></i></div><h3>Delete?</h3><p>Remove <span class="cn" id="confirmUserName"></span> permanently?</p><div class="cfm-btns"><button class="btn btn-outline btn-sm" onclick="cancelDelete()">Cancel</button><button class="btn btn-danger btn-sm" onclick="confirmDeleteUser()">Delete</button></div></div></div>
     <div class="lightbox" id="lightbox"><button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button><button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button><button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button><img id="lightboxImg" src="" alt=""><div class="lightbox-caption" id="lightboxCaption"></div></div>
 
-<header>
-    <div class="container h-wrap">
-        <!-- LEFT: Logo -->
-        <a href="#" class="logo">
-            <img src="logo.png" alt="ITQAN" class="logo-img">
-            <div class="logo-text">
-                <div class="logo-name">ITQAN UNION</div>
-                <div class="logo-tag">Intelligent Trainees for Qualified and Networked Professionals</div>
+    <header>
+        <div class="container h-wrap">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="ITQAN" class="logo-img">
+                <div class="logo-text">
+                    <div class="logo-name">ITQAN UNION</div>
+                    <div class="logo-tag">Intelligent Trainees for Qualified and Networked Professionals</div>
+                </div>
+            </a>
+            <div class="header-controls">
+                <div class="auth-area" id="authArea">
+                    <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
+                    <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>
+                </div>
+                <button class="mob-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
             </div>
-        </a>
-        
-        <!-- RIGHT: Username + Menu Button -->
-        <div class="header-controls">
-            <div class="auth-area" id="authArea">
-                <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
-                <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>
-            </div>
-            <button class="mob-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#media">Media</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div>
-        
-        <!-- Navigation Menu -->
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#media">Media</a></li>
-            <li><a href="#team">Team</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </div>
-</header>
-    
+    </header>
+
     <section class="hero" id="home">
         <div class="hero-bg"></div><div class="hero-grad"></div>
         <canvas id="heroCanvas"></canvas>
@@ -658,1159 +364,315 @@ section {
 
     <section class="features" id="mission">
         <div class="container">
-            <div class="sec-title rv">Cultivating <span style="color:var(--cyan)">Intelligent</span> & <span style="color:var(--pink)">Qualified</span> Networks</div>
-            <div class="sec-line-c rv"><span></span></div>
+            <div class="sec-title scroll-animate">Cultivating <span style="color:var(--cyan)">Intelligent</span> & <span style="color:var(--pink)">Qualified</span> Networks</div>
+            <div class="sec-line-c scroll-animate"><span></span></div>
             <div class="feat-grid">
-                <div class="feat-card rv rv-d1"><div class="feat-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration across all disciplines.</p></div>
-                <div class="feat-card rv rv-d2"><div class="feat-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change in society.</p></div>
-                <div class="feat-card rv rv-d3"><div class="feat-icon"><i class="fas fa-trophy"></i></div><h3>Achievements</h3><p>Best Union Award and featured in Mission-20 Publication — milestones that define our journey.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration across all disciplines.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change in society.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-trophy"></i></div><h3>Achievements</h3><p>Best Union Award and featured in Mission-20 Publication — milestones that define our journey.</p></div>
             </div>
         </div>
     </section>
 
     <section class="about" id="about">
         <div class="container">
-            <div class="sec-title rv">Explore <span style="color:var(--cyan)">ITQAN</span></div>
-            <div class="sec-line-c rv"><span></span></div>
+            <div class="sec-title scroll-animate">Explore <span style="color:var(--cyan)">ITQAN</span></div>
+            <div class="sec-line-c scroll-animate"><span></span></div>
             <div class="about-grid">
-                <div class="about-card rv rv-d1" onclick="window.location.href='publication.html'"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
-                <div class="about-card rv rv-d2" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
-                <div class="about-card rv rv-d3" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><div class="about-ic"><i class="fas fa-palette"></i></div><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:.6rem"><span class="btn btn-sm btn-outline" style="pointer-events:none">Live Event Hub</span></div></div>
+                <div class="about-card" onclick="window.location.href='publication.html'"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
+                <div class="about-card" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
+                <div class="about-card" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><div class="about-ic"><i class="fas fa-palette"></i></div><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:.6rem"><span class="btn btn-sm btn-outline" style="pointer-events:none">Live Event Hub</span></div></div>
             </div>
         </div>
     </section>
 
     <div class="divider"></div>
 
-        <!-- ===== UNIFIED MEDIA & PUBLICATIONS HUB ===== -->
     <section class="media-hub" id="media">
         <div class="container">
-            <div class="sec-title rv">Media & <span style="color:var(--gold)">Publications</span></div>
-            <div class="sec-line-c rv"><span></span></div>
-            
-            <!-- Unified Tabs -->
-            <div class="media-tabs rv">
+            <div class="sec-title scroll-animate">Media & <span style="color:var(--gold)">Publications</span></div>
+            <div class="sec-line-c scroll-animate"><span></span></div>
+            <div class="media-tabs scroll-animate">
                 <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
                 <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines & Tabloids</button>
                 <button class="media-tab" onclick="switchMediaTab('publications')" style="background: linear-gradient(135deg, var(--gold), #E6A600); color: #000;"><i class="fas fa-file-alt"></i> Reports & Publications</button>
             </div>
-            
-            <!-- ===== PANEL 1: PHOTO GALLERY ===== -->
-            <div class="media-panel active" id="mediaGallery">
-                <div class="gallery-grid" id="publicGalleryGrid">
-                    <!-- Gallery images will load here dynamically -->
-                </div>
-                <div class="gallery-empty" id="galleryEmpty" style="display:none">
-                    <i class="fas fa-camera-retro"></i>
-                    <p>No photos yet. Admin can add photos in the panel.</p>
-                </div>
-            </div>
-            
-            <!-- ===== PANEL 2: MAGAZINES & TABLOIDS ===== -->
-            <div class="media-panel" id="mediaMagazines">
-                <div class="mag-grid" id="publicMagGrid">
-                    <!-- Magazines will load here dynamically -->
-                </div>
-                <div class="mag-empty" id="magEmpty" style="display:none">
-                    <i class="fas fa-book-open"></i>
-                    <p>No publications yet. Coming soon!</p>
-                </div>
-            </div>
-            
-            <!-- ===== PANEL 3: REPORTS & PUBLICATIONS (NEW) ===== -->
-            <div class="media-panel" id="mediaPublications">
-                <div class="publications-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <!-- Report Card 1 -->
-                    <div class="pub-card" style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr); cursor: pointer;">
-                        <div style="padding: 1.5rem;">
-                            <div style="display: inline-block; padding: 4px 12px; background: rgba(255,184,0,0.15); border-radius: 20px; font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-bottom: 1rem;">
-                                <i class="fas fa-chart-line"></i> ANNUAL REPORT
-                            </div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Annual Report 2025</h3>
-                            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">Committee achievements, financial summary, event highlights, and future roadmap for 2026.</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> April 2026 | 24 pages</span>
-                                <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--gold); color: var(--gold);">Read PDF →</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Card 2 -->
-                    <div class="pub-card" style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr); cursor: pointer;">
-                        <div style="padding: 1.5rem;">
-                            <div style="display: inline-block; padding: 4px 12px; background: rgba(0,240,255,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--cyan); font-weight: 700; margin-bottom: 1rem;">
-                                <i class="fas fa-newspaper"></i> QUARTERLY MAGAZINE
-                            </div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Quarterly - Issue 03</h3>
-                            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">Student spotlights, wing activity reports, workshop recaps, and upcoming event calendar.</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> March 2026 | 18 pages</span>
-                                <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--cyan); color: var(--cyan);">Read Online →</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Card 3 -->
-                    <div class="pub-card" style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr); cursor: pointer;">
-                        <div style="padding: 1.5rem;">
-                            <div style="display: inline-block; padding: 4px 12px; background: rgba(255,51,102,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--pink); font-weight: 700; margin-bottom: 1rem;">
-                                <i class="fas fa-envelope-open-text"></i> NEWSLETTER
-                            </div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">Summer 2026 Newsletter</h3>
-                            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">ZENITH Arts Fest recap, new member introductions, achievement awards, and community updates.</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> June 2026 | 12 pages</span>
-                                <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--pink); color: var(--pink);">View Newsletter →</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Card 4 - Impact Study -->
-                    <div class="pub-card" style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr); cursor: pointer;">
-                        <div style="padding: 1.5rem;">
-                            <div style="display: inline-block; padding: 4px 12px; background: rgba(130,80,255,0.1); border-radius: 20px; font-size: 0.7rem; color: #A78BFA; font-weight: 700; margin-bottom: 1rem;">
-                                <i class="fas fa-chart-simple"></i> RESEARCH
-                            </div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Impact Study 2025</h3>
-                            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">"Friendship & Excellence" - Measuring community engagement, skill development, and career outcomes.</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> February 2026 | 32 pages</span>
-                                <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: #A78BFA; color: #A78BFA;">Download PDF →</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 2.5rem;">
-                    <a href="#" class="btn btn-cyan" onclick="return false;"><i class="fas fa-archive"></i> Browse Full Archive</a>
-                </div>
-            </div>
+            <div class="media-panel active" id="mediaGallery"><div class="gallery-grid" id="publicGalleryGrid"></div><div class="gallery-empty" id="galleryEmpty" style="display:none"><i class="fas fa-camera-retro"></i><p>No photos yet. Admin can add photos in the panel.</p></div></div>
+            <div class="media-panel" id="mediaMagazines"><div class="mag-grid" id="publicMagGrid"></div><div class="mag-empty" id="magEmpty" style="display:none"><i class="fas fa-book-open"></i><p>No publications yet. Coming soon!</p></div></div>
+            <div class="media-panel" id="mediaPublications"><div class="publications-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;" id="publicationsGrid"></div></div>
         </div>
     </section>
 
-    <style>
-        /* Hover effects for publication cards */
-        .pub-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(0,240,255,0.25) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .pub-card .btn-outline:hover {
-            background: var(--gold);
-            color: var(--s0) !important;
-            border-color: var(--gold) !important;
-        }
-        
-        /* Gallery image styling */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.2rem;
-        }
-        
-        .gallery-item {
-            aspect-ratio: 4/3;
-            border-radius: var(--br);
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        
-        @media (max-width: 768px) {
-            .publications-grid {
-                grid-template-columns: 1fr !important;
-            }
-        }
-    </style>
-
-    <!-- ===== RECENT PUBLICATIONS SECTION ===== -->
-    <section style="padding: 4rem 0; background: linear-gradient(135deg, var(--s1), var(--s0));">
-        <div class="container">
-            <div class="sec-title rv">Recent <span style="color:var(--gold)">Publications</span></div>
-            <div class="sec-line-c rv"><span></span></div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                
-                <!-- Publication Card 1 -->
-                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: inline-block; padding: 4px 12px; background: rgba(255,184,0,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-bottom: 1rem;">
-                            📄 ANNUAL REPORT
-                        </div>
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Annual Report 2025</h3>
-                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Committee achievements, financial summary, and future roadmap.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> April 2026</span>
-                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--gold); color: var(--gold);">Read PDF →</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Publication Card 2 -->
-                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: inline-block; padding: 4px 12px; background: rgba(0,240,255,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--cyan); font-weight: 700; margin-bottom: 1rem;">
-                            📰 MAGAZINE
-                        </div>
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">ITQAN Quarterly - Issue 03</h3>
-                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Student spotlights, wing activities, and upcoming events.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> March 2026</span>
-                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--cyan); color: var(--cyan);">Read Online →</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Publication Card 3 -->
-                <div style="background: var(--s2); border: 1px solid var(--glass-b); border-radius: var(--br-lg); overflow: hidden; transition: var(--tr);">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: inline-block; padding: 4px 12px; background: rgba(255,51,102,0.1); border-radius: 20px; font-size: 0.7rem; color: var(--pink); font-weight: 700; margin-bottom: 1rem;">
-                            📧 NEWSLETTER
-                        </div>
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text);">Summer 2026 Newsletter</h3>
-                        <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">ZENITH recap, new members, achievements, and community updates.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.7rem; color: var(--dim);"><i class="fas fa-calendar-alt"></i> June 2026</span>
-                            <button class="btn btn-outline btn-sm" onclick="window.open('#')" style="border-color: var(--pink); color: var(--pink);">View Newsletter →</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 2.5rem;">
-                <a href="#media" class="btn btn-cyan" onclick="switchMediaTab('magazines')"><i class="fas fa-archive"></i> View All Publications</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fixed: Removed duplicate section opening tag -->
     <section class="acc-zone" id="team">
         <div class="acc-item">
             <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)"><h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2><span class="a-arr"><i class="fas fa-chevron-down"></i></span></div>
-            <div class="acc-body open"><div class="core-grid">
-                <div class="cc cc-pres"><div class="cc-in"><div class="cc-ic"><i class="fas fa-crown"></i></div><div class="cc-role">President</div><h3 class="cc-name">Sayed Hudaif</h3><p class="cc-desc">Leads strategic planning and represents the union externally.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Sayed Hudaif','President','Strategic direction and primary representative.','profiles/Hudaif.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-vp"><div class="cc-in"><div class="cc-ic"><i class="fas fa-shield-alt"></i></div><div class="cc-role">Vice President</div><h3 class="cc-name">Sayed Burhan</h3><p class="cc-desc">Supports the President and oversees operations.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Sayed Burhan','Vice President','Assists President.','profiles/Sayyid-Burhan.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-sec"><div class="cc-in"><div class="cc-ic"><i class="fas fa-pen-alt"></i></div><div class="cc-role">Secretary</div><h3 class="cc-name">Zidan</h3><p class="cc-desc">Manages official records and documentation.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Zidan','Secretary','Administrative records.','profiles/Zidan.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-js"><div class="cc-in"><div class="cc-ic"><i class="fas fa-cog"></i></div><div class="cc-role">Joint Secretary</div><h3 class="cc-name">Muhyudheen</h3><p class="cc-desc">Administrative support and portfolio management.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhyudheen','Joint Secretary','Designated admin functions.','profiles/Muhyudheen.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-tres"><div class="cc-in"><div class="cc-ic"><i class="fas fa-coins"></i></div><div class="cc-role">Treasurer</div><h3 class="cc-name">Mirsad</h3><p class="cc-desc">Manages financial assets and budgets.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Mirsad','Treasurer','Financial stewardship.','profiles/Mirsad.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-fin"><div class="cc-in"><div class="cc-ic"><i class="fas fa-chart-bar"></i></div><div class="cc-role">Financial Manager</div><h3 class="cc-name">Thanzeeh</h3><p class="cc-desc">Oversees financial operations and compliance.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Thanzeeh','Financial Manager','Financial operations.','profiles/Thanzeeh.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-pro"><div class="cc-in"><div class="cc-ic"><i class="fas fa-bullhorn"></i></div><div class="cc-role">P.R.O</div><h3 class="cc-name">Shahzad</h3><p class="cc-desc">External communications and media relations.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Shahzad','P.R.O','Public image.','profiles/Shahzad.png')"><i class="fas fa-user"></i> Profile</button></div></div></div>
-                <div class="cc cc-aud"><div class="cc-in" style="text-align:center"><div class="cc-ic" style="margin:0 auto .6rem"><i class="fas fa-shield-virus"></i></div><div class="cc-role">Auditing Board</div><div class="aud-mini"><div class="aud-p"><div class="aud-r">Chairman</div><div class="aud-n">Adnan</div></div><div class="aud-div"></div><div class="aud-p"><div class="aud-r">Convener</div><div class="aud-n">Rashad</div></div></div><p class="cc-desc">Financial integrity and transparency.</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Adnan','Audit Chair','Audits.','profiles/Adnan.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Rashad','Audit Convener','Procedures.','profiles/Rashad.png')">Conv</button></div></div></div>
-            </div></div>
+            <div class="acc-body open"><div class="core-grid" id="coreGrid"></div></div>
         </div>
         <div class="acc-item">
             <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)"><h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2><span class="a-arr"><i class="fas fa-chevron-down"></i></span></div>
-            <div class="acc-body"><div class="wgrid">
-                <div class="wc w-urdu"><div class="w-in"><div class="w-ic"><i class="fas fa-pen-fancy"></i></div><div class="w-lab">Language</div><h3 class="w-ttl">Urdu Wing</h3><p class="w-info">Urdu literature and heritage.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Muhammed V.K</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Hisham</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed V.K','Urdu Chairman','Urdu programs.','profiles/Muhammed V.K.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Hisham','Urdu Convener','Events.','profiles/Hisham.png')">Conv</button></div></div></div>
-                <div class="wc w-engl"><div class="tdots"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-keyboard"></i></div><div class="w-lab">Communication</div><h3 class="w-ttl">English Wing</h3><p class="w-info">Professional communication.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Mujeeb</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Zameen</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Mujeeb','English Chairman','English programs.','profiles/Mujeeb.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Zameen','English Convener','Workshops.','profiles/Zameen.png')">Conv</button></div></div></div>
-                <div class="wc w-arab"><div class="w-in"><div class="w-ic"><i class="fas fa-moon"></i></div><div class="w-lab">Heritage</div><h3 class="w-ttl">Arabic Wing</h3><p class="w-info">Arabic language and heritage.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Naseem</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Razeen</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Naseem','Arabic Chairman','Arabic programs.','profiles/Naseem.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Razeen','Arabic Convener','Events.','profiles/Razeen.png')">Conv</button></div></div></div>
-                <div class="wc w-mala"><div class="w-in"><div class="w-ic"><i class="fas fa-water"></i></div><div class="w-lab">Regional</div><h3 class="w-ttl">Malayalam Wing</h3><p class="w-info">Regional linguistic heritage.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Rabeeh</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Muzzammil</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Rabeeh','Malayalam Chairman','Regional activities.','profiles/Rabeeh.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muzzammil','Malayalam Convener','Assists.','profiles/Muzzammil.png')">Conv</button></div></div></div>
-                <div class="wc w-song"><div class="eqb"><span></span><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-music"></i></div><div class="w-lab">Arts</div><h3 class="w-ttl">Song & Recitation</h3><p class="w-info">Musical and recitation events.</p><div class="w-leads"><div class="w-chip" style="flex:0 0 auto"><span class="ch-role">Chairman</span><span class="ch-name">Ridhan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Ridhan','Song Chairman','Musical programs.','profiles/Ridhan.png')">Chair</button></div></div></div>
-                <div class="wc w-math"><div class="w-in"><div class="w-ic"><i class="fas fa-calculator"></i></div><div class="w-lab">Academic</div><h3 class="w-ttl">Maths Wing</h3><p class="w-info">Analytical thinking and competitions.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Muhammed U</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Muhammed PP</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed U','Maths Chairman','Math activities.','profiles/muhammed U.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed PP','Maths Convener','Workshops.','profiles/muhamemd.png')">Conv</button></div></div></div>
-                <div class="wc w-art"><div class="pdots"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-paint-brush"></i></div><div class="w-lab">Creative</div><h3 class="w-ttl">Art Wing</h3><p class="w-info">Visual arts and exhibitions.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Ranif</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Rashad</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Ranif','Art Chairman','Creative initiatives.','profiles/Ranif.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Rashad','Art Convener','Exhibitions.','profiles/Rashad.png')">Conv</button></div></div></div>
-                <div class="wc w-lib"><div class="w-in"><div class="w-ic"><i class="fas fa-book-open"></i></div><div class="w-lab">Knowledge</div><h3 class="w-ttl">Library Wing</h3><p class="w-info">Knowledge resources and reading culture.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Razin</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Adnan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Razin','Library Chairman','Library ops.','profiles/Razin.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Adnan','Library Convener','Management.','profiles/Adnan.png')">Conv</button></div></div></div>
-                <div class="wc w-geo"><div class="w-in"><div class="w-ic"><i class="fas fa-globe-americas"></i></div><div class="w-lab">Exploration</div><h3 class="w-ttl">Geography Wing</h3><p class="w-info">Global environments and studies.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Zayin</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Salah</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Zayin','Geography Chairman','Exploration.','profiles/Zayin.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Salah','Geography Convener','Trips.','profiles/Salah.png')">Conv</button></div></div></div>
-                <div class="wc w-gk"><div class="w-in"><div class="w-ic"><i class="fas fa-lightbulb"></i></div><div class="w-lab">Affairs</div><h3 class="w-ttl">G.K Wing</h3><p class="w-info">Quizzes, debates, current affairs.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Fuad M.A</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Aslah</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fuad M.A','G.K Chairman','GK initiatives.','profiles/Fuad M.A.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Aslah','G.K Convener','Quizzes.','profiles/Aslah.png')">Conv</button></div></div></div>
-                <div class="wc w-sci"><div class="w-in"><div class="w-ic"><i class="fas fa-atom"></i><div class="aring"><div class="adot"></div></div></div><div class="w-lab">STEM</div><h3 class="w-ttl">Science Wing</h3><p class="w-info">Science fairs and tech demos.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Shabeel</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Muhaimin</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Shabeel','Science Chairman','Science projects.','profiles/Shabeel.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhaimin','Science Convener','Fairs.','profiles/Muhaimin.png')">Conv</button></div></div></div>
-                <div class="wc w-pub"><div class="w-in"><div class="w-ic"><i class="fas fa-newspaper"></i></div><div class="w-lab">Editorial</div><h3 class="w-ttl">Publication Wing</h3><p class="w-info">Newsletters and digital content.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Fidyan</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Zarhan</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fidyan','Publication Chairman','Editorial.','profiles/Fidyan.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Zarhan','Publication Convener','Production.','profiles/Zarhan.png')">Conv</button></div></div></div>
-                <div class="wc w-media"><div class="w-in"><div class="w-ic"><i class="fas fa-camera-retro"></i></div><div class="w-lab">Visual</div><h3 class="w-ttl">Media Wing</h3><p class="w-info">Photography and videography.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Muhammed S.M</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Shahzad</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhammed S.M','Media Chairman','Media production.','profiles/Muhammed S.M.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Shahzad','Media Convener','Content.','profiles/Shahzad.png')">Conv</button></div></div></div>
-                <div class="wc w-med"><div class="w-in"><div class="w-ic"><i class="fas fa-heartbeat"></i></div><div class="w-lab">Health</div><h3 class="w-ttl">Medical Wing</h3><p class="w-info">Health awareness and camps.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">Nuhman</span></div><div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">Abdu Rahman</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Nuhman','Medical Chairman','Health campaigns.','profiles/Nuhman.png')">Chair</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Abdu Rahman','Medical Convener','Camps.','profiles/abdu-rahman.png')">Conv</button></div></div></div>
-                <div class="wc w-sport"><div class="ssparks"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-futbol"></i></div><div class="w-lab">Athletics</div><h3 class="w-ttl">Sports Wing</h3><p class="w-info">Tournaments and sports events.</p><div class="w-leads"><div class="w-chip" style="flex:0 0 auto"><span class="ch-role">Chairman</span><span class="ch-name">Fuad Habeeb</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Fuad Habeeb','Sports Chairman','Athletics.','profiles/Habeeb.png')">Chair</button></div></div></div>
-                <div class="wc w-for"><div class="fstripes"><span></span><span></span><span></span></div><div class="w-in"><div class="w-ic"><i class="fas fa-language"></i></div><div class="w-lab">Multilingual</div><h3 class="w-ttl">Foreign Language Wing</h3><p class="w-info">German and French instruction.</p><div class="w-leads"><div class="w-chip"><span class="ch-role">German</span><span class="ch-name">Zameen</span></div><div class="w-chip"><span class="ch-role">French Ch.</span><span class="ch-name">Muhyudheen</span></div><div class="w-chip"><span class="ch-role">French Cv.</span><span class="ch-name">Muhammed PP</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('Zameen','German Chairman','German.','profiles/Zameen.png')">DE</button><button class="btn btn-cyan btn-sm" onclick="showProfile('Muhyudheen','French Chairman','French.','profiles/Muhyudheen.png')">FR</button></div></div></div>
-            </div></div>
+            <div class="acc-body"><div class="wgrid" id="wingsGrid"></div></div>
         </div>
         <div class="acc-item">
             <div class="acc-hdr ac-hist" onclick="toggleAccordion(this)"><h2><span class="a-ic"><i class="fas fa-history"></i></span> Union & Artsfest History</h2><span class="a-arr"><i class="fas fa-chevron-down"></i></span></div>
             <div class="acc-body">
                 <div class="htabs"><button class="htab t-u active" onclick="switchHistTab('union')"><i class="fas fa-landmark"></i> Union Committee</button><button class="htab t-a" onclick="switchHistTab('artsfest')"><i class="fas fa-palette"></i> Artsfest Leaders</button></div>
-                <div class="hpanel active" id="histUnion">
-                    <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-bookmark"></i> 1st Class Committee <span class="h-sub">Founding</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">Burhan</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Razin</div></div><div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">Rafan</div></div></div></div>
-                    <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-bookmark"></i> 2nd Class Committee <span class="h-sub">Expansion</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Burhan</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Zidan</div></div><div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Naseem</div></div><div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">V.K</div></div><div class="hcard u-c"><div class="hrole">Fin. Manager</div><div class="hname">Rashad</div></div></div></div>
-                    <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-bookmark"></i> 3rd Class Committee <span class="h-sub">Current</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Burhan</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Moidu</div></div><div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Shahzad</div></div></div><div class="hperiod-t s-a" style="margin-top:.8rem"><i class="fas fa-exchange-alt"></i> Second Semester</div><div class="hgrid"><div class="hcard u-c"><div class="hrole">Sec. (Changed)</div><div class="hname">Zidan</div></div></div></div>
-                </div>
-                <div class="hpanel" id="histArtsfest">
-                    <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 1st Class Artsfest <span class="h-sub">Inaugural</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Ranif</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Naseem</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Muzzammil</div></div></div><div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Zidan</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Hisham</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Moidu</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">V.K</div></div></div></div>
-                    <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 2nd Class Artsfest <span class="h-sub">Growth</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Zidan</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Burhan</div></div></div><div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Mirsad</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Razin</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ranif</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Shahzad</div></div></div><div class="hperiod-t s-a" style="margin-top:1rem"><i class="fas fa-exchange-alt"></i> Second Semester</div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Rashad</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Moidu</div></div></div><div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Naseem</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Nuhman</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">M.A</div></div></div></div>
-                    <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 3rd Class Artsfest <span class="h-sub">ZENITH</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Shahzad</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Aslah</div></div></div><div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Rabeeh</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ridan</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Salah</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Adnan</div></div></div></div>
-                </div>
+                <div class="hpanel active" id="histUnion"><div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-bookmark"></i> 1st Class Committee <span class="h-sub">Founding</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">Burhan</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Razin</div></div><div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">Rafan</div></div></div></div></div>
+                <div class="hpanel" id="histArtsfest"><div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 1st Class Artsfest <span class="h-sub">Inaugural</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Ranif</div></div></div></div></div>
             </div>
         </div>
     </section>
 
-    <footer id="contact"><div class="container"><div class="ft-grid"><div class="ft-col"><h3>ITQAN UNION</h3><p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="soc-icons"><a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a></div></div><div class="ft-col"><h3>Quick Links</h3><ul class="ft-links"><li><a href="#mission">About ITQAN</a></li><li><a href="#media">Media Hub</a></li><li><a href="#team">Our Team</a></li><li><a href="https://itqan-artfeast.vercel.app/" target="_blank" rel="noopener">ZENITH Arts Fest 2K26</a></li></ul></div><div class="ft-col"><h3>Contact</h3><ul class="ft-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div></div><div class="copyright"><p>&copy; 2026 ITQAN Union. All Rights Reserved.</p></div></div></footer>
+    <footer id="contact">
+        <div class="container">
+            <div class="ft-grid">
+                <div class="ft-col"><h3>ITQAN UNION</h3><p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="soc-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div>
+                <div class="ft-col"><h3>Quick Links</h3><ul class="ft-links"><li><a href="#mission">About ITQAN</a></li><li><a href="#media">Media Hub</a></li><li><a href="#team">Our Team</a></li></ul></div>
+                <div class="ft-col"><h3>Contact</h3><ul class="ft-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div>
+            </div>
+            <div class="copyright"><p>&copy; 2026 ITQAN Union. All Rights Reserved.</p></div>
+        </div>
+    </footer>
 
-    <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button><div class="mhwp"><div class="ppc"><img id="modalPhoto" src="" alt="" style="display:none"><div class="pph" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="phi"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wbadges" id="modalBadges"></div></div></div><div class="mbody"><p id="modalDescription"></p><div class="det-sec" id="modalDetails"></div><div class="ct-info" id="modalContactInfo"></div></div><div class="mfooter"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div></div></div>
-    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button><h2>ITQAN Portal</h2><p class="auth-sub">Login or Register to join the network</p><div class="li-box"><h4><i class="fas fa-info-circle"></i> How to Login</h4><p>If an admin created your account, use the <strong>username</strong> and <strong>password</strong> they gave you. Otherwise, click <strong>Register</strong>.</p></div><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-err"></div>
-        <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="fg"><label>Username</label><input type="text" class="fi" id="loginUsername" required placeholder="e.g., hudaif" autocomplete="off"></div><div class="fg"><label>Password</label><input type="password" class="fi" id="loginPassword" required placeholder="--------"></div><button type="submit" class="btn btn-cyan" style="width:100%;margin-top:.4rem">Login</button></form>
-        <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="fg"><label>Full Name</label><input type="text" class="fi" id="regName" required placeholder="Your Full Name"></div><div class="fg"><label>Username</label><input type="text" class="fi" id="regUsername" required placeholder="Choose username (no spaces)" autocomplete="off"></div><div class="fg"><label>Password (min 6)</label><input type="password" class="fi" id="regPassword" required placeholder="--------"></div><div class="fg"><label>Wing (Optional)</label><select class="fi fsel" id="regWing"><option value="">-- General --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option></select></div><button type="submit" class="btn btn-cyan" style="width:100%;margin-top:.4rem">Register</button></form>
+    <div class="profile-modal" id="profileModal"><div class="modal-content"><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button><div class="mhwp"><div class="ppc"><img id="modalPhoto" src="" alt="" style="display:none"><div class="pph" id="photoPlaceholder"><i class="fas fa-user"></i></div></div><div class="phi"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p></div></div><div class="mbody"><p id="modalDescription"></p></div><div class="mfooter"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div></div></div>
+
+    <div class="auth-modal" id="authModal"><div class="auth-card"><button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button><h2>ITQAN Portal</h2><p class="auth-sub">Login or Register to join the network</p><div class="li-box"><h4><i class="fas fa-info-circle"></i> How to Login</h4><p>Use your username and password.</p></div><div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Login</button><button class="auth-tab" onclick="switchAuthTab('register')">Register</button></div><div id="authError" class="auth-err"></div>
+        <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)"><div class="fg"><label>Username</label><input type="text" class="fi" id="loginUsername" required></div><div class="fg"><label>Password</label><input type="password" class="fi" id="loginPassword" required></div><button type="submit" class="btn btn-cyan" style="width:100%">Login</button></form>
+        <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)"><div class="fg"><label>Full Name</label><input type="text" class="fi" id="regName" required></div><div class="fg"><label>Username</label><input type="text" class="fi" id="regUsername" required></div><div class="fg"><label>Password (min 6)</label><input type="password" class="fi" id="regPassword" required></div><div class="fg"><label>Wing (Optional)</label><select class="fi fsel" id="regWing"><option value="">-- General --</option></select></div><button type="submit" class="btn btn-cyan" style="width:100%">Register</button></form>
     </div></div>
 
-    <div class="dash-panel" id="userDashboard"><div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()" style="background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer"><i class="fas fa-times"></i></button></div><div class="dash-body" id="dashBody"></div></div>
+    <div class="dash-panel" id="userDashboard"><div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()"><i class="fas fa-times"></i></button></div><div class="dash-body" id="dashBody"></div></div>
 
     <div class="admin-ov" id="adminPanel">
         <div class="admin-tb"><h3><i class="fas fa-user-shield"></i> Admin Panel</h3><button class="admin-xbtn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
         <div class="admin-bd">
-            <div class="admin-tabs"><button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button><button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button><button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button><button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button> <button class="admin-tbtn" onclick="switchAdminTab('cards')"><i class="fas fa-edit"></i> Edit Cards</button></div>
-            <div class="admin-tc active" id="adminTabOverview"><div class="stat-grid"><div class="stat-card"><div class="si"><i class="fas fa-users"></i></div><div class="sv" id="totalUsers">0</div><div class="sl">Total</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-tie"></i></div><div class="sv" id="totalCore">0</div><div class="sl">Core</div></div><div class="stat-card"><div class="si"><i class="fas fa-plane"></i></div><div class="sv" id="totalWings">0</div><div class="sl">Wings</div></div><div class="stat-card"><div class="si"><i class="fas fa-user-graduate"></i></div><div class="sv" id="totalMembers">0</div><div class="sl">Students</div></div></div><div style="background:rgba(255,184,0,.04);border:1px dashed rgba(255,184,0,.2);border-radius:10px;padding:1.2rem;margin-bottom:1.5rem"><h3 style="color:var(--gold);font-size:.95rem;margin-bottom:.4rem"><i class="fas fa-magic"></i> Quick Tools</h3><p style="color:var(--muted);font-size:.78rem;margin-bottom:.8rem">Sync 34 card members or promote yourself.</p><div style="display:flex;gap:.8rem;flex-wrap:wrap"><button onclick="seedCardMembers()" class="btn btn-sm btn-warning"><i class="fas fa-download"></i> Sync 34 Members</button><button onclick="claimAdminRole()" class="btn btn-sm btn-danger"><i class="fas fa-user-shield"></i> Make Me Admin</button></div></div><h3 style="color:var(--text);margin-bottom:.8rem;font-size:.95rem">Recent Members</h3><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Wing</th></tr></thead><tbody id="overviewUserTable"></tbody></table></div></div>
-            <div class="admin-tc" id="adminTabStudents"><div class="stu-tb"><h3><i class="fas fa-user-graduate" style="color:var(--cyan);margin-right:6px"></i> Manage Students</h3><div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><div class="sbox"><i class="fas fa-search"></i><input type="text" id="studentSearchInput" placeholder="Search..." oninput="filterStudents()"></div><button class="btn btn-sm btn-success" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add</button></div></div><div class="cred-disp" id="credentialsDisplay"><h4><i class="fas fa-check-circle"></i> Account Created!</h4><p>Share these credentials with the student.</p><div class="cred-box"><div class="cred-row"><span class="cred-lbl">Name</span><span class="cred-val" id="credName"></span></div><div class="cred-row"><span class="cred-lbl">Username</span><span class="cred-val" id="credUsername"></span></div><div class="cred-row"><span class="cred-lbl">Password</span><span class="cred-val" id="credPassword"></span></div><div class="cred-row"><span class="cred-lbl">Role</span><span class="cred-val" id="credRole"></span></div></div><div class="cred-acts"><button class="btn btn-sm btn-cyan" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy All</button><button class="btn btn-sm btn-outline" onclick="closeCredDisplay()">Close</button></div></div><div class="add-form" id="addUserForm"><h4><i class="fas fa-user-plus"></i> Add Student</h4><div class="afg"><div class="fg"><label>Full Name *</label><input type="text" class="fi" id="addName" required placeholder="e.g., Ahmed Khan"></div><div class="fg"><label>Username *</label><input type="text" class="fi" id="addUsername" required placeholder="e.g., ahmedkhan" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9]/g,'')"></div><div class="fg"><label>Password *</label><div class="pw-row"><input type="text" class="fi" id="addPassword" required placeholder="Min 6 chars" style="flex:1"><button type="button" class="pw-btn" onclick="generatePassword()"><i class="fas fa-random"></i> Gen</button></div></div><div class="fg"><label>Role</label><select class="fi fsel" id="addRole"><option value="member">Student</option><option value="wing">Wing Leader</option><option value="core">Core</option><option value="admin">Admin</option></select></div><div class="fg"><label>Wing</label><select class="fi fsel" id="addWing"><option value="">-- None --</option><option>Urdu Wing</option><option>English Wing</option><option>Arabic Wing</option><option>Malayalam Wing</option><option>Song & Recitation</option><option>Maths Wing</option><option>Art Wing</option><option>Library Wing</option><option>Geography Wing</option><option>G.K Wing</option><option>Science Wing</option><option>Publication Wing</option><option>Media Wing</option><option>Medical Wing</option><option>Sports Wing</option><option>Foreign Language Wing</option><option>Core Committee</option></select></div></div><div style="display:flex;gap:.5rem"><button type="button" class="btn btn-sm btn-success" onclick="addNewStudent()"><i class="fas fa-check"></i> Create</button><button type="button" class="btn btn-sm btn-outline" onclick="toggleAddForm()">Cancel</button></div></div><div style="overflow-x:auto"><table class="atable"><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Role</th><th>Wing</th><th>Change Role</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody>追赶<div class="no-users" id="noStudentsMsg" style="display:none"><i class="fas fa-user-slash"></i><p>No students found.</p></div></div></div>
-            <div class="admin-tc" id="adminTabGallery"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-images" style="color:var(--cyan);margin-right:8px"></i> Manage Gallery</h3><div class="add-form active" id="addGalleryForm" style="display:block;border-color:rgba(0,240,255,.15)"><h4 style="color:var(--cyan)"><i class="fas fa-cloud-upload-alt"></i> Add Photo</h4><div class="afg"><div class="fg"><label>Image URL *</label><input type="url" class="fi" id="galImageUrl" required placeholder="https://i.imgur.com/..."></div><div class="fg"><label>Caption</label><input type="text" class="fi" id="galCaption" placeholder="Describe the photo"></div></div><button type="button" class="btn btn-sm btn-cyan" onclick="addGalleryItem()"><i class="fas fa-plus"></i> Add Photo</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--cyan);margin-right:6px"></i> Existing Photos (<span id="galCount">0</span>)</h4><div class="adm-il" id="adminGalleryList"></div></div>
-            <div class="admin-tc" id="adminTabMagazines"><h3 style="color:var(--text);margin-bottom:1rem"><i class="fas fa-newspaper" style="color:var(--pink);margin-right:8px"></i> Manage Magazines & Tabloids</h3><div class="add-form active" id="addMagForm" style="display:block;border-color:rgba(255,51,102,.15)"><h4 style="color:var(--pink)"><i class="fas fa-plus-circle"></i> Add Publication</h4><div class="afg"><div class="fg"><label>Type</label><select class="fi fsel" id="magType"><option value="magazine">Magazine</option><option value="tabloid">Tabloid</option></select></div><div class="fg"><label>Title *</label><input type="text" class="fi" id="magTitle" required placeholder="e.g., ITQAN Monthly Issue 1"></div><div class="fg"><label>Cover Image URL *</label><input type="url" class="fi" id="magCover" required placeholder="https://..."></div><div class="fg"><label>PDF / View URL</label><input type="url" class="fi" id="magPdfUrl" placeholder="Link to view online (optional)"></div><div class="fg"><label>Description</label><textarea class="fi" id="magDesc" placeholder="Brief description..." rows="2" style="resize:vertical"></textarea></div></div><button type="button" class="btn btn-sm btn-pink" onclick="addMagItem()"><i class="fas fa-plus"></i> Add Publication</button></div><h4 style="color:var(--text);margin:1.5rem 0 1rem;font-size:.95rem"><i class="fas fa-list" style="color:var(--pink);margin-right:6px"></i> Publications (<span id="magCount">0</span>)</h4><div class="adm-il" id="adminMagList"></div></div>
-            <div class="admin-tc" id="adminTabCards">
-    <h3 style="color:var(--text); margin-bottom:1rem">
-        <i class="fas fa-edit" style="color:var(--gold); margin-right:8px"></i> 
-        Edit Cards (Core Committee & Wings)
-    </h3>
-    
-    <!-- Core Committee Cards -->
-    <div style="margin-bottom: 2rem;">
-        <h4 style="color:var(--cyan); margin-bottom: 1rem;"><i class="fas fa-user-tie"></i> Executive Core Committee</h4>
-        <div id="coreCardsList" class="adm-il"></div>
-        <button class="btn btn-sm btn-cyan" onclick="addCoreCard()" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> Add Core Member</button>
-    </div>
-    
-    <!-- Wings Cards -->
-    <div style="margin-bottom: 2rem;">
-        <h4 style="color:var(--pink); margin-bottom: 1rem;"><i class="fas fa-sitemap"></i> Specialized Sub-Wings</h4>
-        <div id="wingsCardsList" class="adm-il"></div>
-        <button class="btn btn-sm btn-pink" onclick="addWingCard()" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> Add Wing</button>
-    </div>
-</div>
+            <div class="admin-tabs">
+                <button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('cards')"><i class="fas fa-edit"></i> Edit Cards</button>
+            </div>
+            <div class="admin-tc active" id="adminTabOverview"><div class="stat-grid"><div class="stat-card"><div class="si"><i class="fas fa-users"></i></div><div class="sv" id="totalUsers">0</div><div class="sl">Total</div></div></div><button onclick="claimAdminRole()" class="btn btn-sm btn-danger">Make Me Admin</button></div>
+            <div class="admin-tc" id="adminTabStudents"><div class="stu-tb"><h3>Manage Students</h3><button class="btn btn-sm btn-success" onclick="toggleAddForm()">Add Student</button></div><div class="add-form" id="addUserForm"><h4>Add Student</h4><div class="afg"><div class="fg"><label>Full Name</label><input type="text" class="fi" id="addName"></div><div class="fg"><label>Username</label><input type="text" class="fi" id="addUsername"></div><div class="fg"><label>Password</label><input type="text" class="fi" id="addPassword"></div></div><button class="btn btn-sm btn-success" onclick="addNewStudent()">Create</button></div><div id="studentsTableBody"></div></div>
+            <div class="admin-tc" id="adminTabGallery"><h3>Manage Gallery</h3><div class="add-form active"><h4>Add Photo</h4><div class="fg"><label>Image URL</label><input type="url" class="fi" id="galImageUrl"></div><div class="fg"><label>Caption</label><input type="text" class="fi" id="galCaption"></div><button class="btn btn-sm btn-cyan" onclick="addGalleryItem()">Add Photo</button></div><div id="adminGalleryList"></div></div>
+            <div class="admin-tc" id="adminTabMagazines"><h3>Manage Magazines</h3><div class="add-form active"><h4>Add Publication</h4><div class="fg"><label>Title</label><input type="text" class="fi" id="magTitle"></div><div class="fg"><label>Cover URL</label><input type="url" class="fi" id="magCover"></div><div class="fg"><label>PDF URL</label><input type="url" class="fi" id="magPdfUrl"></div><button class="btn btn-sm btn-pink" onclick="addMagItem()">Add</button></div><div id="adminMagList"></div></div>
+            <div class="admin-tc" id="adminTabCards"><h3><i class="fas fa-edit"></i> Edit Cards</h3><div style="margin-bottom:2rem"><h4 style="color:var(--cyan)">Core Committee</h4><div id="coreCardsList" class="adm-il"></div><button class="btn btn-sm btn-cyan" onclick="addCoreCard()">Add Core Member</button></div><div><h4 style="color:var(--pink)">Sub-Wings</h4><div id="wingsCardsList" class="adm-il"></div><button class="btn btn-sm btn-pink" onclick="addWingCard()">Add Wing</button></div></div>
         </div>
     </div>
 
     <script>
-// ===== FIREBASE CONFIG =====
-const firebaseConfig = {
-    apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
-    authDomain: "zenith-artsfest.firebaseapp.com",
-    projectId: "zenith-artsfest",
-    storageBucket: "zenith-artsfest.firebasestorage.app",
-    messagingSenderId: "506898514611",
-    appId: "1:506898514611:web:0ea13ddd075a020062e6c6",
-    measurementId: "G-MER952XSYP"
-};
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
+            authDomain: "zenith-artsfest.firebaseapp.com",
+            projectId: "zenith-artsfest",
+            storageBucket: "zenith-artsfest.firebasestorage.app",
+            messagingSenderId: "506898514611",
+            appId: "1:506898514611:web:0ea13ddd075a020062e6c6"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        let currentUserData = null;
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// ===== SIMPLE SCROLL ANIMATION - NO LAG =====
-(function initSimpleScroll() {
-    // Wait for page to load
-    window.addEventListener('load', function() {
-        // Get all cards and sections
-        const elements = document.querySelectorAll(
-            '.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card, .gallery-item, .sec-title, .media-tabs'
-        );
-        
-        // Set initial state
-        elements.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(15px)';
-            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-        });
-        
-        // Simple Intersection Observer - one at a time
+        // Simple Scroll Animation
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    observer.unobserve(entry.target);
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-        
-        elements.forEach(el => observer.observe(el));
-    });
-})();
+        document.querySelectorAll('.scroll-animate, .feat-card, .about-card, .cc, .wc, .mag-card').forEach(el => observer.observe(el));
 
-// ===== FIXED AUTH MODAL FUNCTIONS =====
-function openAuthModal(type) {
-    console.log('Opening auth modal:', type);
-    const modal = document.getElementById('authModal');
-    if (modal) {
-        modal.classList.add('active');
-        switchAuthTab(type);
-    } else {
-        console.error('Auth modal not found');
-        alert('Please refresh the page and try again.');
-    }
-}
-
-function closeAuthModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) modal.classList.remove('active');
-    const errorDiv = document.getElementById('authError');
-    if (errorDiv) errorDiv.classList.remove('show');
-}
-
-function switchAuthTab(tab) {
-    const tabs = document.querySelectorAll('.auth-tab');
-    const forms = document.querySelectorAll('.auth-form');
-    
-    tabs.forEach(t => t.classList.remove('active'));
-    forms.forEach(f => f.classList.remove('active'));
-    
-    if (tab === 'login') {
-        if (tabs[0]) tabs[0].classList.add('active');
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) loginForm.classList.add('active');
-    } else {
-        if (tabs[1]) tabs[1].classList.add('active');
-        const registerForm = document.getElementById('registerForm');
-        if (registerForm) registerForm.classList.add('active');
-    }
-}
-
-// ===== SIMPLIFIED MOBILE MENU =====
-(function initMobileMenu() {
-    const menuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
-    
-    if (!menuBtn || !navLinks) return;
-    
-    menuBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        navLinks.classList.toggle('active');
-        
-        const icon = menuBtn.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.className = 'fas fa-times';
-            document.body.style.overflow = 'hidden';
-        } else {
-            icon.className = 'fas fa-bars';
-            document.body.style.overflow = '';
-        }
-    });
-    
-    // Close menu when clicking a link
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function() {
-            navLinks.classList.remove('active');
-            const icon = menuBtn.querySelector('i');
-            if (icon) icon.className = 'fas fa-bars';
-            document.body.style.overflow = '';
-        });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                navLinks.classList.remove('active');
-                const icon = menuBtn.querySelector('i');
-                if (icon) icon.className = 'fas fa-bars';
-                document.body.style.overflow = '';
-            }
-        }
-    });
-})();
-
-// ===== SIMPLIFIED HERO CANVAS (Lighter) =====
-(function initHeroCanvas() {
-    const canvas = document.getElementById('heroCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
-    let mouseX = -999, mouseY = -999;
-    
-    function resizeCanvas() {
-        const container = canvas.parentElement;
-        width = canvas.width = container.offsetWidth;
-        height = canvas.height = container.offsetHeight;
-    }
-    
-    function initParticles() {
-        particles = [];
-        const count = Math.min(40, Math.floor(width * height / 15000));
-        for (let i = 0; i < count; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                r: Math.random() * 1.5 + 0.5,
-                color: Math.random() > 0.5 ? '0,240,255' : '255,51,102'
+        // Mouse Glow Effect
+        document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+                card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
             });
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if (menuBtn) menuBtn.onclick = () => navLinks.classList.toggle('active');
+
+        // Auth Functions
+        function openAuthModal(type) { document.getElementById('authModal').classList.add('active'); switchAuthTab(type); }
+        function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            if (tab === 'login') { document.querySelectorAll('.auth-tab')[0].classList.add('active'); document.getElementById('loginForm').classList.add('active'); }
+            else { document.querySelectorAll('.auth-tab')[1].classList.add('active'); document.getElementById('registerForm').classList.add('active'); }
         }
-    }
-    
-    function animate() {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, width, height);
-        
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            
-            if (p.x < 0 || p.x > width) p.vx *= -1;
-            if (p.y < 0 || p.y > height) p.vy *= -1;
-            p.x = Math.max(0, Math.min(width, p.x));
-            p.y = Math.max(0, Math.min(height, p.y));
-            
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${p.color}, 0.3)`;
-            ctx.fill();
-        });
-        
-        requestAnimationFrame(animate);
-    }
-    
-    window.addEventListener('resize', () => {
-        resizeCanvas();
-        initParticles();
-    });
-    
-    canvas.parentElement.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-    });
-    
-    resizeCanvas();
-    initParticles();
-    animate();
 
-    // Add throttle to canvas mouse move
-let canvasTicking = false;
-canvas.parentElement.addEventListener('mousemove', (e) => {
-    if (!canvasTicking) {
-        requestAnimationFrame(() => {
-            const rect = canvas.getBoundingClientRect();
-            ms.x = e.clientX - rect.left;
-            ms.y = e.clientY - rect.top;
-            canvasTicking = false;
-        });
-        canvasTicking = true;
-    }
-});
-})();
-
-// ===== TOAST NOTIFICATION =====
-function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-    
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerText = message;
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        if (toast.remove) toast.remove();
-    }, 3500);
-}
-
-// ===== HANDLE LOGIN/REGISTER =====
-async function handleLogin(event) {
-    event.preventDefault();
-    let username = document.getElementById('loginUsername').value.trim().toLowerCase();
-    const password = document.getElementById('loginPassword').value;
-    const errorDiv = document.getElementById('authError');
-    
-    errorDiv.classList.remove('show');
-    
-    try {
-        await auth.signInWithEmailAndPassword(`${username}@itqan.org`, password);
-        closeAuthModal();
-        showToast('Logged in successfully!', 'success');
-        setTimeout(() => location.reload(), 1000);
-    } catch (err) {
-        errorDiv.innerText = 'Invalid username or password.';
-        errorDiv.classList.add('show');
-    }
-}
-
-async function handleRegister(event) {
-    event.preventDefault();
-    const name = document.getElementById('regName').value.trim();
-    let username = document.getElementById('regUsername').value.trim().toLowerCase();
-    const password = document.getElementById('regPassword').value;
-    const wing = document.getElementById('regWing').value || 'General';
-    const errorDiv = document.getElementById('authError');
-    
-    errorDiv.classList.remove('show');
-    
-    if (username.length < 3) {
-        errorDiv.innerText = 'Username must be at least 3 characters.';
-        errorDiv.classList.add('show');
-        return;
-    }
-    
-    if (password.length < 6) {
-        errorDiv.innerText = 'Password must be at least 6 characters.';
-        errorDiv.classList.add('show');
-        return;
-    }
-    
-    const email = `${username}@itqan.org`;
-    
-    try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        await db.collection('users').doc(userCredential.user.uid).set({
-            name: name,
-            username: username,
-            email: email,
-            role: 'member',
-            wing: wing,
-            hasAuth: true,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        closeAuthModal();
-        showToast('Registration successful! Please login.', 'success');
-    } catch (err) {
-        errorDiv.innerText = err.message;
-        errorDiv.classList.add('show');
-    }
-}
-
-// ===== OTHER FUNCTIONS (Placeholders for now) =====
-function closeModal() {
-    const modal = document.getElementById('profileModal');
-    if (modal) modal.classList.remove('active');
-}
-
-function toggleAccordion(element) {
-    element.classList.toggle('open');
-    const body = element.nextElementSibling;
-    if (body) body.classList.toggle('open');
-}
-
-function switchHistTab(tab) {
-    const unionPanel = document.getElementById('histUnion');
-    const artsfestPanel = document.getElementById('histArtsfest');
-    const unionTab = document.querySelector('.htab.t-u');
-    const artsfestTab = document.querySelector('.htab.t-a');
-    
-    if (tab === 'union') {
-        if (unionTab) unionTab.classList.add('active');
-        if (artsfestTab) artsfestTab.classList.remove('active');
-        if (unionPanel) unionPanel.classList.add('active');
-        if (artsfestPanel) artsfestPanel.classList.remove('active');
-    } else {
-        if (artsfestTab) artsfestTab.classList.add('active');
-        if (unionTab) unionTab.classList.remove('active');
-        if (artsfestPanel) artsfestPanel.classList.add('active');
-        if (unionPanel) unionPanel.classList.remove('active');
-    }
-}
-
-function switchMediaTab(tab) {
-    const galleryPanel = document.getElementById('mediaGallery');
-    const magPanel = document.getElementById('mediaMagazines');
-    const pubPanel = document.getElementById('mediaPublications');
-    const galleryTab = document.querySelector('.media-tab.t-gal');
-    const magTab = document.querySelector('.media-tab.t-mag');
-    const pubTab = document.querySelector('.media-tab:last-child');
-    
-    if (tab === 'gallery') {
-        if (galleryTab) galleryTab.classList.add('active');
-        if (magTab) magTab.classList.remove('active');
-        if (pubTab) pubTab.classList.remove('active');
-        if (galleryPanel) galleryPanel.classList.add('active');
-        if (magPanel) magPanel.classList.remove('active');
-        if (pubPanel) pubPanel.classList.remove('active');
-    } else if (tab === 'magazines') {
-        if (magTab) magTab.classList.add('active');
-        if (galleryTab) galleryTab.classList.remove('active');
-        if (pubTab) pubTab.classList.remove('active');
-        if (magPanel) magPanel.classList.add('active');
-        if (galleryPanel) galleryPanel.classList.remove('active');
-        if (pubPanel) pubPanel.classList.remove('active');
-    } else {
-        if (pubTab) pubTab.classList.add('active');
-        if (galleryTab) galleryTab.classList.remove('active');
-        if (magTab) magTab.classList.remove('active');
-        if (pubPanel) pubPanel.classList.add('active');
-        if (galleryPanel) galleryPanel.classList.remove('active');
-        if (magPanel) magPanel.classList.remove('active');
-    }
-}
-
-function showProfile(name, position, description, photoUrl) {
-    const modal = document.getElementById('profileModal');
-    const title = document.getElementById('modalTitle');
-    const subtitle = document.getElementById('modalSubtitle');
-    const desc = document.getElementById('modalDescription');
-    const img = document.getElementById('modalPhoto');
-    const placeholder = document.getElementById('photoPlaceholder');
-    
-    if (title) title.textContent = name;
-    if (subtitle) subtitle.textContent = position;
-    if (desc) desc.textContent = description;
-    
-    if (img && placeholder) {
-        if (photoUrl) {
-            img.src = photoUrl;
-            img.style.display = 'block';
-            placeholder.style.display = 'none';
-        } else {
-            img.style.display = 'none';
-            placeholder.style.display = 'flex';
-            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-            placeholder.innerHTML = `<span>${initials}</span>`;
-        }
-    }
-    
-    if (modal) modal.classList.add('active');
-}
-
-// ===== LOAD PUBLIC DATA =====
-async function loadPublicGallery() {
-    try {
-        const snapshot = await db.collection('gallery').orderBy('createdAt', 'desc').get();
-        const grid = document.getElementById('publicGalleryGrid');
-        const emptyMsg = document.getElementById('galleryEmpty');
-        
-        if (!grid) return;
-        
-        if (snapshot.empty) {
-            if (emptyMsg) emptyMsg.style.display = 'block';
-            grid.innerHTML = '';
-            return;
-        }
-        
-        if (emptyMsg) emptyMsg.style.display = 'none';
-        grid.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            grid.innerHTML += `
-                <div class="gallery-item" onclick="openLightbox('${data.imageUrl}', '${data.caption || ''}')">
-                    <img src="${data.imageUrl}" alt="${data.caption || 'Gallery image'}" loading="lazy">
-                    <div class="gallery-ov"><h4>${data.caption || ''}</h4></div>
-                </div>
-            `;
-        });
-    } catch (e) {
-        console.error('Gallery load error:', e);
-    }
-}
-
-async function loadPublicMags() {
-    try {
-        const snapshot = await db.collection('magazines').orderBy('createdAt', 'desc').get();
-        const grid = document.getElementById('publicMagGrid');
-        const emptyMsg = document.getElementById('magEmpty');
-        
-        if (!grid) return;
-        
-        if (snapshot.empty) {
-            if (emptyMsg) emptyMsg.style.display = 'block';
-            grid.innerHTML = '';
-            return;
-        }
-        
-        if (emptyMsg) emptyMsg.style.display = 'none';
-        grid.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const badgeClass = data.type === 'tabloid' ? 'tabloid' : 'magazine';
-            grid.innerHTML += `
-                <div class="mag-card">
-                    <img class="mag-cover" src="${data.coverUrl}" alt="${data.title}" loading="lazy">
-                    <div class="mag-body">
-                        <span class="mag-badge ${badgeClass}">${data.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
-                        <h3>${data.title}</h3>
-                        <p>${data.description || 'No description available.'}</p>
-                        <button class="btn btn-cyan btn-sm" onclick="window.open('${data.pdfUrl || '#'}', '_blank')">Read Now</button>
-                    </div>
-                </div>
-            `;
-        });
-    } catch (e) {
-        console.error('Magazines load error:', e);
-    }
-}
-
-function openLightbox(imageUrl, caption) {
-    const lightbox = document.getElementById('lightbox');
-    const img = document.getElementById('lightboxImg');
-    const captionEl = document.getElementById('lightboxCaption');
-    
-    if (img) img.src = imageUrl;
-    if (captionEl) captionEl.textContent = caption;
-    if (lightbox) lightbox.classList.add('active');
-}
-
-function openDashboard() {
-    if (!currentUserData) {
-        openAuthModal('login');
-        return;
-    }
-    const dashboard = document.getElementById('userDashboard');
-    const overlay = document.getElementById('overlayDim');
-    if (dashboard) dashboard.classList.add('open');
-    if (overlay) overlay.classList.add('active');
-}
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) lightbox.classList.remove('active');
-}
-
-// ===== INITIALIZE ON PAGE LOAD =====
-document.addEventListener('DOMContentLoaded', function() {
-    loadPublicGallery();
-    loadPublicMags();
-    
-    // Set up auth state listener
-    auth.onAuthStateChanged(async (user) => {
-        const authArea = document.getElementById('authArea');
-        if (!authArea) return;
-        
-        if (user) {
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
             try {
+                await auth.signInWithEmailAndPassword(`${username}@itqan.org`, password);
+                closeAuthModal();
+                location.reload();
+            } catch(err) { document.getElementById('authError').innerText = 'Invalid credentials'; }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            try {
+                await auth.createUserWithEmailAndPassword(`${username}@itqan.org`, password);
+                await db.collection('users').doc(auth.currentUser.uid).set({ name, username, role: 'member' });
+                closeAuthModal();
+                location.reload();
+            } catch(err) { document.getElementById('authError').innerText = err.message; }
+        }
+
+        auth.onAuthStateChanged(async (user) => {
+            const authArea = document.getElementById('authArea');
+            if (user) {
                 const doc = await db.collection('users').doc(user.uid).get();
                 if (doc.exists) {
-                    const userData = doc.data();
-                    const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
-                    authArea.innerHTML = `
-    <button class="auth-user-btn" onclick="openDashboard()">
-                            <div class="avatar-sm">${initials}</div>
-                            ${userData.name.split(' ')[0]}
-                        </button>
-                    `;
+                    currentUserData = doc.data();
+                    const initial = currentUserData.name.charAt(0).toUpperCase();
+                    authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="avatar-sm">${initial}</div>${currentUserData.name.split(' ')[0]}</button>`;
                 }
-            } catch (e) {
-                console.error('Auth state error:', e);
+            } else {
+                authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`;
             }
-        } else {
-            authArea.innerHTML = `
-                <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
-                <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>
-            `;
+        });
+
+        function openDashboard() { document.getElementById('userDashboard').classList.add('open'); document.getElementById('overlayDim').classList.add('active'); }
+        function closeDashboards() { document.getElementById('userDashboard').classList.remove('open'); document.getElementById('overlayDim').classList.remove('active'); document.getElementById('adminPanel').classList.remove('active'); }
+        function openAdminPanel() { closeDashboards(); document.getElementById('adminPanel').classList.add('active'); loadCardsData(); }
+        function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-tc').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`adminTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.add('active');
+            document.querySelectorAll('.admin-tbtn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            if (tabName === 'cards') loadCardsData();
         }
-    });
-});
 
-        // ===== MOUSE GLOW EFFECT FOR CARDS =====
-(function initMouseGlow() {
-    // Target all cards that should have the glow effect
-    const cards = document.querySelectorAll('.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card');
-    
-    function updateGlow(e, card) {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        card.style.setProperty('--mouse-x', `${x}%`);
-        card.style.setProperty('--mouse-y', `${y}%`);
-    }
-    
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            updateGlow(e, card);
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.setProperty('--mouse-x', '50%');
-            card.style.setProperty('--mouse-y', '50%');
-        });
-    });
-})();
+        function toggleAddForm() { document.getElementById('addUserForm').classList.toggle('active'); }
+        async function addNewStudent() {
+            const name = document.getElementById('addName').value;
+            const username = document.getElementById('addUsername').value.toLowerCase();
+            const password = document.getElementById('addPassword').value;
+            await auth.createUserWithEmailAndPassword(`${username}@itqan.org`, password);
+            await db.collection('users').doc(auth.currentUser.uid).set({ name, username, role: 'member' });
+            location.reload();
+        }
+        async function claimAdminRole() { await db.collection('users').doc(auth.currentUser.uid).update({ role: 'admin' }); location.reload(); }
+        function showToast(msg, type) { const toast = document.createElement('div'); toast.className = `toast toast-${type}`; toast.innerText = msg; document.getElementById('toastContainer').appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+        function toggleAccordion(el) { el.classList.toggle('open'); el.nextElementSibling.classList.toggle('open'); }
+        function switchHistTab(tab) {
+            document.getElementById('histUnion').classList.toggle('active', tab === 'union');
+            document.getElementById('histArtsfest').classList.toggle('active', tab === 'artsfest');
+            document.querySelectorAll('.htab').forEach(btn => btn.classList.remove('active'));
+            if (tab === 'union') document.querySelector('.htab.t-u').classList.add('active');
+            else document.querySelector('.htab.t-a').classList.add('active');
+        }
+        function switchMediaTab(tab) {
+            document.getElementById('mediaGallery').classList.toggle('active', tab === 'gallery');
+            document.getElementById('mediaMagazines').classList.toggle('active', tab === 'magazines');
+            document.getElementById('mediaPublications').classList.toggle('active', tab === 'publications');
+        }
+        function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
+        function showProfile(name, role, desc) { 
+            document.getElementById('modalTitle').innerText = name;
+            document.getElementById('modalSubtitle').innerText = role;
+            document.getElementById('modalDescription').innerText = desc;
+            document.getElementById('profileModal').classList.add('active');
+        }
 
+        // Card Management Functions
+        let coreCards = [], wingCards = [];
+        async function loadCardsData() {
+            const coreSnap = await db.collection('coreCards').get();
+            coreCards = coreSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            const wingSnap = await db.collection('wingCards').get();
+            wingCards = wingSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderCoreList(); renderWingsList(); renderCoreGrid(); renderWingsGrid();
+        }
+        function renderCoreList() {
+            const container = document.getElementById('coreCardsList');
+            if (container) container.innerHTML = coreCards.map(c => `<div class="adm-ir"><div class="adm-ii"><strong>${c.name}</strong> - ${c.role}<br><small>${c.desc || ''}</small></div><div class="adm-ia"><button class="del-btn" onclick="deleteCoreCard('${c.id}')">Delete</button></div></div>`).join('');
+        }
+        function renderWingsList() {
+            const container = document.getElementById('wingsCardsList');
+            if (container) container.innerHTML = wingCards.map(w => `<div class="adm-ir"><div class="adm-ii"><strong>${w.name}</strong><br><small>Chair: ${w.chairman || 'TBD'}</small></div><div class="adm-ia"><button class="del-btn" onclick="deleteWingCard('${w.id}')">Delete</button></div></div>`).join('');
+        }
+        function renderCoreGrid() {
+            const container = document.getElementById('coreGrid');
+            if (container) container.innerHTML = coreCards.map(c => `<div class="cc"><div class="cc-in"><div class="cc-ic"><i class="fas ${c.icon || 'fa-user'}"></i></div><div class="cc-role">${c.role}</div><h3 class="cc-name">${c.name}</h3><p class="cc-desc">${c.desc || ''}</p><div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('${c.name}','${c.role}','${c.desc || ''}')">Profile</button></div></div></div>`).join('');
+        }
+        function renderWingsGrid() {
+            const container = document.getElementById('wingsGrid');
+            if (container) container.innerHTML = wingCards.map(w => `<div class="wc"><div class="w-in"><div class="w-ic"><i class="fas ${w.icon || 'fa-users'}"></i></div><div class="w-lab">WING</div><h3 class="w-ttl">${w.name}</h3><p class="w-info">${w.desc || ''}</p><div class="w-leads"><div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${w.chairman || 'TBD'}</span></div></div><div class="w-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman || 'Chairman'}','Chairman of ${w.name}','')">Profile</button></div></div></div>`).join('');
+        }
+        async function addCoreCard() {
+            const name = prompt('Enter name:'); if (!name) return;
+            const role = prompt('Enter role:'); if (!role) return;
+            await db.collection('coreCards').add({ name, role, desc: 'Member of core committee', icon: 'fa-user' });
+            loadCardsData();
+        }
+        async function addWingCard() {
+            const name = prompt('Enter wing name:'); if (!name) return;
+            const chairman = prompt('Enter chairman name:');
+            await db.collection('wingCards').add({ name, chairman: chairman || 'TBD', desc: 'Sub-wing of ITQAN', icon: 'fa-users' });
+            loadCardsData();
+        }
+        async function deleteCoreCard(id) { await db.collection('coreCards').doc(id).delete(); loadCardsData(); }
+        async function deleteWingCard(id) { await db.collection('wingCards').doc(id).delete(); loadCardsData(); }
 
+        // Gallery Functions
+        async function loadPublicGallery() {
+            const snap = await db.collection('gallery').get();
+            const grid = document.getElementById('publicGalleryGrid');
+            if (grid) grid.innerHTML = snap.docs.map(d => `<div class="gallery-item" onclick="openLightbox('${d.data().imageUrl}','${d.data().caption || ''}')"><img src="${d.data().imageUrl}" loading="lazy"><div class="gallery-ov"><h4>${d.data().caption || ''}</h4></div></div>`).join('');
+        }
+        async function addGalleryItem() {
+            const url = document.getElementById('galImageUrl').value;
+            if (!url) return;
+            await db.collection('gallery').add({ imageUrl: url, caption: document.getElementById('galCaption').value || '' });
+            loadPublicGallery();
+        }
+        async function loadAdminGallery() {
+            const snap = await db.collection('gallery').get();
+            const list = document.getElementById('adminGalleryList');
+            if (list) list.innerHTML = snap.docs.map(d => `<div class="adm-ir"><img src="${d.data().imageUrl}" width="50"><div class="adm-ii">${d.data().caption || ''}</div><button class="del-btn" onclick="deleteGalleryItem('${d.id}')">Delete</button></div>`).join('');
+        }
+        async function deleteGalleryItem(id) { await db.collection('gallery').doc(id).delete(); loadAdminGallery(); loadPublicGallery(); }
 
-        // ===== CARD MANAGEMENT SYSTEM =====
-let coreCardsData = [];
-let wingsCardsData = [];
+        // Magazine Functions
+        async function loadPublicMags() {
+            const snap = await db.collection('magazines').get();
+            const grid = document.getElementById('publicMagGrid');
+            if (grid) grid.innerHTML = snap.docs.map(d => `<div class="mag-card"><img class="mag-cover" src="${d.data().coverUrl}"><div class="mag-body"><h3>${d.data().title}</h3><button class="btn btn-sm btn-cyan" onclick="window.open('${d.data().pdfUrl}')">Read</button></div></div>`).join('');
+        }
+        async function addMagItem() {
+            await db.collection('magazines').add({ title: document.getElementById('magTitle').value, coverUrl: document.getElementById('magCover').value, pdfUrl: document.getElementById('magPdfUrl').value });
+            loadPublicMags();
+        }
+        async function loadAdminMags() {
+            const snap = await db.collection('magazines').get();
+            const list = document.getElementById('adminMagList');
+            if (list) list.innerHTML = snap.docs.map(d => `<div class="adm-ir"><div class="adm-ii"><strong>${d.data().title}</strong></div><button class="del-btn" onclick="deleteMagItem('${d.id}')">Delete</button></div>`).join('');
+        }
+        async function deleteMagItem(id) { await db.collection('magazines').doc(id).delete(); loadAdminMags(); loadPublicMags(); }
 
-// Load cards from Firestore
-async function loadCardsData() {
-    try {
-        // Load core cards
-        const coreSnapshot = await db.collection('coreCards').orderBy('order', 'asc').get();
-        coreCardsData = [];
-        coreSnapshot.forEach(doc => coreCardsData.push({ id: doc.id, ...doc.data() }));
-        
-        // Load wing cards
-        const wingsSnapshot = await db.collection('wingCards').orderBy('order', 'asc').get();
-        wingsCardsData = [];
-        wingsSnapshot.forEach(doc => wingsCardsData.push({ id: doc.id, ...doc.data() }));
-        
-        renderCoreCardsList();
-        renderWingsCardsList();
-        renderCoreCardsHTML();
-        renderWingsCardsHTML();
-    } catch (e) {
-        console.error('Load cards error:', e);
-        // If no data, use default data
-        if (coreCardsData.length === 0) seedDefaultCards();
-    }
-}
+        function openLightbox(url, cap) { document.getElementById('lightboxImg').src = url; document.getElementById('lightboxCaption').innerText = cap; document.getElementById('lightbox').classList.add('active'); }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+        function lightboxNav(d) {}
 
-// Render admin list for core cards
-function renderCoreCardsList() {
-    const container = document.getElementById('coreCardsList');
-    if (!container) return;
-    
-    if (coreCardsData.length === 0) {
-        container.innerHTML = '<div class="gallery-empty"><i class="fas fa-user-slash"></i><p>No core members yet. Click "Add Core Member" to create one.</p></div>';
-        return;
-    }
-    
-    container.innerHTML = coreCardsData.map(card => `
-        <div class="adm-ir" style="justify-content: space-between;">
-            <div class="adm-ii">
-                <h4><strong>${card.name}</strong> - ${card.role}</h4>
-                <p>${card.description || 'No description'}</p>
-                <small style="color: var(--muted);">Icon: ${card.icon || 'fa-user'}</small>
-            </div>
-            <div class="adm-ia">
-                <button class="btn btn-sm btn-cyan" onclick="editCoreCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-edit"></i></button>
-                <button class="del-btn" onclick="deleteCoreCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-trash"></i></button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Render admin list for wing cards
-function renderWingsCardsList() {
-    const container = document.getElementById('wingsCardsList');
-    if (!container) return;
-    
-    if (wingsCardsData.length === 0) {
-        container.innerHTML = '<div class="gallery-empty"><i class="fas fa-layer-group"></i><p>No wings yet. Click "Add Wing" to create one.</p></div>';
-        return;
-    }
-    
-    container.innerHTML = wingsCardsData.map(card => `
-        <div class="adm-ir" style="justify-content: space-between;">
-            <div class="adm-ii">
-                <h4><strong>${card.name}</strong> (${card.type || 'Wing'})</h4>
-                <p>${card.description || 'No description'}</p>
-                <small style="color: var(--muted);">Chair: ${card.chairman || 'N/A'} | Convener: ${card.convener || 'N/A'}</small>
-            </div>
-            <div class="adm-ia">
-                <button class="btn btn-sm btn-pink" onclick="editWingCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-edit"></i></button>
-                <button class="del-btn" onclick="deleteWingCard('${card.id}')" style="padding: 4px 10px;"><i class="fas fa-trash"></i></button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Add Core Card Modal
-function addCoreCard() {
-    const name = prompt('Enter member name:');
-    if (!name) return;
-    const role = prompt('Enter role (e.g., President, Secretary):');
-    if (!role) return;
-    const description = prompt('Enter description:');
-    const icon = prompt('Enter icon class (e.g., fa-crown, fa-user-tie):', 'fa-user');
-    
-    db.collection('coreCards').add({
-        name: name,
-        role: role,
-        description: description || 'No description',
-        icon: icon || 'fa-user',
-        order: coreCardsData.length,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        showToast('Core member added!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-function editCoreCard(id) {
-    const card = coreCardsData.find(c => c.id === id);
-    if (!card) return;
-    
-    const name = prompt('Edit name:', card.name);
-    if (!name) return;
-    const role = prompt('Edit role:', card.role);
-    const description = prompt('Edit description:', card.description);
-    const icon = prompt('Edit icon class:', card.icon);
-    
-    db.collection('coreCards').doc(id).update({
-        name: name,
-        role: role || card.role,
-        description: description || card.description,
-        icon: icon || card.icon
-    }).then(() => {
-        showToast('Core member updated!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-function deleteCoreCard(id) {
-    if (!confirm('Delete this core member?')) return;
-    db.collection('coreCards').doc(id).delete().then(() => {
-        showToast('Deleted!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-// Wing management functions
-function addWingCard() {
-    const name = prompt('Enter wing name (e.g., Urdu Wing):');
-    if (!name) return;
-    const chairman = prompt('Enter Chairman name:');
-    const convener = prompt('Enter Convener name:');
-    const description = prompt('Enter description:');
-    const icon = prompt('Enter icon class (e.g., fa-pen-fancy):', 'fa-users');
-    
-    db.collection('wingCards').add({
-        name: name,
-        type: 'wing',
-        chairman: chairman || 'TBD',
-        convener: convener || 'TBD',
-        description: description || 'No description',
-        icon: icon || 'fa-users',
-        order: wingsCardsData.length,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        showToast('Wing added!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-function editWingCard(id) {
-    const card = wingsCardsData.find(c => c.id === id);
-    if (!card) return;
-    
-    const name = prompt('Edit wing name:', card.name);
-    if (!name) return;
-    const chairman = prompt('Edit Chairman:', card.chairman);
-    const convener = prompt('Edit Convener:', card.convener);
-    const description = prompt('Edit description:', card.description);
-    
-    db.collection('wingCards').doc(id).update({
-        name: name,
-        chairman: chairman || card.chairman,
-        convener: convener || card.convener,
-        description: description || card.description
-    }).then(() => {
-        showToast('Wing updated!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-function deleteWingCard(id) {
-    if (!confirm('Delete this wing?')) return;
-    db.collection('wingCards').doc(id).delete().then(() => {
-        showToast('Deleted!', 'success');
-        loadCardsData();
-        location.reload();
-    }).catch(e => showToast('Error: ' + e.message, 'error'));
-}
-
-// Render Core Cards on main page
-function renderCoreCardsHTML() {
-    const container = document.querySelector('.core-grid');
-    if (!container || coreCardsData.length === 0) return;
-    
-    container.innerHTML = coreCardsData.map(card => `
-        <div class="cc cc-${card.role?.toLowerCase().replace(/\s/g, '-') || 'member'}">
-            <div class="cc-in">
-                <div class="cc-ic"><i class="fas ${card.icon || 'fa-user'}"></i></div>
-                <div class="cc-role">${card.role || 'Member'}</div>
-                <h3 class="cc-name">${card.name}</h3>
-                <p class="cc-desc">${card.description || 'No description'}</p>
-                <div class="cc-btns">
-                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.name}', '${card.role}', '${card.description}', '')">
-                        <i class="fas fa-user"></i> Profile
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Render Wings on main page
-function renderWingsCardsHTML() {
-    const container = document.querySelector('.wgrid');
-    if (!container || wingsCardsData.length === 0) return;
-    
-    container.innerHTML = wingsCardsData.map(card => `
-        <div class="wc w-${card.name?.toLowerCase().replace(/\s/g, '-') || 'custom'}">
-            <div class="w-in">
-                <div class="w-ic"><i class="fas ${card.icon || 'fa-users'}"></i></div>
-                <div class="w-lab">${card.type === 'wing' ? 'Wing' : 'Division'}</div>
-                <h3 class="w-ttl">${card.name}</h3>
-                <p class="w-info">${card.description || 'No description'}</p>
-                <div class="w-leads">
-                    <div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${card.chairman || 'TBD'}</span></div>
-                    <div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">${card.convener || 'TBD'}</span></div>
-                </div>
-                <div class="w-btns">
-                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.chairman || ''}', 'Chairman of ${card.name}', '', '')">Chair</button>
-                    <button class="btn btn-cyan btn-sm" onclick="showProfile('${card.convener || ''}', 'Convener of ${card.name}', '', '')">Conv</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Seed default cards if Firestore is empty
-function seedDefaultCards() {
-    const defaultCore = [
-        { name: "Sayed Hudaif", role: "President", description: "Leads strategic planning and represents the union externally.", icon: "fa-crown", order: 0 },
-        { name: "Sayed Burhan", role: "Vice President", description: "Supports the President and oversees operations.", icon: "fa-shield-alt", order: 1 },
-        { name: "Zidan", role: "Secretary", description: "Manages official records and documentation.", icon: "fa-pen-alt", order: 2 },
-        { name: "Muhyudheen", role: "Joint Secretary", description: "Administrative support and portfolio management.", icon: "fa-cog", order: 3 },
-        { name: "Mirsad", role: "Treasurer", description: "Manages financial assets and budgets.", icon: "fa-coins", order: 4 },
-        { name: "Thanzeeh", role: "Financial Manager", description: "Oversees financial operations and compliance.", icon: "fa-chart-bar", order: 5 },
-        { name: "Shahzad", role: "P.R.O", description: "External communications and media relations.", icon: "fa-bullhorn", order: 6 }
-    ];
-    
-    const defaultWings = [
-        { name: "Urdu Wing", type: "wing", chairman: "Muhammed V.K", convener: "Hisham", description: "Urdu literature and heritage.", icon: "fa-pen-fancy", order: 0 },
-        { name: "English Wing", type: "wing", chairman: "Mujeeb", convener: "Zameen", description: "Professional communication.", icon: "fa-keyboard", order: 1 },
-        { name: "Arabic Wing", type: "wing", chairman: "Naseem", convener: "Razeen", description: "Arabic language and heritage.", icon: "fa-moon", order: 2 },
-        { name: "Malayalam Wing", type: "wing", chairman: "Rabeeh", convener: "Muzzammil", description: "Regional linguistic heritage.", icon: "fa-water", order: 3 },
-        { name: "Maths Wing", type: "wing", chairman: "Muhammed U", convener: "Muhammed PP", description: "Analytical thinking and competitions.", icon: "fa-calculator", order: 4 },
-        { name: "Science Wing", type: "wing", chairman: "Shabeel", convener: "Muhaimin", description: "Science fairs and tech demos.", icon: "fa-atom", order: 5 },
-        { name: "Media Wing", type: "wing", chairman: "Muhammed S.M", convener: "Shahzad", description: "Photography and videography.", icon: "fa-camera-retro", order: 6 }
-    ];
-    
-    const batch = db.batch();
-    defaultCore.forEach(card => {
-        const ref = db.collection('coreCards').doc();
-        batch.set(ref, card);
-    });
-    defaultWings.forEach(card => {
-        const ref = db.collection('wingCards').doc();
-        batch.set(ref, card);
-    });
-    batch.commit().then(() => {
-        console.log('Default cards seeded');
-        loadCardsData();
-    }).catch(e => console.error('Seed error:', e));
-}
-
-// Update switchAdminTab to include cards
-const originalSwitchAdminTab = window.switchAdminTab;
-window.switchAdminTab = function(tab) {
-    if (originalSwitchAdminTab) originalSwitchAdminTab(tab);
-    if (tab === 'cards') {
-        loadCardsData();
-    }
-};
-</script>
-    
-    <script src="cursor-polish.js?v=1"></script>
-   <script src="history-media-upgrade.js?v=3"></script>
+        loadPublicGallery(); loadPublicMags(); loadCardsData();
+    </script>
+    <script src="cursor-polish.js?v=5"></script>
+    <script src="history-media-upgrade.js?v=5"></script>
     <script src="upload-support.js?v=5"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=1"></script>
+    <script src="profile-tabs.js?v=5"></script>
 </body>
 </html>
