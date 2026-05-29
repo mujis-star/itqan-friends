@@ -89,10 +89,9 @@
             50% { border-color: rgba(0,240,255,0.6); }
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
         }
         
         /* ===== HEADER ===== */
@@ -536,7 +535,7 @@
             gap: 24px;
         }
         
-        .gallery-item, .mag-card, .cc, .wc {
+        .gallery-item, .mag-card {
             background: #121626;
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
@@ -544,191 +543,10 @@
             transition: all 0.4s;
         }
         
-        .gallery-item:hover, .mag-card:hover, .cc:hover, .wc:hover {
+        .gallery-item:hover, .mag-card:hover {
             transform: translateY(-8px);
             border-color: #00F0FF;
             box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        
-        /* ===== COLORFUL CORE CARDS ===== */
-        .cc {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; }
-        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, rgba(192,192,192,0.2), rgba(192,192,192,0.05)); color: #C0C0C0; }
-        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: #00F0FF; }
-        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; }
-        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, rgba(0,220,130,0.2), rgba(0,220,130,0.05)); color: #00DC82; }
-        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, rgba(255,100,100,0.2), rgba(255,100,100,0.05)); color: #FF6464; }
-        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: #FFB800; }
-        
-        .cc-ic {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .cc:hover .cc-ic {
-            transform: scale(1.1) rotate(-5deg);
-            animation: pulse 0.5s ease;
-        }
-        
-        .cc-role {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-        
-        .cc:nth-child(1) .cc-role { color: #FFD700; }
-        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
-        .cc:nth-child(3) .cc-role { color: #00F0FF; }
-        .cc:nth-child(4) .cc-role { color: #8250FF; }
-        .cc:nth-child(5) .cc-role { color: #00DC82; }
-        .cc:nth-child(6) .cc-role { color: #FF6464; }
-        .cc:nth-child(7) .cc-role { color: #FFB800; }
-        
-        .cc-name {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        
-        .cc-desc {
-            color: #8892A8;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        
-        .cc-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
-        /* ===== COLORFUL WING CARDS WITH UNIQUE ANIMATIONS ===== */
-        .wc {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Wing card gradients */
-        .wc:nth-child(1) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,184,0,0.3); }
-        .wc:nth-child(2) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,240,255,0.3); }
-        .wc:nth-child(3) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,215,0,0.3); }
-        .wc:nth-child(4) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,200,100,0.3); }
-        .wc:nth-child(5) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(130,80,255,0.3); }
-        .wc:nth-child(6) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,220,130,0.3); }
-        .wc:nth-child(7) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,80,80,0.3); }
-        
-        /* Wing icon colors */
-        .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: #FFB800; }
-        .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: #00F0FF; }
-        .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; }
-        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; }
-        .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; }
-        .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, rgba(0,220,130,0.2), rgba(0,220,130,0.05)); color: #00DC82; }
-        .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, rgba(255,80,80,0.2), rgba(255,80,80,0.05)); color: #FF5050; }
-        
-        /* Unique animations for each wing */
-        .wc:nth-child(1) .w-ic { animation: floatSlow 3s ease-in-out infinite; }
-        .wc:nth-child(2) .w-ic { animation: pulse 2s ease-in-out infinite; }
-        .wc:nth-child(3) .w-ic { animation: rotate 4s linear infinite; }
-        .wc:nth-child(4) .w-ic { animation: float 2.5s ease-in-out infinite; }
-        .wc:nth-child(5) .w-ic { animation: rotate 3s linear infinite; }
-        .wc:nth-child(6) .w-ic { animation: pulse 1.5s ease-in-out infinite; }
-        .wc:nth-child(7) .w-ic { animation: floatSlow 2s ease-in-out infinite; }
-        
-        .wc:hover .w-ic {
-            transform: scale(1.1);
-            animation: shake 0.3s ease;
-        }
-        
-        .w-ic {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .w-lab {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-        
-        .wc:nth-child(1) .w-lab { color: #FFB800; }
-        .wc:nth-child(2) .w-lab { color: #00F0FF; }
-        .wc:nth-child(3) .w-lab { color: #FFD700; }
-        .wc:nth-child(4) .w-lab { color: #00C864; }
-        .wc:nth-child(5) .w-lab { color: #8250FF; }
-        .wc:nth-child(6) .w-lab { color: #00DC82; }
-        .wc:nth-child(7) .w-lab { color: #FF5050; }
-        
-        .w-ttl {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        
-        .w-info {
-            color: #8892A8;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        
-        .w-leads {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .w-chip {
-            flex: 1;
-            padding: 10px 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .w-chip:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-        
-        .ch-role {
-            font-size: 0.55rem;
-            color: #8892A8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        
-        .ch-name {
-            font-size: 0.8rem;
-            font-weight: 600;
-            word-break: keep-all;
-        }
-        
-        .w-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
         }
         
         .gallery-item {
@@ -763,6 +581,12 @@
             opacity: 1;
         }
         
+        .gallery-empty, .magazines-empty {
+            text-align: center;
+            padding: 40px;
+            color: #8892A8;
+        }
+        
         .mag-cover {
             width: 100%;
             aspect-ratio: 3/4;
@@ -774,9 +598,262 @@
             transform: scale(1.05);
         }
         
-        .mag-body, .cc-in, .w-in {
+        .mag-body {
             padding: 20px;
             text-align: center;
+        }
+        
+        /* ===== ARTISTIC COLORFUL CORE CARDS ===== */
+        .cc {
+            background: linear-gradient(135deg, #1a1a2e, #121626);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            position: relative;
+        }
+        
+        .cc::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .cc:hover::after {
+            transform: translateX(100%);
+        }
+        
+        .cc-in {
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* President - Royal Gold */
+        .cc:nth-child(1) { border-top: 3px solid #FFD700; background: linear-gradient(135deg, #1a1a2e, #1a1a2e); }
+        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, #FFD700, #FFA500); color: #FFD700; box-shadow: 0 0 20px rgba(255,215,0,0.3); animation: glow 2s ease-in-out infinite; }
+        .cc:nth-child(1) .cc-role { color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        
+        /* Vice President - Silver/Platinum */
+        .cc:nth-child(2) { border-top: 3px solid #C0C0C0; }
+        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #C0C0C0; box-shadow: 0 0 15px rgba(192,192,192,0.3); }
+        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
+        
+        /* Secretary - Cyan */
+        .cc:nth-child(3) { border-top: 3px solid #00F0FF; }
+        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; box-shadow: 0 0 20px rgba(0,240,255,0.3); }
+        .cc:nth-child(3) .cc-role { color: #00F0FF; }
+        
+        /* Joint Secretary - Purple */
+        .cc:nth-child(4) { border-top: 3px solid #A78BFA; }
+        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; box-shadow: 0 0 15px rgba(167,139,250,0.3); }
+        .cc:nth-child(4) .cc-role { color: #A78BFA; }
+        
+        /* Treasurer - Green */
+        .cc:nth-child(5) { border-top: 3px solid #00DC82; }
+        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; box-shadow: 0 0 15px rgba(0,220,130,0.3); animation: floatSlow 3s ease-in-out infinite; }
+        .cc:nth-child(5) .cc-role { color: #00DC82; }
+        
+        /* Financial Manager - Coral Red */
+        .cc:nth-child(6) { border-top: 3px solid #FF6464; }
+        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; box-shadow: 0 0 15px rgba(255,100,100,0.3); }
+        .cc:nth-child(6) .cc-role { color: #FF6464; }
+        
+        /* P.R.O - Orange/Gold */
+        .cc:nth-child(7) { border-top: 3px solid #FFB800; }
+        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; box-shadow: 0 0 15px rgba(255,184,0,0.3); animation: pulse 2s ease-in-out infinite; }
+        .cc:nth-child(7) .cc-role { color: #FFB800; }
+        
+        .cc-ic {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            transition: all 0.3s;
+        }
+        
+        .cc:hover .cc-ic {
+            transform: scale(1.1) rotate(-5deg);
+        }
+        
+        .cc-role {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .cc-name {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cc-desc {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .cc-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        /* ===== ARTISTIC COLORFUL WING CARDS ===== */
+        .wc {
+            background: linear-gradient(135deg, #1a1a2e, #121626);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            position: relative;
+        }
+        
+        .wc::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .wc:hover::after {
+            transform: translateX(100%);
+        }
+        
+        .w-in {
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Urdu Wing - Orange/Gold */
+        .wc:nth-child(1) { border-bottom: 3px solid #FFB800; }
+        .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; animation: float 3s ease-in-out infinite; }
+        .wc:nth-child(1) .w-lab { color: #FFB800; }
+        
+        /* English Wing - Cyan */
+        .wc:nth-child(2) { border-bottom: 3px solid #00F0FF; }
+        .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; animation: pulse 2s ease-in-out infinite; }
+        .wc:nth-child(2) .w-lab { color: #00F0FF; }
+        
+        /* Arabic Wing - Emerald Green */
+        .wc:nth-child(3) { border-bottom: 3px solid #00DC82; }
+        .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; animation: rotate 4s linear infinite; }
+        .wc:nth-child(3) .w-lab { color: #00DC82; }
+        
+        /* Malayalam Wing - Purple */
+        .wc:nth-child(4) { border-bottom: 3px solid #A78BFA; }
+        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; animation: floatSlow 2.5s ease-in-out infinite; }
+        .wc:nth-child(4) .w-lab { color: #A78BFA; }
+        
+        /* Maths Wing - Blue */
+        .wc:nth-child(5) { border-bottom: 3px solid #4A90E2; }
+        .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #4A90E2; animation: rotate 3s linear infinite; }
+        .wc:nth-child(5) .w-lab { color: #4A90E2; }
+        
+        /* Science Wing - Pink */
+        .wc:nth-child(6) { border-bottom: 3px solid #FF6464; }
+        .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; animation: pulse 1.5s ease-in-out infinite; }
+        .wc:nth-child(6) .w-lab { color: #FF6464; }
+        
+        /* Media Wing - Red */
+        .wc:nth-child(7) { border-bottom: 3px solid #FF3366; }
+        .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, #FF3366, #E62E5C); color: #FF3366; animation: float 2s ease-in-out infinite; }
+        .wc:nth-child(7) .w-lab { color: #FF3366; }
+        
+        .w-ic {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            transition: all 0.3s;
+        }
+        
+        .wc:hover .w-ic {
+            transform: scale(1.1);
+        }
+        
+        .w-lab {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .w-ttl {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .w-info {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        .w-leads {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .w-chip {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .w-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .ch-role {
+            font-size: 0.6rem;
+            color: #8892A8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .ch-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .w-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
         
         /* ===== ACCORDION ===== */
@@ -984,7 +1061,7 @@
         }
         
         .pub-card {
-            background: #121626;
+            background: linear-gradient(135deg, #121626, #0C0F1A);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             padding: 24px;
@@ -1719,11 +1796,11 @@
             </div>
             <div class="media-panel active" id="mediaGallery">
                 <div class="gallery-grid" id="publicGalleryGrid"></div>
-                <div id="galleryEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-camera-retro" style="font-size:2rem;opacity:0.3"></i><p>No photos yet</p></div>
+                <div id="galleryEmpty" class="gallery-empty" style="display:none"><i class="fas fa-camera-retro" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No photos yet. Admin can add photos in the panel.</p></div>
             </div>
             <div class="media-panel" id="mediaMagazines">
                 <div class="mag-grid" id="publicMagGrid"></div>
-                <div id="magazinesEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-book-open" style="font-size:2rem;opacity:0.3"></i><p>No publications yet</p></div>
+                <div id="magazinesEmpty" class="magazines-empty" style="display:none"><i class="fas fa-book-open" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No publications yet. Coming soon!</p></div>
             </div>
         </div>
     </section>
@@ -1733,11 +1810,7 @@
         <div class="container">
             <div class="sec-title">Recent <span style="color:#FFB800">Publications</span></div>
             <div class="sec-line-c"><span></span></div>
-            <div class="publications-grid">
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,184,0,0.1);border-radius:20px;font-size:0.7rem;color:#FFB800;margin-bottom:16px">📄 ANNUAL REPORT</div><h3>ITQAN Annual Report 2025</h3><p>Committee achievements, financial summary, and future roadmap.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">April 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FFB800;color:#FFB800" onclick="alert('PDF coming soon')">Read →</button></div></div>
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(0,240,255,0.1);border-radius:20px;font-size:0.7rem;color:#00F0FF;margin-bottom:16px">📰 MAGAZINE</div><h3>ITQAN Quarterly - Issue 03</h3><p>Student spotlights, wing activities, and upcoming events.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">March 2026</span><button class="btn btn-outline btn-sm" style="border-color:#00F0FF;color:#00F0FF" onclick="alert('Coming soon')">Read →</button></div></div>
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,51,102,0.1);border-radius:20px;font-size:0.7rem;color:#FF3366;margin-bottom:16px">📧 NEWSLETTER</div><h3>Summer 2026 Newsletter</h3><p>ZENITH recap, new members, achievements, and community updates.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">June 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FF3366;color:#FF3366" onclick="alert('Coming soon')">Read →</button></div></div>
-            </div>
+            <div class="publications-grid" id="recentPublicationsGrid"></div>
         </div>
     </section>
 
@@ -1905,6 +1978,13 @@
             { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
         ];
         
+        // Publications Data
+        const publications = [
+            { title: "ITQAN Annual Report 2025", desc: "Committee achievements, financial summary, and future roadmap.", date: "April 2026", type: "ANNUAL REPORT", color: "#FFB800", icon: "📄" },
+            { title: "ITQAN Quarterly - Issue 03", desc: "Student spotlights, wing activities, and upcoming events.", date: "March 2026", type: "MAGAZINE", color: "#00F0FF", icon: "📰" },
+            { title: "Summer 2026 Newsletter", desc: "ZENITH recap, new members, achievements, and community updates.", date: "June 2026", type: "NEWSLETTER", color: "#FF3366", icon: "📧" }
+        ];
+        
         // Render Functions
         function renderCoreGrid() {
             const container = document.getElementById('coreGrid');
@@ -1940,6 +2020,22 @@
                             <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman}','Chairman of ${w.name}','')">Chair</button>
                             <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.convener}','Convener of ${w.name}','')">Conv</button>
                         </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderPublications() {
+            const container = document.getElementById('recentPublicationsGrid');
+            if (!container) return;
+            container.innerHTML = publications.map(p => `
+                <div class="pub-card">
+                    <div style="display:inline-block;padding:4px 12px;background:${p.color}15;border-radius:20px;font-size:0.7rem;color:${p.color};margin-bottom:16px;font-weight:700">${p.icon} ${p.type}</div>
+                    <h3 style="margin-bottom:8px">${p.title}</h3>
+                    <p style="color:#8892A8;font-size:0.85rem;margin-bottom:16px">${p.desc}</p>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:0.7rem;color:#3A4055"><i class="fas fa-calendar-alt"></i> ${p.date}</span>
+                        <button class="btn btn-outline btn-sm" style="border-color:${p.color};color:${p.color}" onclick="alert('PDF coming soon')">Read →</button>
                     </div>
                 </div>
             `).join('');
@@ -2340,15 +2436,16 @@
         // Initialize
         renderCoreGrid();
         renderWingsGrid();
+        renderPublications();
         loadPublicGallery();
         loadPublicMags();
     </script>
     
     <!-- Your existing scripts - KEEP THESE -->
-    <script src="cursor-polish.js?v=11"></script>
-    <script src="history-media-upgrade.js?v=11"></script>
-    <script src="upload-support.js?v=11"></script>
+    <script src="cursor-polish.js?v=12"></script>
+    <script src="history-media-upgrade.js?v=12"></script>
+    <script src="upload-support.js?v=12"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=11"></script>
+    <script src="profile-tabs.js?v=12"></script>
 </body>
 </html>
