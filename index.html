@@ -6,15 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ITQAN - Intelligent Trainees for Qualified Academic Network</title>
     
-    <!-- External CSS -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Your existing CSS files (KEEP THESE) -->
-    <link rel="stylesheet" href="history-media-upgrade.css?v=8">
-    <link rel="stylesheet" href="responsive-polish.css?v=8">
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -23,26 +17,634 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
-        /* ===== ADDITIONAL FIXES - DOES NOT REMOVE YOUR EXISTING CSS ===== */
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        /* Fix for underlines on links */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060810;
+            color: #E8ECF4;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+        
         a {
-            text-decoration: none !important;
+            text-decoration: none;
+            color: inherit;
         }
         
-        .nav-links a::after {
-            display: none !important;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
         
-        /* History section alignment fix */
-        .hpanel {
+        /* ===== COLORS ===== */
+        :root {
+            --cyan: #00F0FF;
+            --pink: #FF3366;
+            --gold: #FFB800;
+            --purple: #A78BFA;
+        }
+        
+        /* ===== HEADER ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(6, 8, 16, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 16px 0;
+        }
+        
+        .h-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-img {
+            height: 48px;
+            width: auto;
+        }
+        
+        .logo-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00F0FF, #FFB800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-tag {
+            font-size: 0.65rem;
+            color: #8892A8;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #8892A8;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #00F0FF;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .auth-area {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .auth-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.8rem;
+        }
+        
+        .auth-btn-login {
+            background: transparent;
+            border: 1.5px solid rgba(0, 240, 255, 0.4);
+            color: #00F0FF;
+        }
+        
+        .auth-btn-login:hover {
+            background: #00F0FF;
+            color: #060810;
+        }
+        
+        .auth-btn-register {
+            background: #FF3366;
+            color: white;
+        }
+        
+        .auth-btn-register:hover {
+            background: #E62E5C;
+            transform: translateY(-2px);
+        }
+        
+        .auth-user-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        
+        .avatar-sm {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00F0FF, #FF3366);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .mob-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #00F0FF;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* ===== HERO ===== */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
+            position: relative;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: #00F0FF;
+            margin-bottom: 24px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #00F0FF, #FFB800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1rem;
+            color: #8892A8;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-pink {
+            background: linear-gradient(135deg, #FF3366, #E62E5C);
+            color: white;
+        }
+        
+        .btn-cyan {
+            background: linear-gradient(135deg, #00F0FF, #00B8D4);
+            color: #060810;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #00F0FF;
+            color: #00F0FF;
+        }
+        
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #8892A8;
+            font-size: 0.6rem;
+        }
+        
+        .hero-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00F0FF, #FF3366, #FFB800, #00F0FF);
+            background-size: 300% 100%;
+            animation: lineMove 5s linear infinite;
+        }
+        
+        @keyframes lineMove {
+            0% { background-position: 0% 0; }
+            100% { background-position: 300% 0; }
+        }
+        
+        /* ===== SECTIONS ===== */
+        .features, .about, .media-hub, .acc-zone {
+            padding: 80px 0;
+        }
+        
+        .about {
+            background: #0C0F1A;
+        }
+        
+        .sec-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        
+        .sec-line-c {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+        
+        .sec-line-c span {
+            width: 8px;
+            height: 8px;
+            background: #00F0FF;
+            border-radius: 50%;
+        }
+        
+        .sec-line-c::before,
+        .sec-line-c::after {
+            content: '';
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3A4055);
+        }
+        
+        /* ===== GRIDS ===== */
+        .feat-grid, .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .feat-card, .about-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+        
+        .feat-card:hover, .about-card:hover {
+            transform: translateY(-8px);
+            border-color: #00F0FF;
+        }
+        
+        .feat-icon, .about-ic {
+            width: 64px;
+            height: 64px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: #00F0FF;
+        }
+        
+        .about-ic {
+            background: rgba(255, 51, 102, 0.1);
+            color: #FF3366;
+        }
+        
+        .feat-card h3, .about-card h3 {
+            margin-bottom: 12px;
+        }
+        
+        .feat-card p, .about-card p {
+            color: #8892A8;
+            font-size: 0.9rem;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+        }
+        
+        /* ===== MEDIA HUB ===== */
+        .media-tabs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .media-tab {
+            padding: 12px 28px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            color: #8892A8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .media-tab.active {
+            background: linear-gradient(135deg, #00F0FF, #00B8D4);
+            color: #060810;
+        }
+        
+        .media-panel {
             display: none;
         }
         
-        .hpanel.active {
+        .media-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gallery-grid, .mag-grid, .core-grid, .wgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+        
+        .gallery-item, .mag-card, .cc, .wc {
+            background: #121626;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+        
+        .gallery-item:hover, .mag-card:hover, .cc:hover, .wc:hover {
+            transform: translateY(-8px);
+            border-color: #00F0FF;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-ov {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-ov {
+            opacity: 1;
+        }
+        
+        .mag-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+        }
+        
+        .mag-body, .cc-in, .w-in {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .cc-ic, .w-ic {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+            color: #00F0FF;
+        }
+        
+        .w-ic {
+            background: rgba(167, 139, 250, 0.1);
+            color: #A78BFA;
+        }
+        
+        .cc-role, .w-lab {
+            font-size: 0.7rem;
+            color: #00F0FF;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        
+        .w-lab {
+            color: #A78BFA;
+        }
+        
+        .cc-name, .w-ttl {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .cc-desc, .w-info {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        
+        .cc-btns, .w-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .w-leads {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .w-chip {
+            flex: 1;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+        
+        .ch-role {
+            font-size: 0.55rem;
+            color: #8892A8;
+            text-transform: uppercase;
+        }
+        
+        .ch-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* ===== ACCORDION ===== */
+        .acc-item {
+            max-width: 1200px;
+            margin: 0 auto 16px;
+        }
+        
+        .acc-hdr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.04), #121626);
+            border: 1px solid rgba(0, 240, 255, 0.12);
+        }
+        
+        .acc-hdr:hover {
+            transform: translateX(5px);
+        }
+        
+        .acc-hdr h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            color: #00F0FF;
+        }
+        
+        .acc-hdr .a-ic {
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F0FF;
+        }
+        
+        .acc-hdr .a-arr {
+            transition: transform 0.3s;
+        }
+        
+        .acc-hdr.open .a-arr {
+            transform: rotate(180deg);
+        }
+        
+        .acc-body {
+            display: none;
+            padding: 24px 0 8px;
+        }
+        
+        .acc-body.open {
             display: block;
         }
         
+        /* Wing specific header */
+        .ac-wing {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.04), #121626);
+            border-color: rgba(167, 139, 250, 0.12);
+        }
+        
+        .ac-wing h2 {
+            color: #A78BFA;
+        }
+        
+        .ac-wing .a-ic {
+            background: rgba(167, 139, 250, 0.1);
+            color: #A78BFA;
+        }
+        
+        .ac-hist {
+            background: linear-gradient(135deg, rgba(255, 184, 0, 0.04), #121626);
+            border-color: rgba(255, 184, 0, 0.12);
+        }
+        
+        .ac-hist h2 {
+            color: #FFB800;
+        }
+        
+        .ac-hist .a-ic {
+            background: rgba(255, 184, 0, 0.1);
+            color: #FFB800;
+        }
+        
+        /* ===== HISTORY SECTION ===== */
         .htabs {
             display: flex;
             gap: 8px;
@@ -66,6 +668,14 @@
         .htab.active {
             background: #00F0FF;
             color: #060810;
+        }
+        
+        .hpanel {
+            display: none;
+        }
+        
+        .hpanel.active {
+            display: block;
         }
         
         .hperiod {
@@ -123,109 +733,17 @@
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
         
-        /* Dashboard fix */
-        .dash-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 380px;
-            height: 100vh;
-            background: #0C0F1A;
-            z-index: 2500;
-            transition: right 0.3s ease;
-            border-left: 1px solid rgba(0, 240, 255, 0.1);
-            overflow-y: auto;
+        .h-sub {
+            font-size: 0.65rem;
+            color: #8892A8;
+            margin-left: 8px;
         }
         
-        .dash-panel.open {
-            right: 0;
-        }
-        
-        .dash-hdr {
-            padding: 20px;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .dash-hdr h3 {
-            color: #00F0FF;
-            margin: 0;
-        }
-        
-        .dash-body {
-            padding: 20px;
-        }
-        
-        .dash-pc {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .dash-av {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00F0FF, #FF3366);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0 auto 16px;
-        }
-        
-        /* Overlay */
-        .ov-dim {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 2400;
-            display: none;
-        }
-        
-        .ov-dim.active {
-            display: block;
-        }
-        
-        /* Fix for custom cursor - ensure it works */
-        .custom-cursor, .custom-cursor-follower {
-            pointer-events: none;
-            position: fixed;
-            z-index: 9999;
-        }
-        
-        /* Glow effect for cards */
-        .cc, .wc, .feat-card, .about-card, .mag-card {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cc::before, .wc::before, .feat-card::before, .about-card::before, .mag-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 240, 255, 0.15), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .cc:hover::before, .wc:hover::before, .feat-card:hover::before, .about-card:hover::before, .mag-card:hover::before {
-            opacity: 1;
-        }
-        
-        /* Recent publications section */
+        /* ===== PUBLICATIONS ===== */
         .publications-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 24px;
-            margin-top: 40px;
         }
         
         .pub-card {
@@ -238,10 +756,86 @@
         
         .pub-card:hover {
             transform: translateY(-6px);
-            border-color: rgba(0, 240, 255, 0.3);
+            border-color: #00F0FF;
         }
         
-        /* Modal fixes */
+        /* ===== FOOTER ===== */
+        footer {
+            background: #060810;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+        }
+        
+        .ft-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 48px;
+            margin-bottom: 32px;
+        }
+        
+        .ft-col h3 {
+            color: #00F0FF;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .ft-desc {
+            color: #8892A8;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        
+        .ft-links {
+            list-style: none;
+        }
+        
+        .ft-links li {
+            margin-bottom: 12px;
+        }
+        
+        .ft-links a {
+            color: #8892A8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .ft-links a:hover {
+            color: #00F0FF;
+        }
+        
+        .soc-icons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .soc-icons a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F0FF;
+            transition: all 0.3s;
+        }
+        
+        .soc-icons a:hover {
+            background: #00F0FF;
+            color: #060810;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #3A4055;
+            font-size: 0.75rem;
+        }
+        
+        /* ===== MODALS ===== */
         .profile-modal, .auth-modal {
             display: none;
             position: fixed;
@@ -271,7 +865,271 @@
             position: relative;
         }
         
-        /* Toast notifications */
+        .modal-close, .auth-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #8892A8;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        /* ===== DASHBOARD ===== */
+        .dash-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: #0C0F1A;
+            z-index: 2500;
+            transition: right 0.3s ease;
+            border-left: 1px solid rgba(0, 240, 255, 0.1);
+            overflow-y: auto;
+        }
+        
+        .dash-panel.open {
+            right: 0;
+        }
+        
+        .dash-hdr {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dash-hdr h3 {
+            color: #00F0FF;
+        }
+        
+        .dash-body {
+            padding: 20px;
+        }
+        
+        .dash-pc {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .dash-av {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00F0FF, #FF3366);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 16px;
+            color: white;
+        }
+        
+        .dash-nm {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .dash-pos {
+            color: #00F0FF;
+            font-size: 0.8rem;
+        }
+        
+        .dash-sec h4 {
+            color: #00F0FF;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dash-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .dash-lbl {
+            color: #8892A8;
+        }
+        
+        .dash-val {
+            font-weight: 600;
+        }
+        
+        .dash-acts {
+            margin-top: 24px;
+        }
+        
+        .dash-abtn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 10px;
+            color: #FF3366;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dash-abtn:hover {
+            background: #FF3366;
+            color: white;
+        }
+        
+        /* ===== ADMIN PANEL ===== */
+        .admin-ov {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #060810;
+            z-index: 4000;
+            overflow-y: auto;
+        }
+        
+        .admin-ov.active {
+            display: block;
+        }
+        
+        .admin-tb {
+            background: #0C0F1A;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+        
+        .admin-tb h3 {
+            color: #00F0FF;
+        }
+        
+        .admin-xbtn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .admin-bd {
+            padding: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: #121626;
+            border-radius: 12px;
+            padding: 4px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-tbtn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            color: #8892A8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .admin-tbtn.active {
+            background: #00F0FF;
+            color: #060810;
+        }
+        
+        .admin-tc {
+            display: none;
+        }
+        
+        .admin-tc.active {
+            display: block;
+        }
+        
+        .add-form {
+            background: #121626;
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .fg {
+            margin-bottom: 16px;
+        }
+        
+        .fg label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            color: #00F0FF;
+        }
+        
+        .fi {
+            width: 100%;
+            padding: 10px 14px;
+            background: #1A1F33;
+            border: 1px solid #3A4055;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85rem;
+        }
+        
+        .adm-il {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .adm-ir {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #1A1F33;
+            border-radius: 10px;
+        }
+        
+        .del-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .ov-dim {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2400;
+            display: none;
+        }
+        
+        .ov-dim.active {
+            display: block;
+        }
+        
         .toast-c {
             position: fixed;
             bottom: 20px;
@@ -282,58 +1140,146 @@
         .toast {
             padding: 12px 24px;
             border-radius: 10px;
-            background: #10B981;
             color: white;
             margin-top: 10px;
             animation: slideIn 0.3s ease;
+        }
+        
+        .toast-success {
+            background: #10B981;
+        }
+        
+        .toast-error {
+            background: #EF4444;
         }
         
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 6000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 16px;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .feat-grid, .about-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .ft-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+            }
+            .soc-icons {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mob-btn {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: #060810;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                z-index: 1000;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .feat-grid, .about-grid, .gallery-grid, .mag-grid, .core-grid, .wgrid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .sec-title {
+                font-size: 1.5rem;
+            }
+            .htabs {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .hgrid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Mouse glow effect */
+        .cc, .wc, .feat-card, .about-card, .mag-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cc::before, .wc::before, .feat-card::before, .about-card::before, .mag-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 240, 255, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .cc:hover::before, .wc:hover::before, .feat-card:hover::before, .about-card:hover::before, .mag-card:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <!-- Ambient Background -->
-    <div class="amb amb-1"></div>
-    <div class="amb amb-2"></div>
-    <div class="amb amb-3"></div>
-    
     <!-- Toast Container -->
     <div class="toast-c" id="toastContainer"></div>
     
     <!-- Overlay -->
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
     
-    <!-- Confirmation Modal -->
-    <div class="cfm-modal" id="confirmModal">
-        <div class="cfm-card">
-            <div class="ci"><i class="fas fa-exclamation-triangle"></i></div>
-            <h3>Delete?</h3>
-            <p>Remove <span class="cn" id="confirmUserName"></span> permanently?</p>
-            <div class="cfm-btns">
-                <button class="btn btn-outline btn-sm" onclick="cancelDelete()">Cancel</button>
-                <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser()">Delete</button>
-            </div>
-        </div>
-    </div>
-    
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
-        <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
-        <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
-        <img id="lightboxImg" src="" alt="">
-        <div class="lightbox-caption" id="lightboxCaption"></div>
+        <button class="lightbox-close" onclick="closeLightbox()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
+        <img id="lightboxImg" src="">
+        <div class="lightbox-caption" id="lightboxCaption" style="margin-top:16px;color:white"></div>
     </div>
 
     <!-- Header -->
     <header>
         <div class="container h-wrap">
             <a href="#" class="logo">
-                <img src="logo.png" alt="ITQAN" class="logo-img">
-                <div class="logo-text">
+                <img src="logo.png" alt="ITQAN" class="logo-img" onerror="this.style.display='none'">
+                <div>
                     <div class="logo-name">ITQAN UNION</div>
                     <div class="logo-tag">Intelligent Trainees for Qualified and Networked Professionals</div>
                 </div>
@@ -343,9 +1289,7 @@
                     <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
                     <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>
                 </div>
-                <button class="mob-btn" id="mobileMenuBtn">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="mob-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
             </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
@@ -359,31 +1303,26 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-bg"></div>
-        <div class="hero-grad"></div>
-        <canvas id="heroCanvas"></canvas>
-        <div class="hero-inner">
-            <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
-            <h1>United for Professional Growth & Excellence</h1>
-            <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
-            <div class="hero-btns">
-                <a href="#mission" class="btn btn-pink">Discover More</a>
-                <a href="#team" class="btn btn-cyan">Meet Our Leadership</a>
-            </div>
+        <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
+        <h1>United for Professional <br>Growth & Excellence</h1>
+        <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
+        <div class="hero-btns">
+            <a href="#mission" class="btn btn-pink">Discover More</a>
+            <a href="#team" class="btn btn-cyan">Meet Our Leadership</a>
         </div>
-        <div class="scroll-hint"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
+        <div class="scroll-hint"><span>SCROLL</span><i class="fas fa-chevron-down"></i></div>
         <div class="hero-line"></div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="mission">
         <div class="container">
-            <div class="sec-title rv">Cultivating <span style="color:var(--cyan)">Intelligent</span> & <span style="color:var(--pink)">Qualified</span> Networks</div>
-            <div class="sec-line-c rv"><span></span></div>
+            <div class="sec-title">Cultivating <span style="color:#00F0FF">Intelligent</span> & <span style="color:#FF3366">Qualified</span> Networks</div>
+            <div class="sec-line-c"><span></span></div>
             <div class="feat-grid">
-                <div class="feat-card rv rv-d1"><div class="feat-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration across all disciplines.</p></div>
-                <div class="feat-card rv rv-d2"><div class="feat-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change in society.</p></div>
-                <div class="feat-card rv rv-d3"><div class="feat-icon"><i class="fas fa-trophy"></i></div><h3>Achievements</h3><p>Best Union Award and featured in Mission-20 Publication — milestones that define our journey.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-users"></i></div><h3>Our Mission</h3><p>To foster a unified community that champions leadership, continuous growth, and collaboration across all disciplines.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To be the cornerstone for skilled and interconnected professionals, driving positive change in society.</p></div>
+                <div class="feat-card"><div class="feat-icon"><i class="fas fa-trophy"></i></div><h3>Achievements</h3><p>Best Union Award and featured in Mission-20 Publication — milestones that define our journey.</p></div>
             </div>
         </div>
     </section>
@@ -391,183 +1330,96 @@
     <!-- About Section -->
     <section class="about" id="about">
         <div class="container">
-            <div class="sec-title rv">Explore <span style="color:var(--cyan)">ITQAN</span></div>
-            <div class="sec-line-c rv"><span></span></div>
+            <div class="sec-title">Explore <span style="color:#00F0FF">ITQAN</span></div>
+            <div class="sec-line-c"><span></span></div>
             <div class="about-grid">
-                <div class="about-card rv rv-d1" onclick="window.location.href='publication.html'"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
-                <div class="about-card rv rv-d2" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
-                <div class="about-card rv rv-d3" onclick="window.location.href='https://itqan-artfeast.vercel.app/'"><div class="about-ic"><i class="fas fa-palette"></i></div><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:.6rem"><span class="btn btn-sm btn-outline" style="pointer-events:none">Live Event Hub</span></div></div>
+                <div class="about-card" onclick="switchMediaTab('magazines')"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
+                <div class="about-card" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
+                <div class="about-card" onclick="window.open('https://itqan-artfeast.vercel.app/')"><div class="about-ic"><i class="fas fa-palette"></i></div><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:12px"><span class="btn btn-sm btn-outline" style="pointer-events:none">Live Event Hub</span></div></div>
             </div>
         </div>
     </section>
 
     <div class="divider"></div>
 
-    <!-- Media Hub Section -->
+    <!-- Media Hub -->
     <section class="media-hub" id="media">
         <div class="container">
-            <div class="sec-title rv">Media & <span style="color:var(--gold)">Publications</span></div>
-            <div class="sec-line-c rv"><span></span></div>
-            <div class="media-tabs rv">
+            <div class="sec-title">Media & <span style="color:#FFB800">Publications</span></div>
+            <div class="sec-line-c"><span></span></div>
+            <div class="media-tabs">
                 <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
                 <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines & Tabloids</button>
             </div>
             <div class="media-panel active" id="mediaGallery">
                 <div class="gallery-grid" id="publicGalleryGrid"></div>
-                <div class="gallery-empty" id="galleryEmpty" style="display:none"><i class="fas fa-camera-retro"></i><p>No photos yet. Admin can add photos in the panel.</p></div>
+                <div id="galleryEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-camera-retro" style="font-size:2rem;opacity:0.3"></i><p>No photos yet</p></div>
             </div>
             <div class="media-panel" id="mediaMagazines">
                 <div class="mag-grid" id="publicMagGrid"></div>
-                <div class="mag-empty" id="magEmpty" style="display:none"><i class="fas fa-book-open"></i><p>No publications yet. Coming soon!</p></div>
+                <div id="magazinesEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-book-open" style="font-size:2rem;opacity:0.3"></i><p>No publications yet</p></div>
             </div>
         </div>
     </section>
 
-    <!-- Recent Publications Section -->
-    <section style="padding: 4rem 0; background: linear-gradient(135deg, var(--s1), var(--s0));">
+    <!-- Recent Publications -->
+    <section style="padding: 80px 0; background: #0C0F1A;">
         <div class="container">
-            <div class="sec-title rv">Recent <span style="color:var(--gold)">Publications</span></div>
-            <div class="sec-line-c rv"><span></span></div>
+            <div class="sec-title">Recent <span style="color:#FFB800">Publications</span></div>
+            <div class="sec-line-c"><span></span></div>
             <div class="publications-grid">
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,184,0,0.1);border-radius:20px;font-size:0.7rem;color:var(--gold);margin-bottom:1rem">📄 ANNUAL REPORT</div><h3>ITQAN Annual Report 2025</h3><p>Committee achievements, financial summary, and future roadmap.</p><div style="display:flex;justify-content:space-between;margin-top:1rem"><span style="font-size:0.7rem;color:#3A4055">April 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FFB800;color:#FFB800" onclick="alert('PDF coming soon')">Read →</button></div></div>
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(0,240,255,0.1);border-radius:20px;font-size:0.7rem;color:var(--cyan);margin-bottom:1rem">📰 MAGAZINE</div><h3>ITQAN Quarterly - Issue 03</h3><p>Student spotlights, wing activities, and upcoming events.</p><div style="display:flex;justify-content:space-between;margin-top:1rem"><span style="font-size:0.7rem;color:#3A4055">March 2026</span><button class="btn btn-outline btn-sm" style="border-color:#00F0FF;color:#00F0FF" onclick="alert('Coming soon')">Read →</button></div></div>
-                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,51,102,0.1);border-radius:20px;font-size:0.7rem;color:var(--pink);margin-bottom:1rem">📧 NEWSLETTER</div><h3>Summer 2026 Newsletter</h3><p>ZENITH recap, new members, achievements, and community updates.</p><div style="display:flex;justify-content:space-between;margin-top:1rem"><span style="font-size:0.7rem;color:#3A4055">June 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FF3366;color:#FF3366" onclick="alert('Coming soon')">Read →</button></div></div>
+                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,184,0,0.1);border-radius:20px;font-size:0.7rem;color:#FFB800;margin-bottom:16px">📄 ANNUAL REPORT</div><h3>ITQAN Annual Report 2025</h3><p>Committee achievements, financial summary, and future roadmap.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">April 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FFB800;color:#FFB800" onclick="alert('PDF coming soon')">Read →</button></div></div>
+                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(0,240,255,0.1);border-radius:20px;font-size:0.7rem;color:#00F0FF;margin-bottom:16px">📰 MAGAZINE</div><h3>ITQAN Quarterly - Issue 03</h3><p>Student spotlights, wing activities, and upcoming events.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">March 2026</span><button class="btn btn-outline btn-sm" style="border-color:#00F0FF;color:#00F0FF" onclick="alert('Coming soon')">Read →</button></div></div>
+                <div class="pub-card"><div style="display:inline-block;padding:4px 12px;background:rgba(255,51,102,0.1);border-radius:20px;font-size:0.7rem;color:#FF3366;margin-bottom:16px">📧 NEWSLETTER</div><h3>Summer 2026 Newsletter</h3><p>ZENITH recap, new members, achievements, and community updates.</p><div style="display:flex;justify-content:space-between;margin-top:16px"><span style="font-size:0.7rem;color:#3A4055">June 2026</span><button class="btn btn-outline btn-sm" style="border-color:#FF3366;color:#FF3366" onclick="alert('Coming soon')">Read →</button></div></div>
             </div>
         </div>
     </section>
 
-    <!-- Team Accordion Section -->
+    <!-- Team Section -->
     <section class="acc-zone" id="team">
-        <!-- Core Committee -->
-        <div class="acc-item">
-            <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)">
-                <h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2>
-                <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="acc-body open">
-                <div class="core-grid" id="coreGrid"></div>
-            </div>
-        </div>
-        
-        <!-- Sub-Wings -->
-        <div class="acc-item">
-            <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)">
-                <h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2>
-                <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="acc-body">
-                <div class="wgrid" id="wingsGrid"></div>
-            </div>
-        </div>
-        
-        <!-- History Section - FIXED ALIGNMENT -->
-        <div class="acc-item">
-            <div class="acc-hdr ac-hist" onclick="toggleAccordion(this)">
-                <h2><span class="a-ic"><i class="fas fa-history"></i></span> Union & Artsfest History</h2>
-                <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="acc-body">
-                <div class="htabs">
-                    <button class="htab t-u active" onclick="switchHistTab('union')"><i class="fas fa-landmark"></i> Union Committee</button>
-                    <button class="htab t-a" onclick="switchHistTab('artsfest')"><i class="fas fa-palette"></i> Artsfest Leaders</button>
+        <div class="container">
+            <!-- Core Committee -->
+            <div class="acc-item">
+                <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)">
+                    <h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2>
+                    <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
                 </div>
-                
-                <!-- Union Committee Panel -->
-                <div class="hpanel active" id="histUnion">
-                    <div class="hperiod">
-                        <div class="hperiod-t u-a"><i class="fas fa-trophy"></i> 1st Class Committee <span class="h-sub">Founding</span></div>
-                        <div class="hgrid">
-                            <div class="hcard u-c"><div class="hrole">President</div><div class="hname">Burhan</div></div>
-                            <div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div>
-                            <div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Razin</div></div>
-                            <div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">Rafan</div></div>
-                        </div>
-                    </div>
-                    <div class="hperiod">
-                        <div class="hperiod-t u-a"><i class="fas fa-chart-line"></i> 2nd Class Committee <span class="h-sub">Expansion</span></div>
-                        <div class="hgrid">
-                            <div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Burhan</div></div>
-                            <div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div>
-                            <div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Zidan</div></div>
-                            <div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Naseem</div></div>
-                            <div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">V.K</div></div>
-                            <div class="hcard u-c"><div class="hrole">Fin. Manager</div><div class="hname">Rashad</div></div>
-                        </div>
-                    </div>
-                    <div class="hperiod">
-                        <div class="hperiod-t u-a"><i class="fas fa-star"></i> 3rd Class Committee <span class="h-sub">Current</span></div>
-                        <div class="hgrid">
-                            <div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Hudaif</div></div>
-                            <div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Burhan</div></div>
-                            <div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Moidu</div></div>
-                            <div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Shahzad</div></div>
-                        </div>
-                        <div class="hperiod-t s-a" style="margin-top:1rem"><i class="fas fa-exchange-alt"></i> Second Semester</div>
-                        <div class="hgrid">
-                            <div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Zidan</div></div>
-                        </div>
-                    </div>
+                <div class="acc-body open">
+                    <div class="core-grid" id="coreGrid"></div>
                 </div>
-                
-                <!-- Artsfest Leaders Panel -->
-                <div class="hpanel" id="histArtsfest">
-                    <div class="hperiod">
-                        <div class="hperiod-t a-a"><i class="fas fa-star"></i> 1st Class Artsfest <span class="h-sub">Inaugural</span></div>
-                        <div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Ranif</div></div>
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Naseem</div></div>
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Muzzammil</div></div>
-                        </div>
-                        <div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Zidan</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Hisham</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Moidu</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">V.K</div></div>
-                        </div>
+            </div>
+            
+            <!-- Sub-Wings -->
+            <div class="acc-item">
+                <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)">
+                    <h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2>
+                    <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="acc-body">
+                    <div class="wgrid" id="wingsGrid"></div>
+                </div>
+            </div>
+            
+            <!-- History -->
+            <div class="acc-item">
+                <div class="acc-hdr ac-hist" onclick="toggleAccordion(this)">
+                    <h2><span class="a-ic"><i class="fas fa-history"></i></span> Union & Artsfest History</h2>
+                    <span class="a-arr"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="acc-body">
+                    <div class="htabs">
+                        <button class="htab t-u active" onclick="switchHistTab('union')"><i class="fas fa-landmark"></i> Union Committee</button>
+                        <button class="htab t-a" onclick="switchHistTab('artsfest')"><i class="fas fa-palette"></i> Artsfest Leaders</button>
                     </div>
-                    <div class="hperiod">
-                        <div class="hperiod-t a-a"><i class="fas fa-chart-line"></i> 2nd Class Artsfest <span class="h-sub">Growth</span></div>
-                        <div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Zidan</div></div>
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Burhan</div></div>
-                        </div>
-                        <div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Mirsad</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Razin</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ranif</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Shahzad</div></div>
-                        </div>
-                        <div class="hperiod-t s-a" style="margin-top:1rem"><i class="fas fa-exchange-alt"></i> Second Semester</div>
-                        <div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Rashad</div></div>
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Moidu</div></div>
-                        </div>
-                        <div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Naseem</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Nuhman</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">M.A</div></div>
-                        </div>
+                    <div class="hpanel active" id="histUnion">
+                        <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-trophy"></i> 1st Class Committee <span class="h-sub">Founding</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">Burhan</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Razin</div></div><div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">Rafan</div></div></div></div>
+                        <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-chart-line"></i> 2nd Class Committee <span class="h-sub">Expansion</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Burhan</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Zidan</div></div><div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Naseem</div></div><div class="hcard u-c"><div class="hrole">Treasurer</div><div class="hname">V.K</div></div><div class="hcard u-c"><div class="hrole">Fin. Manager</div><div class="hname">Rashad</div></div></div></div>
+                        <div class="hperiod"><div class="hperiod-t u-a"><i class="fas fa-star"></i> 3rd Class Committee <span class="h-sub">Current</span></div><div class="hgrid"><div class="hcard u-c"><div class="hrole">President</div><div class="hname">S. Hudaif</div></div><div class="hcard u-c"><div class="hrole">Vice President</div><div class="hname">S. Burhan</div></div><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Moidu</div></div><div class="hcard u-c"><div class="hrole">Joint Sec.</div><div class="hname">Shahzad</div></div></div><div class="hperiod-t s-a" style="margin-top:16px"><i class="fas fa-exchange-alt"></i> Second Semester</div><div class="hgrid"><div class="hcard u-c"><div class="hrole">Secretary</div><div class="hname">Zidan</div></div></div></div>
                     </div>
-                    <div class="hperiod">
-                        <div class="hperiod-t a-a"><i class="fas fa-star"></i> 3rd Class Artsfest <span class="h-sub">ZENITH</span></div>
-                        <div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Shahzad</div></div>
-                            <div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Aslah</div></div>
-                        </div>
-                        <div class="hgroup a-g" style="margin-top:.7rem"><i class="fas fa-flag"></i> Captains</div>
-                        <div class="hgrid">
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Rabeeh</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ridan</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Salah</div></div>
-                            <div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Adnan</div></div>
-                        </div>
+                    <div class="hpanel" id="histArtsfest">
+                        <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 1st Class Artsfest <span class="h-sub">Inaugural</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Ranif</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Naseem</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Muzzammil</div></div></div><div class="hgroup a-g" style="margin-top:12px"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Zidan</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Hisham</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Moidu</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">V.K</div></div></div></div>
+                        <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-chart-line"></i> 2nd Class Artsfest <span class="h-sub">Growth</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Zidan</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Burhan</div></div></div><div class="hgroup a-g" style="margin-top:12px"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Mirsad</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Razin</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ranif</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Shahzad</div></div></div><div class="hperiod-t s-a" style="margin-top:16px"><i class="fas fa-exchange-alt"></i> Second Semester</div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Rashad</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Moidu</div></div></div><div class="hgroup a-g" style="margin-top:12px"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Naseem</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Nuhman</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">M.A</div></div></div></div>
+                        <div class="hperiod"><div class="hperiod-t a-a"><i class="fas fa-star"></i> 3rd Class Artsfest <span class="h-sub">ZENITH</span></div><div class="hgroup a-g"><i class="fas fa-headset"></i> Controllers</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Shahzad</div></div><div class="hcard a-c"><div class="hrole">Controller</div><div class="hname">Aslah</div></div></div><div class="hgroup a-g" style="margin-top:12px"><i class="fas fa-flag"></i> Captains</div><div class="hgrid"><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Rabeeh</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Ridan</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Salah</div></div><div class="hcard a-c"><div class="hrole">Captain</div><div class="hname">Adnan</div></div></div></div>
                     </div>
                 </div>
             </div>
@@ -578,33 +1430,11 @@
     <footer id="contact">
         <div class="container">
             <div class="ft-grid">
-                <div class="ft-col">
-                    <h3>ITQAN UNION</h3>
-                    <p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p>
-                    <div class="soc-icons">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="ft-col">
-                    <h3>Quick Links</h3>
-                    <ul class="ft-links">
-                        <li><a href="#mission">About ITQAN</a></li>
-                        <li><a href="#media">Media Hub</a></li>
-                        <li><a href="#team">Our Team</a></li>
-                    </ul>
-                </div>
-                <div class="ft-col">
-                    <h3>Contact</h3>
-                    <ul class="ft-links">
-                        <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> contact@itqanunion.org</li>
-                    </ul>
-                </div>
+                <div class="ft-col"><h3>ITQAN UNION</h3><p class="ft-desc">Empowering students and professionals through leadership, collaboration, and training.</p><div class="soc-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div>
+                <div class="ft-col"><h3>Quick Links</h3><ul class="ft-links"><li><a href="#mission">About ITQAN</a></li><li><a href="#media">Media Hub</a></li><li><a href="#team">Our Team</a></li></ul></div>
+                <div class="ft-col"><h3>Contact</h3><ul class="ft-links"><li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li><li><i class="fas fa-envelope"></i> contact@itqanunion.org</li></ul></div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2026 ITQAN Union. All Rights Reserved.</p>
-            </div>
+            <div class="copyright"><p>&copy; 2026 ITQAN Union. All Rights Reserved.</p></div>
         </div>
     </footer>
 
@@ -612,42 +1442,39 @@
     <div class="profile-modal" id="profileModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div class="mhwp">
-                <div class="ppc"><img id="modalPhoto" src="" alt="" style="display:none"><div class="pph" id="photoPlaceholder"><i class="fas fa-user"></i></div></div>
-                <div class="phi"><h3 id="modalTitle">Name</h3><p id="modalSubtitle">Position</p><div class="wbadges" id="modalBadges"></div></div>
-            </div>
-            <div class="mbody"><p id="modalDescription"></p></div>
-            <div class="mfooter"><button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button></div>
+            <div id="modalPhotoPlaceholder" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00F0FF,#FF3366);margin:0 auto 16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-user fa-2x"></i></div>
+            <h3 id="modalTitle"></h3>
+            <p id="modalSubtitle" style="color:#00F0FF"></p>
+            <p id="modalDescription" style="color:#8892A8;margin:16px 0"></p>
+            <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
         </div>
     </div>
 
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
             <button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
-            <h2>ITQAN Portal</h2>
-            <p class="auth-sub">Login or Register to join the network</p>
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
-                <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+            <h2 style="text-align:center;margin-bottom:24px">ITQAN Portal</h2>
+            <div style="display:flex;gap:8px;margin-bottom:24px">
+                <button class="auth-tab-btn active" onclick="switchAuthTab('login')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;border:none;color:#8892A8;cursor:pointer">Login</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('register')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;border:none;color:#8892A8;cursor:pointer">Register</button>
             </div>
-            <div id="authError" class="auth-err"></div>
-            <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
-                <div class="fg"><label>Username</label><input type="text" class="fi" id="loginUsername" required placeholder="e.g., hudaif"></div>
-                <div class="fg"><label>Password</label><input type="password" class="fi" id="loginPassword" required placeholder="--------"></div>
+            <div id="authError" style="color:#EF4444;display:none;margin-bottom:16px"></div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <input type="text" id="loginUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
+                <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Login</button>
             </form>
-            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
-                <div class="fg"><label>Full Name</label><input type="text" class="fi" id="regName" required placeholder="Your Full Name"></div>
-                <div class="fg"><label>Username</label><input type="text" class="fi" id="regUsername" required placeholder="Choose username"></div>
-                <div class="fg"><label>Password (min 6)</label><input type="password" class="fi" id="regPassword" required placeholder="--------"></div>
-                <div class="fg"><label>Wing (Optional)</label><select class="fi fsel" id="regWing"><option value="">-- General --</option></select></div>
+            <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
+                <input type="text" id="regName" placeholder="Full Name" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
+                <input type="text" id="regUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
+                <input type="password" id="regPassword" placeholder="Password (min 6)" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Register</button>
             </form>
         </div>
     </div>
 
     <div class="dash-panel" id="userDashboard">
-        <div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()" style="background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer"><i class="fas fa-times"></i></button></div>
+        <div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()" style="background:none;border:none;color:#8892A8;font-size:1.2rem;cursor:pointer"><i class="fas fa-times"></i></button></div>
         <div class="dash-body" id="dashBody"></div>
     </div>
 
@@ -659,501 +1486,496 @@
                 <button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button>
-                <button class="admin-tbtn" onclick="switchAdminTab('cards')"><i class="fas fa-edit"></i> Edit Cards</button>
             </div>
-            <div class="admin-tc active" id="adminTabOverview"><div class="stat-grid"><div class="stat-card"><div class="si"><i class="fas fa-users"></i></div><div class="sv" id="totalUsers">0</div><div class="sl">Total</div></div></div><button onclick="claimAdminRole()" class="btn btn-sm btn-danger">Make Me Admin</button></div>
+            <div class="admin-tc active" id="adminTabOverview"><button onclick="claimAdminRole()" class="btn btn-sm btn-danger">Make Me Admin</button><div id="totalUsers" style="margin-top:16px"></div></div>
             <div class="admin-tc" id="adminTabStudents"><button class="btn btn-sm btn-success" onclick="toggleAddForm()">Add Student</button><div id="studentsTableBody"></div></div>
-            <div class="admin-tc" id="adminTabGallery"><div class="add-form active"><h4>Add Photo</h4><div class="fg"><label>Image URL</label><input type="url" id="galImageUrl" class="fi"></div><div class="fg"><label>Caption</label><input type="text" id="galCaption" class="fi"></div><button onclick="addGalleryItem()" class="btn btn-sm btn-cyan">Add Photo</button></div><div id="adminGalleryList"></div></div>
-            <div class="admin-tc" id="adminTabMagazines"><div class="add-form active"><h4>Add Publication</h4><div class="fg"><label>Title</label><input type="text" id="magTitle" class="fi"></div><div class="fg"><label>Cover URL</label><input type="url" id="magCover" class="fi"></div><div class="fg"><label>PDF URL</label><input type="url" id="magPdfUrl" class="fi"></div><button onclick="addMagItem()" class="btn btn-sm btn-pink">Add</button></div><div id="adminMagList"></div></div>
-            <div class="admin-tc" id="adminTabCards"><div id="coreCardsList"></div><div id="wingsCardsList"></div></div>
+            <div class="admin-tc" id="adminTabGallery"><div class="add-form"><h4>Add Photo</h4><div class="fg"><label>Image URL</label><input type="url" id="galImageUrl" class="fi" placeholder="https://..."></div><div class="fg"><label>Caption</label><input type="text" id="galCaption" class="fi"></div><button onclick="addGalleryItem()" class="btn btn-sm btn-cyan">Add Photo</button></div><div id="adminGalleryList"></div></div>
+            <div class="admin-tc" id="adminTabMagazines"><div class="add-form"><h4>Add Publication</h4><div class="fg"><label>Title</label><input type="text" id="magTitle" class="fi"></div><div class="fg"><label>Cover URL</label><input type="url" id="magCover" class="fi"></div><div class="fg"><label>PDF URL</label><input type="url" id="magPdfUrl" class="fi"></div><button onclick="addMagItem()" class="btn btn-sm btn-pink">Add</button></div><div id="adminMagList"></div></div>
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script>
-    // Firebase Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
-        authDomain: "zenith-artsfest.firebaseapp.com",
-        projectId: "zenith-artsfest",
-        storageBucket: "zenith-artsfest.firebasestorage.app",
-        messagingSenderId: "506898514611",
-        appId: "1:506898514611:web:0ea13ddd075a020062e6c6"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    let currentUserData = null;
-    let allUsersCache = [];
-    let galleryCache = [];
-    let magCache = [];
-    
-    // Core Committee Data
-    const coreMembers = [
-        { name: "Sayed Hudaif", role: "President", desc: "Leads strategic planning and represents the union externally.", icon: "fa-crown" },
-        { name: "Sayed Burhan", role: "Vice President", desc: "Supports the President and oversees operations.", icon: "fa-shield-alt" },
-        { name: "Zidan", role: "Secretary", desc: "Manages official records and documentation.", icon: "fa-pen-alt" },
-        { name: "Muhyudheen", role: "Joint Secretary", desc: "Administrative support and portfolio management.", icon: "fa-cog" },
-        { name: "Mirsad", role: "Treasurer", desc: "Manages financial assets and budgets.", icon: "fa-coins" },
-        { name: "Thanzeeh", role: "Financial Manager", desc: "Oversees financial operations and compliance.", icon: "fa-chart-bar" },
-        { name: "Shahzad", role: "P.R.O", desc: "External communications and media relations.", icon: "fa-bullhorn" }
-    ];
-    
-    // Wings Data
-    const wings = [
-        { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy" },
-        { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard" },
-        { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon" },
-        { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water" },
-        { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator" },
-        { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom" },
-        { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
-    ];
-    
-    // Render Functions
-    function renderCoreGrid() {
-        const container = document.getElementById('coreGrid');
-        if (!container) return;
-        container.innerHTML = coreMembers.map(m => `
-            <div class="cc">
-                <div class="cc-in">
-                    <div class="cc-ic"><i class="fas ${m.icon}"></i></div>
-                    <div class="cc-role">${m.role}</div>
-                    <h3 class="cc-name">${m.name}</h3>
-                    <p class="cc-desc">${m.desc}</p>
-                    <div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('${m.name}','${m.role}','${m.desc}')"><i class="fas fa-user"></i> Profile</button></div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function renderWingsGrid() {
-        const container = document.getElementById('wingsGrid');
-        if (!container) return;
-        container.innerHTML = wings.map(w => `
-            <div class="wc">
-                <div class="w-in">
-                    <div class="w-ic"><i class="fas ${w.icon}"></i></div>
-                    <div class="w-lab">WING</div>
-                    <h3 class="w-ttl">${w.name}</h3>
-                    <p class="w-info">${w.desc}</p>
-                    <div class="w-leads">
-                        <div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${w.chairman}</span></div>
-                        <div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">${w.convener}</span></div>
-                    </div>
-                    <div class="w-btns">
-                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman}','Chairman of ${w.name}','')">Chair</button>
-                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.convener}','Convener of ${w.name}','')">Conv</button>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
+            authDomain: "zenith-artsfest.firebaseapp.com",
+            projectId: "zenith-artsfest",
+            storageBucket: "zenith-artsfest.firebasestorage.app",
+            messagingSenderId: "506898514611",
+            appId: "1:506898514611:web:0ea13ddd075a020062e6c6"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        let currentUserData = null;
+        let galleryCache = [];
+        
+        // ===== CORE DATA =====
+        const coreMembers = [
+            { name: "Sayed Hudaif", role: "President", desc: "Leads strategic planning and represents the union externally.", icon: "fa-crown" },
+            { name: "Sayed Burhan", role: "Vice President", desc: "Supports the President and oversees operations.", icon: "fa-shield-alt" },
+            { name: "Zidan", role: "Secretary", desc: "Manages official records and documentation.", icon: "fa-pen-alt" },
+            { name: "Muhyudheen", role: "Joint Secretary", desc: "Administrative support and portfolio management.", icon: "fa-cog" },
+            { name: "Mirsad", role: "Treasurer", desc: "Manages financial assets and budgets.", icon: "fa-coins" },
+            { name: "Thanzeeh", role: "Financial Manager", desc: "Oversees financial operations and compliance.", icon: "fa-chart-bar" },
+            { name: "Shahzad", role: "P.R.O", desc: "External communications and media relations.", icon: "fa-bullhorn" }
+        ];
+        
+        const wings = [
+            { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy" },
+            { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard" },
+            { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon" },
+            { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water" },
+            { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator" },
+            { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom" },
+            { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
+        ];
+        
+        // Render Functions
+        function renderCoreGrid() {
+            const container = document.getElementById('coreGrid');
+            if (!container) return;
+            container.innerHTML = coreMembers.map(m => `
+                <div class="cc">
+                    <div class="cc-in">
+                        <div class="cc-ic"><i class="fas ${m.icon}"></i></div>
+                        <div class="cc-role">${m.role}</div>
+                        <h3 class="cc-name">${m.name}</h3>
+                        <p class="cc-desc">${m.desc}</p>
+                        <div class="cc-btns"><button class="btn btn-cyan btn-sm" onclick="showProfile('${m.name}','${m.role}','${m.desc}')"><i class="fas fa-user"></i> Profile</button></div>
                     </div>
                 </div>
-            </div>
-        `).join('');
-    }
-    
-    // Mouse Glow Effect
-    document.querySelectorAll('.cc, .wc, .feat-card, .about-card, .mag-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty('--x', ((e.clientX - rect.left) / rect.width * 100) + '%');
-            card.style.setProperty('--y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+            `).join('');
+        }
+        
+        function renderWingsGrid() {
+            const container = document.getElementById('wingsGrid');
+            if (!container) return;
+            container.innerHTML = wings.map(w => `
+                <div class="wc">
+                    <div class="w-in">
+                        <div class="w-ic"><i class="fas ${w.icon}"></i></div>
+                        <div class="w-lab">WING</div>
+                        <h3 class="w-ttl">${w.name}</h3>
+                        <p class="w-info">${w.desc}</p>
+                        <div class="w-leads">
+                            <div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${w.chairman}</span></div>
+                            <div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">${w.convener}</span></div>
+                        </div>
+                        <div class="w-btns">
+                            <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman}','Chairman of ${w.name}','')">Chair</button>
+                            <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.convener}','Convener of ${w.name}','')">Conv</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Mouse Glow Effect
+        document.querySelectorAll('.cc, .wc, .feat-card, .about-card, .mag-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+                card.style.setProperty('--y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+            });
         });
-    });
-    
-    // Mobile Menu
-    const menuBtn = document.getElementById('mobileMenuBtn');
-    const navLinksEl = document.getElementById('navLinks');
-    if (menuBtn) {
-        menuBtn.addEventListener('click', () => navLinksEl.classList.toggle('active'));
-    }
-    
-    // Accordion
-    function toggleAccordion(element) {
-        element.classList.toggle('open');
-        const body = element.nextElementSibling;
-        if (body) body.classList.toggle('open');
-    }
-    
-    // History Tabs
-    function switchHistTab(tab) {
-        const unionPanel = document.getElementById('histUnion');
-        const artsfestPanel = document.getElementById('histArtsfest');
-        const unionTab = document.querySelector('.htab.t-u');
-        const artsfestTab = document.querySelector('.htab.t-a');
         
-        if (tab === 'union') {
-            if (unionPanel) unionPanel.classList.add('active');
-            if (artsfestPanel) artsfestPanel.classList.remove('active');
-            if (unionTab) unionTab.classList.add('active');
-            if (artsfestTab) artsfestTab.classList.remove('active');
-        } else {
-            if (artsfestPanel) artsfestPanel.classList.add('active');
-            if (unionPanel) unionPanel.classList.remove('active');
-            if (artsfestTab) artsfestTab.classList.add('active');
-            if (unionTab) unionTab.classList.remove('active');
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => navLinks.classList.toggle('active'));
         }
-    }
-    
-    // Media Tabs
-    function switchMediaTab(tab) {
-        const galleryPanel = document.getElementById('mediaGallery');
-        const magPanel = document.getElementById('mediaMagazines');
-        const galleryTab = document.querySelector('.media-tab.t-gal');
-        const magTab = document.querySelector('.media-tab.t-mag');
         
-        if (tab === 'gallery') {
-            if (galleryPanel) galleryPanel.classList.add('active');
-            if (magPanel) magPanel.classList.remove('active');
-            if (galleryTab) galleryTab.classList.add('active');
-            if (magTab) magTab.classList.remove('active');
-        } else {
-            if (magPanel) magPanel.classList.add('active');
-            if (galleryPanel) galleryPanel.classList.remove('active');
-            if (magTab) magTab.classList.add('active');
-            if (galleryTab) galleryTab.classList.remove('active');
+        // Accordion
+        function toggleAccordion(element) {
+            element.classList.toggle('open');
+            const body = element.nextElementSibling;
+            if (body) body.classList.toggle('open');
         }
-    }
-    
-    // Auth Functions
-    function openAuthModal(type) {
-        const modal = document.getElementById('authModal');
-        if (modal) modal.classList.add('active');
-        switchAuthTab(type);
-    }
-    
-    function closeAuthModal() {
-        const modal = document.getElementById('authModal');
-        if (modal) modal.classList.remove('active');
-    }
-    
-    function switchAuthTab(tab) {
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const tabs = document.querySelectorAll('.auth-tab');
         
-        if (tab === 'login') {
-            if (tabs[0]) tabs[0].classList.add('active');
-            if (tabs[1]) tabs[1].classList.remove('active');
-            if (loginForm) loginForm.classList.add('active');
-            if (registerForm) registerForm.classList.remove('active');
-        } else {
-            if (tabs[1]) tabs[1].classList.add('active');
-            if (tabs[0]) tabs[0].classList.remove('active');
-            if (registerForm) registerForm.classList.add('active');
-            if (loginForm) loginForm.classList.remove('active');
-        }
-    }
-    
-    async function handleLogin(e) {
-        e.preventDefault();
-        const username = document.getElementById('loginUsername').value.trim().toLowerCase();
-        const password = document.getElementById('loginPassword').value;
-        const errorDiv = document.getElementById('authError');
-        
-        try {
-            await auth.signInWithEmailAndPassword(`${username}@itqan.org`, password);
-            closeAuthModal();
-            showToast('Logged in successfully!', 'success');
-            setTimeout(() => location.reload(), 1000);
-        } catch (err) {
-            if (errorDiv) {
-                errorDiv.innerText = 'Invalid username or password.';
-                errorDiv.classList.add('show');
+        // History Tabs
+        function switchHistTab(tab) {
+            const unionPanel = document.getElementById('histUnion');
+            const artsfestPanel = document.getElementById('histArtsfest');
+            const unionTab = document.querySelector('.htab.t-u');
+            const artsfestTab = document.querySelector('.htab.t-a');
+            
+            if (tab === 'union') {
+                if (unionPanel) unionPanel.classList.add('active');
+                if (artsfestPanel) artsfestPanel.classList.remove('active');
+                if (unionTab) unionTab.classList.add('active');
+                if (artsfestTab) artsfestTab.classList.remove('active');
+            } else {
+                if (artsfestPanel) artsfestPanel.classList.add('active');
+                if (unionPanel) unionPanel.classList.remove('active');
+                if (artsfestTab) artsfestTab.classList.add('active');
+                if (unionTab) unionTab.classList.remove('active');
             }
         }
-    }
-    
-    async function handleRegister(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const username = document.getElementById('regUsername').value.trim().toLowerCase();
-        const password = document.getElementById('regPassword').value;
-        const errorDiv = document.getElementById('authError');
         
-        try {
-            await auth.createUserWithEmailAndPassword(`${username}@itqan.org`, password);
-            await db.collection('users').doc(auth.currentUser.uid).set({ name, username, role: 'member' });
-            closeAuthModal();
-            showToast('Registration successful! Please login.', 'success');
-        } catch (err) {
-            if (errorDiv) {
-                errorDiv.innerText = err.message;
-                errorDiv.classList.add('show');
+        // Media Tabs
+        function switchMediaTab(tab) {
+            const galleryPanel = document.getElementById('mediaGallery');
+            const magPanel = document.getElementById('mediaMagazines');
+            const galleryTab = document.querySelector('.media-tab.t-gal');
+            const magTab = document.querySelector('.media-tab.t-mag');
+            
+            if (tab === 'gallery') {
+                if (galleryPanel) galleryPanel.classList.add('active');
+                if (magPanel) magPanel.classList.remove('active');
+                if (galleryTab) galleryTab.classList.add('active');
+                if (magTab) magTab.classList.remove('active');
+            } else {
+                if (magPanel) magPanel.classList.add('active');
+                if (galleryPanel) galleryPanel.classList.remove('active');
+                if (magTab) magTab.classList.add('active');
+                if (galleryTab) galleryTab.classList.remove('active');
             }
         }
-    }
-    
-    function showToast(message, type) {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerText = message;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3500);
-    }
-    
-    function showProfile(name, role, desc) {
-        const modal = document.getElementById('profileModal');
-        const title = document.getElementById('modalTitle');
-        const subtitle = document.getElementById('modalSubtitle');
-        const description = document.getElementById('modalDescription');
         
-        if (title) title.innerText = name;
-        if (subtitle) subtitle.innerText = role;
-        if (description) description.innerText = desc || 'No description available.';
-        if (modal) modal.classList.add('active');
-    }
-    
-    function closeModal() {
-        const modal = document.getElementById('profileModal');
-        if (modal) modal.classList.remove('active');
-    }
-    
-    function openDashboard() {
-        const dashboard = document.getElementById('userDashboard');
-        const overlay = document.getElementById('overlayDim');
-        if (dashboard) dashboard.classList.add('open');
-        if (overlay) overlay.classList.add('active');
-        
-        const dashBody = document.getElementById('dashBody');
-        if (dashBody && currentUserData) {
-            dashBody.innerHTML = `
-                <div class="dash-pc">
-                    <div class="dash-av">${currentUserData.name?.charAt(0).toUpperCase() || 'U'}</div>
-                    <div class="dash-nm">${currentUserData.name || 'User'}</div>
-                    <div class="dash-pos">${currentUserData.role || 'Member'}</div>
-                </div>
-                <div class="dash-sec">
-                    <h4>Profile Details</h4>
-                    <div class="dash-row"><span class="dash-lbl">Username</span><span class="dash-val">@${currentUserData.username || 'N/A'}</span></div>
-                    <div class="dash-row"><span class="dash-lbl">Role</span><span class="dash-val">${currentUserData.role || 'Member'}</span></div>
-                </div>
-                <div class="dash-acts"><button class="dash-abtn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
-            `;
+        // Auth Functions
+        function openAuthModal(type) {
+            const modal = document.getElementById('authModal');
+            if (modal) modal.classList.add('active');
+            switchAuthTab(type);
         }
-    }
-    
-    function closeDashboards() {
-        const dashboard = document.getElementById('userDashboard');
-        const overlay = document.getElementById('overlayDim');
-        const adminPanel = document.getElementById('adminPanel');
-        if (dashboard) dashboard.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
-        if (adminPanel) adminPanel.classList.remove('active');
-    }
-    
-    function handleLogout() {
-        auth.signOut();
-        location.reload();
-    }
-    
-    function openAdminPanel() {
-        closeDashboards();
-        const adminPanel = document.getElementById('adminPanel');
-        if (adminPanel) adminPanel.classList.add('active');
-    }
-    
-    function closeAdminPanel() {
-        const adminPanel = document.getElementById('adminPanel');
-        if (adminPanel) adminPanel.classList.remove('active');
-    }
-    
-    function switchAdminTab(tab) {
-        const tabs = ['overview', 'students', 'gallery', 'magazines', 'cards'];
-        tabs.forEach(t => {
-            const content = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-            if (content) content.classList.remove('active');
-        });
-        const btn = document.querySelectorAll('.admin-tbtn');
-        btn.forEach(b => b.classList.remove('active'));
         
-        const activeContent = document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-        if (activeContent) activeContent.classList.add('active');
-        if (event && event.target) event.target.classList.add('active');
-    }
-    
-    async function claimAdminRole() {
-        if (auth.currentUser) {
-            await db.collection('users').doc(auth.currentUser.uid).update({ role: 'admin' });
-            showToast('You are now admin!', 'success');
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            if (modal) modal.classList.remove('active');
+        }
+        
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const btns = document.querySelectorAll('.auth-tab-btn');
+            
+            if (tab === 'login') {
+                if (btns[0]) { btns[0].style.background = '#00F0FF'; btns[0].style.color = '#060810'; }
+                if (btns[1]) { btns[1].style.background = '#1A1F33'; btns[1].style.color = '#8892A8'; }
+                if (loginForm) loginForm.style.display = 'block';
+                if (registerForm) registerForm.style.display = 'none';
+            } else {
+                if (btns[1]) { btns[1].style.background = '#00F0FF'; btns[1].style.color = '#060810'; }
+                if (btns[0]) { btns[0].style.background = '#1A1F33'; btns[0].style.color = '#8892A8'; }
+                if (registerForm) registerForm.style.display = 'block';
+                if (loginForm) loginForm.style.display = 'none';
+            }
+        }
+        
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('authError');
+            
+            try {
+                await auth.signInWithEmailAndPassword(`${username}@itqan.org`, password);
+                closeAuthModal();
+                showToast('Logged in successfully!', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } catch (err) {
+                if (errorDiv) {
+                    errorDiv.innerText = 'Invalid username or password.';
+                    errorDiv.style.display = 'block';
+                }
+            }
+        }
+        
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const errorDiv = document.getElementById('authError');
+            
+            try {
+                await auth.createUserWithEmailAndPassword(`${username}@itqan.org`, password);
+                await db.collection('users').doc(auth.currentUser.uid).set({ name, username, role: 'member' });
+                closeAuthModal();
+                showToast('Registration successful! Please login.', 'success');
+            } catch (err) {
+                if (errorDiv) {
+                    errorDiv.innerText = err.message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+        }
+        
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+        
+        function showProfile(name, role, desc) {
+            const modal = document.getElementById('profileModal');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            const description = document.getElementById('modalDescription');
+            
+            if (title) title.innerText = name;
+            if (subtitle) subtitle.innerText = role;
+            if (description) description.innerText = desc || 'No description available.';
+            if (modal) modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('profileModal');
+            if (modal) modal.classList.remove('active');
+        }
+        
+        function openDashboard() {
+            const dashboard = document.getElementById('userDashboard');
+            const overlay = document.getElementById('overlayDim');
+            if (dashboard) dashboard.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+            
+            const dashBody = document.getElementById('dashBody');
+            if (dashBody && currentUserData) {
+                dashBody.innerHTML = `
+                    <div class="dash-pc">
+                        <div class="dash-av">${currentUserData.name?.charAt(0).toUpperCase() || 'U'}</div>
+                        <div class="dash-nm">${currentUserData.name || 'User'}</div>
+                        <div class="dash-pos">${currentUserData.role || 'Member'}</div>
+                    </div>
+                    <div class="dash-sec">
+                        <h4>Profile Details</h4>
+                        <div class="dash-row"><span class="dash-lbl">Username</span><span class="dash-val">@${currentUserData.username || 'N/A'}</span></div>
+                        <div class="dash-row"><span class="dash-lbl">Role</span><span class="dash-val">${currentUserData.role || 'Member'}</span></div>
+                    </div>
+                    <div class="dash-acts"><button class="dash-abtn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+                `;
+            }
+        }
+        
+        function closeDashboards() {
+            const dashboard = document.getElementById('userDashboard');
+            const overlay = document.getElementById('overlayDim');
+            const adminPanel = document.getElementById('adminPanel');
+            if (dashboard) dashboard.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            if (adminPanel) adminPanel.classList.remove('active');
+        }
+        
+        function handleLogout() {
+            auth.signOut();
             location.reload();
         }
-    }
-    
-    function toggleAddForm() {
-        const form = document.getElementById('addUserForm');
-        if (form) form.classList.toggle('active');
-    }
-    
-    // Gallery Functions
-    async function loadPublicGallery() {
-        try {
-            const snapshot = await db.collection('gallery').orderBy('createdAt', 'desc').get();
-            const grid = document.getElementById('publicGalleryGrid');
-            const emptyMsg = document.getElementById('galleryEmpty');
-            
-            if (snapshot.empty) {
-                if (emptyMsg) emptyMsg.style.display = 'block';
-                if (grid) grid.innerHTML = '';
-            } else {
-                if (emptyMsg) emptyMsg.style.display = 'none';
-                if (grid) {
-                    grid.innerHTML = snapshot.docs.map((doc, i) => `
-                        <div class="gallery-item" onclick="openLightbox(${i})">
-                            <img src="${doc.data().imageUrl}" alt="${doc.data().caption || ''}" loading="lazy">
-                            <div class="gallery-ov"><h4>${doc.data().caption || ''}</h4></div>
-                        </div>
-                    `).join('');
-                    galleryCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-                }
-            }
-        } catch(e) { console.error(e); }
-    }
-    
-    async function addGalleryItem() {
-        const url = document.getElementById('galImageUrl').value;
-        const caption = document.getElementById('galCaption').value;
-        if (!url) { showToast('Image URL required', 'error'); return; }
-        await db.collection('gallery').add({ imageUrl: url, caption: caption || '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        showToast('Photo added!', 'success');
-        loadPublicGallery();
-        loadAdminGallery();
-    }
-    
-    async function loadAdminGallery() {
-        const snapshot = await db.collection('gallery').get();
-        const list = document.getElementById('adminGalleryList');
-        if (list) {
-            list.innerHTML = snapshot.docs.map(d => `
-                <div class="adm-ir">
-                    <img src="${d.data().imageUrl}" width="50" height="50" style="object-fit:cover;border-radius:8px">
-                    <div class="adm-ii">${d.data().caption || 'Untitled'}</div>
-                    <button class="del-btn" onclick="deleteGalleryItem('${d.id}')">Delete</button>
-                </div>
-            `).join('');
-        }
-    }
-    
-    async function deleteGalleryItem(id) {
-        await db.collection('gallery').doc(id).delete();
-        loadPublicGallery();
-        loadAdminGallery();
-        showToast('Photo deleted', 'success');
-    }
-    
-    async function loadPublicMags() {
-        try {
-            const snapshot = await db.collection('magazines').orderBy('createdAt', 'desc').get();
-            const grid = document.getElementById('publicMagGrid');
-            const emptyMsg = document.getElementById('magEmpty');
-            
-            if (snapshot.empty) {
-                if (emptyMsg) emptyMsg.style.display = 'block';
-                if (grid) grid.innerHTML = '';
-            } else {
-                if (emptyMsg) emptyMsg.style.display = 'none';
-                if (grid) {
-                    grid.innerHTML = snapshot.docs.map(d => `
-                        <div class="mag-card">
-                            <img class="mag-cover" src="${d.data().coverUrl}" alt="${d.data().title}" loading="lazy">
-                            <div class="mag-body">
-                                <span class="mag-badge magazine">MAGAZINE</span>
-                                <h3>${d.data().title}</h3>
-                                <p>${d.data().description || 'No description'}</p>
-                                <button class="btn btn-cyan btn-sm" onclick="window.open('${d.data().pdfUrl || '#'}', '_blank')">Read Now</button>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            }
-        } catch(e) { console.error(e); }
-    }
-    
-    async function addMagItem() {
-        const title = document.getElementById('magTitle').value;
-        const cover = document.getElementById('magCover').value;
-        const pdf = document.getElementById('magPdfUrl').value;
-        if (!title || !cover) { showToast('Title and cover required', 'error'); return; }
-        await db.collection('magazines').add({ title, coverUrl: cover, pdfUrl: pdf || '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        showToast('Publication added!', 'success');
-        loadPublicMags();
-        loadAdminMags();
-    }
-    
-    async function loadAdminMags() {
-        const snapshot = await db.collection('magazines').get();
-        const list = document.getElementById('adminMagList');
-        if (list) {
-            list.innerHTML = snapshot.docs.map(d => `
-                <div class="adm-ir">
-                    <div class="adm-ii"><strong>${d.data().title}</strong></div>
-                    <button class="del-btn" onclick="deleteMagItem('${d.id}')">Delete</button>
-                </div>
-            `).join('');
-        }
-    }
-    
-    async function deleteMagItem(id) {
-        await db.collection('magazines').doc(id).delete();
-        loadPublicMags();
-        loadAdminMags();
-        showToast('Publication deleted', 'success');
-    }
-    
-    let lbIdx = 0;
-    function openLightbox(i) {
-        lbIdx = i;
-        const items = galleryCache;
-        if (!items.length) return;
-        const img = document.getElementById('lightboxImg');
-        const caption = document.getElementById('lightboxCaption');
-        const lightbox = document.getElementById('lightbox');
-        if (img) img.src = items[i].imageUrl;
-        if (caption) caption.innerText = items[i].caption || '';
-        if (lightbox) lightbox.classList.add('active');
-    }
-    
-    function closeLightbox() {
-        const lightbox = document.getElementById('lightbox');
-        if (lightbox) lightbox.classList.remove('active');
-    }
-    
-    function lightboxNav(dir) {
-        lbIdx = (lbIdx + dir + galleryCache.length) % galleryCache.length;
-        openLightbox(lbIdx);
-    }
-    
-    // Auth State Listener
-    auth.onAuthStateChanged(async (user) => {
-        const authArea = document.getElementById('authArea');
-        if (!authArea) return;
         
-        if (user) {
-            const doc = await db.collection('users').doc(user.uid).get();
-            if (doc.exists) {
-                currentUserData = doc.data();
-                const initial = currentUserData.name?.charAt(0).toUpperCase() || 'U';
-                authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="avatar-sm">${initial}</div>${currentUserData.name?.split(' ')[0] || 'User'}</button>`;
-            }
-        } else {
-            currentUserData = null;
-            authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`;
+        function openAdminPanel() {
+            closeDashboards();
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) adminPanel.classList.add('active');
         }
-    });
-    
-    // Initialize
-    renderCoreGrid();
-    renderWingsGrid();
-    loadPublicGallery();
-    loadPublicMags();
+        
+        function closeAdminPanel() {
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) adminPanel.classList.remove('active');
+        }
+        
+        function switchAdminTab(tab) {
+            const tabs = ['overview', 'students', 'gallery', 'magazines'];
+            tabs.forEach(t => {
+                const content = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if (content) content.classList.remove('active');
+            });
+            const btns = document.querySelectorAll('.admin-tbtn');
+            btns.forEach(b => b.classList.remove('active'));
+            
+            const activeContent = document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+            if (activeContent) activeContent.classList.add('active');
+            if (event && event.target) event.target.classList.add('active');
+        }
+        
+        async function claimAdminRole() {
+            if (auth.currentUser) {
+                await db.collection('users').doc(auth.currentUser.uid).update({ role: 'admin' });
+                showToast('You are now admin!', 'success');
+                location.reload();
+            }
+        }
+        
+        function toggleAddForm() {
+            const form = document.getElementById('addUserForm');
+            if (form) form.classList.toggle('active');
+        }
+        
+        // Gallery Functions
+        async function loadPublicGallery() {
+            try {
+                const snapshot = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+                const grid = document.getElementById('publicGalleryGrid');
+                const emptyMsg = document.getElementById('galleryEmpty');
+                
+                if (snapshot.empty) {
+                    if (emptyMsg) emptyMsg.style.display = 'block';
+                    if (grid) grid.innerHTML = '';
+                } else {
+                    if (emptyMsg) emptyMsg.style.display = 'none';
+                    if (grid) {
+                        grid.innerHTML = snapshot.docs.map((doc, i) => `
+                            <div class="gallery-item" onclick="openLightbox(${i})">
+                                <img src="${doc.data().imageUrl}" alt="${doc.data().caption || ''}" loading="lazy">
+                                <div class="gallery-ov"><h4>${doc.data().caption || ''}</h4></div>
+                            </div>
+                        `).join('');
+                        galleryCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    }
+                }
+            } catch(e) { console.error(e); }
+        }
+        
+        async function addGalleryItem() {
+            const url = document.getElementById('galImageUrl').value;
+            const caption = document.getElementById('galCaption').value;
+            if (!url) { showToast('Image URL required', 'error'); return; }
+            await db.collection('gallery').add({ imageUrl: url, caption: caption || '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            showToast('Photo added!', 'success');
+            loadPublicGallery();
+            loadAdminGallery();
+            document.getElementById('galImageUrl').value = '';
+            document.getElementById('galCaption').value = '';
+        }
+        
+        async function loadAdminGallery() {
+            const snapshot = await db.collection('gallery').get();
+            const list = document.getElementById('adminGalleryList');
+            if (list) {
+                list.innerHTML = snapshot.docs.map(d => `
+                    <div class="adm-ir">
+                        <span>${d.data().caption || 'Untitled'}</span>
+                        <button class="del-btn" onclick="deleteGalleryItem('${d.id}')">Delete</button>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        async function deleteGalleryItem(id) {
+            await db.collection('gallery').doc(id).delete();
+            loadPublicGallery();
+            loadAdminGallery();
+            showToast('Photo deleted', 'success');
+        }
+        
+        async function loadPublicMags() {
+            try {
+                const snapshot = await db.collection('magazines').orderBy('createdAt', 'desc').get();
+                const grid = document.getElementById('publicMagGrid');
+                const emptyMsg = document.getElementById('magazinesEmpty');
+                
+                if (snapshot.empty) {
+                    if (emptyMsg) emptyMsg.style.display = 'block';
+                    if (grid) grid.innerHTML = '';
+                } else {
+                    if (emptyMsg) emptyMsg.style.display = 'none';
+                    if (grid) {
+                        grid.innerHTML = snapshot.docs.map(d => `
+                            <div class="mag-card">
+                                <img class="mag-cover" src="${d.data().coverUrl}" alt="${d.data().title}" loading="lazy">
+                                <div class="mag-body">
+                                    <h3>${d.data().title}</h3>
+                                    <button class="btn btn-cyan btn-sm" onclick="window.open('${d.data().pdfUrl || '#'}', '_blank')">Read Now</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch(e) { console.error(e); }
+        }
+        
+        async function addMagItem() {
+            const title = document.getElementById('magTitle').value;
+            const cover = document.getElementById('magCover').value;
+            const pdf = document.getElementById('magPdfUrl').value;
+            if (!title || !cover) { showToast('Title and cover required', 'error'); return; }
+            await db.collection('magazines').add({ title, coverUrl: cover, pdfUrl: pdf || '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            showToast('Publication added!', 'success');
+            loadPublicMags();
+            loadAdminMags();
+            document.getElementById('magTitle').value = '';
+            document.getElementById('magCover').value = '';
+            document.getElementById('magPdfUrl').value = '';
+        }
+        
+        async function loadAdminMags() {
+            const snapshot = await db.collection('magazines').get();
+            const list = document.getElementById('adminMagList');
+            if (list) {
+                list.innerHTML = snapshot.docs.map(d => `
+                    <div class="adm-ir">
+                        <span><strong>${d.data().title}</strong></span>
+                        <button class="del-btn" onclick="deleteMagItem('${d.id}')">Delete</button>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        async function deleteMagItem(id) {
+            await db.collection('magazines').doc(id).delete();
+            loadPublicMags();
+            loadAdminMags();
+            showToast('Publication deleted', 'success');
+        }
+        
+        let lbIdx = 0;
+        function openLightbox(i) {
+            lbIdx = i;
+            if (!galleryCache.length) return;
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            const lightbox = document.getElementById('lightbox');
+            if (img) img.src = galleryCache[i].imageUrl;
+            if (caption) caption.innerText = galleryCache[i].caption || '';
+            if (lightbox) lightbox.classList.add('active');
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox) lightbox.classList.remove('active');
+        }
+        
+        function lightboxNav(dir) {
+            lbIdx = (lbIdx + dir + galleryCache.length) % galleryCache.length;
+            openLightbox(lbIdx);
+        }
+        
+        // Auth State Listener
+        auth.onAuthStateChanged(async (user) => {
+            const authArea = document.getElementById('authArea');
+            if (!authArea) return;
+            
+            if (user) {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    currentUserData = doc.data();
+                    const initial = currentUserData.name?.charAt(0).toUpperCase() || 'U';
+                    authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="avatar-sm">${initial}</div>${currentUserData.name?.split(' ')[0] || 'User'}</button>`;
+                }
+            } else {
+                currentUserData = null;
+                authArea.innerHTML = `<button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button><button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>`;
+            }
+        });
+        
+        // Initialize
+        renderCoreGrid();
+        renderWingsGrid();
+        loadPublicGallery();
+        loadPublicMags();
     </script>
     
-    <!-- Your existing scripts - KEEP ALL OF THESE -->
-    <script src="cursor-polish.js?v=8"></script>
-    <script src="history-media-upgrade.js?v=8"></script>
-    <script src="upload-support.js?v=8"></script>
+    <!-- Your existing scripts - KEEP THESE -->
+    <script src="cursor-polish.js?v=9"></script>
+    <script src="history-media-upgrade.js?v=9"></script>
+    <script src="upload-support.js?v=9"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=8"></script>
+    <script src="profile-tabs.js?v=9"></script>
 </body>
 </html>
