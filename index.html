@@ -48,12 +48,30 @@
             padding: 0 24px;
         }
         
-        /* ===== COLORS ===== */
-        :root {
-            --cyan: #00F0FF;
-            --pink: #FF3366;
-            --gold: #FFB800;
-            --purple: #A78BFA;
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         /* ===== HEADER ===== */
@@ -166,6 +184,12 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 40px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .auth-user-btn:hover {
+            transform: translateY(-2px);
+            border-color: #00F0FF;
         }
         
         .avatar-sm {
@@ -190,38 +214,69 @@
             cursor: pointer;
         }
         
-        /* ===== HERO ===== */
+        /* ===== HERO WITH BACKGROUND IMAGE ===== */
         .hero {
-            text-align: center;
-            padding: 100px 20px;
-            background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
             position: relative;
+            text-align: center;
+            padding: 120px 20px;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(1.2);
+            z-index: 0;
+        }
+        
+        .hero-grad {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(6,8,16,0.8) 0%, rgba(6,8,16,0.6) 100%);
+            z-index: 1;
+        }
+        
+        .hero-inner {
+            position: relative;
+            z-index: 2;
         }
         
         .hero-badge {
             display: inline-block;
             padding: 8px 20px;
             background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 50px;
             font-size: 0.7rem;
             color: #00F0FF;
             margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
         }
         
         .hero h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 16px;
             background: linear-gradient(135deg, #fff, #00F0FF, #FFB800);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: fadeUp 0.8s ease;
         }
         
         .hero p {
-            font-size: 1rem;
-            color: #8892A8;
+            font-size: 1.1rem;
+            color: #cbd5e1;
             max-width: 600px;
             margin: 0 auto 32px;
+            animation: fadeUp 0.8s ease 0.2s both;
         }
         
         .hero-btns {
@@ -229,6 +284,7 @@
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+            animation: fadeUp 0.8s ease 0.4s both;
         }
         
         /* ===== BUTTONS ===== */
@@ -248,11 +304,23 @@
         .btn-pink {
             background: linear-gradient(135deg, #FF3366, #E62E5C);
             color: white;
+            box-shadow: 0 4px 15px rgba(255,51,102,0.3);
+        }
+        
+        .btn-pink:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,51,102,0.4);
         }
         
         .btn-cyan {
             background: linear-gradient(135deg, #00F0FF, #00B8D4);
             color: #060810;
+            box-shadow: 0 4px 15px rgba(0,240,255,0.3);
+        }
+        
+        .btn-cyan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,240,255,0.4);
         }
         
         .btn-outline {
@@ -261,13 +329,14 @@
             color: #00F0FF;
         }
         
+        .btn-outline:hover {
+            background: #00F0FF;
+            color: #060810;
+        }
+        
         .btn-sm {
             padding: 6px 16px;
             font-size: 0.75rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
         }
         
         .scroll-hint {
@@ -281,6 +350,8 @@
             gap: 6px;
             color: #8892A8;
             font-size: 0.6rem;
+            z-index: 2;
+            animation: float 2s ease-in-out infinite;
         }
         
         .hero-line {
@@ -292,6 +363,7 @@
             background: linear-gradient(90deg, #00F0FF, #FF3366, #FFB800, #00F0FF);
             background-size: 300% 100%;
             animation: lineMove 5s linear infinite;
+            z-index: 2;
         }
         
         @keyframes lineMove {
@@ -327,6 +399,7 @@
             height: 8px;
             background: #00F0FF;
             border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
         }
         
         .sec-line-c::before,
@@ -352,11 +425,13 @@
             text-align: center;
             transition: all 0.4s;
             cursor: pointer;
+            backdrop-filter: blur(10px);
         }
         
         .feat-card:hover, .about-card:hover {
             transform: translateY(-8px);
             border-color: #00F0FF;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
         .feat-icon, .about-ic {
@@ -370,11 +445,20 @@
             margin: 0 auto 20px;
             font-size: 1.8rem;
             color: #00F0FF;
+            transition: all 0.3s;
+        }
+        
+        .feat-card:hover .feat-icon {
+            transform: scale(1.1) rotate(-5deg);
         }
         
         .about-ic {
             background: rgba(255, 51, 102, 0.1);
             color: #FF3366;
+        }
+        
+        .about-card:hover .about-ic {
+            transform: scale(1.1);
         }
         
         .feat-card h3, .about-card h3 {
@@ -421,12 +505,7 @@
         
         .media-panel.active {
             display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            animation: fadeUp 0.4s ease;
         }
         
         .gallery-grid, .mag-grid, .core-grid, .wgrid {
@@ -446,6 +525,7 @@
         .gallery-item:hover, .mag-card:hover, .cc:hover, .wc:hover {
             transform: translateY(-8px);
             border-color: #00F0FF;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
         }
         
         .gallery-item {
@@ -458,6 +538,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
         }
         
         .gallery-ov {
@@ -465,7 +550,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             padding: 16px;
             opacity: 0;
             transition: opacity 0.3s;
@@ -479,6 +564,11 @@
             width: 100%;
             aspect-ratio: 3/4;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .mag-card:hover .mag-cover {
+            transform: scale(1.05);
         }
         
         .mag-body, .cc-in, .w-in {
@@ -486,25 +576,29 @@
             text-align: center;
         }
         
+        /* ===== CORE CARDS ===== */
         .cc-ic, .w-ic {
             width: 60px;
             height: 60px;
-            background: rgba(0, 240, 255, 0.1);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
             font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .cc-ic {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.05));
             color: #00F0FF;
         }
         
-        .w-ic {
-            background: rgba(167, 139, 250, 0.1);
-            color: #A78BFA;
+        .cc:hover .cc-ic {
+            transform: scale(1.1) rotate(-5deg);
         }
         
-        .cc-role, .w-lab {
+        .cc-role {
             font-size: 0.7rem;
             color: #00F0FF;
             text-transform: uppercase;
@@ -512,25 +606,59 @@
             margin-bottom: 8px;
         }
         
-        .w-lab {
-            color: #A78BFA;
-        }
-        
-        .cc-name, .w-ttl {
+        .cc-name {
             font-size: 1.2rem;
             margin-bottom: 8px;
         }
         
-        .cc-desc, .w-info {
+        .cc-desc {
             color: #8892A8;
             font-size: 0.85rem;
             margin-bottom: 16px;
         }
         
-        .cc-btns, .w-btns {
+        .cc-btns {
             display: flex;
             gap: 8px;
             justify-content: center;
+        }
+        
+        /* ===== WING CARDS WITH UNIQUE ANIMATIONS ===== */
+        .w-ic {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(167, 139, 250, 0.05));
+            color: #A78BFA;
+        }
+        
+        /* Unique animations for each wing */
+        .wc[data-wing="urdu"] .w-ic { animation: float 3s ease-in-out infinite; }
+        .wc[data-wing="english"] .w-ic { animation: pulse 2s ease-in-out infinite; }
+        .wc[data-wing="arabic"] .w-ic { animation: rotate 4s linear infinite; }
+        .wc[data-wing="malayalam"] .w-ic { animation: float 2.5s ease-in-out infinite; }
+        .wc[data-wing="maths"] .w-ic { animation: rotate 3s linear infinite; }
+        .wc[data-wing="science"] .w-ic { animation: pulse 1.5s ease-in-out infinite; }
+        .wc[data-wing="media"] .w-ic { animation: float 2s ease-in-out infinite; }
+        
+        .wc:hover .w-ic {
+            transform: scale(1.1);
+        }
+        
+        .w-lab {
+            font-size: 0.7rem;
+            color: #A78BFA;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        
+        .w-ttl {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .w-info {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
         }
         
         .w-leads {
@@ -544,6 +672,12 @@
             padding: 8px;
             background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .w-chip:hover {
+            background: rgba(167, 139, 250, 0.1);
+            transform: translateY(-2px);
         }
         
         .ch-role {
@@ -555,6 +689,12 @@
         .ch-name {
             font-size: 0.75rem;
             font-weight: 600;
+        }
+        
+        .w-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
         }
         
         /* ===== ACCORDION ===== */
@@ -577,6 +717,7 @@
         
         .acc-hdr:hover {
             transform: translateX(5px);
+            border-color: rgba(0, 240, 255, 0.3);
         }
         
         .acc-hdr h2 {
@@ -596,6 +737,11 @@
             align-items: center;
             justify-content: center;
             color: #00F0FF;
+            transition: all 0.3s;
+        }
+        
+        .acc-hdr:hover .a-ic {
+            transform: scale(1.05);
         }
         
         .acc-hdr .a-arr {
@@ -613,6 +759,7 @@
         
         .acc-body.open {
             display: block;
+            animation: fadeUp 0.3s ease;
         }
         
         /* Wing specific header */
@@ -676,6 +823,7 @@
         
         .hpanel.active {
             display: block;
+            animation: fadeUp 0.3s ease;
         }
         
         .hperiod {
@@ -708,6 +856,12 @@
             border-radius: 12px;
             padding: 12px;
             text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .hcard:hover {
+            transform: translateY(-3px);
+            border-color: #FFB800;
         }
         
         .hrole {
@@ -757,123 +911,165 @@
         .pub-card:hover {
             transform: translateY(-6px);
             border-color: #00F0FF;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        /* ===== FOOTER ===== */
-        footer {
-            background: #060810;
-            padding: 60px 0 20px;
-            border-top: 1px solid rgba(0, 240, 255, 0.1);
-        }
-        
-        .ft-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr 1fr;
-            gap: 48px;
-            margin-bottom: 32px;
-        }
-        
-        .ft-col h3 {
-            color: #00F0FF;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-        
-        .ft-desc {
-            color: #8892A8;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-        
-        .ft-links {
-            list-style: none;
-        }
-        
-        .ft-links li {
-            margin-bottom: 12px;
-        }
-        
-        .ft-links a {
-            color: #8892A8;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .ft-links a:hover {
-            color: #00F0FF;
-        }
-        
-        .soc-icons {
-            display: flex;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
-        .soc-icons a {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #00F0FF;
-            transition: all 0.3s;
-        }
-        
-        .soc-icons a:hover {
-            background: #00F0FF;
-            color: #060810;
-            transform: translateY(-3px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: #3A4055;
-            font-size: 0.75rem;
-        }
-        
-        /* ===== MODALS ===== */
-        .profile-modal, .auth-modal {
+        /* ===== PROFILE MODAL - FIXED & STYLED ===== */
+        .profile-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
         }
         
-        .profile-modal.active, .auth-modal.active {
+        .profile-modal.active {
             display: flex;
+            animation: fadeUp 0.3s ease;
         }
         
-        .modal-content, .auth-card {
-            background: #121626;
-            border: 1px solid rgba(0, 240, 255, 0.1);
-            border-radius: 24px;
-            padding: 32px;
+        .modal-content {
+            background: linear-gradient(135deg, #121626, #0C0F1A);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 28px;
+            padding: 40px;
             max-width: 450px;
             width: 90%;
             text-align: center;
             position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
         
-        .modal-close, .auth-close {
+        .modal-close {
             position: absolute;
-            top: 16px;
-            right: 16px;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #8892A8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #FF3366;
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00F0FF, #FF3366);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .profile-avatar i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .modal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #00F0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modal-content .profile-role {
+            color: #00F0FF;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        
+        .modal-content .profile-desc {
+            color: #8892A8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding: 0 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        /* ===== AUTH MODAL ===== */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-modal.active {
+            display: flex;
+            animation: fadeUp 0.3s ease;
+        }
+        
+        .auth-card {
+            background: linear-gradient(135deg, #121626, #0C0F1A);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 28px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .auth-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: none;
             border: none;
             color: #8892A8;
             font-size: 1.2rem;
             cursor: pointer;
+        }
+        
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            background: #1A1F33;
+            border: none;
+            color: #8892A8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab-btn.active {
+            background: #00F0FF;
+            color: #060810;
         }
         
         /* ===== DASHBOARD ===== */
@@ -927,6 +1123,7 @@
             font-weight: bold;
             margin: 0 auto 16px;
             color: white;
+            animation: pulse 2s ease-in-out infinite;
         }
         
         .dash-nm {
@@ -1181,6 +1378,30 @@
             border-radius: 16px;
         }
         
+        /* ===== MOUSE GLOW EFFECT ===== */
+        .cc, .wc, .feat-card, .about-card, .mag-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cc::before, .wc::before, .feat-card::before, .about-card::before, .mag-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 240, 255, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .cc:hover::before, .wc:hover::before, .feat-card:hover::before, .about-card:hover::before, .mag-card:hover::before {
+            opacity: 1;
+        }
+        
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .feat-grid, .about-grid {
@@ -1223,6 +1444,9 @@
             .hero h1 {
                 font-size: 2rem;
             }
+            .hero p {
+                font-size: 0.9rem;
+            }
             .sec-title {
                 font-size: 1.5rem;
             }
@@ -1233,30 +1457,85 @@
             .hgrid {
                 grid-template-columns: 1fr;
             }
+            .modal-content, .auth-card {
+                padding: 30px 20px;
+            }
         }
         
-        /* Mouse glow effect */
-        .cc, .wc, .feat-card, .about-card, .mag-card {
-            position: relative;
-            overflow: hidden;
+        /* ===== FOOTER ===== */
+        footer {
+            background: #060810;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
         }
         
-        .cc::before, .wc::before, .feat-card::before, .about-card::before, .mag-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 240, 255, 0.15), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 1;
+        .ft-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 48px;
+            margin-bottom: 32px;
         }
         
-        .cc:hover::before, .wc:hover::before, .feat-card:hover::before, .about-card:hover::before, .mag-card:hover::before {
-            opacity: 1;
+        .ft-col h3 {
+            color: #00F0FF;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .ft-desc {
+            color: #8892A8;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        
+        .ft-links {
+            list-style: none;
+        }
+        
+        .ft-links li {
+            margin-bottom: 12px;
+        }
+        
+        .ft-links a {
+            color: #8892A8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .ft-links a:hover {
+            color: #00F0FF;
+        }
+        
+        .soc-icons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .soc-icons a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F0FF;
+            transition: all 0.3s;
+        }
+        
+        .soc-icons a:hover {
+            background: #00F0FF;
+            color: #060810;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #3A4055;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -1271,7 +1550,7 @@
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" onclick="closeLightbox()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
         <img id="lightboxImg" src="">
-        <div class="lightbox-caption" id="lightboxCaption" style="margin-top:16px;color:white"></div>
+        <div class="lightbox-caption" id="lightboxCaption" style="margin-top:16px;color:white;text-align:center"></div>
     </div>
 
     <!-- Header -->
@@ -1303,12 +1582,16 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
-        <h1>United for Professional <br>Growth & Excellence</h1>
-        <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
-        <div class="hero-btns">
-            <a href="#mission" class="btn btn-pink">Discover More</a>
-            <a href="#team" class="btn btn-cyan">Meet Our Leadership</a>
+        <div class="hero-bg"></div>
+        <div class="hero-grad"></div>
+        <div class="hero-inner">
+            <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
+            <h1>United for Professional <br>Growth & Excellence</h1>
+            <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
+            <div class="hero-btns">
+                <a href="#mission" class="btn btn-pink">Discover More</a>
+                <a href="#team" class="btn btn-cyan">Meet Our Leadership</a>
+            </div>
         </div>
         <div class="scroll-hint"><span>SCROLL</span><i class="fas fa-chevron-down"></i></div>
         <div class="hero-line"></div>
@@ -1389,7 +1672,7 @@
                 </div>
             </div>
             
-            <!-- Sub-Wings -->
+            <!-- Sub-Wings with Unique Animations -->
             <div class="acc-item">
                 <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)">
                     <h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2>
@@ -1438,18 +1721,23 @@
         </div>
     </footer>
 
-    <!-- Modals -->
+    <!-- Profile Modal -->
     <div class="profile-modal" id="profileModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div id="modalPhotoPlaceholder" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00F0FF,#FF3366);margin:0 auto 16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-user fa-2x"></i></div>
-            <h3 id="modalTitle"></h3>
-            <p id="modalSubtitle" style="color:#00F0FF"></p>
-            <p id="modalDescription" style="color:#8892A8;margin:16px 0"></p>
-            <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h3 id="modalTitle">Name</h3>
+            <div class="profile-role" id="modalSubtitle">Position</div>
+            <div class="profile-desc" id="modalDescription">Description</div>
+            <div class="modal-buttons">
+                <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
+            </div>
         </div>
     </div>
 
+    <!-- Auth Modal -->
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
             <button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
@@ -1473,11 +1761,13 @@
         </div>
     </div>
 
+    <!-- Dashboard -->
     <div class="dash-panel" id="userDashboard">
         <div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()" style="background:none;border:none;color:#8892A8;font-size:1.2rem;cursor:pointer"><i class="fas fa-times"></i></button></div>
         <div class="dash-body" id="dashBody"></div>
     </div>
 
+    <!-- Admin Panel -->
     <div class="admin-ov" id="adminPanel">
         <div class="admin-tb"><h3><i class="fas fa-user-shield"></i> Admin Panel</h3><button class="admin-xbtn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
         <div class="admin-bd">
@@ -1523,13 +1813,13 @@
         ];
         
         const wings = [
-            { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy" },
-            { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard" },
-            { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon" },
-            { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water" },
-            { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator" },
-            { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom" },
-            { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
+            { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy", type: "urdu" },
+            { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard", type: "english" },
+            { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon", type: "arabic" },
+            { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water", type: "malayalam" },
+            { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator", type: "maths" },
+            { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom", type: "science" },
+            { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro", type: "media" }
         ];
         
         // Render Functions
@@ -1553,7 +1843,7 @@
             const container = document.getElementById('wingsGrid');
             if (!container) return;
             container.innerHTML = wings.map(w => `
-                <div class="wc">
+                <div class="wc" data-wing="${w.type}">
                     <div class="w-in">
                         <div class="w-ic"><i class="fas ${w.icon}"></i></div>
                         <div class="w-lab">WING</div>
@@ -1972,10 +2262,10 @@
     </script>
     
     <!-- Your existing scripts - KEEP THESE -->
-    <script src="cursor-polish.js?v=9"></script>
-    <script src="history-media-upgrade.js?v=9"></script>
-    <script src="upload-support.js?v=9"></script>
+    <script src="cursor-polish.js?v=10"></script>
+    <script src="history-media-upgrade.js?v=10"></script>
+    <script src="upload-support.js?v=10"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=9"></script>
+    <script src="profile-tabs.js?v=10"></script>
 </body>
 </html>
