@@ -54,9 +54,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
         
         @keyframes rotate {
@@ -65,13 +75,24 @@
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(0,240,255,0.3); }
+            50% { box-shadow: 0 0 20px rgba(0,240,255,0.6); }
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(0,240,255,0.2); }
+            50% { border-color: rgba(0,240,255,0.6); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
         
         /* ===== HEADER ===== */
@@ -214,12 +235,13 @@
             cursor: pointer;
         }
         
-        /* ===== HERO WITH BACKGROUND IMAGE ===== */
+        /* ===== HERO ===== */
         .hero {
             position: relative;
             text-align: center;
             padding: 120px 20px;
             overflow: hidden;
+            background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
         }
         
         .hero-bg {
@@ -231,7 +253,7 @@
             background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
             background-size: cover;
             background-position: center;
-            filter: brightness(0.25) saturate(1.2);
+            filter: brightness(0.2) saturate(1.2);
             z-index: 0;
         }
         
@@ -241,7 +263,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(6,8,16,0.8) 0%, rgba(6,8,16,0.6) 100%);
+            background: linear-gradient(135deg, rgba(6,8,16,0.85) 0%, rgba(6,8,16,0.7) 100%);
             z-index: 1;
         }
         
@@ -510,7 +532,7 @@
         
         .gallery-grid, .mag-grid, .core-grid, .wgrid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
         }
         
@@ -526,6 +548,187 @@
             transform: translateY(-8px);
             border-color: #00F0FF;
             box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        /* ===== COLORFUL CORE CARDS ===== */
+        .cc {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; }
+        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, rgba(192,192,192,0.2), rgba(192,192,192,0.05)); color: #C0C0C0; }
+        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: #00F0FF; }
+        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; }
+        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, rgba(0,220,130,0.2), rgba(0,220,130,0.05)); color: #00DC82; }
+        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, rgba(255,100,100,0.2), rgba(255,100,100,0.05)); color: #FF6464; }
+        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: #FFB800; }
+        
+        .cc-ic {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .cc:hover .cc-ic {
+            transform: scale(1.1) rotate(-5deg);
+            animation: pulse 0.5s ease;
+        }
+        
+        .cc-role {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .cc:nth-child(1) .cc-role { color: #FFD700; }
+        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
+        .cc:nth-child(3) .cc-role { color: #00F0FF; }
+        .cc:nth-child(4) .cc-role { color: #8250FF; }
+        .cc:nth-child(5) .cc-role { color: #00DC82; }
+        .cc:nth-child(6) .cc-role { color: #FF6464; }
+        .cc:nth-child(7) .cc-role { color: #FFB800; }
+        
+        .cc-name {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .cc-desc {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        
+        .cc-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        /* ===== COLORFUL WING CARDS WITH UNIQUE ANIMATIONS ===== */
+        .wc {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Wing card gradients */
+        .wc:nth-child(1) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,184,0,0.3); }
+        .wc:nth-child(2) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,240,255,0.3); }
+        .wc:nth-child(3) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,215,0,0.3); }
+        .wc:nth-child(4) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,200,100,0.3); }
+        .wc:nth-child(5) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(130,80,255,0.3); }
+        .wc:nth-child(6) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(0,220,130,0.3); }
+        .wc:nth-child(7) { background: linear-gradient(135deg, #1a1a2e, #121626); border-color: rgba(255,80,80,0.3); }
+        
+        /* Wing icon colors */
+        .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,184,0,0.05)); color: #FFB800; }
+        .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,240,255,0.05)); color: #00F0FF; }
+        .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); color: #FFD700; }
+        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, rgba(0,200,100,0.2), rgba(0,200,100,0.05)); color: #00C864; }
+        .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, rgba(130,80,255,0.2), rgba(130,80,255,0.05)); color: #8250FF; }
+        .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, rgba(0,220,130,0.2), rgba(0,220,130,0.05)); color: #00DC82; }
+        .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, rgba(255,80,80,0.2), rgba(255,80,80,0.05)); color: #FF5050; }
+        
+        /* Unique animations for each wing */
+        .wc:nth-child(1) .w-ic { animation: floatSlow 3s ease-in-out infinite; }
+        .wc:nth-child(2) .w-ic { animation: pulse 2s ease-in-out infinite; }
+        .wc:nth-child(3) .w-ic { animation: rotate 4s linear infinite; }
+        .wc:nth-child(4) .w-ic { animation: float 2.5s ease-in-out infinite; }
+        .wc:nth-child(5) .w-ic { animation: rotate 3s linear infinite; }
+        .wc:nth-child(6) .w-ic { animation: pulse 1.5s ease-in-out infinite; }
+        .wc:nth-child(7) .w-ic { animation: floatSlow 2s ease-in-out infinite; }
+        
+        .wc:hover .w-ic {
+            transform: scale(1.1);
+            animation: shake 0.3s ease;
+        }
+        
+        .w-ic {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .w-lab {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .wc:nth-child(1) .w-lab { color: #FFB800; }
+        .wc:nth-child(2) .w-lab { color: #00F0FF; }
+        .wc:nth-child(3) .w-lab { color: #FFD700; }
+        .wc:nth-child(4) .w-lab { color: #00C864; }
+        .wc:nth-child(5) .w-lab { color: #8250FF; }
+        .wc:nth-child(6) .w-lab { color: #00DC82; }
+        .wc:nth-child(7) .w-lab { color: #FF5050; }
+        
+        .w-ttl {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .w-info {
+            color: #8892A8;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        
+        .w-leads {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .w-chip {
+            flex: 1;
+            padding: 10px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .w-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .ch-role {
+            font-size: 0.55rem;
+            color: #8892A8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        .ch-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            word-break: keep-all;
+        }
+        
+        .w-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
         }
         
         .gallery-item {
@@ -576,127 +779,6 @@
             text-align: center;
         }
         
-        /* ===== CORE CARDS ===== */
-        .cc-ic, .w-ic {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .cc-ic {
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.05));
-            color: #00F0FF;
-        }
-        
-        .cc:hover .cc-ic {
-            transform: scale(1.1) rotate(-5deg);
-        }
-        
-        .cc-role {
-            font-size: 0.7rem;
-            color: #00F0FF;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        
-        .cc-name {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        
-        .cc-desc {
-            color: #8892A8;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        
-        .cc-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
-        /* ===== WING CARDS WITH UNIQUE ANIMATIONS ===== */
-        .w-ic {
-            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(167, 139, 250, 0.05));
-            color: #A78BFA;
-        }
-        
-        /* Unique animations for each wing */
-        .wc[data-wing="urdu"] .w-ic { animation: float 3s ease-in-out infinite; }
-        .wc[data-wing="english"] .w-ic { animation: pulse 2s ease-in-out infinite; }
-        .wc[data-wing="arabic"] .w-ic { animation: rotate 4s linear infinite; }
-        .wc[data-wing="malayalam"] .w-ic { animation: float 2.5s ease-in-out infinite; }
-        .wc[data-wing="maths"] .w-ic { animation: rotate 3s linear infinite; }
-        .wc[data-wing="science"] .w-ic { animation: pulse 1.5s ease-in-out infinite; }
-        .wc[data-wing="media"] .w-ic { animation: float 2s ease-in-out infinite; }
-        
-        .wc:hover .w-ic {
-            transform: scale(1.1);
-        }
-        
-        .w-lab {
-            font-size: 0.7rem;
-            color: #A78BFA;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        
-        .w-ttl {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        
-        .w-info {
-            color: #8892A8;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        
-        .w-leads {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .w-chip {
-            flex: 1;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        
-        .w-chip:hover {
-            background: rgba(167, 139, 250, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .ch-role {
-            font-size: 0.55rem;
-            color: #8892A8;
-            text-transform: uppercase;
-        }
-        
-        .ch-name {
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .w-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
         /* ===== ACCORDION ===== */
         .acc-item {
             max-width: 1200px;
@@ -713,6 +795,7 @@
             transition: all 0.3s;
             background: linear-gradient(135deg, rgba(0, 240, 255, 0.04), #121626);
             border: 1px solid rgba(0, 240, 255, 0.12);
+            animation: borderGlow 3s ease-in-out infinite;
         }
         
         .acc-hdr:hover {
@@ -914,7 +997,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        /* ===== PROFILE MODAL - FIXED & STYLED ===== */
+        /* ===== PROFILE MODAL ===== */
         .profile-modal {
             display: none;
             position: fixed;
@@ -1672,7 +1755,7 @@
                 </div>
             </div>
             
-            <!-- Sub-Wings with Unique Animations -->
+            <!-- Sub-Wings -->
             <div class="acc-item">
                 <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)">
                     <h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2>
@@ -1813,20 +1896,20 @@
         ];
         
         const wings = [
-            { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy", type: "urdu" },
-            { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard", type: "english" },
-            { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon", type: "arabic" },
-            { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water", type: "malayalam" },
-            { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator", type: "maths" },
-            { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom", type: "science" },
-            { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro", type: "media" }
+            { name: "Urdu Wing", chairman: "Muhammed V.K", convener: "Hisham", desc: "Urdu literature and heritage.", icon: "fa-pen-fancy" },
+            { name: "English Wing", chairman: "Mujeeb", convener: "Zameen", desc: "Professional communication.", icon: "fa-keyboard" },
+            { name: "Arabic Wing", chairman: "Naseem", convener: "Razeen", desc: "Arabic language and heritage.", icon: "fa-moon" },
+            { name: "Malayalam Wing", chairman: "Rabeeh", convener: "Muzzammil", desc: "Regional linguistic heritage.", icon: "fa-water" },
+            { name: "Maths Wing", chairman: "Muhammed U", convener: "Muhammed PP", desc: "Analytical thinking.", icon: "fa-calculator" },
+            { name: "Science Wing", chairman: "Shabeel", convener: "Muhaimin", desc: "Science fairs and tech demos.", icon: "fa-atom" },
+            { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
         ];
         
         // Render Functions
         function renderCoreGrid() {
             const container = document.getElementById('coreGrid');
             if (!container) return;
-            container.innerHTML = coreMembers.map(m => `
+            container.innerHTML = coreMembers.map((m, idx) => `
                 <div class="cc">
                     <div class="cc-in">
                         <div class="cc-ic"><i class="fas ${m.icon}"></i></div>
@@ -1842,8 +1925,8 @@
         function renderWingsGrid() {
             const container = document.getElementById('wingsGrid');
             if (!container) return;
-            container.innerHTML = wings.map(w => `
-                <div class="wc" data-wing="${w.type}">
+            container.innerHTML = wings.map((w, idx) => `
+                <div class="wc">
                     <div class="w-in">
                         <div class="w-ic"><i class="fas ${w.icon}"></i></div>
                         <div class="w-lab">WING</div>
@@ -2262,10 +2345,10 @@
     </script>
     
     <!-- Your existing scripts - KEEP THESE -->
-    <script src="cursor-polish.js?v=10"></script>
-    <script src="history-media-upgrade.js?v=10"></script>
-    <script src="upload-support.js?v=10"></script>
+    <script src="cursor-polish.js?v=11"></script>
+    <script src="history-media-upgrade.js?v=11"></script>
+    <script src="upload-support.js?v=11"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=10"></script>
+    <script src="profile-tabs.js?v=11"></script>
 </body>
 </html>
