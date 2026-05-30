@@ -1708,53 +1708,83 @@
     }
 
     // Gallery & Magazine functions
+// ===== FIXED GALLERY FUNCTION =====
 async function loadPublicGallery() {
-    console.log("loadPublicGallery STARTED");
+    console.log("🖼️ Loading gallery...");
     
     try {
         const snap = await db.collection('gallery').get();
         const grid = document.getElementById('publicGalleryGrid');
+        const emptyMsg = document.getElementById('galleryEmpty');
         
-        console.log("Grid element found:", grid);
-        console.log("Number of photos:", snap.size);
+        console.log("Grid found:", !!grid);
+        console.log("Photos count:", snap.size);
         
         if (!grid) {
-            console.error("ERROR: publicGalleryGrid element not found!");
+            console.error("❌ publicGalleryGrid not found!");
             return;
         }
         
         if (snap.empty) {
-            grid.innerHTML = '<div style="text-align:center;padding:40px">No photos yet.</div>';
+            if (emptyMsg) emptyMsg.style.display = 'block';
+            grid.innerHTML = '';
+            console.log("No photos to display");
             return;
         }
         
+        // Hide empty message
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        
+        // Build gallery HTML
         let html = '';
-        snap.forEach((doc, index) => {
+        let index = 0;
+        snap.forEach(doc => {
             const data = doc.data();
             const imgSrc = data.imageUrl;
             const caption = data.caption || 'Photo';
             
-            console.log(`Photo ${index}:`, imgSrc.substring(0, 100) + "..."); // Show first 100 chars
+            console.log(`Photo ${index}:`, caption, imgSrc ? imgSrc.substring(0, 50) : 'NO URL');
             
             html += `
                 <div class="gallery-item" onclick="openLightbox(${index})">
-                    <img src="${imgSrc}" alt="${caption}" style="width:100%;height:100%;object-fit:cover">
+                    <img src="${imgSrc}" alt="${caption}" loading="lazy">
                     <div class="gallery-ov"><h4>${caption}</h4></div>
                 </div>
             `;
+            index++;
         });
         
         grid.innerHTML = html;
-        console.log("Gallery HTML updated, length:", html.length);
+        console.log(`✅ Gallery updated with ${index} photos`);
         
-        // Hide empty message
-        const empty = document.getElementById('galleryEmpty');
-        if (empty) empty.style.display = 'none';
+        // Also update cache for lightbox
+        galleryCache = [];
+        snap.forEach(doc => galleryCache.push({ id: doc.id, ...doc.data() }));
         
     } catch(e) {
-        console.error("Gallery error:", e);
+        console.error("❌ Gallery error:", e);
     }
 }
+
+// Make sure it runs after page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(loadPublicGallery, 500);
+    });
+} else {
+    setTimeout(loadPublicGallery, 500);
+}
+
+// Also refresh when switching to gallery tab
+const originalSwitchMediaTab = window.switchMediaTab;
+window.switchMediaTab = function(tab) {
+    originalSwitchMediaTab(tab);
+    if (tab === 'gallery') {
+        setTimeout(loadPublicGallery, 100);
+    }
+};
+
+        
     async function addGalleryItem(){
         const url=document.getElementById('galImageUrl').value.trim();
         const cap=document.getElementById('galCaption').value.trim();
