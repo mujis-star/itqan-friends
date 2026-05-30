@@ -2032,12 +2032,15 @@ async function loadPublicGallery() {
         }
     });
 
-    // Initialize
-    renderPublications();
+// Initialize - MAKE SURE THIS EXISTS
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded, loading gallery...");
     loadPublicGallery();
     loadPublicMags();
+    renderPublications();
     loadCoreMembers();
     loadWings();
+});
     </script>
 
     <!-- External scripts -->
