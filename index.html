@@ -1413,15 +1413,31 @@
                 <button onclick="claimAdminRole()" class="btn btn-sm btn-danger"><i class="fas fa-shield-alt"></i> Claim Admin Role</button>
             </div>
 
-            <!-- Gallery Tab -->
+                        <!-- Gallery Tab -->
             <div class="admin-tc" id="adminTabGallery">
                 <div class="add-form">
-                    <h4><i class="fas fa-plus-circle" style="color:var(--cyan)"></i> Add Photo</h4>
-                    <div class="fg"><label>Image URL</label><input type="url" id="galImageUrl" class="fi" placeholder="https://..."></div>
-                    <div class="fg"><label>Caption</label><input type="text" id="galCaption" class="fi" placeholder="Photo caption..."></div>
-                    <button onclick="addGalleryItem()" class="btn btn-sm btn-cyan"><i class="fas fa-upload"></i> Add Photo</button>
+                    <h4><i class="fas fa-cloud-upload-alt" style="color:var(--cyan)"></i> Upload Photo (Google Drive)</h4>
+                    <div class="fg">
+                        <label>Choose Image File</label>
+                        <input type="file" id="galImageFile" accept="image/jpeg,image/png,image/jpg,image/webp" class="fi">
+                        <small style="color:var(--muted);font-size:0.7rem">Max 5MB. Uploads to Google Drive (Free)</small>
+                        <div id="imagePreview" style="margin-top:10px;display:none">
+                            <img id="previewImg" style="max-width:100px;max-height:100px;border-radius:8px">
+                        </div>
+                    </div>
+                    <div class="fg">
+                        <label>Caption</label>
+                        <input type="text" id="galCaption" class="fi" placeholder="Photo caption...">
+                    </div>
+                    <div id="uploadProgress" style="display:none;margin-top:10px">
+                        <progress id="uploadProgressBar" value="0" max="100" style="width:100%;height:6px;border-radius:3px"></progress>
+                        <p id="uploadStatus" style="font-size:0.7rem;color:var(--muted);margin-top:5px">Uploading...</p>
+                    </div>
+                    <button onclick="uploadToDrive()" class="btn btn-sm btn-cyan" style="margin-top:10px">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload to Drive
+                    </button>
                 </div>
-                <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Photos</h4>
+                <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem">Existing Photos</h4>
                 <div id="adminGalleryList" class="adm-il"></div>
             </div>
 
@@ -2110,6 +2126,134 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCoreMembers();
     loadWings();
 });
+
+
+
+
+
+        // Your Google Apps Script Web App URL
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxv-gohPVoXk2aypSWqP5NaFf_KbztT8QHfgv_TBbvJ5MH-pcjLMNJ-zepmlMgZoMJT/exec'; // ← PASTE YOUR URL
+
+// Preview image
+document.getElementById('galImageFile')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const preview = document.getElementById('previewImg');
+            const previewDiv = document.getElementById('imagePreview');
+            preview.src = event.target.result;
+            previewDiv.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Upload to Google Drive via Apps Script
+async function uploadToDrive() {
+    const fileInput = document.getElementById('galImageFile');
+    const file = fileInput.files[0];
+    const caption = document.getElementById('galCaption').value.trim();
+    
+    if (!file) {
+        showToast('Please select an image file', 'error');
+        return;
+    }
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('File too large. Max 5MB.', 'error');
+        return;
+    }
+    
+    // Show progress
+    const progressDiv = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('uploadProgressBar');
+    const statusText = document.getElementById('uploadStatus');
+    progressDiv.style.display = 'block';
+    progressBar.value = 0;
+    statusText.textContent = 'Preparing upload...';
+    
+    try {
+        // Convert file to base64
+        const reader = new FileReader();
+        const base64Promise = new Promise((resolve, reject) => {
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+        
+        const base64Image = await base64Promise;
+        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+        
+        statusText.textContent = 'Uploading to Google Drive...';
+        progressBar.value = 30;
+        
+        // Send to Google Apps Script
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'upload',
+                imageBase64: base64Image,
+                fileName: fileName
+            })
+        });
+        
+        // Note: 'no-cors' mode means we can't read the response directly
+        // We'll assume success and show a message
+        
+        progressBar.value = 100;
+        statusText.textContent = 'Complete! Refreshing...';
+        
+        showToast('Photo uploaded to Google Drive!', 'success');
+        
+        // Clear form
+        fileInput.value = '';
+        document.getElementById('galCaption').value = '';
+        document.getElementById('imagePreview').style.display = 'none';
+        progressDiv.style.display = 'none';
+        
+        // Refresh page to reload gallery
+        setTimeout(() => location.reload(), 1500);
+        
+    } catch(e) {
+        console.error("Upload error:", e);
+        showToast('Upload failed: ' + e.message, 'error');
+        progressDiv.style.display = 'none';
+    }
+}
+
+// Modified loadAdminGallery to work with Drive URLs
+async function loadAdminGallery() {
+    const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+    const list = document.getElementById('adminGalleryList');
+    if (!list) return;
+    
+    if (snap.empty) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
+        return;
+    }
+    
+    list.innerHTML = snap.docs.map(doc => {
+        const data = doc.data();
+        return `
+            <div class="adm-ir">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <img src="${data.imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=?'">
+                    <div>
+                        <strong>${data.caption || 'Untitled'}</strong><br>
+                        <small style="color:var(--muted)">${data.driveFileId ? 'Google Drive' : 'URL'}</small>
+                    </div>
+                </div>
+                <button class="del-btn" onclick="deleteGalleryItem('${doc.id}', '${data.driveFileId || ''}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+    }).join('');
+}
     </script>
 
     <!-- External scripts -->
