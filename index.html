@@ -1708,21 +1708,48 @@
     }
 
     // Gallery & Magazine functions
-    async function loadPublicGallery(){
-        try{
-            const snap=await db.collection('gallery').orderBy('createdAt','desc').get();
-            const grid=document.getElementById('publicGalleryGrid');
-            const empty=document.getElementById('galleryEmpty');
-            if(snap.empty){if(empty)empty.style.display='block';if(grid)grid.innerHTML='';return}
-            galleryCache=snap.docs.map(d=>({id:d.id,...d.data()}));
-            if(empty)empty.style.display='none';
-            if(grid)grid.innerHTML=galleryCache.map((item,i)=>`
-                <div class="gallery-item" onclick="openLightbox(${i})">
-                    <img src="${item.imageUrl}" alt="${item.caption||''}" loading="lazy" onerror="this.src='https://placehold.co/560x420/0e1120/0e1120?text=Photo'">
-                    <div class="gallery-ov"><h4>${item.caption||''}</h4></div>
-                </div>`).join('');
-        }catch(e){console.error(e)}
+async function loadPublicGallery() {
+    try {
+        const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+        const grid = document.getElementById('publicGalleryGrid');
+        const empty = document.getElementById('galleryEmpty');
+        
+        console.log("Gallery items found:", snap.size); // Debug log
+        
+        if (snap.empty) {
+            if (empty) empty.style.display = 'block';
+            if (grid) grid.innerHTML = '';
+            return;
+        }
+        
+        galleryCache = snap.docs.map(doc => {
+            const data = doc.data();
+            console.log("Photo data:", data); // Debug log to see what fields exist
+            return { id: doc.id, ...data };
+        });
+        
+        if (empty) empty.style.display = 'none';
+        
+        if (grid) {
+            grid.innerHTML = galleryCache.map((item, i) => {
+                // Try multiple possible field names for the image URL
+                const imageUrl = item.imageUrl || item.imageURL || item.url || item.img || item.photoUrl;
+                const caption = item.caption || item.title || item.name || 'Photo';
+                
+                return `
+                    <div class="gallery-item" onclick="openLightbox(${i})">
+                        <img src="${imageUrl}" alt="${caption}" loading="lazy"
+                             onerror="this.src='https://placehold.co/560x420/0e1120/0e1120?text=Image+Not+Found'">
+                        <div class="gallery-ov"><h4>${caption}</h4></div>
+                    </div>
+                `;
+            }).join('');
+        }
+    } catch(e) { 
+        console.error("Gallery load error:", e);
+        showToast("Error loading gallery", "error");
     }
+}
 
     async function addGalleryItem(){
         const url=document.getElementById('galImageUrl').value.trim();
