@@ -1,0 +1,5 @@
+backend/uploads/
+backend/service-account-key.json
+__pycache__/
+*.pyc
+.env
