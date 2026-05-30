@@ -1512,10 +1512,21 @@
     })();
 
     // Firebase Config
-    const firebaseConfig={apiKey:"AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",authDomain:"zenith-artsfest.firebaseapp.com",projectId:"zenith-artsfest",storageBucket:"zenith-artsfest.firebasestorage.app",messagingSenderId:"506898514611",appId:"1:506898514611:web:0ea13ddd075a020062e6c6"};
-    firebase.initializeApp(firebaseConfig);
-    const auth=firebase.auth();
-    const db=firebase.firestore();
+// ===== BACKEND API URL =====
+const API_BASE_URL = 'https://itqan-backend.onrender.com';
+
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+    apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
+    authDomain: "zenith-artsfest.firebaseapp.com",
+    projectId: "zenith-artsfest",
+    storageBucket: "zenith-artsfest.firebasestorage.app",
+    messagingSenderId: "506898514611",
+    appId: "1:506898514611:web:0ea13ddd075a020062e6c6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
     let currentUserData=null;
     let galleryCache=[];
@@ -1894,6 +1905,7 @@ async function deleteGalleryItem(id) {
             throw new Error(result.error);
         }
     } catch(e) {
+        console.error("Delete error:", e);
         showToast('Error deleting photo: ' + e.message, 'error');
     }
 }
@@ -2265,32 +2277,41 @@ async function uploadToDrive() {
 
 // Modified loadAdminGallery to work with Drive URLs
 async function loadAdminGallery() {
-    const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
-    const list = document.getElementById('adminGalleryList');
-    if (!list) return;
-
-    if (snap.empty) {
-        list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
-        return;
-    }
-
-    list.innerHTML = snap.docs.map(doc => {
-        const data = doc.data();
-        return `
+    try {
+        const response = await fetch(`${API_BASE_URL}/gallery`);
+        const galleryData = await response.json();
+        
+        const list = document.getElementById('adminGalleryList');
+        if (!list) return;
+        
+        if (!galleryData || galleryData.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
+            return;
+        }
+        
+        list.innerHTML = galleryData.map(item => `
             <div class="adm-ir">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <img src="${data.imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=?'">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <img src="${item.imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" 
+                         onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=Error'">
                     <div>
-                        <strong>${data.caption || 'Untitled'}</strong><br>
-                        <small style="color:var(--muted)">${data.driveFileId ? 'Google Drive' : 'URL'}</small>
+                        <strong>${item.caption || 'Untitled'}</strong><br>
+                        <small style="color:var(--muted)">${item.imageUrl.substring(0, 50)}...</small>
                     </div>
                 </div>
-                <button class="del-btn" onclick="deleteGalleryItem('${doc.id}', '${data.driveFileId || ''}')">
+                <button class="del-btn" onclick="deleteGalleryItem('${item.id}')">
                     <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
-        `;
-    }).join('');
+        `).join('');
+        
+        console.log("Admin gallery loaded with", galleryData.length, "items");
+        
+    } catch(e) {
+        console.error("Load admin gallery error:", e);
+        const list = document.getElementById('adminGalleryList');
+        if (list) list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Error loading photos</p>';
+    }
 }
 
 
@@ -2365,39 +2386,38 @@ async function loadAdminGallery() {
                                 
                 // Update loadPublicGallery to use the backend URL for images
                 async function loadPublicGallery() {
-                    try {
-                        const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
-                        const grid = document.getElementById('publicGalleryGrid');
-                        const empty = document.getElementById('galleryEmpty');
-                        
-                        if (snap.empty) {
-                            if (empty) empty.style.display = 'block';
-                            if (grid) grid.innerHTML = '';
-                            return;
-                        }
-                        
-                        galleryCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        if (empty) empty.style.display = 'none';
-                        
-                        if (grid) {
-                            grid.innerHTML = galleryCache.map((item, i) => {
-                                let imageUrl = item.imageUrl;
-                                // If it's a relative URL from our backend, prepend the backend URL
-                                if (imageUrl && imageUrl.startsWith('/uploads')) {
-                                    imageUrl = `${API_BASE_URL}${imageUrl}`;
-                                }
-                                return `
-                                    <div class="gallery-item" onclick="openLightbox(${i})">
-                                        <img src="${imageUrl}" alt="${item.caption || ''}" loading="lazy">
-                                        <div class="gallery-ov"><h4>${item.caption || ''}</h4></div>
-                                    </div>
-                                `;
-                            }).join('');
-                        }
-                    } catch(e) { 
-                        console.error("Gallery load error:", e);
-                    }
-                }
+    try {
+        const response = await fetch(`${API_BASE_URL}/gallery`);
+        const galleryData = await response.json();
+        
+        const grid = document.getElementById('publicGalleryGrid');
+        const empty = document.getElementById('galleryEmpty');
+        
+        if (!galleryData || galleryData.length === 0) {
+            if (empty) empty.style.display = 'block';
+            if (grid) grid.innerHTML = '';
+            return;
+        }
+        
+        if (empty) empty.style.display = 'none';
+        
+        galleryCache = galleryData;
+        
+        if (grid) {
+            grid.innerHTML = galleryData.map((item, i) => `
+                <div class="gallery-item" onclick="openLightbox(${i})">
+                    <img src="${item.imageUrl}" alt="${item.caption || ''}" loading="lazy">
+                    <div class="gallery-ov"><h4>${item.caption || ''}</h4></div>
+                </div>
+            `).join('');
+        }
+        
+        console.log("Public gallery loaded with", galleryData.length, "items");
+        
+    } catch(e) { 
+        console.error("Gallery load error:", e);
+    }
+}
 async function uploadToBackend() {
     const fileInput = document.getElementById('galImageFile');
     const file = fileInput.files[0];
