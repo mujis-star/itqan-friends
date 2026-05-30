@@ -6,18 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ITQAN - Intelligent Trainees for Qualified Academic Network</title>
     
-    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -54,19 +51,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
         }
         
         @keyframes rotate {
@@ -79,19 +66,15 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
         
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(0,240,255,0.3); }
-            50% { box-shadow: 0 0 20px rgba(0,240,255,0.6); }
-        }
-        
-        @keyframes borderGlow {
-            0%, 100% { border-color: rgba(0,240,255,0.2); }
-            50% { border-color: rgba(0,240,255,0.6); }
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: -100% 0; }
-            100% { background-position: 200% 0; }
+        /* ===== PARTICLE NETWORK CANVAS ===== */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
         
         /* ===== HEADER ===== */
@@ -241,34 +224,7 @@
             padding: 120px 20px;
             overflow: hidden;
             background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
-        }
-        
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.2) saturate(1.2);
-            z-index: 0;
-        }
-        
-        .hero-grad {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(6,8,16,0.85) 0%, rgba(6,8,16,0.7) 100%);
             z-index: 1;
-        }
-        
-        .hero-inner {
-            position: relative;
-            z-index: 2;
         }
         
         .hero-badge {
@@ -308,7 +264,6 @@
             animation: fadeUp 0.8s ease 0.4s both;
         }
         
-        /* ===== BUTTONS ===== */
         .btn {
             padding: 12px 32px;
             border-radius: 40px;
@@ -375,26 +330,11 @@
             animation: float 2s ease-in-out infinite;
         }
         
-        .hero-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #00F0FF, #FF3366, #FFB800, #00F0FF);
-            background-size: 300% 100%;
-            animation: lineMove 5s linear infinite;
-            z-index: 2;
-        }
-        
-        @keyframes lineMove {
-            0% { background-position: 0% 0; }
-            100% { background-position: 300% 0; }
-        }
-        
         /* ===== SECTIONS ===== */
         .features, .about, .media-hub, .acc-zone {
             padding: 80px 0;
+            position: relative;
+            z-index: 1;
         }
         
         .about {
@@ -431,7 +371,6 @@
             background: linear-gradient(90deg, transparent, #3A4055);
         }
         
-        /* ===== GRIDS ===== */
         .feat-grid, .about-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -446,7 +385,6 @@
             text-align: center;
             transition: all 0.4s;
             cursor: pointer;
-            backdrop-filter: blur(10px);
         }
         
         .feat-card:hover, .about-card:hover {
@@ -529,30 +467,26 @@
             animation: fadeUp 0.4s ease;
         }
         
-        .gallery-grid, .mag-grid, .core-grid, .wgrid {
+        .gallery-grid, .mag-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
         }
         
-        .gallery-item, .mag-card {
+        .gallery-item {
             background: #121626;
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.4s;
-        }
-        
-        .gallery-item:hover, .mag-card:hover {
-            transform: translateY(-8px);
-            border-color: #00F0FF;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        
-        .gallery-item {
             aspect-ratio: 4/3;
             cursor: pointer;
             position: relative;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            border-color: #00F0FF;
         }
         
         .gallery-item img {
@@ -581,10 +515,17 @@
             opacity: 1;
         }
         
-        .gallery-empty, .magazines-empty {
-            text-align: center;
-            padding: 40px;
-            color: #8892A8;
+        .mag-card {
+            background: #121626;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+        
+        .mag-card:hover {
+            transform: translateY(-8px);
+            border-color: #00F0FF;
         }
         
         .mag-cover {
@@ -603,74 +544,31 @@
             text-align: center;
         }
         
-        /* ===== ARTISTIC COLORFUL CORE CARDS ===== */
-        .cc {
+        /* ===== CORE CARDS ===== */
+        .core-grid, .wgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .cc, .wc {
             background: linear-gradient(135deg, #1a1a2e, #121626);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.4s;
-            position: relative;
         }
         
-        .cc::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+        .cc:hover, .wc:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
-        .cc:hover::after {
-            transform: translateX(100%);
-        }
-        
-        .cc-in {
+        .cc-in, .w-in {
             padding: 24px;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
         
-        /* President - Royal Gold */
-        .cc:nth-child(1) { border-top: 3px solid #FFD700; background: linear-gradient(135deg, #1a1a2e, #1a1a2e); }
-        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, #FFD700, #FFA500); color: #FFD700; box-shadow: 0 0 20px rgba(255,215,0,0.3); animation: glow 2s ease-in-out infinite; }
-        .cc:nth-child(1) .cc-role { color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
-        
-        /* Vice President - Silver/Platinum */
-        .cc:nth-child(2) { border-top: 3px solid #C0C0C0; }
-        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #C0C0C0; box-shadow: 0 0 15px rgba(192,192,192,0.3); }
-        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
-        
-        /* Secretary - Cyan */
-        .cc:nth-child(3) { border-top: 3px solid #00F0FF; }
-        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; box-shadow: 0 0 20px rgba(0,240,255,0.3); }
-        .cc:nth-child(3) .cc-role { color: #00F0FF; }
-        
-        /* Joint Secretary - Purple */
-        .cc:nth-child(4) { border-top: 3px solid #A78BFA; }
-        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; box-shadow: 0 0 15px rgba(167,139,250,0.3); }
-        .cc:nth-child(4) .cc-role { color: #A78BFA; }
-        
-        /* Treasurer - Green */
-        .cc:nth-child(5) { border-top: 3px solid #00DC82; }
-        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; box-shadow: 0 0 15px rgba(0,220,130,0.3); animation: floatSlow 3s ease-in-out infinite; }
-        .cc:nth-child(5) .cc-role { color: #00DC82; }
-        
-        /* Financial Manager - Coral Red */
-        .cc:nth-child(6) { border-top: 3px solid #FF6464; }
-        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; box-shadow: 0 0 15px rgba(255,100,100,0.3); }
-        .cc:nth-child(6) .cc-role { color: #FF6464; }
-        
-        /* P.R.O - Orange/Gold */
-        .cc:nth-child(7) { border-top: 3px solid #FFB800; }
-        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; box-shadow: 0 0 15px rgba(255,184,0,0.3); animation: pulse 2s ease-in-out infinite; }
-        .cc:nth-child(7) .cc-role { color: #FFB800; }
-        
-        .cc-ic {
+        .cc-ic, .w-ic {
             width: 70px;
             height: 70px;
             border-radius: 20px;
@@ -682,11 +580,11 @@
             transition: all 0.3s;
         }
         
-        .cc:hover .cc-ic {
+        .cc:hover .cc-ic, .wc:hover .w-ic {
             transform: scale(1.1) rotate(-5deg);
         }
         
-        .cc-role {
+        .cc-role, .w-lab {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 3px;
@@ -694,128 +592,87 @@
             font-weight: 700;
         }
         
-        .cc-name {
-            font-size: 1.3rem;
+        .cc-name, .w-ttl {
+            font-size: 1.2rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #fff, #ccc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         
-        .cc-desc {
+        .cc-desc, .w-info {
             color: #8892A8;
             font-size: 0.85rem;
             margin-bottom: 20px;
             line-height: 1.5;
         }
         
-        .cc-btns {
+        .cc-btns, .w-btns {
             display: flex;
             gap: 10px;
             justify-content: center;
         }
         
-        /* ===== ARTISTIC COLORFUL WING CARDS ===== */
-        .wc {
-            background: linear-gradient(135deg, #1a1a2e, #121626);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s;
-            position: relative;
-        }
+        /* President - Gold */
+        .cc:nth-child(1) { border-top: 3px solid #FFD700; }
+        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, #FFD700, #FFA500); color: #FFD700; animation: pulse 2s ease-in-out infinite; }
+        .cc:nth-child(1) .cc-role { color: #FFD700; }
         
-        .wc::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
+        /* Vice President - Silver */
+        .cc:nth-child(2) { border-top: 3px solid #C0C0C0; }
+        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #C0C0C0; }
+        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
         
-        .wc:hover::after {
-            transform: translateX(100%);
-        }
+        /* Secretary - Cyan */
+        .cc:nth-child(3) { border-top: 3px solid #00F0FF; }
+        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; }
+        .cc:nth-child(3) .cc-role { color: #00F0FF; }
         
-        .w-in {
-            padding: 24px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
+        /* Joint Secretary - Purple */
+        .cc:nth-child(4) { border-top: 3px solid #A78BFA; }
+        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; }
+        .cc:nth-child(4) .cc-role { color: #A78BFA; }
         
-        /* Urdu Wing - Orange/Gold */
+        /* Treasurer - Green */
+        .cc:nth-child(5) { border-top: 3px solid #00DC82; }
+        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; animation: float 3s ease-in-out infinite; }
+        .cc:nth-child(5) .cc-role { color: #00DC82; }
+        
+        /* Financial Manager - Coral */
+        .cc:nth-child(6) { border-top: 3px solid #FF6464; }
+        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; }
+        .cc:nth-child(6) .cc-role { color: #FF6464; }
+        
+        /* P.R.O - Orange */
+        .cc:nth-child(7) { border-top: 3px solid #FFB800; }
+        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; }
+        .cc:nth-child(7) .cc-role { color: #FFB800; }
+        
+        /* Wing Cards Colors */
         .wc:nth-child(1) { border-bottom: 3px solid #FFB800; }
         .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; animation: float 3s ease-in-out infinite; }
         .wc:nth-child(1) .w-lab { color: #FFB800; }
         
-        /* English Wing - Cyan */
         .wc:nth-child(2) { border-bottom: 3px solid #00F0FF; }
         .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; animation: pulse 2s ease-in-out infinite; }
         .wc:nth-child(2) .w-lab { color: #00F0FF; }
         
-        /* Arabic Wing - Emerald Green */
         .wc:nth-child(3) { border-bottom: 3px solid #00DC82; }
         .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; animation: rotate 4s linear infinite; }
         .wc:nth-child(3) .w-lab { color: #00DC82; }
         
-        /* Malayalam Wing - Purple */
         .wc:nth-child(4) { border-bottom: 3px solid #A78BFA; }
-        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; animation: floatSlow 2.5s ease-in-out infinite; }
+        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; animation: float 2.5s ease-in-out infinite; }
         .wc:nth-child(4) .w-lab { color: #A78BFA; }
         
-        /* Maths Wing - Blue */
         .wc:nth-child(5) { border-bottom: 3px solid #4A90E2; }
         .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #4A90E2; animation: rotate 3s linear infinite; }
         .wc:nth-child(5) .w-lab { color: #4A90E2; }
         
-        /* Science Wing - Pink */
         .wc:nth-child(6) { border-bottom: 3px solid #FF6464; }
         .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; animation: pulse 1.5s ease-in-out infinite; }
         .wc:nth-child(6) .w-lab { color: #FF6464; }
         
-        /* Media Wing - Red */
         .wc:nth-child(7) { border-bottom: 3px solid #FF3366; }
         .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, #FF3366, #E62E5C); color: #FF3366; animation: float 2s ease-in-out infinite; }
         .wc:nth-child(7) .w-lab { color: #FF3366; }
-        
-        .w-ic {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.8rem;
-            transition: all 0.3s;
-        }
-        
-        .wc:hover .w-ic {
-            transform: scale(1.1);
-        }
-        
-        .w-lab {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .w-ttl {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .w-info {
-            color: #8892A8;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
         
         .w-leads {
             display: flex;
@@ -850,12 +707,6 @@
             font-weight: 600;
         }
         
-        .w-btns {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        
         /* ===== ACCORDION ===== */
         .acc-item {
             max-width: 1200px;
@@ -872,7 +723,6 @@
             transition: all 0.3s;
             background: linear-gradient(135deg, rgba(0, 240, 255, 0.04), #121626);
             border: 1px solid rgba(0, 240, 255, 0.12);
-            animation: borderGlow 3s ease-in-out infinite;
         }
         
         .acc-hdr:hover {
@@ -900,10 +750,6 @@
             transition: all 0.3s;
         }
         
-        .acc-hdr:hover .a-ic {
-            transform: scale(1.05);
-        }
-        
         .acc-hdr .a-arr {
             transition: transform 0.3s;
         }
@@ -922,7 +768,6 @@
             animation: fadeUp 0.3s ease;
         }
         
-        /* Wing specific header */
         .ac-wing {
             background: linear-gradient(135deg, rgba(167, 139, 250, 0.04), #121626);
             border-color: rgba(167, 139, 250, 0.12);
@@ -951,7 +796,7 @@
             color: #FFB800;
         }
         
-        /* ===== HISTORY SECTION ===== */
+        /* ===== HISTORY ===== */
         .htabs {
             display: flex;
             gap: 8px;
@@ -1047,12 +892,6 @@
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
         
-        .h-sub {
-            font-size: 0.65rem;
-            color: #8892A8;
-            margin-left: 8px;
-        }
-        
         /* ===== PUBLICATIONS ===== */
         .publications-grid {
             display: grid;
@@ -1074,8 +913,86 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        /* ===== PROFILE MODAL ===== */
-        .profile-modal {
+        /* ===== FOOTER ===== */
+        footer {
+            background: #060810;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ft-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 48px;
+            margin-bottom: 32px;
+        }
+        
+        .ft-col h3 {
+            color: #00F0FF;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .ft-desc {
+            color: #8892A8;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        
+        .ft-links {
+            list-style: none;
+        }
+        
+        .ft-links li {
+            margin-bottom: 12px;
+        }
+        
+        .ft-links a {
+            color: #8892A8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .ft-links a:hover {
+            color: #00F0FF;
+        }
+        
+        .soc-icons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .soc-icons a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00F0FF;
+            transition: all 0.3s;
+        }
+        
+        .soc-icons a:hover {
+            background: #00F0FF;
+            color: #060810;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #3A4055;
+            font-size: 0.75rem;
+        }
+        
+        /* ===== MODALS ===== */
+        .profile-modal, .auth-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -1089,12 +1006,12 @@
             align-items: center;
         }
         
-        .profile-modal.active {
+        .profile-modal.active, .auth-modal.active {
             display: flex;
             animation: fadeUp 0.3s ease;
         }
         
-        .modal-content {
+        .modal-content, .auth-card {
             background: linear-gradient(135deg, #121626, #0C0F1A);
             border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 28px;
@@ -1103,10 +1020,9 @@
             width: 90%;
             text-align: center;
             position: relative;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
         
-        .modal-close {
+        .modal-close, .auth-close {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -1121,7 +1037,7 @@
             transition: all 0.3s;
         }
         
-        .modal-close:hover {
+        .modal-close:hover, .auth-close:hover {
             background: #FF3366;
             color: white;
             transform: rotate(90deg);
@@ -1136,7 +1052,6 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
             animation: pulse 2s ease-in-out infinite;
         }
         
@@ -1151,85 +1066,6 @@
             background: linear-gradient(135deg, #fff, #00F0FF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-        
-        .modal-content .profile-role {
-            color: #00F0FF;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-        }
-        
-        .modal-content .profile-desc {
-            color: #8892A8;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            padding: 0 16px;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        
-        /* ===== AUTH MODAL ===== */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .auth-modal.active {
-            display: flex;
-            animation: fadeUp 0.3s ease;
-        }
-        
-        .auth-card {
-            background: linear-gradient(135deg, #121626, #0C0F1A);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 28px;
-            padding: 40px;
-            max-width: 450px;
-            width: 90%;
-            position: relative;
-        }
-        
-        .auth-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #8892A8;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .auth-tab-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            background: #1A1F33;
-            border: none;
-            color: #8892A8;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .auth-tab-btn.active {
-            background: #00F0FF;
-            color: #060810;
         }
         
         /* ===== DASHBOARD ===== */
@@ -1266,11 +1102,6 @@
             padding: 20px;
         }
         
-        .dash-pc {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
         .dash-av {
             width: 80px;
             height: 80px;
@@ -1284,58 +1115,6 @@
             margin: 0 auto 16px;
             color: white;
             animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .dash-nm {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .dash-pos {
-            color: #00F0FF;
-            font-size: 0.8rem;
-        }
-        
-        .dash-sec h4 {
-            color: #00F0FF;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .dash-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .dash-lbl {
-            color: #8892A8;
-        }
-        
-        .dash-val {
-            font-weight: 600;
-        }
-        
-        .dash-acts {
-            margin-top: 24px;
-        }
-        
-        .dash-abtn {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 51, 102, 0.1);
-            border: 1px solid rgba(255, 51, 102, 0.3);
-            border-radius: 10px;
-            color: #FF3366;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .dash-abtn:hover {
-            background: #FF3366;
-            color: white;
         }
         
         /* ===== ADMIN PANEL ===== */
@@ -1365,25 +1144,6 @@
             top: 0;
             z-index: 10;
             border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-        }
-        
-        .admin-tb h3 {
-            color: #00F0FF;
-        }
-        
-        .admin-xbtn {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #EF4444;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .admin-bd {
-            padding: 24px;
-            max-width: 1100px;
-            margin: 0 auto;
         }
         
         .admin-tabs {
@@ -1502,13 +1262,8 @@
             animation: slideIn 0.3s ease;
         }
         
-        .toast-success {
-            background: #10B981;
-        }
-        
-        .toast-error {
-            background: #EF4444;
-        }
+        .toast-success { background: #10B981; }
+        .toast-error { background: #EF4444; }
         
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
@@ -1538,30 +1293,6 @@
             border-radius: 16px;
         }
         
-        /* ===== MOUSE GLOW EFFECT ===== */
-        .cc, .wc, .feat-card, .about-card, .mag-card {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cc::before, .wc::before, .feat-card::before, .about-card::before, .mag-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 240, 255, 0.15), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .cc:hover::before, .wc:hover::before, .feat-card:hover::before, .about-card:hover::before, .mag-card:hover::before {
-            opacity: 1;
-        }
-        
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .feat-grid, .about-grid {
@@ -1571,9 +1302,6 @@
                 grid-template-columns: 1fr;
                 gap: 32px;
                 text-align: center;
-            }
-            .soc-icons {
-                justify-content: center;
             }
         }
         
@@ -1610,110 +1338,21 @@
             .sec-title {
                 font-size: 1.5rem;
             }
-            .htabs {
-                flex-wrap: wrap;
-                width: 100%;
-            }
-            .hgrid {
-                grid-template-columns: 1fr;
-            }
-            .modal-content, .auth-card {
-                padding: 30px 20px;
-            }
-        }
-        
-        /* ===== FOOTER ===== */
-        footer {
-            background: #060810;
-            padding: 60px 0 20px;
-            border-top: 1px solid rgba(0, 240, 255, 0.1);
-        }
-        
-        .ft-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr 1fr;
-            gap: 48px;
-            margin-bottom: 32px;
-        }
-        
-        .ft-col h3 {
-            color: #00F0FF;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-        
-        .ft-desc {
-            color: #8892A8;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-        
-        .ft-links {
-            list-style: none;
-        }
-        
-        .ft-links li {
-            margin-bottom: 12px;
-        }
-        
-        .ft-links a {
-            color: #8892A8;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .ft-links a:hover {
-            color: #00F0FF;
-        }
-        
-        .soc-icons {
-            display: flex;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
-        .soc-icons a {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #00F0FF;
-            transition: all 0.3s;
-        }
-        
-        .soc-icons a:hover {
-            background: #00F0FF;
-            color: #060810;
-            transform: translateY(-3px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: #3A4055;
-            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
-    <!-- Toast Container -->
+    <!-- Particle Network Canvas -->
+    <canvas id="particleCanvas"></canvas>
+    
     <div class="toast-c" id="toastContainer"></div>
-    
-    <!-- Overlay -->
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
-    
-    <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" onclick="closeLightbox()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
         <img id="lightboxImg" src="">
         <div class="lightbox-caption" id="lightboxCaption" style="margin-top:16px;color:white;text-align:center"></div>
     </div>
 
-    <!-- Header -->
     <header>
         <div class="container h-wrap">
             <a href="#" class="logo">
@@ -1740,10 +1379,7 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-bg"></div>
-        <div class="hero-grad"></div>
         <div class="hero-inner">
             <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
             <h1>United for Professional <br>Growth & Excellence</h1>
@@ -1754,10 +1390,8 @@
             </div>
         </div>
         <div class="scroll-hint"><span>SCROLL</span><i class="fas fa-chevron-down"></i></div>
-        <div class="hero-line"></div>
     </section>
 
-    <!-- Features Section -->
     <section class="features" id="mission">
         <div class="container">
             <div class="sec-title">Cultivating <span style="color:#00F0FF">Intelligent</span> & <span style="color:#FF3366">Qualified</span> Networks</div>
@@ -1770,13 +1404,12 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section class="about" id="about">
         <div class="container">
             <div class="sec-title">Explore <span style="color:#00F0FF">ITQAN</span></div>
             <div class="sec-line-c"><span></span></div>
             <div class="about-grid">
-                <div class="about-card" onclick="switchMediaTab('magazines')"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
+                <div class="about-card" onclick="document.getElementById('media').scrollIntoView({behavior:'smooth'}); switchMediaTab('magazines')"><div class="about-ic"><i class="fas fa-newspaper"></i></div><h3>Publications & Media</h3><p>Explore our digital tabloids, magazines, and media content.</p></div>
                 <div class="about-card" onclick="window.location.href='achievement.html'"><div class="about-ic"><i class="fas fa-award"></i></div><h3>Awards & Recognitions</h3><p>Review our portfolio of awards, milestones, and successful programs.</p></div>
                 <div class="about-card" onclick="window.open('https://itqan-artfeast.vercel.app/')"><div class="about-ic"><i class="fas fa-palette"></i></div><h3>ZENITH Arts Fest 2K26</h3><p>Experience our flagship arts festival.</p><div style="margin-top:12px"><span class="btn btn-sm btn-outline" style="pointer-events:none">Live Event Hub</span></div></div>
             </div>
@@ -1785,7 +1418,6 @@
 
     <div class="divider"></div>
 
-    <!-- Media Hub -->
     <section class="media-hub" id="media">
         <div class="container">
             <div class="sec-title">Media & <span style="color:#FFB800">Publications</span></div>
@@ -1805,7 +1437,6 @@
         </div>
     </section>
 
-    <!-- Recent Publications -->
     <section style="padding: 80px 0; background: #0C0F1A;">
         <div class="container">
             <div class="sec-title">Recent <span style="color:#FFB800">Publications</span></div>
@@ -1814,10 +1445,8 @@
         </div>
     </section>
 
-    <!-- Team Section -->
     <section class="acc-zone" id="team">
         <div class="container">
-            <!-- Core Committee -->
             <div class="acc-item">
                 <div class="acc-hdr ac-core open" onclick="toggleAccordion(this)">
                     <h2><span class="a-ic"><i class="fas fa-user-tie"></i></span> Executive Core Committee</h2>
@@ -1828,7 +1457,6 @@
                 </div>
             </div>
             
-            <!-- Sub-Wings -->
             <div class="acc-item">
                 <div class="acc-hdr ac-wing" onclick="toggleAccordion(this)">
                     <h2><span class="a-ic"><i class="fas fa-sitemap"></i></span> Specialized Sub-Wings</h2>
@@ -1839,7 +1467,6 @@
                 </div>
             </div>
             
-            <!-- History -->
             <div class="acc-item">
                 <div class="acc-hdr ac-hist" onclick="toggleAccordion(this)">
                     <h2><span class="a-ic"><i class="fas fa-history"></i></span> Union & Artsfest History</h2>
@@ -1865,7 +1492,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer id="contact">
         <div class="container">
             <div class="ft-grid">
@@ -1877,71 +1503,174 @@
         </div>
     </footer>
 
-    <!-- Profile Modal -->
+    <!-- Modals -->
     <div class="profile-modal" id="profileModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div class="profile-avatar">
-                <i class="fas fa-user"></i>
-            </div>
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
             <h3 id="modalTitle">Name</h3>
             <div class="profile-role" id="modalSubtitle">Position</div>
             <div class="profile-desc" id="modalDescription">Description</div>
-            <div class="modal-buttons">
-                <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
-            </div>
+            <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
         </div>
     </div>
 
-    <!-- Auth Modal -->
     <div class="auth-modal" id="authModal">
         <div class="auth-card">
             <button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
             <h2 style="text-align:center;margin-bottom:24px">ITQAN Portal</h2>
             <div style="display:flex;gap:8px;margin-bottom:24px">
-                <button class="auth-tab-btn active" onclick="switchAuthTab('login')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;border:none;color:#8892A8;cursor:pointer">Login</button>
-                <button class="auth-tab-btn" onclick="switchAuthTab('register')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;border:none;color:#8892A8;cursor:pointer">Register</button>
+                <button class="auth-tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
             </div>
             <div id="authError" style="color:#EF4444;display:none;margin-bottom:16px"></div>
             <form id="loginForm" onsubmit="handleLogin(event)">
-                <input type="text" id="loginUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
-                <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:24px">
+                <input type="text" id="loginUsername" placeholder="Username" class="fi" style="margin-bottom:16px">
+                <input type="password" id="loginPassword" placeholder="Password" class="fi" style="margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Login</button>
             </form>
             <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
-                <input type="text" id="regName" placeholder="Full Name" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
-                <input type="text" id="regUsername" placeholder="Username" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:16px">
-                <input type="password" id="regPassword" placeholder="Password (min 6)" style="width:100%;padding:12px;border-radius:10px;background:#1A1F33;border:1px solid #3A4055;color:white;margin-bottom:24px">
+                <input type="text" id="regName" placeholder="Full Name" class="fi" style="margin-bottom:16px">
+                <input type="text" id="regUsername" placeholder="Username" class="fi" style="margin-bottom:16px">
+                <input type="password" id="regPassword" placeholder="Password (min 6)" class="fi" style="margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Register</button>
             </form>
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div class="dash-panel" id="userDashboard">
         <div class="dash-hdr"><h3><i class="fas fa-th-large"></i> My Dashboard</h3><button onclick="closeDashboards()" style="background:none;border:none;color:#8892A8;font-size:1.2rem;cursor:pointer"><i class="fas fa-times"></i></button></div>
         <div class="dash-body" id="dashBody"></div>
     </div>
 
-    <!-- Admin Panel -->
     <div class="admin-ov" id="adminPanel">
-        <div class="admin-tb"><h3><i class="fas fa-user-shield"></i> Admin Panel</h3><button class="admin-xbtn" onclick="closeAdminPanel()"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
+        <div class="admin-tb"><h3><i class="fas fa-user-shield"></i> Admin Panel</h3><button class="admin-xbtn" onclick="closeAdminPanel()">Exit</button></div>
         <div class="admin-bd">
             <div class="admin-tabs">
-                <button class="admin-tbtn active" onclick="switchAdminTab('overview')"><i class="fas fa-chart-pie"></i> Overview</button>
-                <button class="admin-tbtn" onclick="switchAdminTab('students')"><i class="fas fa-user-graduate"></i> Students</button>
-                <button class="admin-tbtn" onclick="switchAdminTab('gallery')"><i class="fas fa-images"></i> Gallery</button>
-                <button class="admin-tbtn" onclick="switchAdminTab('magazines')"><i class="fas fa-newspaper"></i> Magazines</button>
+                <button class="admin-tbtn active" onclick="switchAdminTab('overview')">Overview</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('gallery')">Gallery</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('magazines')">Magazines</button>
             </div>
-            <div class="admin-tc active" id="adminTabOverview"><button onclick="claimAdminRole()" class="btn btn-sm btn-danger">Make Me Admin</button><div id="totalUsers" style="margin-top:16px"></div></div>
-            <div class="admin-tc" id="adminTabStudents"><button class="btn btn-sm btn-success" onclick="toggleAddForm()">Add Student</button><div id="studentsTableBody"></div></div>
-            <div class="admin-tc" id="adminTabGallery"><div class="add-form"><h4>Add Photo</h4><div class="fg"><label>Image URL</label><input type="url" id="galImageUrl" class="fi" placeholder="https://..."></div><div class="fg"><label>Caption</label><input type="text" id="galCaption" class="fi"></div><button onclick="addGalleryItem()" class="btn btn-sm btn-cyan">Add Photo</button></div><div id="adminGalleryList"></div></div>
-            <div class="admin-tc" id="adminTabMagazines"><div class="add-form"><h4>Add Publication</h4><div class="fg"><label>Title</label><input type="text" id="magTitle" class="fi"></div><div class="fg"><label>Cover URL</label><input type="url" id="magCover" class="fi"></div><div class="fg"><label>PDF URL</label><input type="url" id="magPdfUrl" class="fi"></div><button onclick="addMagItem()" class="btn btn-sm btn-pink">Add</button></div><div id="adminMagList"></div></div>
+            <div class="admin-tc active" id="adminTabOverview"><button onclick="claimAdminRole()" class="btn btn-sm btn-danger">Make Me Admin</button></div>
+            <div class="admin-tc" id="adminTabGallery">
+                <div class="add-form"><h4>Add Photo</h4><div class="fg"><label>Image URL</label><input type="url" id="galImageUrl" class="fi"></div><div class="fg"><label>Caption</label><input type="text" id="galCaption" class="fi"></div><button onclick="addGalleryItem()" class="btn btn-sm btn-cyan">Add Photo</button></div>
+                <div id="adminGalleryList" class="adm-il"></div>
+            </div>
+            <div class="admin-tc" id="adminTabMagazines">
+                <div class="add-form"><h4>Add Publication</h4><div class="fg"><label>Title</label><input type="text" id="magTitle" class="fi"></div><div class="fg"><label>Cover URL</label><input type="url" id="magCover" class="fi"></div><div class="fg"><label>PDF URL</label><input type="url" id="magPdfUrl" class="fi"></div><button onclick="addMagItem()" class="btn btn-sm btn-pink">Add</button></div>
+                <div id="adminMagList" class="adm-il"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Firebase Config
+        // ===== PARTICLE NETWORK - ENTERTAINMENT EFFECT =====
+        (function initParticleNetwork() {
+            const canvas = document.getElementById('particleCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            let mouseX = null, mouseY = null;
+            let mouseRadius = 100;
+            
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            
+            function createParticles() {
+                const particleCount = Math.min(80, Math.floor(width * height / 15000));
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        radius: Math.random() * 2 + 1,
+                        color: `hsl(${Math.random() * 60 + 180}, 70%, 60%)`
+                    });
+                }
+            }
+            
+            function draw() {
+                if (!ctx) return;
+                ctx.clearRect(0, 0, width, height);
+                
+                // Update and draw particles
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    // Boundary check
+                    if (p.x < 0) { p.x = width; }
+                    if (p.x > width) { p.x = 0; }
+                    if (p.y < 0) { p.y = height; }
+                    if (p.y > height) { p.y = 0; }
+                    
+                    // Mouse repulsion
+                    if (mouseX !== null && mouseY !== null) {
+                        const dx = p.x - mouseX;
+                        const dy = p.y - mouseY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < mouseRadius) {
+                            const angle = Math.atan2(dy, dx);
+                            const force = (mouseRadius - dist) / mouseRadius * 2;
+                            p.x += Math.cos(angle) * force * 3;
+                            p.y += Math.sin(angle) * force * 3;
+                        }
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                }
+                
+                // Draw connections
+                ctx.beginPath();
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(draw);
+            }
+            
+            window.addEventListener('resize', () => {
+                resize();
+                createParticles();
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            window.addEventListener('mouseleave', () => {
+                mouseX = null;
+                mouseY = null;
+            });
+            
+            resize();
+            createParticles();
+            draw();
+        })();
+        
+        // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
             apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
             authDomain: "zenith-artsfest.firebaseapp.com",
@@ -1978,14 +1707,12 @@
             { name: "Media Wing", chairman: "Muhammed S.M", convener: "Shahzad", desc: "Photography and videography.", icon: "fa-camera-retro" }
         ];
         
-        // Publications Data
         const publications = [
             { title: "ITQAN Annual Report 2025", desc: "Committee achievements, financial summary, and future roadmap.", date: "April 2026", type: "ANNUAL REPORT", color: "#FFB800", icon: "📄" },
             { title: "ITQAN Quarterly - Issue 03", desc: "Student spotlights, wing activities, and upcoming events.", date: "March 2026", type: "MAGAZINE", color: "#00F0FF", icon: "📰" },
             { title: "Summer 2026 Newsletter", desc: "ZENITH recap, new members, achievements, and community updates.", date: "June 2026", type: "NEWSLETTER", color: "#FF3366", icon: "📧" }
         ];
         
-        // Render Functions
         function renderCoreGrid() {
             const container = document.getElementById('coreGrid');
             if (!container) return;
@@ -2031,7 +1758,7 @@
             container.innerHTML = publications.map(p => `
                 <div class="pub-card">
                     <div style="display:inline-block;padding:4px 12px;background:${p.color}15;border-radius:20px;font-size:0.7rem;color:${p.color};margin-bottom:16px;font-weight:700">${p.icon} ${p.type}</div>
-                    <h3 style="margin-bottom:8px">${p.title}</h3>
+                    <h3>${p.title}</h3>
                     <p style="color:#8892A8;font-size:0.85rem;margin-bottom:16px">${p.desc}</p>
                     <div style="display:flex;justify-content:space-between;align-items:center">
                         <span style="font-size:0.7rem;color:#3A4055"><i class="fas fa-calendar-alt"></i> ${p.date}</span>
@@ -2040,15 +1767,6 @@
                 </div>
             `).join('');
         }
-        
-        // Mouse Glow Effect
-        document.querySelectorAll('.cc, .wc, .feat-card, .about-card, .mag-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--x', ((e.clientX - rect.left) / rect.width * 100) + '%');
-                card.style.setProperty('--y', ((e.clientY - rect.top) / rect.height * 100) + '%');
-            });
-        });
         
         // Mobile Menu
         const menuBtn = document.getElementById('mobileMenuBtn');
@@ -2219,7 +1937,7 @@
                         <div class="dash-row"><span class="dash-lbl">Username</span><span class="dash-val">@${currentUserData.username || 'N/A'}</span></div>
                         <div class="dash-row"><span class="dash-lbl">Role</span><span class="dash-val">${currentUserData.role || 'Member'}</span></div>
                     </div>
-                    <div class="dash-acts"><button class="dash-abtn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+                    <div class="dash-acts"><button class="dash-abtn" onclick="handleLogout()">Logout</button></div>
                 `;
             }
         }
@@ -2250,7 +1968,7 @@
         }
         
         function switchAdminTab(tab) {
-            const tabs = ['overview', 'students', 'gallery', 'magazines'];
+            const tabs = ['overview', 'gallery', 'magazines'];
             tabs.forEach(t => {
                 const content = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
                 if (content) content.classList.remove('active');
@@ -2269,11 +1987,6 @@
                 showToast('You are now admin!', 'success');
                 location.reload();
             }
-        }
-        
-        function toggleAddForm() {
-            const form = document.getElementById('addUserForm');
-            if (form) form.classList.toggle('active');
         }
         
         // Gallery Functions
@@ -2426,6 +2139,14 @@
                     currentUserData = doc.data();
                     const initial = currentUserData.name?.charAt(0).toUpperCase() || 'U';
                     authArea.innerHTML = `<button class="auth-user-btn" onclick="openDashboard()"><div class="avatar-sm">${initial}</div>${currentUserData.name?.split(' ')[0] || 'User'}</button>`;
+                    if (currentUserData.role === 'admin') {
+                        const adminBtn = document.createElement('button');
+                        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+                        adminBtn.className = 'auth-btn auth-btn-login';
+                        adminBtn.style.marginLeft = '8px';
+                        adminBtn.onclick = () => openAdminPanel();
+                        authArea.appendChild(adminBtn);
+                    }
                 }
             } else {
                 currentUserData = null;
@@ -2441,11 +2162,11 @@
         loadPublicMags();
     </script>
     
-    <!-- Your existing scripts - KEEP THESE -->
-    <script src="cursor-polish.js?v=12"></script>
-    <script src="history-media-upgrade.js?v=12"></script>
-    <script src="upload-support.js?v=12"></script>
+    <!-- Your existing scripts - KEEP ALL -->
+    <script src="cursor-polish.js?v=13"></script>
+    <script src="history-media-upgrade.js?v=13"></script>
+    <script src="upload-support.js?v=13"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=12"></script>
+    <script src="profile-tabs.js?v=13"></script>
 </body>
 </html>
