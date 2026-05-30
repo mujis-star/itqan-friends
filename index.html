@@ -1846,19 +1846,58 @@ window.switchMediaTab = function(tab) {
         document.getElementById('galCaption').value='';
         loadPublicGallery();loadAdminGallery();
     }
-
-    async function loadAdminGallery(){
-        const snap=await db.collection('gallery').get();
-        const list=document.getElementById('adminGalleryList');
-        if(!list)return;
-        if(snap.empty){list.innerHTML='<p style="color:var(--muted);font-size:.88rem">No photos yet.</p>';return}
-        list.innerHTML=snap.docs.map(d=>`<div class="adm-ir"><span>${d.data().caption||'Untitled'}</span><button class="del-btn" onclick="deleteGalleryItem('${d.id}')"><i class="fas fa-trash"></i> Delete</button></div>`).join('');
+async function loadAdminGallery() {
+    const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+    const list = document.getElementById('adminGalleryList');
+    if (!list) return;
+    
+    if (snap.empty) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
+        return;
     }
+    
+    list.innerHTML = snap.docs.map(doc => {
+        const data = doc.data();
+        // Get image URL - handle both old and new data formats
+        let imageUrl = data.imageUrl || '';
+        let caption = data.caption || 'Untitled';
+        
+        return `
+            <div class="adm-ir">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <img src="${imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" 
+                         onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=Error'">
+                    <div>
+                        <strong>${caption}</strong><br>
+                        <small style="color:var(--muted)">${imageUrl ? 'Image URL' : 'No URL'}</small>
+                    </div>
+                </div>
+                <button class="del-btn" onclick="deleteGalleryItem('${doc.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+    }).join('');
+}
 
-    async function deleteGalleryItem(id){
+async function deleteGalleryItem(id) {
+    if (!confirm('Delete this photo permanently?')) return;
+    try {
+        // Get the document first to check if there's a file to delete from backend
+        const doc = await db.collection('gallery').doc(id).get();
+        const data = doc.data();
+        
+        // If there's a fileName, you could also delete from backend here
+        // For now, just delete from Firestore
+        
         await db.collection('gallery').doc(id).delete();
-        loadPublicGallery();loadAdminGallery();showToast('Photo deleted','success');
+        showToast('Photo deleted', 'success');
+        await loadPublicGallery();
+        await loadAdminGallery();
+    } catch(e) {
+        showToast('Error deleting photo: ' + e.message, 'error');
     }
+}
 
     async function loadPublicMags(){
         try{
