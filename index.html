@@ -1051,34 +1051,36 @@
     <div class="divider"></div>
 
     <!-- Media Hub -->
-    <section class="media-hub" id="media">
-        <div class="container">
-            <div class="sec-wrap">
-                <div class="sec-eyebrow">Media Hub</div>
-                <div class="sec-title">Gallery &amp; <span style="color:var(--gold)">Publications</span></div>
-                <div class="sec-line"><span></span></div>
-            </div>
-            <div class="media-tabs">
-                <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
-                <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines &amp; Tabloids</button>
-            </div>
-            <div class="media-panel active" id="mediaGallery">
-                <div class="gallery-grid" id="publicGalleryGrid"></div>
-                <div id="galleryEmpty" class="empty-state" style="display:none">
-                    <i class="fas fa-camera-retro"></i>
-                    <p>No photos yet. Admin can add photos in the panel.</p>
-                </div>
-            </div>
-            <div class="media-panel" id="mediaMagazines">
-                <div class="mag-grid" id="publicMagGrid"></div>
-                <div id="magazinesEmpty" class="empty-state" style="display:none">
-                    <i class="fas fa-book-open"></i>
-                    <p>No publications yet. Check back soon!</p>
-                </div>
+    <!-- ===== MEDIA HUB SECTION ===== -->
+<section class="media-hub" id="media">
+    <div class="container">
+        <div class="sec-wrap">
+            <div class="sec-eyebrow">Media Hub</div>
+            <div class="sec-title">Gallery &amp; <span style="color:var(--gold)">Publications</span></div>
+            <div class="sec-line"><span></span></div>
+        </div>
+        <div class="media-tabs">
+            <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
+            <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines &amp; Tabloids</button>
+        </div>
+        <div class="media-panel active" id="mediaGallery">
+            <div class="gallery-grid" id="publicGalleryGrid"></div>
+            <div id="galleryEmpty" class="empty-state" style="display:block">
+                <i class="fas fa-camera-retro"></i>
+                <p>No photos yet. <strong>Admin:</strong> Go to Admin Panel → Gallery to add photos.</p>
+                <button class="btn btn-sm btn-cyan" onclick="openAdminPanel()" style="margin-top:12px"><i class="fas fa-user-shield"></i> Open Admin Panel</button>
             </div>
         </div>
-    </section>
-
+        <div class="media-panel" id="mediaMagazines">
+            <div class="mag-grid" id="publicMagGrid"></div>
+            <div id="magazinesEmpty" class="empty-state" style="display:block">
+                <i class="fas fa-book-open"></i>
+                <p>No publications yet. <strong>Admin:</strong> Go to Admin Panel → Magazines to add publications.</p>
+                <button class="btn btn-sm btn-cyan" onclick="openAdminPanel()" style="margin-top:12px"><i class="fas fa-user-shield"></i> Open Admin Panel</button>
+            </div>
+        </div>
+    </div>
+</section>
     <!-- Recent Publications -->
     <section class="pub-section">
         <div class="container">
