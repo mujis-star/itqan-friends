@@ -1433,9 +1433,9 @@
                         <progress id="uploadProgressBar" value="0" max="100" style="width:100%;height:6px;border-radius:3px"></progress>
                         <p id="uploadStatus" style="font-size:0.7rem;color:var(--muted);margin-top:5px">Uploading...</p>
                     </div>
-                    <button onclick="uploadToDrive()" class="btn btn-sm btn-cyan" style="margin-top:10px">
-                        <i class="fas fa-cloud-upload-alt"></i> Upload to Drive
-                    </button>
+                        <button onclick="uploadToBackend()" class="btn btn-sm btn-cyan">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                        </button>
                 </div>
                 <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem">Existing Photos</h4>
                 <div id="adminGalleryList" class="adm-il"></div>
@@ -2254,6 +2254,111 @@ async function loadAdminGallery() {
         `;
     }).join('');
 }
+
+
+                
+                
+                        // Backend API URL (your Render URL)
+                const API_BASE_URL = 'https://itqan-backend.onrender.com';
+                
+                // Get Firebase ID token
+                // Get Firebase ID token
+                async function getIdToken() {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error('Not logged in');
+                    return await user.getIdToken();  // Note: getIdToken() not getIDToken()
+                }
+                
+                // Upload to Python Backend
+                async function uploadToBackend() {
+                    const fileInput = document.getElementById('galImageFile');
+                    const file = fileInput.files[0];
+                    const caption = document.getElementById('galCaption').value.trim();
+                    
+                    if (!file) {
+                        showToast('Please select an image', 'error');
+                        return;
+                    }
+                    
+                    const token = await getIdToken();  // ← This matches the function name
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('caption', caption);
+                    
+                    const progressDiv = document.getElementById('uploadProgress');
+                    const progressBar = document.getElementById('uploadProgressBar');
+                    const statusText = document.getElementById('uploadStatus');
+                    progressDiv.style.display = 'block';
+                    progressBar.value = 0;
+                    statusText.textContent = 'Uploading...';
+                    
+                    try {
+                        const response = await fetch('https://itqan-backend.onrender.com/upload', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: formData,
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            progressBar.value = 100;
+                            statusText.textContent = 'Complete!';
+                            showToast('Uploaded successfully!', 'success');
+                            
+                            fileInput.value = '';
+                            document.getElementById('galCaption').value = '';
+                            document.getElementById('imagePreview').style.display = 'none';
+                            progressDiv.style.display = 'none';
+                            
+                            await loadPublicGallery();
+                            await loadAdminGallery();
+                        } else {
+                            throw new Error(result.error);
+                        }
+                    } catch (error) {
+                        showToast('Upload failed: ' + error.message, 'error');
+                        progressDiv.style.display = 'none';
+                    }
+                }
+                                
+                // Update loadPublicGallery to use the backend URL for images
+                async function loadPublicGallery() {
+                    try {
+                        const snap = await db.collection('gallery').orderBy('createdAt', 'desc').get();
+                        const grid = document.getElementById('publicGalleryGrid');
+                        const empty = document.getElementById('galleryEmpty');
+                        
+                        if (snap.empty) {
+                            if (empty) empty.style.display = 'block';
+                            if (grid) grid.innerHTML = '';
+                            return;
+                        }
+                        
+                        galleryCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        if (empty) empty.style.display = 'none';
+                        
+                        if (grid) {
+                            grid.innerHTML = galleryCache.map((item, i) => {
+                                let imageUrl = item.imageUrl;
+                                // If it's a relative URL from our backend, prepend the backend URL
+                                if (imageUrl && imageUrl.startsWith('/uploads')) {
+                                    imageUrl = `${API_BASE_URL}${imageUrl}`;
+                                }
+                                return `
+                                    <div class="gallery-item" onclick="openLightbox(${i})">
+                                        <img src="${imageUrl}" alt="${item.caption || ''}" loading="lazy">
+                                        <div class="gallery-ov"><h4>${item.caption || ''}</h4></div>
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    } catch(e) { 
+                        console.error("Gallery load error:", e);
+                    }
+                }
     </script>
 
     <!-- External scripts -->
