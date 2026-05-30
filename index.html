@@ -972,6 +972,41 @@
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
 }
+
+
+        /* ===== EMERGENCY GALLERY FIX ===== */
+#mediaGallery.active,
+#mediaGallery {
+    display: block !important;
+}
+
+#publicGalleryGrid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+}
+
+#publicGalleryGrid .gallery-item {
+    display: block !important;
+    width: 100% !important;
+    aspect-ratio: 4/3 !important;
+    background: #121626 !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+}
+
+#publicGalleryGrid .gallery-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+#galleryEmpty {
+    display: none !important;
+}
+
+        
     </style>
 </head>
 <body>
