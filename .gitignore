@@ -1,5 +1,24 @@
-backend/uploads/
-backend/service-account-key.json
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# Uploads
+backend/uploads/
+uploads/
+
+# Environment
 .env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
