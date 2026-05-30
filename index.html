@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- YOUR EXTERNAL CSS - KEPT -->
+    <link rel="stylesheet" href="history-media-upgrade.css?v=14">
+    <link rel="stylesheet" href="responsive-polish.css?v=14">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -45,28 +49,7 @@
             padding: 0 24px;
         }
         
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-        
-        /* ===== PARTICLE NETWORK CANVAS ===== */
+        /* ===== PARTICLE CANVAS (BACKGROUND ONLY) ===== */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -75,6 +58,144 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+        }
+        
+        /* All content above canvas */
+        header, .hero, .features, .about, .media-hub, .acc-zone, footer {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Hero background image restored */
+        .hero {
+            position: relative;
+            text-align: center;
+            padding: 120px 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
+            z-index: 1;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25);
+            z-index: 0;
+        }
+        
+        .hero-grad {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(6,8,16,0.85) 0%, rgba(6,8,16,0.7) 100%);
+            z-index: 1;
+        }
+        
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: #00F0FF;
+            margin-bottom: 24px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #00F0FF, #FFB800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-pink {
+            background: linear-gradient(135deg, #FF3366, #E62E5C);
+            color: white;
+        }
+        
+        .btn-pink:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn-cyan {
+            background: linear-gradient(135deg, #00F0FF, #00B8D4);
+            color: #060810;
+        }
+        
+        .btn-cyan:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #00F0FF;
+            color: #00F0FF;
+        }
+        
+        .btn-outline:hover {
+            background: #00F0FF;
+            color: #060810;
+        }
+        
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 0.75rem;
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #8892A8;
+            font-size: 0.6rem;
+            z-index: 2;
         }
         
         /* ===== HEADER ===== */
@@ -145,6 +266,7 @@
         .auth-area {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
         
         .auth-btn {
@@ -217,124 +339,9 @@
             cursor: pointer;
         }
         
-        /* ===== HERO ===== */
-        .hero {
-            position: relative;
-            text-align: center;
-            padding: 120px 20px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #0C0F1A 0%, #060810 100%);
-            z-index: 1;
-        }
-        
-        .hero-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 50px;
-            font-size: 0.7rem;
-            color: #00F0FF;
-            margin-bottom: 24px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #fff, #00F0FF, #FFB800);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: fadeUp 0.8s ease;
-        }
-        
-        .hero p {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            max-width: 600px;
-            margin: 0 auto 32px;
-            animation: fadeUp 0.8s ease 0.2s both;
-        }
-        
-        .hero-btns {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeUp 0.8s ease 0.4s both;
-        }
-        
-        .btn {
-            padding: 12px 32px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-pink {
-            background: linear-gradient(135deg, #FF3366, #E62E5C);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255,51,102,0.3);
-        }
-        
-        .btn-pink:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255,51,102,0.4);
-        }
-        
-        .btn-cyan {
-            background: linear-gradient(135deg, #00F0FF, #00B8D4);
-            color: #060810;
-            box-shadow: 0 4px 15px rgba(0,240,255,0.3);
-        }
-        
-        .btn-cyan:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,240,255,0.4);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #00F0FF;
-            color: #00F0FF;
-        }
-        
-        .btn-outline:hover {
-            background: #00F0FF;
-            color: #060810;
-        }
-        
-        .btn-sm {
-            padding: 6px 16px;
-            font-size: 0.75rem;
-        }
-        
-        .scroll-hint {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #8892A8;
-            font-size: 0.6rem;
-            z-index: 2;
-            animation: float 2s ease-in-out infinite;
-        }
-        
         /* ===== SECTIONS ===== */
         .features, .about, .media-hub, .acc-zone {
             padding: 80px 0;
-            position: relative;
-            z-index: 1;
         }
         
         .about {
@@ -360,7 +367,6 @@
             height: 8px;
             background: #00F0FF;
             border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
         }
         
         .sec-line-c::before,
@@ -390,7 +396,6 @@
         .feat-card:hover, .about-card:hover {
             transform: translateY(-8px);
             border-color: #00F0FF;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
         .feat-icon, .about-ic {
@@ -404,7 +409,6 @@
             margin: 0 auto 20px;
             font-size: 1.8rem;
             color: #00F0FF;
-            transition: all 0.3s;
         }
         
         .feat-card:hover .feat-icon {
@@ -464,7 +468,6 @@
         
         .media-panel.active {
             display: block;
-            animation: fadeUp 0.4s ease;
         }
         
         .gallery-grid, .mag-grid {
@@ -532,11 +535,6 @@
             width: 100%;
             aspect-ratio: 3/4;
             object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .mag-card:hover .mag-cover {
-            transform: scale(1.05);
         }
         
         .mag-body {
@@ -544,7 +542,7 @@
             text-align: center;
         }
         
-        /* ===== CORE CARDS ===== */
+        /* ===== CORE GRID ===== */
         .core-grid, .wgrid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -560,7 +558,6 @@
         
         .cc:hover, .wc:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
         .cc-in, .w-in {
@@ -577,12 +574,16 @@
             justify-content: center;
             margin: 0 auto 20px;
             font-size: 1.8rem;
-            transition: all 0.3s;
         }
         
-        .cc:hover .cc-ic, .wc:hover .w-ic {
-            transform: scale(1.1) rotate(-5deg);
-        }
+        /* Core colors */
+        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, #FFD700, #FFA500); color: #FFD700; }
+        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #C0C0C0; }
+        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; }
+        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; }
+        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; }
+        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; }
+        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; }
         
         .cc-role, .w-lab {
             font-size: 0.7rem;
@@ -591,6 +592,14 @@
             margin-bottom: 10px;
             font-weight: 700;
         }
+        
+        .cc:nth-child(1) .cc-role { color: #FFD700; }
+        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
+        .cc:nth-child(3) .cc-role { color: #00F0FF; }
+        .cc:nth-child(4) .cc-role { color: #A78BFA; }
+        .cc:nth-child(5) .cc-role { color: #00DC82; }
+        .cc:nth-child(6) .cc-role { color: #FF6464; }
+        .cc:nth-child(7) .cc-role { color: #FFB800; }
         
         .cc-name, .w-ttl {
             font-size: 1.2rem;
@@ -601,7 +610,6 @@
             color: #8892A8;
             font-size: 0.85rem;
             margin-bottom: 20px;
-            line-height: 1.5;
         }
         
         .cc-btns, .w-btns {
@@ -610,68 +618,21 @@
             justify-content: center;
         }
         
-        /* President - Gold */
-        .cc:nth-child(1) { border-top: 3px solid #FFD700; }
-        .cc:nth-child(1) .cc-ic { background: linear-gradient(135deg, #FFD700, #FFA500); color: #FFD700; animation: pulse 2s ease-in-out infinite; }
-        .cc:nth-child(1) .cc-role { color: #FFD700; }
+        /* Wing colors */
+        .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; }
+        .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; }
+        .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; }
+        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; }
+        .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #4A90E2; }
+        .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; }
+        .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, #FF3366, #E62E5C); color: #FF3366; }
         
-        /* Vice President - Silver */
-        .cc:nth-child(2) { border-top: 3px solid #C0C0C0; }
-        .cc:nth-child(2) .cc-ic { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #C0C0C0; }
-        .cc:nth-child(2) .cc-role { color: #C0C0C0; }
-        
-        /* Secretary - Cyan */
-        .cc:nth-child(3) { border-top: 3px solid #00F0FF; }
-        .cc:nth-child(3) .cc-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; }
-        .cc:nth-child(3) .cc-role { color: #00F0FF; }
-        
-        /* Joint Secretary - Purple */
-        .cc:nth-child(4) { border-top: 3px solid #A78BFA; }
-        .cc:nth-child(4) .cc-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; }
-        .cc:nth-child(4) .cc-role { color: #A78BFA; }
-        
-        /* Treasurer - Green */
-        .cc:nth-child(5) { border-top: 3px solid #00DC82; }
-        .cc:nth-child(5) .cc-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; animation: float 3s ease-in-out infinite; }
-        .cc:nth-child(5) .cc-role { color: #00DC82; }
-        
-        /* Financial Manager - Coral */
-        .cc:nth-child(6) { border-top: 3px solid #FF6464; }
-        .cc:nth-child(6) .cc-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; }
-        .cc:nth-child(6) .cc-role { color: #FF6464; }
-        
-        /* P.R.O - Orange */
-        .cc:nth-child(7) { border-top: 3px solid #FFB800; }
-        .cc:nth-child(7) .cc-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; }
-        .cc:nth-child(7) .cc-role { color: #FFB800; }
-        
-        /* Wing Cards Colors */
-        .wc:nth-child(1) { border-bottom: 3px solid #FFB800; }
-        .wc:nth-child(1) .w-ic { background: linear-gradient(135deg, #FFB800, #FF9500); color: #FFB800; animation: float 3s ease-in-out infinite; }
         .wc:nth-child(1) .w-lab { color: #FFB800; }
-        
-        .wc:nth-child(2) { border-bottom: 3px solid #00F0FF; }
-        .wc:nth-child(2) .w-ic { background: linear-gradient(135deg, #00F0FF, #00B8D4); color: #00F0FF; animation: pulse 2s ease-in-out infinite; }
         .wc:nth-child(2) .w-lab { color: #00F0FF; }
-        
-        .wc:nth-child(3) { border-bottom: 3px solid #00DC82; }
-        .wc:nth-child(3) .w-ic { background: linear-gradient(135deg, #00DC82, #00B868); color: #00DC82; animation: rotate 4s linear infinite; }
         .wc:nth-child(3) .w-lab { color: #00DC82; }
-        
-        .wc:nth-child(4) { border-bottom: 3px solid #A78BFA; }
-        .wc:nth-child(4) .w-ic { background: linear-gradient(135deg, #A78BFA, #8250FF); color: #A78BFA; animation: float 2.5s ease-in-out infinite; }
         .wc:nth-child(4) .w-lab { color: #A78BFA; }
-        
-        .wc:nth-child(5) { border-bottom: 3px solid #4A90E2; }
-        .wc:nth-child(5) .w-ic { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #4A90E2; animation: rotate 3s linear infinite; }
         .wc:nth-child(5) .w-lab { color: #4A90E2; }
-        
-        .wc:nth-child(6) { border-bottom: 3px solid #FF6464; }
-        .wc:nth-child(6) .w-ic { background: linear-gradient(135deg, #FF6464, #FF4444); color: #FF6464; animation: pulse 1.5s ease-in-out infinite; }
         .wc:nth-child(6) .w-lab { color: #FF6464; }
-        
-        .wc:nth-child(7) { border-bottom: 3px solid #FF3366; }
-        .wc:nth-child(7) .w-ic { background: linear-gradient(135deg, #FF3366, #E62E5C); color: #FF3366; animation: float 2s ease-in-out infinite; }
         .wc:nth-child(7) .w-lab { color: #FF3366; }
         
         .w-leads {
@@ -685,20 +646,13 @@
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            transition: all 0.3s;
             text-align: center;
-        }
-        
-        .w-chip:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
         }
         
         .ch-role {
             font-size: 0.6rem;
             color: #8892A8;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 5px;
         }
         
@@ -727,7 +681,6 @@
         
         .acc-hdr:hover {
             transform: translateX(5px);
-            border-color: rgba(0, 240, 255, 0.3);
         }
         
         .acc-hdr h2 {
@@ -747,7 +700,6 @@
             align-items: center;
             justify-content: center;
             color: #00F0FF;
-            transition: all 0.3s;
         }
         
         .acc-hdr .a-arr {
@@ -765,7 +717,6 @@
         
         .acc-body.open {
             display: block;
-            animation: fadeUp 0.3s ease;
         }
         
         .ac-wing {
@@ -814,7 +765,6 @@
             border: none;
             color: #8892A8;
             cursor: pointer;
-            transition: all 0.3s;
         }
         
         .htab.active {
@@ -828,7 +778,6 @@
         
         .hpanel.active {
             display: block;
-            animation: fadeUp 0.3s ease;
         }
         
         .hperiod {
@@ -861,12 +810,6 @@
             border-radius: 12px;
             padding: 12px;
             text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .hcard:hover {
-            transform: translateY(-3px);
-            border-color: #FFB800;
         }
         
         .hrole {
@@ -879,17 +822,6 @@
         .hname {
             font-weight: 600;
             font-size: 0.85rem;
-        }
-        
-        .hcard.u-c .hrole { color: #FFB800; }
-        .hcard.a-c .hrole { color: #FF3366; }
-        
-        .hgroup {
-            font-size: 0.7rem;
-            color: #8892A8;
-            margin: 16px 0 8px;
-            padding-bottom: 4px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
         
         /* ===== PUBLICATIONS ===== */
@@ -910,7 +842,6 @@
         .pub-card:hover {
             transform: translateY(-6px);
             border-color: #00F0FF;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         /* ===== FOOTER ===== */
@@ -918,8 +849,6 @@
             background: #060810;
             padding: 60px 0 20px;
             border-top: 1px solid rgba(0, 240, 255, 0.1);
-            position: relative;
-            z-index: 1;
         }
         
         .ft-grid {
@@ -938,7 +867,6 @@
         .ft-desc {
             color: #8892A8;
             font-size: 0.85rem;
-            line-height: 1.6;
         }
         
         .ft-links {
@@ -951,7 +879,6 @@
         
         .ft-links a {
             color: #8892A8;
-            text-decoration: none;
             transition: color 0.3s;
         }
         
@@ -1008,7 +935,6 @@
         
         .profile-modal.active, .auth-modal.active {
             display: flex;
-            animation: fadeUp 0.3s ease;
         }
         
         .modal-content, .auth-card {
@@ -1034,13 +960,11 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            transition: all 0.3s;
         }
         
         .modal-close:hover, .auth-close:hover {
             background: #FF3366;
             color: white;
-            transform: rotate(90deg);
         }
         
         .profile-avatar {
@@ -1052,20 +976,11 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            animation: pulse 2s ease-in-out infinite;
         }
         
         .profile-avatar i {
             font-size: 2.5rem;
             color: white;
-        }
-        
-        .modal-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff, #00F0FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         
         /* ===== DASHBOARD ===== */
@@ -1114,7 +1029,6 @@
             font-weight: bold;
             margin: 0 auto 16px;
             color: white;
-            animation: pulse 2s ease-in-out infinite;
         }
         
         /* ===== ADMIN PANEL ===== */
@@ -1142,8 +1056,6 @@
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 10;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
         }
         
         .admin-tabs {
@@ -1163,7 +1075,6 @@
             border: none;
             color: #8892A8;
             cursor: pointer;
-            transition: all 0.3s;
         }
         
         .admin-tbtn.active {
@@ -1205,7 +1116,6 @@
             border: 1px solid #3A4055;
             border-radius: 8px;
             color: white;
-            font-size: 0.85rem;
         }
         
         .adm-il {
@@ -1259,16 +1169,10 @@
             border-radius: 10px;
             color: white;
             margin-top: 10px;
-            animation: slideIn 0.3s ease;
         }
         
         .toast-success { background: #10B981; }
         .toast-error { background: #EF4444; }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
         
         .lightbox {
             display: none;
@@ -1332,9 +1236,6 @@
             .hero h1 {
                 font-size: 2rem;
             }
-            .hero p {
-                font-size: 0.9rem;
-            }
             .sec-title {
                 font-size: 1.5rem;
             }
@@ -1342,15 +1243,17 @@
     </style>
 </head>
 <body>
-    <!-- Particle Network Canvas -->
+    <!-- Particle Network Canvas (Background only) -->
     <canvas id="particleCanvas"></canvas>
     
     <div class="toast-c" id="toastContainer"></div>
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="closeLightbox()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
+        <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+        <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
         <img id="lightboxImg" src="">
-        <div class="lightbox-caption" id="lightboxCaption" style="margin-top:16px;color:white;text-align:center"></div>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
     </div>
 
     <header>
@@ -1380,6 +1283,8 @@
     </header>
 
     <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-grad"></div>
         <div class="hero-inner">
             <div class="hero-badge"><i class="fas fa-bolt"></i> Empowering Leaders Since Day One</div>
             <h1>United for Professional <br>Growth & Excellence</h1>
@@ -1428,11 +1333,11 @@
             </div>
             <div class="media-panel active" id="mediaGallery">
                 <div class="gallery-grid" id="publicGalleryGrid"></div>
-                <div id="galleryEmpty" class="gallery-empty" style="display:none"><i class="fas fa-camera-retro" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No photos yet. Admin can add photos in the panel.</p></div>
+                <div id="galleryEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-camera-retro" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No photos yet. Admin can add photos in the panel.</p></div>
             </div>
             <div class="media-panel" id="mediaMagazines">
                 <div class="mag-grid" id="publicMagGrid"></div>
-                <div id="magazinesEmpty" class="magazines-empty" style="display:none"><i class="fas fa-book-open" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No publications yet. Coming soon!</p></div>
+                <div id="magazinesEmpty" style="display:none;text-align:center;padding:40px"><i class="fas fa-book-open" style="font-size:2rem;opacity:0.3;margin-bottom:16px;display:block"></i><p>No publications yet. Coming soon!</p></div>
             </div>
         </div>
     </section>
@@ -1509,8 +1414,8 @@
             <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             <div class="profile-avatar"><i class="fas fa-user"></i></div>
             <h3 id="modalTitle">Name</h3>
-            <div class="profile-role" id="modalSubtitle">Position</div>
-            <div class="profile-desc" id="modalDescription">Description</div>
+            <p id="modalSubtitle" style="color:#00F0FF;margin-bottom:16px">Position</p>
+            <p id="modalDescription" style="color:#8892A8;margin-bottom:24px">Description</p>
             <button class="btn btn-outline btn-sm" onclick="closeModal()">Close</button>
         </div>
     </div>
@@ -1520,19 +1425,19 @@
             <button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
             <h2 style="text-align:center;margin-bottom:24px">ITQAN Portal</h2>
             <div style="display:flex;gap:8px;margin-bottom:24px">
-                <button class="auth-tab-btn active" onclick="switchAuthTab('login')">Login</button>
-                <button class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
+                <button class="auth-tab-btn active" onclick="switchAuthTab('login')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;color:#8892A8;cursor:pointer">Login</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('register')" style="flex:1;padding:10px;border-radius:8px;background:#1A1F33;color:#8892A8;cursor:pointer">Register</button>
             </div>
             <div id="authError" style="color:#EF4444;display:none;margin-bottom:16px"></div>
             <form id="loginForm" onsubmit="handleLogin(event)">
-                <input type="text" id="loginUsername" placeholder="Username" class="fi" style="margin-bottom:16px">
-                <input type="password" id="loginPassword" placeholder="Password" class="fi" style="margin-bottom:24px">
+                <input type="text" id="loginUsername" placeholder="Username" class="fi" style="width:100%;margin-bottom:16px">
+                <input type="password" id="loginPassword" placeholder="Password" class="fi" style="width:100%;margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Login</button>
             </form>
             <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
-                <input type="text" id="regName" placeholder="Full Name" class="fi" style="margin-bottom:16px">
-                <input type="text" id="regUsername" placeholder="Username" class="fi" style="margin-bottom:16px">
-                <input type="password" id="regPassword" placeholder="Password (min 6)" class="fi" style="margin-bottom:24px">
+                <input type="text" id="regName" placeholder="Full Name" class="fi" style="width:100%;margin-bottom:16px">
+                <input type="text" id="regUsername" placeholder="Username" class="fi" style="width:100%;margin-bottom:16px">
+                <input type="password" id="regPassword" placeholder="Password (min 6)" class="fi" style="width:100%;margin-bottom:24px">
                 <button type="submit" class="btn btn-cyan" style="width:100%">Register</button>
             </form>
         </div>
@@ -1564,7 +1469,7 @@
     </div>
 
     <script>
-        // ===== PARTICLE NETWORK - ENTERTAINMENT EFFECT =====
+        // ===== PARTICLE NETWORK (BACKGROUND ONLY) =====
         (function initParticleNetwork() {
             const canvas = document.getElementById('particleCanvas');
             if (!canvas) return;
@@ -1573,7 +1478,6 @@
             let width, height;
             let particles = [];
             let mouseX = null, mouseY = null;
-            let mouseRadius = 100;
             
             function resize() {
                 width = canvas.width = window.innerWidth;
@@ -1581,16 +1485,16 @@
             }
             
             function createParticles() {
-                const particleCount = Math.min(80, Math.floor(width * height / 15000));
+                const count = Math.min(60, Math.floor(width * height / 18000));
                 particles = [];
-                for (let i = 0; i < particleCount; i++) {
+                for (let i = 0; i < count; i++) {
                     particles.push({
                         x: Math.random() * width,
                         y: Math.random() * height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
                         radius: Math.random() * 2 + 1,
-                        color: `hsl(${Math.random() * 60 + 180}, 70%, 60%)`
+                        color: `rgba(0, 240, 255, ${Math.random() * 0.3 + 0.1})`
                     });
                 }
             }
@@ -1599,28 +1503,26 @@
                 if (!ctx) return;
                 ctx.clearRect(0, 0, width, height);
                 
-                // Update and draw particles
                 for (let i = 0; i < particles.length; i++) {
                     const p = particles[i];
                     p.x += p.vx;
                     p.y += p.vy;
                     
-                    // Boundary check
-                    if (p.x < 0) { p.x = width; }
-                    if (p.x > width) { p.x = 0; }
-                    if (p.y < 0) { p.y = height; }
-                    if (p.y > height) { p.y = 0; }
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
                     
                     // Mouse repulsion
                     if (mouseX !== null && mouseY !== null) {
                         const dx = p.x - mouseX;
                         const dy = p.y - mouseY;
                         const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < mouseRadius) {
+                        if (dist < 100) {
                             const angle = Math.atan2(dy, dx);
-                            const force = (mouseRadius - dist) / mouseRadius * 2;
-                            p.x += Math.cos(angle) * force * 3;
-                            p.y += Math.sin(angle) * force * 3;
+                            const force = (100 - dist) / 100 * 2;
+                            p.x += Math.cos(angle) * force;
+                            p.y += Math.sin(angle) * force;
                         }
                     }
                     
@@ -1631,17 +1533,16 @@
                 }
                 
                 // Draw connections
-                ctx.beginPath();
                 for (let i = 0; i < particles.length; i++) {
                     for (let j = i + 1; j < particles.length; j++) {
                         const dx = particles[i].x - particles[j].x;
                         const dy = particles[i].y - particles[j].y;
                         const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
+                        if (dist < 100) {
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - dist / 120)})`;
+                            ctx.strokeStyle = `rgba(0, 240, 255, ${0.08 * (1 - dist / 100)})`;
                             ctx.stroke();
                         }
                     }
@@ -1670,7 +1571,7 @@
             draw();
         })();
         
-        // ===== FIREBASE CONFIG =====
+        // ===== FIREBASE =====
         const firebaseConfig = {
             apiKey: "AIzaSyAgOLv2xG21CY7ghd3KOhQcfRrWZ34aPGU",
             authDomain: "zenith-artsfest.firebaseapp.com",
@@ -1686,7 +1587,7 @@
         let currentUserData = null;
         let galleryCache = [];
         
-        // ===== CORE DATA =====
+        // ===== DATA =====
         const coreMembers = [
             { name: "Sayed Hudaif", role: "President", desc: "Leads strategic planning and represents the union externally.", icon: "fa-crown" },
             { name: "Sayed Burhan", role: "Vice President", desc: "Supports the President and oversees operations.", icon: "fa-shield-alt" },
@@ -1759,7 +1660,7 @@
                 <div class="pub-card">
                     <div style="display:inline-block;padding:4px 12px;background:${p.color}15;border-radius:20px;font-size:0.7rem;color:${p.color};margin-bottom:16px;font-weight:700">${p.icon} ${p.type}</div>
                     <h3>${p.title}</h3>
-                    <p style="color:#8892A8;font-size:0.85rem;margin-bottom:16px">${p.desc}</p>
+                    <p style="color:#8892A8;margin-bottom:16px">${p.desc}</p>
                     <div style="display:flex;justify-content:space-between;align-items:center">
                         <span style="font-size:0.7rem;color:#3A4055"><i class="fas fa-calendar-alt"></i> ${p.date}</span>
                         <button class="btn btn-outline btn-sm" style="border-color:${p.color};color:${p.color}" onclick="alert('PDF coming soon')">Read →</button>
@@ -1927,17 +1828,17 @@
             const dashBody = document.getElementById('dashBody');
             if (dashBody && currentUserData) {
                 dashBody.innerHTML = `
-                    <div class="dash-pc">
-                        <div class="dash-av">${currentUserData.name?.charAt(0).toUpperCase() || 'U'}</div>
+                    <div class="dash-pc" style="text-align:center;margin-bottom:24px">
+                        <div class="dash-av" style="margin:0 auto 16px">${currentUserData.name?.charAt(0).toUpperCase() || 'U'}</div>
                         <div class="dash-nm">${currentUserData.name || 'User'}</div>
-                        <div class="dash-pos">${currentUserData.role || 'Member'}</div>
+                        <div class="dash-pos" style="color:#00F0FF">${currentUserData.role || 'Member'}</div>
                     </div>
                     <div class="dash-sec">
-                        <h4>Profile Details</h4>
-                        <div class="dash-row"><span class="dash-lbl">Username</span><span class="dash-val">@${currentUserData.username || 'N/A'}</span></div>
-                        <div class="dash-row"><span class="dash-lbl">Role</span><span class="dash-val">${currentUserData.role || 'Member'}</span></div>
+                        <h4 style="color:#00F0FF;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px">Profile Details</h4>
+                        <div class="dash-row" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span class="dash-lbl" style="color:#8892A8">Username</span><span class="dash-val">@${currentUserData.username || 'N/A'}</span></div>
+                        <div class="dash-row" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span class="dash-lbl" style="color:#8892A8">Role</span><span class="dash-val">${currentUserData.role || 'Member'}</span></div>
                     </div>
-                    <div class="dash-acts"><button class="dash-abtn" onclick="handleLogout()">Logout</button></div>
+                    <div class="dash-acts" style="margin-top:24px"><button class="dash-abtn" onclick="handleLogout()" style="width:100%;padding:12px;background:rgba(255,51,102,0.1);border:1px solid rgba(255,51,102,0.3);border-radius:10px;color:#FF3366;cursor:pointer">Logout</button></div>
                 `;
             }
         }
@@ -1968,24 +1869,17 @@
         }
         
         function switchAdminTab(tab) {
-            const tabs = ['overview', 'gallery', 'magazines'];
-            tabs.forEach(t => {
-                const content = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                if (content) content.classList.remove('active');
-            });
-            const btns = document.querySelectorAll('.admin-tbtn');
-            btns.forEach(b => b.classList.remove('active'));
-            
-            const activeContent = document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-            if (activeContent) activeContent.classList.add('active');
+            document.querySelectorAll('.admin-tc').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+            document.querySelectorAll('.admin-tbtn').forEach(btn => btn.classList.remove('active'));
             if (event && event.target) event.target.classList.add('active');
         }
         
         async function claimAdminRole() {
             if (auth.currentUser) {
                 await db.collection('users').doc(auth.currentUser.uid).update({ role: 'admin' });
-                showToast('You are now admin!', 'success');
-                location.reload();
+                showToast('You are now admin! Reloading...', 'success');
+                setTimeout(() => location.reload(), 1500);
             }
         }
         
@@ -2116,6 +2010,10 @@
             if (img) img.src = galleryCache[i].imageUrl;
             if (caption) caption.innerText = galleryCache[i].caption || '';
             if (lightbox) lightbox.classList.add('active');
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
+            if (prevBtn) prevBtn.style.display = galleryCache.length > 1 ? 'flex' : 'none';
+            if (nextBtn) nextBtn.style.display = galleryCache.length > 1 ? 'flex' : 'none';
         }
         
         function closeLightbox() {
@@ -2162,11 +2060,11 @@
         loadPublicMags();
     </script>
     
-    <!-- Your existing scripts - KEEP ALL -->
-    <script src="cursor-polish.js?v=13"></script>
-    <script src="history-media-upgrade.js?v=13"></script>
-    <script src="upload-support.js?v=13"></script>
+    <!-- YOUR EXTERNAL SCRIPTS - KEPT -->
+    <script src="cursor-polish.js?v=14"></script>
+    <script src="history-media-upgrade.js?v=14"></script>
+    <script src="upload-support.js?v=14"></script>
     <script src="login-state-fix.js"></script>
-    <script src="profile-tabs.js?v=13"></script>
+    <script src="profile-tabs.js?v=14"></script>
 </body>
 </html>
