@@ -1833,17 +1833,17 @@
     }
 
     // Media tabs
-    function switchMediaTab(tab){
-        document.querySelectorAll('.media-panel').forEach(p=>p.classList.remove('active'));
-        document.querySelectorAll('.media-tab').forEach(t=>t.classList.remove('active'));
-        if(tab==='gallery'){
-            document.getElementById('mediaGallery').classList.add('active');
-            document.querySelector('.media-tab.t-gal').classList.add('active');
-        }else{
-            document.getElementById('mediaMagazines').classList.add('active');
-            document.querySelector('.media-tab.t-mag').classList.add('active');
-        }
+    function switchMediaTab(tab) {
+            document.querySelectorAll('.media-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.media-tab').forEach(t => t.classList.remove('active'));
+    if (tab === 'gallery') {
+        document.getElementById('mediaGallery').classList.add('active');
+        document.querySelector('.media-tab.t-gal').classList.add('active');
+    } else {
+        document.getElementById('mediaMagazines').classList.add('active');
+        document.querySelector('.media-tab.t-mag').classList.add('active');
     }
+}
 
     // Auth
     function openAuthModal(type){
