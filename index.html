@@ -3060,43 +3060,32 @@ async function addNewUser() {
         // ===== LOAD ADMIN STATS =====
 async function loadAdminStats() {
     try {
-        // Count users
+        // Get gallery count from Render backend
+        const galleryRes = await fetch(`${API_BASE_URL}/gallery`);
+        const galleryData = await galleryRes.json();
+        document.getElementById('statTotalPhotos').innerText = galleryData.length;
+        
+        // Get magazines count from Render backend
+        const magRes = await fetch(`${API_BASE_URL}/magazines`);
+        const magData = await magRes.json();
+        document.getElementById('statTotalMagazines').innerText = magData.length;
+        
+        // Get users from Firestore
         const usersSnap = await db.collection('users').get();
-        const totalUsers = document.getElementById('statTotalUsers');
-        if (totalUsers) totalUsers.innerText = usersSnap.size;
+        document.getElementById('statTotalUsers').innerText = usersSnap.size;
         
-        // Count gallery photos
-        const gallerySnap = await db.collection('gallery').get();
-        const totalPhotos = document.getElementById('statTotalPhotos');
-        if (totalPhotos) totalPhotos.innerText = gallerySnap.size;
-        
-        // Count magazines
-        const magSnap = await db.collection('magazines').get();
-        const totalMags = document.getElementById('statTotalMagazines');
-        if (totalMags) totalMags.innerText = magSnap.size;
-        
-        // Count core members
+        // Core and Wings from Firestore
         const coreSnap = await db.collection('coreMembers').get();
-        const totalCore = document.getElementById('statTotalCore');
-        if (totalCore) totalCore.innerText = coreSnap.size > 0 ? coreSnap.size : 7;
+        document.getElementById('statTotalCore').innerText = coreSnap.size > 0 ? coreSnap.size : 7;
         
-        // Count wings
         const wingsSnap = await db.collection('wings').get();
-        const totalWings = document.getElementById('statTotalWings');
-        if (totalWings) totalWings.innerText = wingsSnap.size > 0 ? wingsSnap.size : 7;
-        
-        // Events placeholder
-        const totalEvents = document.getElementById('statTotalEvents');
-        if (totalEvents) totalEvents.innerText = "12";
-        
-        // Load recent activity
-        loadRecentActivity();
+        document.getElementById('statTotalWings').innerText = wingsSnap.size > 0 ? wingsSnap.size : 7;
         
     } catch(e) {
         console.error("Error loading stats:", e);
     }
 }
-
+        
 async function loadRecentActivity() {
     const container = document.getElementById('recentActivityList');
     if (!container) return;
