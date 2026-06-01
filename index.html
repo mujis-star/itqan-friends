@@ -3645,7 +3645,89 @@ function setActive(activeButton) {
 
 photoBtn.addEventListener('click', () => setActive(photoBtn));
 magazinesBtn.addEventListener('click', () => setActive(magazinesBtn));
-        
+
+
+
+
+
+        // Make sure you have a variable tracking the active tab
+let activeTab = 'photo'; // 'photo' or 'magazine'
+
+// Function to render based on active tab
+function renderGallery() {
+    const allPublications = JSON.parse(localStorage.getItem('publications')) || [];
+    
+    // CRITICAL: Filter by type based on active tab
+    let itemsToShow = [];
+    
+    if (activeTab === 'photo') {
+        // Show ONLY items with type = 'photo'
+        itemsToShow = allPublications.filter(item => item.type === 'photo');
+    } else if (activeTab === 'magazine') {
+        // Show ONLY items with type = 'magazine'
+        itemsToShow = allPublications.filter(item => item.type === 'magazine');
+    }
+    
+    const container = document.getElementById('galleryContainer');
+    
+    if (itemsToShow.length === 0) {
+        container.innerHTML = `<div class="empty-message">
+            No ${activeTab === 'photo' ? 'photos' : 'magazines'} found.
+        </div>`;
+        return;
+    }
+    
+    // Render differently based on type
+    if (activeTab === 'photo') {
+        // Photo gallery display
+        container.innerHTML = itemsToShow.map(item => `
+            <div class="photo-card">
+                <img src="${item.imageUrl}" alt="${item.title}">
+                <h3>${item.title}</h3>
+                <p>${item.description || ''}</p>
+            </div>
+        `).join('');
+    } else {
+        // Magazine display (SHOW PDF OR MAGAZINE COVER, NOT REGULAR IMAGES)
+        container.innerHTML = itemsToShow.map(item => `
+            <div class="magazine-card">
+                ${item.pdfUrl ? 
+                    `<iframe src="${item.pdfUrl}" class="pdf-viewer"></iframe>` :
+                    `<img src="${item.imageUrl}" alt="${item.title}" class="magazine-cover">`
+                }
+                <h3>${item.title}</h3>
+                <p>${item.description || ''}</p>
+                ${item.pdfUrl ? `<a href="${item.pdfUrl}" target="_blank" class="read-btn">📖 Read Full Magazine</a>` : ''}
+            </div>
+        `).join('');
+    }
+}
+
+// Tab button click handlers
+document.getElementById('photoGalleryBtn').addEventListener('click', () => {
+    activeTab = 'photo';
+    // Update active button styles
+    document.getElementById('photoGalleryBtn').classList.add('active');
+    document.getElementById('magazinesBtn').classList.remove('active');
+    // Re-render
+    renderGallery();
+});
+
+document.getElementById('magazinesBtn').addEventListener('click', () => {
+    activeTab = 'magazine';
+    // Update active button styles
+    document.getElementById('magazinesBtn').classList.add('active');
+    document.getElementById('photoGalleryBtn').classList.remove('active');
+    // Re-render
+    renderGallery();
+});
+
+// Initial render
+renderGallery();
+
+
+
+            
 </script>
 
     <!-- External scripts -->
