@@ -1006,6 +1006,74 @@
     display: none !important;
 }
 
+        /* GALLERY GRID STYLES */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.gallery-item {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #121626;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-ov {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.gallery-item:hover .gallery-ov {
+    opacity: 1;
+}
+
+.gallery-ov h4 {
+    color: white;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+}
+
+.empty-state i {
+    font-size: 2.5rem;
+    opacity: 0.3;
+    display: block;
+    margin-bottom: 16px;
+}
+
+#loadMoreBtn {
+    margin: 0 auto;
+}
 
     </style>
 </head>
@@ -1123,11 +1191,6 @@
     </section>
 
     <div class="divider"></div>
-
-    <!-- Media Hub -->
-    <!-- ===== MEDIA HUB SECTION ===== -->
-    <div class="divider"></div>
-
     <!-- ===== MEDIA HUB SECTION ===== -->
     <section class="media-hub" id="media">
         <div class="container">
@@ -1140,17 +1203,27 @@
                 <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
                 <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines &amp; Tabloids</button>
             </div>
+            
+            <!-- PHOTO GALLERY PANEL - ALWAYS VISIBLE -->
             <div class="media-panel active" id="mediaGallery">
                 <div class="gallery-grid" id="publicGalleryGrid"></div>
-                <div id="galleryEmpty" class="empty-state" style="display:block">
+                <div id="galleryEmpty" class="empty-state" style="display:none">
                     <i class="fas fa-camera-retro"></i>
                     <p>No photos yet. <strong>Admin:</strong> Go to Admin Panel → Gallery to add photos.</p>
                     <button class="btn btn-sm btn-cyan" onclick="openAdminPanel()" style="margin-top:12px"><i class="fas fa-user-shield"></i> Open Admin Panel</button>
                 </div>
+                <!-- LOAD MORE BUTTON -->
+                <div id="loadMoreContainer" style="text-align: center; margin-top: 32px; display: none;">
+                    <button id="loadMoreBtn" class="btn btn-outline" onclick="loadMoreImages()">
+                        <i class="fas fa-plus-circle"></i> Load More
+                    </button>
+                </div>
             </div>
+            
+            <!-- MAGAZINES PANEL -->
             <div class="media-panel" id="mediaMagazines">
                 <div class="mag-grid" id="publicMagGrid"></div>
-                <div id="magazinesEmpty" class="empty-state" style="display:block">
+                <div id="magazinesEmpty" class="empty-state" style="display:none">
                     <i class="fas fa-book-open"></i>
                     <p>No publications yet. <strong>Admin:</strong> Go to Admin Panel → Magazines to add publications.</p>
                     <button class="btn btn-sm btn-cyan" onclick="openAdminPanel()" style="margin-top:12px"><i class="fas fa-user-shield"></i> Open Admin Panel</button>
@@ -1158,7 +1231,6 @@
             </div>
         </div>
     </section>
-
     <!-- Recent Publications -->
     <section class="pub-section">
 
@@ -2149,16 +2221,132 @@
         }
     });
 
-    // ===== INITIALIZE =====
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("Page loaded, initializing...");
-        loadPublicGallery();
-        loadAdminGallery();
-        loadPublicMags();
-        renderPublications();
-        loadCoreMembers();
-        loadWings();
-    });
+
+        
+// Initialize - MAKE SURE THIS EXISTS
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded, initializing...");
+    
+    // Ensure gallery panel is active
+    const galleryPanel = document.getElementById('mediaGallery');
+    if (galleryPanel) {
+        galleryPanel.classList.add('active');
+    }
+    
+    loadPublicGallery();
+    loadAdminGallery();
+    loadPublicMags();
+    renderPublications();
+    loadCoreMembers();
+    loadWings();
+});
+
+
+
+
+
+        // ===== GALLERY WITH LOAD MORE =====
+let allGalleryImages = [];
+let currentDisplayCount = 6; // Show 6 images initially
+const IMAGES_PER_LOAD = 6;    // Load 6 more each time
+
+async function loadPublicGallery() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/gallery`);
+        const galleryData = await response.json();
+        
+        const grid = document.getElementById('publicGalleryGrid');
+        const emptyMsg = document.getElementById('galleryEmpty');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        
+        if (!grid) return;
+        
+        // Store all images
+        allGalleryImages = galleryData || [];
+        
+        if (allGalleryImages.length === 0) {
+            // Show empty state
+            if (emptyMsg) emptyMsg.style.display = 'block';
+            grid.innerHTML = '';
+            if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+            galleryCache = [];
+            return;
+        }
+        
+        // Hide empty message
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        
+        // Update cache for lightbox
+        galleryCache = allGalleryImages;
+        
+        // Show first batch of images
+        displayGalleryImages();
+        
+        // Show/hide load more button
+        if (loadMoreContainer) {
+            if (allGalleryImages.length > currentDisplayCount) {
+                loadMoreContainer.style.display = 'block';
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+        
+        console.log(`📸 Gallery: ${allGalleryImages.length} total, showing ${currentDisplayCount}`);
+        
+    } catch(e) { 
+        console.error("Gallery load error:", e);
+    }
+}
+
+function displayGalleryImages() {
+    const grid = document.getElementById('publicGalleryGrid');
+    if (!grid) return;
+    
+    // Show only up to currentDisplayCount
+    const imagesToShow = allGalleryImages.slice(0, currentDisplayCount);
+    
+    grid.innerHTML = imagesToShow.map((item, index) => `
+        <div class="gallery-item" onclick="openLightbox(${index})">
+            <img src="${item.imageUrl}" alt="${item.caption || 'Gallery image'}" loading="lazy">
+            <div class="gallery-ov">
+                <h4>${item.caption || 'Untitled'}</h4>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadMoreImages() {
+    // Increase display count
+    currentDisplayCount += IMAGES_PER_LOAD;
+    
+    // Update display
+    displayGalleryImages();
+    
+    // Hide button if no more images
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    if (loadMoreContainer && currentDisplayCount >= allGalleryImages.length) {
+        loadMoreContainer.style.display = 'none';
+    }
+    
+    console.log(`📸 Loaded more: now showing ${currentDisplayCount} of ${allGalleryImages.length}`);
+}
+
+// Reset display count when switching to gallery tab
+const originalSwitchMediaTab = window.switchMediaTab;
+window.switchMediaTab = function(tab) {
+    originalSwitchMediaTab(tab);
+    if (tab === 'gallery') {
+        currentDisplayCount = 6; // Reset to initial count
+        if (allGalleryImages.length > 0) {
+            displayGalleryImages();
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            if (loadMoreContainer) {
+                loadMoreContainer.style.display = allGalleryImages.length > currentDisplayCount ? 'block' : 'none';
+            }
+        }
+        setTimeout(loadPublicGallery, 100);
+    }
+};
 </script>
 
     <!-- External scripts -->
