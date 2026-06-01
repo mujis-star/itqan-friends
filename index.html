@@ -1563,7 +1563,83 @@
         z-index: 9998;
     }
 }
+
+
+        /* Hide heading until JS is ready */
+.heading-flicker-fix {
+  visibility: hidden;
+}
+
+
+        /* Button container */
+.button-group {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+/* Base button style */
+.gallery-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 50px; /* Pill shape */
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  border: 2px solid transparent;
+  background: transparent;
+}
+
+/* Inactive state (dark, subtle) */
+.gallery-btn:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ccc;
+}
+
+/* Inactive hover */
+.gallery-btn:not(.active):hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Active state (bright, distinct) */
+.gallery-btn.active {
+  background: #00adb5; /* Teal/cyan accent */
+  border-color: #00adb5;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 173, 181, 0.3);
+}
+
+/* Active hover */
+.gallery-btn.active:hover {
+  background: #007b7f;
+  border-color: #007b7f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 173, 181, 0.4);
+}
+
+/* Focus accessibility */
+.gallery-btn:focus-visible {
+  outline: 2px solid #00adb5;
+  outline-offset: 2px;
+}
+
         
+
+        
+
+        @media (max-width: 480px) {
+  .gallery-btn {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
 
         
     </style>
@@ -1694,10 +1770,10 @@
                 <div class="sec-title">Gallery &amp; <span style="color:var(--gold)">Publications</span></div>
                 <div class="sec-line"><span></span></div>
             </div>
-            <div class="media-tabs">
-                <button class="media-tab t-gal active" onclick="switchMediaTab('gallery')"><i class="fas fa-images"></i> Photo Gallery</button>
-                <button class="media-tab t-mag" onclick="switchMediaTab('magazines')"><i class="fas fa-newspaper"></i> Magazines &amp; Tabloids</button>
-            </div>
+<div class="button-group">
+  <button class="gallery-btn active" id="photoGalleryBtn">📷 Photo Gallery</button>
+  <button class="gallery-btn" id="magazinesBtn">📘 Magazines & Tabloids</button>
+</div>
             
             <!-- PHOTO GALLERY PANEL - ALWAYS VISIBLE -->
             <div class="media-panel active" id="mediaGallery">
@@ -3542,8 +3618,33 @@ async function deleteMagazineItem(id) {
 }
 
 
+        // Run this as early as possible (in <head> or right after heading)
+const heading = document.querySelector('h1');
+heading.style.visibility = 'visible';
+heading.innerText = 'Publications & Media';
 
 
+
+
+        const photoBtn = document.getElementById('photoGalleryBtn');
+const magazinesBtn = document.getElementById('magazinesBtn');
+
+function setActive(activeButton) {
+  [photoBtn, magazinesBtn].forEach(btn => {
+    btn.classList.remove('active');
+  });
+  activeButton.classList.add('active');
+  
+  // Your content switching logic here
+  if (activeButton === photoBtn) {
+    console.log('Show Photo Gallery content');
+  } else {
+    console.log('Show Magazines & Tabloids content');
+  }
+}
+
+photoBtn.addEventListener('click', () => setActive(photoBtn));
+magazinesBtn.addEventListener('click', () => setActive(magazinesBtn));
         
 </script>
 
