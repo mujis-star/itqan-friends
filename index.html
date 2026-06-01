@@ -1682,7 +1682,8 @@
                 <button class="admin-tbtn" onclick="switchAdminTab('magazines', this)"><i class="fas fa-newspaper"></i> Magazines</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('core', this)"><i class="fas fa-user-tie"></i> Core Committee</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('wings', this)"><i class="fas fa-sitemap"></i> Sub-Wings</button>
-                <button class="admin-tbtn" onclick="switchAdminTab('users', this)"><i class="fas fa-users"></i> Users</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('profiles', this)"><i class="fas fa-users"></i> Profiles</button>
+
             </div>
             <!-- Overview Tab -->
             <div class="admin-tc active" id="adminTabOverview">
@@ -1767,57 +1768,69 @@
                 <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Sub-Wings</h4>
                 <div id="adminWingsList" class="adm-il"></div>
             </div>
+
+
+
+                        <!-- Profiles / User Management Tab -->
+            <div class="admin-tc" id="adminTabProfiles">
+                <div class="add-form">
+                    <h4><i class="fas fa-user-plus" style="color:var(--cyan)"></i> Add New User</h4>
+                    <div class="afg">
+                        <div class="fg">
+                            <label>Full Name *</label>
+                            <input type="text" id="newUserName" class="fi" placeholder="e.g., John Doe">
+                        </div>
+                        <div class="fg">
+                            <label>Username *</label>
+                            <input type="text" id="newUserUsername" class="fi" placeholder="e.g., johndoe">
+                        </div>
+                        <div class="fg">
+                            <label>Password * (min 6)</label>
+                            <input type="text" id="newUserPassword" class="fi" placeholder="••••••">
+                        </div>
+                        <div class="fg">
+                            <label>Role *</label>
+                            <select id="newUserRole" class="fi">
+                                <option value="member">👤 Member</option>
+                                <option value="wing">🪽 Wing Leader</option>
+                                <option value="core">⭐ Core Committee</option>
+                                <option value="admin">👑 Admin</option>
+                            </select>
+                        </div>
+                        <div class="fg">
+                            <label>Wing (Optional)</label>
+                            <select id="newUserWing" class="fi">
+                                <option value="">-- None --</option>
+                                <option>Urdu Wing</option>
+                                <option>English Wing</option>
+                                <option>Arabic Wing</option>
+                                <option>Malayalam Wing</option>
+                                <option>Maths Wing</option>
+                                <option>Science Wing</option>
+                                <option>Media Wing</option>
+                                <option>Art Wing</option>
+                                <option>Library Wing</option>
+                                <option>G.K Wing</option>
+                                <option>Publication Wing</option>
+                                <option>Medical Wing</option>
+                                <option>Sports Wing</option>
+                                <option>Foreign Language Wing</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
+                </div>
+
+                <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">
+                    <i class="fas fa-users"></i> Registered Users
+                </h4>
+                <div id="usersList" class="adm-il"></div>
+            </div>
+
+            
         </div>
     </div>
 
-    <!-- Users Management Tab -->
-<div class="admin-tc" id="adminTabUsers">
-    <div class="add-form">
-        <h4><i class="fas fa-user-plus" style="color:var(--cyan)"></i> Add New User</h4>
-        <div class="afg">
-            <div class="fg">
-                <label>Full Name</label>
-                <input type="text" id="newUserName" class="fi" placeholder="e.g., John Doe">
-            </div>
-            <div class="fg">
-                <label>Username</label>
-                <input type="text" id="newUserUsername" class="fi" placeholder="e.g., johndoe">
-            </div>
-            <div class="fg">
-                <label>Password (min 6)</label>
-                <input type="text" id="newUserPassword" class="fi" placeholder="••••••">
-            </div>
-            <div class="fg">
-                <label>Role</label>
-                <select id="newUserRole" class="fi">
-                    <option value="member">Member</option>
-                    <option value="wing">Wing Leader</option>
-                    <option value="core">Core Committee</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            <div class="fg">
-                <label>Wing (Optional)</label>
-                <select id="newUserWing" class="fi">
-                    <option value="">-- None --</option>
-                    <option>Urdu Wing</option>
-                    <option>English Wing</option>
-                    <option>Arabic Wing</option>
-                    <option>Malayalam Wing</option>
-                    <option>Maths Wing</option>
-                    <option>Science Wing</option>
-                    <option>Media Wing</option>
-                </select>
-            </div>
-        </div>
-        <button onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
-    </div>
-
-    <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">
-        <i class="fas fa-users"></i> Registered Users
-    </h4>
-    <div id="usersList" class="adm-il"></div>
-</div>
 
     <script>
     // ===== PARTICLE BACKGROUND =====
@@ -2400,7 +2413,7 @@ function switchMediaTab(tab) {
     function openAdminPanel() { closeDashboards(); document.getElementById('adminPanel').classList.add('active'); }
     function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
 
-        function switchAdminTab(tab, btn) {
+function switchAdminTab(tab, btn) {
     document.querySelectorAll('.admin-tc').forEach(t => t.classList.remove('active'));
     document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
     document.querySelectorAll('.admin-tbtn').forEach(b => b.classList.remove('active'));
@@ -2410,7 +2423,7 @@ function switchMediaTab(tab) {
     if (tab === 'magazines') loadAdminMags();
     if (tab === 'core') loadCoreMembers();
     if (tab === 'wings') loadWings();
-    if (tab === 'users') loadUsers();
+    if (tab === 'profiles') loadUsers();  // ← Load users for Profiles tab
 }
 
     async function claimAdminRole() {
