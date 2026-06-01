@@ -1482,6 +1482,46 @@
 
 
 
+        /* Mobile menu - ensure it works */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed !important;
+        top: 0 !important;
+        right: -300px !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: #0C0F1A !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        z-index: 9999 !important;
+        transition: right 0.3s ease !important;
+        display: flex !important;
+        border-left: 1px solid rgba(0, 229, 255, 0.1) !important;
+    }
+    
+    .nav-links.active {
+        right: 0 !important;
+    }
+    
+    body.menu-open {
+        overflow: hidden !important;
+    }
+    
+    body.menu-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
+    }
+}
+
+
         
     </style>
 </head>
@@ -3462,66 +3502,44 @@ async function deleteMagazineItem(id) {
 
 // ===== MOBILE MENU TOGGLE =====
 // ===== MOBILE MENU - COMPLETE FIX =====
-(function() {
-    const menuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
-    
-    if (!menuBtn) {
-        console.log("Menu button not found");
-        return;
+/* Mobile menu - ensure it works */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed !important;
+        top: 0 !important;
+        right: -300px !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: #0C0F1A !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        z-index: 9999 !important;
+        transition: right 0.3s ease !important;
+        display: flex !important;
+        border-left: 1px solid rgba(0, 229, 255, 0.1) !important;
     }
     
-    console.log("Mobile menu initialized");
-    
-    function closeMenu() {
-        navLinks.classList.remove('active');
-        document.body.classList.remove('menu-open');
-        menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    .nav-links.active {
+        right: 0 !important;
     }
     
-    function openMenu() {
-        navLinks.classList.add('active');
-        document.body.classList.add('menu-open');
-        menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+    body.menu-open {
+        overflow: hidden !important;
     }
     
-    menuBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("Menu button clicked");
-        
-        if (navLinks.classList.contains('active')) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    });
-    
-    // Close menu when clicking a link
-    if (navLinks) {
-        navLinks.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                closeMenu();
-            });
-        });
+    body.menu-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
     }
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (navLinks && navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                closeMenu();
-            }
-        }
-    });
-    
-    // Close on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
-            closeMenu();
-        }
-    });
-})();
+}
         
         
 </script>
