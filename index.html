@@ -1522,6 +1522,49 @@
 }
 
 
+
+        // ===== MOBILE MENU TOGGLE =====
+// ===== MOBILE MENU - COMPLETE FIX =====
+/* Mobile menu - ensure it works */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed !important;
+        top: 0 !important;
+        right: -300px !important;
+        width: 280px !important;
+        height: 100vh !important;
+        background: #0C0F1A !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        z-index: 9999 !important;
+        transition: right 0.3s ease !important;
+        display: flex !important;
+        border-left: 1px solid rgba(0, 229, 255, 0.1) !important;
+    }
+    
+    .nav-links.active {
+        right: 0 !important;
+    }
+    
+    body.menu-open {
+        overflow: hidden !important;
+    }
+    
+    body.menu-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
+    }
+}
+        
+
         
     </style>
 </head>
@@ -3500,47 +3543,7 @@ async function deleteMagazineItem(id) {
 
 
 
-// ===== MOBILE MENU TOGGLE =====
-// ===== MOBILE MENU - COMPLETE FIX =====
-/* Mobile menu - ensure it works */
-@media (max-width: 768px) {
-    .nav-links {
-        position: fixed !important;
-        top: 0 !important;
-        right: -300px !important;
-        width: 280px !important;
-        height: 100vh !important;
-        background: #0C0F1A !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 1.5rem !important;
-        z-index: 9999 !important;
-        transition: right 0.3s ease !important;
-        display: flex !important;
-        border-left: 1px solid rgba(0, 229, 255, 0.1) !important;
-    }
-    
-    .nav-links.active {
-        right: 0 !important;
-    }
-    
-    body.menu-open {
-        overflow: hidden !important;
-    }
-    
-    body.menu-open::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 9998;
-    }
-}
-        
+
         
 </script>
 
