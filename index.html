@@ -1945,24 +1945,25 @@
             </div>
 
             <!-- Magazines Tab -->
-            <div class="admin-tc" id="adminTabMagazines">
-                <div class="add-form">
-                    <h4><i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Publication</h4>
-                    <div class="fg"><label>Title</label><input type="text" id="magTitle" class="fi" placeholder="Publication title..."></div>
-                    <div class="fg"><label>Type</label>
-                        <select id="magType" class="fi">
-                            <option value="magazine">Magazine</option>
-                            <option value="tabloid">Tabloid</option>
-                        </select>
-                    </div>
-                    <div class="fg"><label>Description</label><input type="text" id="magDesc" class="fi" placeholder="Short description..."></div>
-                    <div class="fg"><label>Cover Image URL</label><input type="url" id="magCover" class="fi" placeholder="https://..."></div>
-                    <div class="fg"><label>PDF URL (optional)</label><input type="url" id="magPdfUrl" class="fi" placeholder="https://..."></div>
-                    <button onclick="addMagItem()" class="btn btn-sm btn-pink"><i class="fas fa-upload"></i> Add Publication</button>
+        <div class="admin-tc" id="adminTabMagazines">
+            <div class="add-form">
+                <h4><i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Publication</h4>
+                <div class="fg"><label>Title *</label><input type="text" id="magTitle" class="fi"></div>
+                <div class="fg">
+                    <label>Type</label>
+                    <select id="magType" class="fi">
+                        <option value="magazine">Magazine</option>
+                        <option value="tabloid">Tabloid</option>
+                    </select>
                 </div>
-                <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Publications</h4>
-                <div id="adminMagList" class="adm-il"></div>
+                <div class="fg"><label>Description</label><textarea id="magDesc" class="fi" rows="2"></textarea></div>
+                <div class="fg"><label>Upload Cover Image *</label><input type="file" id="magCoverFile" accept="image/*" class="fi"></div>
+                <div class="fg"><label>Upload PDF (optional)</label><input type="file" id="magPdfFile" accept=".pdf" class="fi"></div>
+                <button onclick="uploadMagazine()" class="btn btn-sm btn-pink"><i class="fas fa-upload"></i> Add Publication</button>
             </div>
+            <h4>Existing Publications</h4>
+            <div id="adminMagList" class="adm-il"></div>
+        </div>
 
             <!-- Core Committee Management Tab -->
             <div class="admin-tc" id="adminTabCore">
@@ -3135,6 +3136,147 @@ async function loadRecentActivity() {
     } catch(e) {
         console.error("Error loading recent activity:", e);
         container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Unable to load activity</p>';
+    }
+}
+
+
+
+        // ===== MAGAZINE UPLOAD FUNCTIONS =====
+async function uploadMagazine() {
+    const title = document.getElementById('magTitle').value.trim();
+    const type = document.getElementById('magType').value;
+    const description = document.getElementById('magDesc').value.trim();
+    const coverFile = document.getElementById('magCoverFile').files[0];
+    const pdfFile = document.getElementById('magPdfFile').files[0];
+    
+    if (!title) {
+        showToast('Please enter a title', 'error');
+        return;
+    }
+    if (!coverFile) {
+        showToast('Please select a cover image', 'error');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('type', type);
+    formData.append('description', description);
+    formData.append('cover', coverFile);
+    if (pdfFile) formData.append('pdf', pdfFile);
+    
+    const progressDiv = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('uploadProgressBar');
+    const statusText = document.getElementById('uploadStatus');
+    if (progressDiv) progressDiv.style.display = 'block';
+    if (progressBar) progressBar.value = 0;
+    if (statusText) statusText.textContent = 'Uploading...';
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/upload-magazine`, {
+            method: 'POST',
+            body: formData,
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showToast('Magazine added successfully!', 'success');
+            document.getElementById('magTitle').value = '';
+            document.getElementById('magDesc').value = '';
+            document.getElementById('magCoverFile').value = '';
+            document.getElementById('magPdfFile').value = '';
+            if (progressDiv) progressDiv.style.display = 'none';
+            await loadPublicMags();
+            await loadAdminMags();
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        showToast('Upload failed: ' + error.message, 'error');
+        if (progressDiv) progressDiv.style.display = 'none';
+    }
+}
+
+async function loadPublicMags() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/magazines`);
+        const magazines = await response.json();
+        
+        const grid = document.getElementById('publicMagGrid');
+        const empty = document.getElementById('magazinesEmpty');
+        
+        if (!magazines || magazines.length === 0) {
+            if (empty) empty.style.display = 'block';
+            if (grid) grid.innerHTML = '';
+            return;
+        }
+        
+        if (empty) empty.style.display = 'none';
+        
+        if (grid) {
+            grid.innerHTML = magazines.map(mag => `
+                <div class="mag-card">
+                    <img class="mag-cover" src="${mag.coverUrl}" alt="${mag.title}" loading="lazy">
+                    <div class="mag-body">
+                        <span class="mag-badge ${mag.type}">${mag.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
+                        <h3>${mag.title}</h3>
+                        <p>${mag.description || ''}</p>
+                        ${mag.pdfUrl ? 
+                            `<button class="btn btn-cyan btn-sm" onclick="window.open('${mag.pdfUrl}', '_blank')">Read Now</button>` : 
+                            '<button class="btn btn-outline btn-sm" disabled>No PDF</button>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch(e) {
+        console.error("Load magazines error:", e);
+    }
+}
+
+async function loadAdminMags() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/magazines`);
+        const magazines = await response.json();
+        
+        const list = document.getElementById('adminMagList');
+        if (!list) return;
+        
+        if (!magazines || magazines.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No publications yet.</p>';
+            return;
+        }
+        
+        list.innerHTML = magazines.map(mag => `
+            <div class="adm-ir">
+                <div>
+                    <strong>${mag.title}</strong>
+                    <span style="margin-left:10px;font-size:.72rem;color:var(--muted);text-transform:capitalize">${mag.type}</span>
+                </div>
+                <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `).join('');
+    } catch(e) {
+        console.error("Load admin magazines error:", e);
+    }
+}
+
+async function deleteMagazineItem(id) {
+    if (!confirm('Delete this publication?')) return;
+    try {
+        const response = await fetch(`${API_BASE_URL}/delete-magazine/${id}`, {
+            method: 'DELETE',
+        });
+        const result = await response.json();
+        if (result.success) {
+            showToast('Publication deleted', 'success');
+            await loadPublicMags();
+            await loadAdminMags();
+        }
+    } catch(e) {
+        showToast('Error deleting: ' + e.message, 'error');
     }
 }
 </script>
