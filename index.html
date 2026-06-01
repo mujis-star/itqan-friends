@@ -1273,6 +1273,162 @@
     color: #10B981;
     border: 1px solid rgba(16, 185, 129, 0.3);
 } 
+
+
+
+
+
+        /* Overview Tab Styles */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #0e1120, #090c18);
+    border: 1px solid rgba(0, 229, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: #00e5ff;
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    color: #00e5ff;
+    margin-bottom: 10px;
+}
+
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: #6b7895;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+
+.admin-actions {
+    background: #0e1120;
+    border: 1px solid rgba(0, 229, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 32px;
+}
+
+.admin-actions h4 {
+    color: #00e5ff;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.action-btn {
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    color: #dce4f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: #00e5ff;
+    color: #060810;
+    border-color: #00e5ff;
+    transform: translateY(-2px);
+}
+
+.action-warning:hover {
+    background: #EF4444 !important;
+    border-color: #EF4444 !important;
+    color: white !important;
+}
+
+.recent-activity {
+    background: #0e1120;
+    border: 1px solid rgba(0, 229, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.recent-activity h4 {
+    color: #00e5ff;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activity-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 229, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00e5ff;
+}
+
+.activity-text {
+    flex: 1;
+    font-size: 0.85rem;
+}
+
+.activity-time {
+    font-size: 0.7rem;
+    color: #6b7895;
+}
+
+
+
+        
     </style>
 </head>
 <body>
@@ -1685,12 +1841,80 @@
                 <button class="admin-tbtn" onclick="switchAdminTab('profiles', this)"><i class="fas fa-users"></i> Profiles</button>
 
             </div>
+
+
+            
             <!-- Overview Tab -->
             <div class="admin-tc active" id="adminTabOverview">
-                <h4 style="margin-bottom:20px;font-size:1.1rem;color:#fff">Welcome to the Admin Panel</h4>
-                <p style="color:var(--muted);margin-bottom:24px;font-size:.9rem">Manage gallery photos, magazine publications, core committee members, and sub-wings from here.</p>
-                <button onclick="claimAdminRole()" class="btn btn-sm btn-danger"><i class="fas fa-shield-alt"></i> Claim Admin Role</button>
-            </div>
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-number" id="statTotalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-images"></i></div>
+                        <div class="stat-number" id="statTotalPhotos">0</div>
+                        <div class="stat-label">Gallery Photos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="stat-number" id="statTotalMagazines">0</div>
+                        <div class="stat-label">Publications</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="stat-number" id="statTotalCore">0</div>
+                        <div class="stat-label">Core Committee</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-sitemap"></i></div>
+                        <div class="stat-number" id="statTotalWings">0</div>
+                        <div class="stat-label">Sub-Wings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                        <div class="stat-number" id="statTotalEvents">0</div>
+                        <div class="stat-label">Events</div>
+                    </div>
+                </div>
+            
+                <!-- Admin Actions -->
+                <div class="admin-actions">
+                    <h4><i class="fas fa-tools"></i> Quick Actions</h4>
+                    <div class="actions-grid">
+                        <button onclick="switchAdminTab('gallery', this)" class="action-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Add Photo
+                        </button>
+                        <button onclick="switchAdminTab('magazines', this)" class="action-btn">
+                            <i class="fas fa-plus-circle"></i> Add Publication
+                        </button>
+                        <button onclick="switchAdminTab('core', this)" class="action-btn">
+                            <i class="fas fa-user-plus"></i> Add Core Member
+                        </button>
+                        <button onclick="switchAdminTab('wings', this)" class="action-btn">
+                            <i class="fas fa-plus"></i> Add Sub-Wing
+                        </button>
+                        <button onclick="switchAdminTab('profiles', this)" class="action-btn">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                        <button onclick="claimAdminRole()" class="action-btn action-warning">
+                            <i class="fas fa-user-shield"></i> Claim Admin Role
+                        </button>
+                    </div>
+                </div>
+
+
+                
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h4><i class="fas fa-history"></i> Recent Activity</h4>
+        <div id="recentActivityList" class="activity-list">
+            <p style="color:var(--muted);text-align:center;padding:20px">Loading activity...</p>
+        </div>
+    </div>
+</div>
 
                         <!-- Gallery Tab -->
             <div class="admin-tc" id="adminTabGallery">
@@ -2424,6 +2648,7 @@ function switchAdminTab(tab, btn) {
     if (tab === 'core') loadCoreMembers();
     if (tab === 'wings') loadWings();
     if (tab === 'profiles') loadUsers();  // ← Load users for Profiles tab
+    if (tab === 'overview') loadAdminStats();
 }
 
     async function claimAdminRole() {
@@ -2512,6 +2737,7 @@ document.addEventListener('DOMContentLoaded', function() {
     renderPublications();
     loadCoreMembers();
     loadWings();
+    loadAdminStats();
 });
 
 
@@ -2768,6 +2994,89 @@ async function addNewUser() {
     } catch(e) {
         console.error("Error creating user:", e);
         showToast('Error: ' + e.message, 'error');
+    }
+}
+
+
+        // ===== LOAD ADMIN STATS =====
+async function loadAdminStats() {
+    try {
+        // Count users
+        const usersSnap = await db.collection('users').get();
+        const totalUsers = document.getElementById('statTotalUsers');
+        if (totalUsers) totalUsers.innerText = usersSnap.size;
+        
+        // Count gallery photos
+        const gallerySnap = await db.collection('gallery').get();
+        const totalPhotos = document.getElementById('statTotalPhotos');
+        if (totalPhotos) totalPhotos.innerText = gallerySnap.size;
+        
+        // Count magazines
+        const magSnap = await db.collection('magazines').get();
+        const totalMags = document.getElementById('statTotalMagazines');
+        if (totalMags) totalMags.innerText = magSnap.size;
+        
+        // Count core members
+        const coreSnap = await db.collection('coreMembers').get();
+        const totalCore = document.getElementById('statTotalCore');
+        if (totalCore) totalCore.innerText = coreSnap.size > 0 ? coreSnap.size : 7;
+        
+        // Count wings
+        const wingsSnap = await db.collection('wings').get();
+        const totalWings = document.getElementById('statTotalWings');
+        if (totalWings) totalWings.innerText = wingsSnap.size > 0 ? wingsSnap.size : 7;
+        
+        // Events placeholder
+        const totalEvents = document.getElementById('statTotalEvents');
+        if (totalEvents) totalEvents.innerText = "12";
+        
+        // Load recent activity
+        loadRecentActivity();
+        
+    } catch(e) {
+        console.error("Error loading stats:", e);
+    }
+}
+
+async function loadRecentActivity() {
+    const container = document.getElementById('recentActivityList');
+    if (!container) return;
+    
+    try {
+        const usersSnap = await db.collection('users').orderBy('createdAt', 'desc').limit(5).get();
+        
+        if (usersSnap.empty) {
+            container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">No recent activity</p>';
+            return;
+        }
+        
+        let html = '';
+        usersSnap.forEach(doc => {
+            const user = doc.data();
+            let timeAgo = 'Just now';
+            if (user.createdAt && user.createdAt.toDate) {
+                const seconds = Math.floor((new Date() - user.createdAt.toDate()) / 1000);
+                if (seconds < 60) timeAgo = 'Just now';
+                else if (seconds < 3600) timeAgo = Math.floor(seconds / 60) + ' min ago';
+                else if (seconds < 86400) timeAgo = Math.floor(seconds / 3600) + ' hour ago';
+                else timeAgo = Math.floor(seconds / 86400) + ' days ago';
+            }
+            html += `
+                <div class="activity-item">
+                    <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="activity-text">
+                        <strong>${user.name || 'New user'}</strong> joined ITQAN
+                    </div>
+                    <div class="activity-time">${timeAgo}</div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+        
+    } catch(e) {
+        console.error("Error loading recent activity:", e);
+        container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Unable to load activity</p>';
     }
 }
 </script>
