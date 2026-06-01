@@ -3402,7 +3402,7 @@ async function deleteMagazineItem(id) {
 
 
 
-        // ===== MOBILE MENU WITH OVERLAY =====
+// ===== MOBILE MENU TOGGLE =====
 (function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
@@ -3414,7 +3414,6 @@ async function deleteMagazineItem(id) {
         document.body.classList.remove('menu-open');
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-bars';
-        document.body.style.overflow = '';
     }
     
     function openMenu() {
@@ -3422,7 +3421,6 @@ async function deleteMagazineItem(id) {
         document.body.classList.add('menu-open');
         const icon = menuBtn.querySelector('i');
         if (icon) icon.className = 'fas fa-times';
-        document.body.style.overflow = 'hidden';
     }
     
     menuBtn.addEventListener('click', (e) => {
@@ -3435,14 +3433,14 @@ async function deleteMagazineItem(id) {
         }
     });
     
-    // Close menu when clicking a link
+    // Close when clicking a link
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', closeMenu);
     });
     
-    // Close menu when clicking outside (on overlay)
-    document.body.addEventListener('click', (e) => {
-        if (document.body.classList.contains('menu-open')) {
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navLinks.classList.contains('active')) {
             if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
                 closeMenu();
             }
@@ -3456,6 +3454,7 @@ async function deleteMagazineItem(id) {
         }
     });
 })();
+        
         
 </script>
 
