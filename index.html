@@ -1243,7 +1243,36 @@
     margin-bottom: 12px;
 }
 
-        
+       /* Role Badges */
+.role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.role-admin {
+    background: linear-gradient(135deg, #FF3366, #E62E5C);
+    color: white;
+}
+
+.role-core {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+}
+
+.role-wing {
+    background: linear-gradient(135deg, #00F0FF, #00B8D4);
+    color: #000;
+}
+
+.role-member {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+} 
     </style>
 </head>
 <body>
@@ -1653,8 +1682,8 @@
                 <button class="admin-tbtn" onclick="switchAdminTab('magazines', this)"><i class="fas fa-newspaper"></i> Magazines</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('core', this)"><i class="fas fa-user-tie"></i> Core Committee</button>
                 <button class="admin-tbtn" onclick="switchAdminTab('wings', this)"><i class="fas fa-sitemap"></i> Sub-Wings</button>
+                <button class="admin-tbtn" onclick="switchAdminTab('users', this)"><i class="fas fa-users"></i> Users</button>
             </div>
-
             <!-- Overview Tab -->
             <div class="admin-tc active" id="adminTabOverview">
                 <h4 style="margin-bottom:20px;font-size:1.1rem;color:#fff">Welcome to the Admin Panel</h4>
@@ -1740,6 +1769,55 @@
             </div>
         </div>
     </div>
+
+    <!-- Users Management Tab -->
+<div class="admin-tc" id="adminTabUsers">
+    <div class="add-form">
+        <h4><i class="fas fa-user-plus" style="color:var(--cyan)"></i> Add New User</h4>
+        <div class="afg">
+            <div class="fg">
+                <label>Full Name</label>
+                <input type="text" id="newUserName" class="fi" placeholder="e.g., John Doe">
+            </div>
+            <div class="fg">
+                <label>Username</label>
+                <input type="text" id="newUserUsername" class="fi" placeholder="e.g., johndoe">
+            </div>
+            <div class="fg">
+                <label>Password (min 6)</label>
+                <input type="text" id="newUserPassword" class="fi" placeholder="••••••">
+            </div>
+            <div class="fg">
+                <label>Role</label>
+                <select id="newUserRole" class="fi">
+                    <option value="member">Member</option>
+                    <option value="wing">Wing Leader</option>
+                    <option value="core">Core Committee</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="fg">
+                <label>Wing (Optional)</label>
+                <select id="newUserWing" class="fi">
+                    <option value="">-- None --</option>
+                    <option>Urdu Wing</option>
+                    <option>English Wing</option>
+                    <option>Arabic Wing</option>
+                    <option>Malayalam Wing</option>
+                    <option>Maths Wing</option>
+                    <option>Science Wing</option>
+                    <option>Media Wing</option>
+                </select>
+            </div>
+        </div>
+        <button onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
+    </div>
+
+    <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">
+        <i class="fas fa-users"></i> Registered Users
+    </h4>
+    <div id="usersList" class="adm-il"></div>
+</div>
 
     <script>
     // ===== PARTICLE BACKGROUND =====
@@ -2322,16 +2400,18 @@ function switchMediaTab(tab) {
     function openAdminPanel() { closeDashboards(); document.getElementById('adminPanel').classList.add('active'); }
     function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
 
-    function switchAdminTab(tab, btn) {
-        document.querySelectorAll('.admin-tc').forEach(t => t.classList.remove('active'));
-        document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-        document.querySelectorAll('.admin-tbtn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-        if (tab === 'gallery') loadAdminGallery();
-        if (tab === 'magazines') loadAdminMags();
-        if (tab === 'core') loadCoreMembers();
-        if (tab === 'wings') loadWings();
-    }
+        function switchAdminTab(tab, btn) {
+    document.querySelectorAll('.admin-tc').forEach(t => t.classList.remove('active'));
+    document.getElementById(`adminTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+    document.querySelectorAll('.admin-tbtn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    if (tab === 'gallery') loadAdminGallery();
+    if (tab === 'magazines') loadAdminMags();
+    if (tab === 'core') loadCoreMembers();
+    if (tab === 'wings') loadWings();
+    if (tab === 'users') loadUsers();
+}
 
     async function claimAdminRole() {
         if (auth.currentUser) {
@@ -2527,6 +2607,156 @@ window.switchMediaTab = function(tab) {
         setTimeout(loadPublicGallery, 100);
     }
 };
+
+
+
+
+
+        // ===== USER MANAGEMENT FUNCTIONS =====
+let allUsers = [];
+
+async function loadUsers() {
+    try {
+        const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+        allUsers = [];
+        snapshot.forEach(doc => {
+            allUsers.push({ id: doc.id, ...doc.data() });
+        });
+        renderUsersList();
+    } catch(e) {
+        console.error("Error loading users:", e);
+        showToast('Error loading users', 'error');
+    }
+}
+
+function renderUsersList() {
+    const container = document.getElementById('usersList');
+    if (!container) return;
+    
+    if (allUsers.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted);font-size:.88rem;text-align:center;padding:40px">No users found.</p>';
+        return;
+    }
+    
+    container.innerHTML = allUsers.map(user => `
+        <div class="adm-ir">
+            <div style="flex:2">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <div class="avatar-sm" style="width:40px;height:40px;font-size:1rem">${(user.name || 'U').charAt(0).toUpperCase()}</div>
+                    <div>
+                        <strong>${user.name || 'Unknown'}</strong><br>
+                        <small style="color:var(--muted)">@${user.username || 'N/A'}</small>
+                    </div>
+                </div>
+            </div>
+            <div style="flex:1">
+                <span class="role-badge role-${user.role || 'member'}">${(user.role || 'member').toUpperCase()}</span>
+            </div>
+            <div style="flex:1">
+                <select class="role-select" data-user-id="${user.id}" data-current-role="${user.role || 'member'}" 
+                        style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);cursor:pointer">
+                    <option value="member" ${user.role === 'member' ? 'selected' : ''}>👤 Member</option>
+                    <option value="wing" ${user.role === 'wing' ? 'selected' : ''}>🪽 Wing Leader</option>
+                    <option value="core" ${user.role === 'core' ? 'selected' : ''}>⭐ Core Committee</option>
+                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>👑 Admin</option>
+                </select>
+            </div>
+            <div>
+                <button class="del-btn" onclick="deleteUser('${user.id}', '${user.name}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Add event listeners to role selectors
+    document.querySelectorAll('.role-select').forEach(select => {
+        select.addEventListener('change', async (e) => {
+            const userId = select.dataset.userId;
+            const newRole = select.value;
+            await updateUserRole(userId, newRole);
+        });
+    });
+}
+
+async function updateUserRole(userId, newRole) {
+    try {
+        await db.collection('users').doc(userId).update({ role: newRole });
+        showToast('User role updated!', 'success');
+        loadUsers(); // Refresh the list
+    } catch(e) {
+        console.error("Error updating role:", e);
+        showToast('Error updating role: ' + e.message, 'error');
+    }
+}
+
+async function deleteUser(userId, userName) {
+    if (!confirm(`Delete user "${userName}" permanently?`)) return;
+    try {
+        await db.collection('users').doc(userId).delete();
+        showToast(`User "${userName}" deleted`, 'success');
+        loadUsers();
+    } catch(e) {
+        showToast('Error deleting user: ' + e.message, 'error');
+    }
+}
+
+async function addNewUser() {
+    const name = document.getElementById('newUserName').value.trim();
+    const username = document.getElementById('newUserUsername').value.trim().toLowerCase();
+    const password = document.getElementById('newUserPassword').value;
+    const role = document.getElementById('newUserRole').value;
+    const wing = document.getElementById('newUserWing').value;
+    
+    if (!name || !username || !password) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
+        return;
+    }
+    
+    try {
+        // Check if username exists
+        const existing = await db.collection('users').where('username', '==', username).get();
+        if (!existing.empty) {
+            showToast('Username already exists', 'error');
+            return;
+        }
+        
+        // Create Firebase Auth user
+        const email = `${username}@itqan.org`;
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        
+        // Save to Firestore
+        await db.collection('users').doc(userCredential.user.uid).set({
+            name: name,
+            username: username,
+            email: email,
+            role: role,
+            wing: wing || '',
+            hasAuth: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showToast(`User "${name}" created successfully!`, 'success');
+        
+        // Clear form
+        document.getElementById('newUserName').value = '';
+        document.getElementById('newUserUsername').value = '';
+        document.getElementById('newUserPassword').value = '';
+        document.getElementById('newUserRole').value = 'member';
+        document.getElementById('newUserWing').value = '';
+        
+        loadUsers();
+        
+    } catch(e) {
+        console.error("Error creating user:", e);
+        showToast('Error: ' + e.message, 'error');
+    }
+}
 </script>
 
     <!-- External scripts -->
