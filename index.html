@@ -2267,32 +2267,45 @@
     }
 
     async function loadAdminGallery() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/gallery`);
-            const galleryData = await response.json();
-            const list = document.getElementById('adminGalleryList');
-            if (!list) return;
-            if (!galleryData || galleryData.length === 0) {
-                list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
-                return;
-            }
-            list.innerHTML = galleryData.map(item => `
-                <div class="adm-ir">
-                    <div style="display:flex;align-items:center;gap:12px">
-                        <img src="${item.imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=Error'">
-                        <div><strong>${item.caption || 'Untitled'}</strong></div>
-                    </div>
-                    <button class="del-btn" onclick="deleteGalleryItem('${item.id}')">Delete</button>
-                </div>
-            `).join('');
-            console.log("Admin gallery loaded with", galleryData.length, "items");
-        } catch(e) {
-            console.error("Load admin gallery error:", e);
-            const list = document.getElementById('adminGalleryList');
-            if (list) list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Error loading photos</p>';
+    try {
+        console.log("📋 Loading admin gallery...");
+        const response = await fetch(`${API_BASE_URL}/gallery`);
+        const galleryData = await response.json();
+        
+        const list = document.getElementById('adminGalleryList');
+        if (!list) return;
+        
+        console.log("📸 Gallery data:", galleryData);
+        
+        if (!galleryData || galleryData.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No photos yet. Upload one above.</p>';
+            return;
         }
+        
+        list.innerHTML = galleryData.map(item => `
+            <div class="adm-ir">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <img src="${item.imageUrl}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" 
+                         onerror="this.src='https://placehold.co/50x50/0e1120/0e1120?text=Error'">
+                    <div>
+                        <strong>${item.caption || 'Untitled'}</strong><br>
+                        <small style="color:var(--muted)">${item.imageUrl?.substring(0, 50) || 'No URL'}...</small>
+                    </div>
+                </div>
+                <button class="del-btn" onclick="deleteGalleryItem('${item.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `).join('');
+        
+        console.log(`✅ Admin gallery loaded with ${galleryData.length} items`);
+        
+    } catch(e) {
+        console.error("Load admin gallery error:", e);
+        const list = document.getElementById('adminGalleryList');
+        if (list) list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Error loading photos</p>';
     }
-
+}
     async function deleteGalleryItem(id) {
         if (!confirm('Delete this photo permanently?')) return;
         try {
@@ -2311,48 +2324,93 @@
         }
     }
 
-    async function uploadToBackend() {
-        const fileInput = document.getElementById('galImageFile');
-        const file = fileInput.files[0];
-        const caption = document.getElementById('galCaption').value.trim();
-        if (!file) {
-            showToast('Please select an image', 'error');
-            return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('File too large. Max 5MB.', 'error');
-            return;
-        }
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('caption', caption);
-        const progressDiv = document.getElementById('uploadProgress');
-        const progressBar = document.getElementById('uploadProgressBar');
-        const statusText = document.getElementById('uploadStatus');
-        progressDiv.style.display = 'block';
-        progressBar.value = 0;
-        statusText.textContent = 'Uploading...';
-        try {
-            const response = await fetch(`${API_BASE_URL}/upload`, { method: 'POST', body: formData });
-            const result = await response.json();
-            if (result.success) {
-                progressBar.value = 100;
-                statusText.textContent = 'Complete!';
-                showToast('Uploaded successfully!', 'success');
-                fileInput.value = '';
-                document.getElementById('galCaption').value = '';
-                document.getElementById('imagePreview').style.display = 'none';
-                progressDiv.style.display = 'none';
-                await loadPublicGallery();
-                await loadAdminGallery();
-            } else {
-                throw new Error(result.error);
-            }
-        } catch(error) {
-            showToast('Upload failed: ' + error.message, 'error');
-            progressDiv.style.display = 'none';
-        }
+   // ===== UPLOAD TO BACKEND - FIXED VERSION =====
+async function uploadToBackend() {
+    console.log("📤 Upload function called");
+    
+    const fileInput = document.getElementById('galImageFile');
+    const caption = document.getElementById('galCaption').value.trim();
+    
+    // Debug: log what we found
+    console.log("File input element:", fileInput);
+    console.log("Selected file:", fileInput?.files[0]);
+    
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        showToast('Please select an image file first', 'error');
+        return;
     }
+    
+    const file = fileInput.files[0];
+    
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('File too large. Max 5MB.', 'error');
+        return;
+    }
+    
+    // Show progress
+    const progressDiv = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('uploadProgressBar');
+    const statusText = document.getElementById('uploadStatus');
+    if (progressDiv) progressDiv.style.display = 'block';
+    if (progressBar) progressBar.value = 0;
+    if (statusText) statusText.textContent = 'Uploading...';
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('caption', caption || 'Untitled');
+    
+    try {
+        console.log("🚀 Sending to backend:", `${API_BASE_URL}/upload`);
+        
+        const response = await fetch(`${API_BASE_URL}/upload`, {
+            method: 'POST',
+            body: formData,
+        });
+        
+        const result = await response.json();
+        console.log("📥 Response:", result);
+        
+        if (result.success) {
+            if (progressBar) progressBar.value = 100;
+            if (statusText) statusText.textContent = 'Complete!';
+            showToast('Uploaded successfully!', 'success');
+            
+            // Clear form
+            fileInput.value = '';
+            document.getElementById('galCaption').value = '';
+            const previewDiv = document.getElementById('imagePreview');
+            if (previewDiv) previewDiv.style.display = 'none';
+            if (progressDiv) progressDiv.style.display = 'none';
+            
+            // Refresh galleries
+            await loadPublicGallery();
+            await loadAdminGallery();
+            
+        } else {
+            throw new Error(result.error || 'Upload failed');
+        }
+    } catch (error) {
+        console.error("❌ Upload error:", error);
+        showToast('Upload failed: ' + error.message, 'error');
+        if (progressDiv) progressDiv.style.display = 'none';
+    }
+}
+
+// Preview image when file is selected
+document.getElementById('galImageFile')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    console.log("📎 File selected:", file?.name);
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const preview = document.getElementById('previewImg');
+            const previewDiv = document.getElementById('imagePreview');
+            if (preview) preview.src = event.target.result;
+            if (previewDiv) previewDiv.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
     // ===== MAGAZINE FUNCTIONS =====
     async function loadPublicMags() {
