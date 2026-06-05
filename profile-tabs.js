@@ -253,16 +253,30 @@
       const modalContactInfo = document.getElementById("modalContactInfo");
       const modalPhoto = document.getElementById("modalPhoto");
       const placeholder = document.getElementById("photoPlaceholder");
+      const profilePosition = document.getElementById("profilePosition");
+      const profileMotto = document.getElementById("profileMotto");
+      const profileEmail = document.getElementById("profileEmail");
+      const profileSocial = document.getElementById("profileSocial");
 
       if (modalDescription && profile.details) modalDescription.textContent = profile.details;
+      if (profilePosition) profilePosition.textContent = profile.wing ? `${profile.role || position} • ${profile.wing}` : (profile.role || position || "Member");
+      if (profileMotto && profile.details) profileMotto.textContent = profile.details.split(".")[0] || profile.details;
+      if (profileEmail) profileEmail.textContent = profile.contact || profile.email || "Not added yet";
+      if (profileSocial) profileSocial.textContent = profile.username ? `@${profile.username}` : "@itqan_union";
+
       if (modalDetails) {
         const achievements = Array.isArray(profile.achievements) ? profile.achievements : [];
+        modalDetails.className = "profile-placeholder-panel";
         modalDetails.innerHTML = achievements.length
-          ? `<h4>Achievements</h4><ul>${achievements.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`
-          : '<h4>Achievements</h4><ul><li>No achievements added yet.</li></ul>';
+          ? `<div><i class="fas fa-award"></i><h4>Achievements & Responsibilities</h4><ul style="text-align:left;margin-top:14px;line-height:1.9;color:#667085">${achievements.map((item) => `<li>${esc(item)}</li>`).join("")}</ul></div>`
+          : '<div><i class="fas fa-clipboard-list"></i><h4>Role & Responsibilities</h4><p>No achievements added yet.</p></div>';
       }
       if (modalContactInfo) {
-        modalContactInfo.innerHTML = `<h4>Contact</h4><div class="ct-item"><i class="fas fa-at"></i><span>${esc(profile.contact || "Not added yet")}</span></div>`;
+        modalContactInfo.innerHTML = `
+          <div class="profile-detail"><i class="fas fa-envelope"></i><span>${esc(profile.contact || profile.email || "Not added yet")}</span></div>
+          <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span>${esc(profile.wing || "Kerala, India")}</span></div>
+          <div class="profile-detail"><i class="fas fa-calendar-check"></i><span>Joined 2026</span></div>
+          <div class="profile-detail"><i class="fab fa-instagram"></i><span>${profile.username ? `@${esc(profile.username)}` : "@itqan_union"}</span></div>`;
       }
       if (profile.photoUrl && modalPhoto && placeholder) {
         modalPhoto.src = profile.photoUrl;
