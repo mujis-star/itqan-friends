@@ -2087,7 +2087,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14777b7a60757760547d6065757a617a7d7b7a3a7b6673">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0a3afaeb4a1a3b480a9b4b1a1aeb5aea9afaeeeafb2a7">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2113,7 +2113,7 @@
                 </blockquote>
 
                 <div class="profile-detail-list" id="modalContactInfo">
-                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="44272b2a30252730042d3035252a6a2b3623">[email&#160;protected]</a></span></div>
+                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="284b47465c494b5c68415c59494606475a4f">[email&#160;protected]</a></span></div>
                     <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="profileLocation">Kerala, India</span></div>
                     <div class="profile-detail"><i class="fas fa-calendar-check"></i><span id="profileJoined">Joined 2026</span></div>
                     <div class="profile-detail"><i class="fab fa-instagram"></i><span id="profileSocial">@itqan_union</span></div>
@@ -3861,9 +3861,8 @@ async function loadAdminStats() {
         const galleryData = await getPersistentGalleryItems();
         document.getElementById('statTotalPhotos').innerText = galleryData.length;
         
-        // Get magazines count from Render backend
-        const magRes = await fetch(`${API_BASE_URL}/magazines`);
-        const magData = await magRes.json();
+// Get magazines count from persistent Firestore plus any legacy backend publications
+        const magData = typeof getPersistentMagazineItems === 'function' ? await getPersistentMagazineItems() : [];
         document.getElementById('statTotalMagazines').innerText = magData.length;
         
         // Get users from Firestore
@@ -4180,6 +4179,235 @@ async function deleteMagazineItem(id) {
 }
 
 
+// ===== PERSISTENT MAGAZINES / PUBLICATIONS (FIRESTORE + LEGACY BACKEND FALLBACK) =====
+let magazineCache = [];
+
+async function uploadPublicationPdfToStorage(file) {
+    if (!file) return '';
+    if (!window.firebase || !firebase.storage) {
+        throw new Error('Firebase Storage is not loaded.');
+    }
+    if (file.size > 25 * 1024 * 1024) {
+        throw new Error('PDF is too large. Max 25MB.');
+    }
+    const safeName = String(file.name || 'publication.pdf').toLowerCase().replace(/[^a-z0-9._-]+/g, '-');
+    const ref = firebase.storage().ref(`publications/${Date.now()}-${safeName}`);
+    const snap = await ref.put(file, { contentType: file.type || 'application/pdf' });
+    return snap.ref.getDownloadURL();
+}
+
+async function getPersistentMagazineItems() {
+    let firestoreItems = [];
+    let backendItems = [];
+
+    try {
+        const snap = await db.collection('magazines').orderBy('createdAt', 'desc').get();
+        snap.forEach(doc => {
+            const item = doc.data() || {};
+            firestoreItems.push({
+                id: doc.id,
+                title: item.title || 'Untitled',
+                type: item.type || 'magazine',
+                description: item.description || '',
+                coverUrl: item.coverUrl || item.imageUrl || '',
+                pdfUrl: item.pdfUrl || '',
+                createdAt: item.createdAt || '',
+                _source: 'firestore'
+            });
+        });
+    } catch (e) {
+        console.warn('Firestore magazines read failed; using backend fallback only:', e);
+    }
+
+    // Keep old backend publications visible while the Render backend still has them.
+    // New publications are saved to Firestore so they do not disappear after Render restarts.
+    try {
+        const response = await fetch(`${API_BASE_URL}/magazines`);
+        if (response.ok) {
+            const data = await response.json();
+            backendItems = (data || []).map(item => ({ ...item, _source: 'backend' }));
+        }
+    } catch (e) {
+        console.warn('Backend magazines read failed; Firestore publications will still be shown:', e);
+    }
+
+    const seen = new Set();
+    return [...firestoreItems, ...backendItems].filter(item => {
+        const key = `${item.title || ''}|${item.coverUrl || ''}|${item.pdfUrl || ''}`;
+        if (!item || !item.title || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+}
+
+async function loadPublicMags() {
+    try {
+        const magazines = await getPersistentMagazineItems();
+        magazineCache = magazines;
+
+        const grid = document.getElementById('publicMagGrid');
+        const empty = document.getElementById('magazinesEmpty');
+
+        if (!magazines || magazines.length === 0) {
+            if (empty) empty.style.display = 'block';
+            if (grid) grid.innerHTML = '';
+            return;
+        }
+
+        if (empty) empty.style.display = 'none';
+        if (grid) {
+            grid.innerHTML = magazines.map(mag => `
+                <div class="mag-card">
+                    <img class="mag-cover" src="${mag.coverUrl || 'logo.png'}" alt="${escapeHTML(mag.title)}" loading="lazy" onerror="this.src='logo.png'">
+                    <div class="mag-body">
+                        <span class="mag-badge ${escapeHTML(mag.type || 'magazine')}">${mag.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
+                        <h3>${escapeHTML(mag.title)}</h3>
+                        <p>${escapeHTML(mag.description || '')}</p>
+                        ${mag.pdfUrl ?
+                            `<button class="btn btn-cyan btn-sm" onclick="window.open('${mag.pdfUrl}', '_blank')">Read Now</button>` :
+                            '<button class="btn btn-outline btn-sm" disabled>No PDF</button>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch(e) {
+        console.error('Load magazines error:', e);
+    }
+}
+
+async function loadAdminMags() {
+    try {
+        const magazines = await getPersistentMagazineItems();
+        magazineCache = magazines;
+
+        const list = document.getElementById('adminMagList');
+        if (!list) return;
+
+        if (!magazines || magazines.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">No publications yet.</p>';
+            return;
+        }
+
+        list.innerHTML = magazines.map(mag => `
+            <div class="adm-ir">
+                <div style="display:flex;align-items:center;gap:12px;min-width:0">
+                    <img src="${mag.coverUrl || 'logo.png'}" alt="" style="width:46px;height:58px;object-fit:cover;border-radius:8px;background:var(--bg2)" onerror="this.src='logo.png'">
+                    <div style="min-width:0">
+                        <strong>${escapeHTML(mag.title)}</strong>
+                        <span style="margin-left:10px;font-size:.72rem;color:var(--muted);text-transform:capitalize">${escapeHTML(mag.type || 'magazine')}</span><br>
+                        <small style="color:var(--muted)">${mag._source === 'firestore' ? 'Permanent storage' : 'Legacy backend storage'}</small>
+                    </div>
+                </div>
+                <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `).join('');
+    } catch(e) {
+        console.error('Load admin magazines error:', e);
+        const list = document.getElementById('adminMagList');
+        if (list) list.innerHTML = '<p style="color:var(--muted);font-size:.88rem">Error loading publications</p>';
+    }
+}
+
+async function deleteMagazineItem(id) {
+    if (!confirm('Delete this publication?')) return;
+    try {
+        const item = magazineCache.find(x => x.id === id);
+        if (item?._source === 'backend') {
+            const response = await fetch(`${API_BASE_URL}/delete-magazine/${id}`, { method: 'DELETE' });
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error || 'Delete failed');
+        } else {
+            await db.collection('magazines').doc(id).delete();
+        }
+        showToast('Publication deleted', 'success');
+        await loadPublicMags();
+        await loadAdminMags();
+        await loadAdminStats();
+    } catch(e) {
+        showToast('Error deleting: ' + e.message, 'error');
+    }
+}
+
+async function uploadMagazineToBackend() {
+    const title = document.getElementById('magTitle').value.trim();
+    const type = document.getElementById('magType').value;
+    const description = document.getElementById('magDesc').value.trim();
+    const coverFile = document.getElementById('magCoverFile')?.files?.[0];
+    const pdfFile = document.getElementById('magPdfFile')?.files?.[0];
+
+    if (!title) {
+        showToast('Please enter a title', 'error');
+        return;
+    }
+    if (!coverFile) {
+        showToast('Please select a cover image', 'error');
+        return;
+    }
+    if (!coverFile.type.startsWith('image/')) {
+        showToast('Please select a valid cover image.', 'error');
+        return;
+    }
+
+    const progressDiv = document.getElementById('magUploadProgress');
+    const progressBar = document.getElementById('magProgressBar');
+    const statusText = document.getElementById('magStatus');
+    if (progressDiv) progressDiv.style.display = 'block';
+    if (progressBar) progressBar.value = 10;
+    if (statusText) statusText.textContent = 'Compressing cover for permanent storage...';
+
+    try {
+        const coverUrl = await imageFileToPersistentDataUrl(coverFile);
+        let pdfUrl = '';
+        let pdfWarning = '';
+
+        if (pdfFile) {
+            if (progressBar) progressBar.value = 55;
+            if (statusText) statusText.textContent = 'Uploading PDF to Firebase Storage...';
+            try {
+                pdfUrl = await uploadPublicationPdfToStorage(pdfFile);
+            } catch (pdfError) {
+                console.warn('PDF upload skipped:', pdfError);
+                pdfWarning = ' PDF was not saved because Firebase Storage blocked it or the file was too large.';
+            }
+        }
+
+        if (progressBar) progressBar.value = 82;
+        if (statusText) statusText.textContent = 'Saving publication permanently...';
+
+        await db.collection('magazines').add({
+            title,
+            type,
+            description,
+            coverUrl,
+            pdfUrl,
+            uploadedBy: currentUserData?.name || 'Admin',
+            storage: 'firestore-cover' + (pdfUrl ? '+firebase-storage-pdf' : ''),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        if (progressBar) progressBar.value = 100;
+        if (statusText) statusText.textContent = 'Saved permanently!';
+        showToast(`Publication saved permanently.${pdfWarning}`, pdfWarning ? 'error' : 'success');
+
+        document.getElementById('magTitle').value = '';
+        document.getElementById('magDesc').value = '';
+        document.getElementById('magCoverFile').value = '';
+        document.getElementById('magPdfFile').value = '';
+        if (progressDiv) setTimeout(() => { progressDiv.style.display = 'none'; }, 600);
+
+        await loadPublicMags();
+        await loadAdminMags();
+        await loadAdminStats();
+    } catch (error) {
+        console.error('Publication upload failed:', error);
+        showToast('Upload failed: ' + (error.message || error), 'error');
+        if (progressDiv) progressDiv.style.display = 'none';
+    }
+}
+
+
         // ===== MEDIA HUB TAB BUTTONS =====
 // Keep this simple: the buttons switch between the real gallery and magazine panels.
 document.addEventListener('DOMContentLoaded', function () {
@@ -4210,5 +4438,5 @@ document.addEventListener('DOMContentLoaded', function () {
     <script src="upload-support.js?v=16"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=16"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06da018cdae7ed9',t:'MTc4MDY0NjIzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
