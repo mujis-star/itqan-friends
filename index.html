@@ -949,6 +949,14 @@
         font-family:'Inter',sans-serif;transition:var(--trans);font-size:.8rem;
     }
     .del-btn:hover{background:rgba(239,68,68,.2);transform:scale(1.02)}
+    .admin-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .admin-form-grid .fg{margin-bottom:0}
+    .admin-form-grid .fg.full{grid-column:1/-1}
+    .profile-edit-panel{border-color:rgba(0,229,255,.28);box-shadow:0 18px 44px rgba(0,229,255,.06)}
+    .profile-edit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .profile-edit-head p{color:var(--muted);font-size:.82rem;margin-top:4px}
+    .profile-edit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    @media(max-width:720px){.admin-form-grid{grid-template-columns:1fr}.adm-ir{align-items:flex-start;flex-direction:column}}
 
     .ov-dim{
         position:fixed;inset:0;background:rgba(0,0,0,.65);
@@ -2076,7 +2084,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bad9d5d4cedbd9cefad3cecbdbd4cfd4d3d5d494d5c8dd">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ffcf0f1ebfefcebdff6ebeefef1eaf1f6f0f1b1f0edf8">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2102,7 +2110,7 @@
                 </blockquote>
 
                 <div class="profile-detail-list" id="modalContactInfo">
-                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d2e2223392c2e390d24393c2c2363223f2a">[email&#160;protected]</a></span></div>
+                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8cbc7c6dcc9cbdce8c1dcd9c9c686c7dacf">[email&#160;protected]</a></span></div>
                     <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="profileLocation">Kerala, India</span></div>
                     <div class="profile-detail"><i class="fas fa-calendar-check"></i><span id="profileJoined">Joined 2026</span></div>
                     <div class="profile-detail"><i class="fab fa-instagram"></i><span id="profileSocial">@itqan_union</span></div>
@@ -2446,6 +2454,40 @@
                         </div>
                     </div>
                     <button onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
+                </div>
+
+                <div class="add-form profile-edit-panel" id="adminProfileEditor" style="display:none">
+                    <div class="profile-edit-head">
+                        <div>
+                            <h4><i class="fas fa-user-edit" style="color:var(--gold)"></i> Edit Individual Profile</h4>
+                            <p>Update the selected member's public profile. These details appear in the profile modal.</p>
+                        </div>
+                        <button class="admin-xbtn" type="button" onclick="closeProfileEditor()"><i class="fas fa-times"></i> Close</button>
+                    </div>
+                    <input type="hidden" id="editProfileUserId">
+                    <div class="admin-form-grid">
+                        <div class="fg"><label>Full Name *</label><input type="text" id="editProfileName" class="fi" placeholder="Full name"></div>
+                        <div class="fg"><label>Username *</label><input type="text" id="editProfileUsername" class="fi" placeholder="username"></div>
+                        <div class="fg">
+                            <label>Role</label>
+                            <select id="editProfileRole" class="fi">
+                                <option value="member">👤 Member</option>
+                                <option value="wing">🪽 Wing Leader</option>
+                                <option value="core">⭐ Core Committee</option>
+                                <option value="admin">👑 Admin</option>
+                            </select>
+                        </div>
+                        <div class="fg"><label>Wing / Category</label><input type="text" id="editProfileWing" class="fi" placeholder="e.g., Media Wing"></div>
+                        <div class="fg"><label>Email / Contact</label><input type="text" id="editProfileContact" class="fi" placeholder="email or contact"></div>
+                        <div class="fg"><label>Profile Photo URL</label><input type="url" id="editProfilePhotoUrl" class="fi" placeholder="https://..."></div>
+                        <div class="fg full"><label>About Me / Bio</label><textarea id="editProfileDetails" class="fi" rows="4" placeholder="Short profile bio..."></textarea></div>
+                        <div class="fg full"><label>Responsibilities / Achievements</label><textarea id="editProfileAchievements" class="fi" rows="4" placeholder="Write one item per line"></textarea></div>
+                    </div>
+                    <div class="profile-edit-actions">
+                        <button class="btn btn-sm btn-cyan" type="button" onclick="saveProfileEditor()"><i class="fas fa-save"></i> Save Profile</button>
+                        <button class="btn btn-sm btn-outline" type="button" onclick="previewEditedProfile()"><i class="fas fa-eye"></i> Preview</button>
+                        <button class="btn btn-sm btn-danger" type="button" onclick="closeProfileEditor()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
                 </div>
 
                 <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">
@@ -3564,6 +3606,15 @@ function profileSlug(value) {
         .replace(/^-+|-+$/g, '') || 'profile';
 }
 
+function setProfileEditorValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value || '';
+}
+
+function getProfileEditorValue(id) {
+    return document.getElementById(id)?.value?.trim() || '';
+}
+
 async function editUserProfile(userId) {
     const user = allUsers.find(u => u.id === userId);
     if (!user) {
@@ -3571,48 +3622,58 @@ async function editUserProfile(userId) {
         return;
     }
 
-    const name = prompt('Full name:', user.name || '');
-    if (name === null) return;
+    setProfileEditorValue('editProfileUserId', userId);
+    setProfileEditorValue('editProfileName', user.name || '');
+    setProfileEditorValue('editProfileUsername', user.username || '');
+    setProfileEditorValue('editProfileWing', user.wing || '');
+    setProfileEditorValue('editProfileContact', user.contact || user.email || '');
+    setProfileEditorValue('editProfilePhotoUrl', user.photoUrl || '');
+    setProfileEditorValue('editProfileDetails', user.details || '');
+    setProfileEditorValue('editProfileAchievements', Array.isArray(user.achievements) ? user.achievements.join('\n') : '');
 
-    const username = prompt('Username:', user.username || '');
-    if (username === null) return;
+    const roleEl = document.getElementById('editProfileRole');
+    if (roleEl) roleEl.value = ['member', 'wing', 'core', 'admin'].includes(user.role) ? user.role : 'member';
 
-    const role = prompt('Role (member, wing, core, admin):', user.role || 'member');
-    if (role === null) return;
+    const editor = document.getElementById('adminProfileEditor');
+    if (editor) {
+        editor.style.display = 'block';
+        editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 
-    const wing = prompt('Wing / category:', user.wing || 'General');
-    if (wing === null) return;
+function closeProfileEditor() {
+    const editor = document.getElementById('adminProfileEditor');
+    if (editor) editor.style.display = 'none';
+    setProfileEditorValue('editProfileUserId', '');
+}
 
-    const details = prompt('About Me / profile bio:', user.details || '');
-    if (details === null) return;
-
-    const contact = prompt('Email / contact:', user.contact || user.email || '');
-    if (contact === null) return;
-
-    const photoUrl = prompt('Profile photo URL:', user.photoUrl || '');
-    if (photoUrl === null) return;
-
-    const achievementsText = prompt(
-        'Responsibilities / achievements (one per line):',
-        Array.isArray(user.achievements) ? user.achievements.join('\n') : ''
-    );
-    if (achievementsText === null) return;
-
-    const cleanRole = ['member', 'wing', 'core', 'admin'].includes(role.trim().toLowerCase())
-        ? role.trim().toLowerCase()
-        : (user.role || 'member');
-
-    const updatedProfile = {
-        name: name.trim(),
-        username: username.trim().toLowerCase(),
-        role: cleanRole,
-        wing: wing.trim(),
-        details: details.trim(),
-        contact: contact.trim(),
-        photoUrl: photoUrl.trim(),
-        achievements: achievementsText.split('\n').map(x => x.trim()).filter(Boolean),
+function collectProfileEditorData() {
+    const role = getProfileEditorValue('editProfileRole').toLowerCase();
+    return {
+        name: getProfileEditorValue('editProfileName'),
+        username: getProfileEditorValue('editProfileUsername').toLowerCase(),
+        role: ['member', 'wing', 'core', 'admin'].includes(role) ? role : 'member',
+        wing: getProfileEditorValue('editProfileWing'),
+        details: getProfileEditorValue('editProfileDetails'),
+        contact: getProfileEditorValue('editProfileContact'),
+        photoUrl: getProfileEditorValue('editProfilePhotoUrl'),
+        achievements: getProfileEditorValue('editProfileAchievements').split('\n').map(x => x.trim()).filter(Boolean),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
+}
+
+async function saveProfileEditor() {
+    const userId = getProfileEditorValue('editProfileUserId');
+    if (!userId) {
+        showToast('No profile selected.', 'error');
+        return;
+    }
+
+    const updatedProfile = collectProfileEditorData();
+    if (!updatedProfile.name || !updatedProfile.username) {
+        showToast('Name and username are required.', 'error');
+        return;
+    }
 
     try {
         await db.collection('users').doc(userId).set(updatedProfile, { merge: true });
@@ -3633,11 +3694,17 @@ async function editUserProfile(userId) {
         }
 
         showToast('Profile updated successfully!', 'success');
+        closeProfileEditor();
         await loadUsers();
     } catch (e) {
         console.error('Profile update error:', e);
         showToast('Error updating profile: ' + e.message, 'error');
     }
+}
+
+function previewEditedProfile() {
+    const data = collectProfileEditorData();
+    showProfile(data.name || 'Preview Member', data.role || 'member', data.details || 'No bio added yet.', data.photoUrl || '');
 }
 
 async function deleteUser(userId, userName) {
@@ -4067,5 +4134,5 @@ document.addEventListener('DOMContentLoaded', function () {
     <script src="upload-support.js?v=16"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=16"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06d14ab9d601262',t:'MTc4MDY0MDUyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
