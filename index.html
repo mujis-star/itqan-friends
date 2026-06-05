@@ -745,6 +745,7 @@
         padding:24px;
     }
     .profile-modal.active,.auth-modal.active{display:flex}
+    .profile-modal{z-index:5000}
 
     .auth-card{
         background:linear-gradient(145deg,var(--bg3),var(--bg2));
@@ -843,6 +844,8 @@
     .activity-item:hover{transform:translateY(-2px);border-color:#c9f7ff}.activity-thumb{width:58px;height:58px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,#dffaff,#fff2c2)}
     .activity-meta{flex:1;min-width:0}.activity-title{font-weight:800;color:#182230;font-size:.92rem;margin-bottom:4px}.activity-date{color:#98a2b3;font-size:.78rem;font-weight:600}.activity-arrow{color:#98a2b3;margin-left:auto}
     .profile-placeholder-panel{min-height:360px;display:grid;place-items:center;text-align:center;color:#667085;background:#fff;border:1px dashed #d0d5dd;border-radius:22px;padding:30px}.profile-placeholder-panel i{font-size:2.2rem;color:var(--cyan);margin-bottom:12px}
+    .profile-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;width:100%}
+    .profile-gallery-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid #e8edf3;background:#eef3f8}
     .profile-footer-quote{grid-column:1/-1;padding:18px 28px 26px;text-align:center;color:#667085;font-size:.9rem;font-style:italic;border-top:1px solid #e8edf3;background:#fff}
 
     @media (max-width:900px){
@@ -2084,7 +2087,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ffcf0f1ebfefcebdff6ebeefef1eaf1f6f0f1b1f0edf8">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14777b7a60757760547d6065757a617a7d7b7a3a7b6673">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2110,7 +2113,7 @@
                 </blockquote>
 
                 <div class="profile-detail-list" id="modalContactInfo">
-                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8cbc7c6dcc9cbdce8c1dcd9c9c686c7dacf">[email&#160;protected]</a></span></div>
+                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="44272b2a30252730042d3035252a6a2b3623">[email&#160;protected]</a></span></div>
                     <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="profileLocation">Kerala, India</span></div>
                     <div class="profile-detail"><i class="fas fa-calendar-check"></i><span id="profileJoined">Joined 2026</span></div>
                     <div class="profile-detail"><i class="fab fa-instagram"></i><span id="profileSocial">@itqan_union</span></div>
@@ -2182,8 +2185,8 @@
                     </div>
                 </section>
 
-                <section class="profile-tab-panel" id="profileTabGallery">
-                    <div class="profile-placeholder-panel">
+<section class="profile-tab-panel" id="profileTabGallery">
+                    <div class="profile-placeholder-panel" id="profileGalleryPanel">
                         <div><i class="fas fa-images"></i><h4>Gallery</h4><p>Member photos and media highlights will appear here.</p></div>
                     </div>
                 </section>
@@ -2478,10 +2481,18 @@
                             </select>
                         </div>
                         <div class="fg"><label>Wing / Category</label><input type="text" id="editProfileWing" class="fi" placeholder="e.g., Media Wing"></div>
-                        <div class="fg"><label>Email / Contact</label><input type="text" id="editProfileContact" class="fi" placeholder="email or contact"></div>
+<div class="fg"><label>Email / Contact</label><input type="text" id="editProfileContact" class="fi" placeholder="email or contact"></div>
                         <div class="fg"><label>Profile Photo URL</label><input type="url" id="editProfilePhotoUrl" class="fi" placeholder="https://..."></div>
+                        <div class="fg"><label>Location</label><input type="text" id="editProfileLocation" class="fi" placeholder="Kerala, India"></div>
+                        <div class="fg"><label>Joined Date</label><input type="text" id="editProfileJoined" class="fi" placeholder="Joined 2026"></div>
+                        <div class="fg"><label>Social Handle</label><input type="text" id="editProfileSocial" class="fi" placeholder="@username"></div>
+                        <div class="fg"><label>Status</label><input type="text" id="editProfileStatus" class="fi" placeholder="Active"></div>
+                        <div class="fg full"><label>Motto / Quote</label><textarea id="editProfileMotto" class="fi" rows="2" placeholder="Personal motto..."></textarea></div>
                         <div class="fg full"><label>About Me / Bio</label><textarea id="editProfileDetails" class="fi" rows="4" placeholder="Short profile bio..."></textarea></div>
+                        <div class="fg full"><label>Skills & Strengths</label><textarea id="editProfileSkills" class="fi" rows="3" placeholder="Leadership, Communication, Teamwork"></textarea></div>
                         <div class="fg full"><label>Responsibilities / Achievements</label><textarea id="editProfileAchievements" class="fi" rows="4" placeholder="Write one item per line"></textarea></div>
+                        <div class="fg full"><label>Recent Activities</label><textarea id="editProfileActivities" class="fi" rows="4" placeholder="One per line: Activity title | Date | optional image URL"></textarea></div>
+                        <div class="fg full"><label>Gallery Images</label><textarea id="editProfileGallery" class="fi" rows="3" placeholder="One image URL per line"></textarea></div>
                     </div>
                     <div class="profile-edit-actions">
                         <button class="btn btn-sm btn-cyan" type="button" onclick="saveProfileEditor()"><i class="fas fa-save"></i> Save Profile</button>
@@ -3098,27 +3109,46 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         if (activeBtn) activeBtn.classList.add('active');
     }
 
-    function showProfile(name, role, desc, photo) {
-        const safeName = name || 'ITQAN Member';
-        const safeRole = role || 'Member';
-        const about = desc || 'A dedicated ITQAN member contributing to learning, leadership, teamwork, and community growth.';
+    function profilePillClass(index) {
+        return ['skill-cyan', 'skill-rose', 'skill-gold', 'skill-violet', 'skill-green'][index % 5];
+    }
+
+    function parseActivityLine(line) {
+        const [title, date, imageUrl] = String(line || '').split('|').map(x => x.trim());
+        return { title, date: date || 'Recent', imageUrl: imageUrl || 'logo.png' };
+    }
+
+    function renderProfileData(data = {}) {
+        const safeName = data.name || 'ITQAN Member';
+        const safeRole = data.roleLabel || data.position || data.role || 'Member';
+        const about = data.details || data.description || 'A dedicated ITQAN member contributing to learning, leadership, teamwork, and community growth.';
+        const skills = Array.isArray(data.skills) && data.skills.length ? data.skills : ['Leadership', 'Communication', 'Teamwork', 'Planning', 'Creativity'];
+        const achievements = Array.isArray(data.achievements) ? data.achievements : [];
+        const activitiesData = Array.isArray(data.activities) && data.activities.length
+            ? data.activities.map(item => typeof item === 'string' ? parseActivityLine(item) : item)
+            : [
+                { title: 'Union leadership contribution', date: 'June 2026', imageUrl: 'logo.png' },
+                { title: 'Team planning and coordination', date: 'May 2026', imageUrl: 'logo.png' },
+                { title: 'Academic and cultural programme support', date: 'April 2026', imageUrl: 'logo.png' }
+            ];
+        const galleryImages = Array.isArray(data.galleryImages) ? data.galleryImages.filter(Boolean) : [];
 
         setText('modalTitle', safeName);
         setText('modalSubtitle', safeRole);
         setText('modalDescription', about);
-        setText('profilePosition', safeRole);
-        setText('profileMemberSince', '2026');
-        setText('profileStatus', 'Active');
-        setText('profileMotto', 'Committed to learning, serving, and growing together with the ITQAN community.');
-        setText('profileEmail', `${safeName.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '') || 'member'}@itqan.org`);
-        setText('profileLocation', 'Kerala, India');
-        setText('profileJoined', 'Joined 2026');
-        setText('profileSocial', '@itqan_union');
+        setText('profilePosition', data.position || safeRole);
+        setText('profileMemberSince', data.memberSince || data.joined || '2026');
+        setText('profileStatus', data.status || 'Active');
+        setText('profileMotto', data.motto || 'Committed to learning, serving, and growing together with the ITQAN community.');
+        setText('profileEmail', data.contact || data.email || `${safeName.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '') || 'member'}@itqan.org`);
+        setText('profileLocation', data.location || data.wing || 'Kerala, India');
+        setText('profileJoined', data.joined || data.memberSince || 'Joined 2026');
+        setText('profileSocial', data.social || (data.username ? `@${data.username}` : '@itqan_union'));
 
         const photoEl = document.getElementById('modalPhoto');
         const placeholder = document.getElementById('photoPlaceholder');
-        if (photo && photoEl && placeholder) {
-            photoEl.src = photo;
+        if (data.photoUrl && photoEl && placeholder) {
+            photoEl.src = data.photoUrl;
             photoEl.style.display = 'block';
             placeholder.style.display = 'none';
         } else if (photoEl && placeholder) {
@@ -3127,21 +3157,42 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
             placeholder.style.display = 'flex';
         }
 
+        const skillsEl = document.getElementById('profileSkills');
+        if (skillsEl) {
+            skillsEl.innerHTML = skills.map((skill, i) => `<span class="skill-pill ${profilePillClass(i)}">${escapeHTML(skill)}</span>`).join('');
+        }
+
         const activities = document.getElementById('profileActivities');
         if (activities) {
-            activities.innerHTML = [
-                ['Union leadership contribution', 'June 2026'],
-                ['Team planning and coordination', 'May 2026'],
-                ['Academic and cultural programme support', 'April 2026']
-            ].map(([title, date]) => `
+            activities.innerHTML = activitiesData.map(item => `
                 <div class="activity-item">
-                    <img class="activity-thumb" src="logo.png" alt="Activity">
-                    <div class="activity-meta"><div class="activity-title">${title}</div><div class="activity-date">${date}</div></div>
+                    <img class="activity-thumb" src="${escapeHTML(item.imageUrl || 'logo.png')}" alt="Activity">
+                    <div class="activity-meta"><div class="activity-title">${escapeHTML(item.title || 'Activity update')}</div><div class="activity-date">${escapeHTML(item.date || 'Recent')}</div></div>
                     <i class="fas fa-chevron-right activity-arrow"></i>
                 </div>
             `).join('');
         }
 
+        const details = document.getElementById('modalDetails');
+        if (details) {
+            details.className = 'profile-placeholder-panel';
+            details.innerHTML = achievements.length
+                ? `<div><i class="fas fa-award"></i><h4>Responsibilities & Achievements</h4><ul style="text-align:left;margin-top:14px;line-height:1.9;color:#667085">${achievements.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul></div>`
+                : '<div><i class="fas fa-clipboard-list"></i><h4>Role & Responsibilities</h4><p>No responsibilities added yet.</p></div>';
+        }
+
+        const galleryPanel = document.getElementById('profileGalleryPanel');
+        if (galleryPanel) {
+            galleryPanel.innerHTML = galleryImages.length
+                ? `<div class="profile-gallery-grid">${galleryImages.map(url => `<img src="${escapeHTML(url)}" alt="Profile gallery image">`).join('')}</div>`
+                : '<div><i class="fas fa-images"></i><h4>Gallery</h4><p>Member photos and media highlights will appear here.</p></div>';
+        }
+    }
+
+    window.renderProfileData = renderProfileData;
+
+    function showProfile(name, role, desc, photo) {
+        renderProfileData({ name, roleLabel: role, position: role, description: desc, photoUrl: photo });
         switchProfileTab('overview');
         document.getElementById('profileModal').classList.add('active');
     }
@@ -3628,8 +3679,16 @@ async function editUserProfile(userId) {
     setProfileEditorValue('editProfileWing', user.wing || '');
     setProfileEditorValue('editProfileContact', user.contact || user.email || '');
     setProfileEditorValue('editProfilePhotoUrl', user.photoUrl || '');
+    setProfileEditorValue('editProfileLocation', user.location || '');
+    setProfileEditorValue('editProfileJoined', user.joined || user.memberSince || '');
+    setProfileEditorValue('editProfileSocial', user.social || (user.username ? `@${user.username}` : ''));
+    setProfileEditorValue('editProfileStatus', user.status || 'Active');
+    setProfileEditorValue('editProfileMotto', user.motto || '');
     setProfileEditorValue('editProfileDetails', user.details || '');
+    setProfileEditorValue('editProfileSkills', Array.isArray(user.skills) ? user.skills.join(', ') : '');
     setProfileEditorValue('editProfileAchievements', Array.isArray(user.achievements) ? user.achievements.join('\n') : '');
+    setProfileEditorValue('editProfileActivities', Array.isArray(user.activities) ? user.activities.map(a => typeof a === 'string' ? a : `${a.title || ''} | ${a.date || ''} | ${a.imageUrl || ''}`).join('\n') : '');
+    setProfileEditorValue('editProfileGallery', Array.isArray(user.galleryImages) ? user.galleryImages.join('\n') : '');
 
     const roleEl = document.getElementById('editProfileRole');
     if (roleEl) roleEl.value = ['member', 'wing', 'core', 'admin'].includes(user.role) ? user.role : 'member';
@@ -3657,7 +3716,16 @@ function collectProfileEditorData() {
         details: getProfileEditorValue('editProfileDetails'),
         contact: getProfileEditorValue('editProfileContact'),
         photoUrl: getProfileEditorValue('editProfilePhotoUrl'),
+        location: getProfileEditorValue('editProfileLocation'),
+        joined: getProfileEditorValue('editProfileJoined'),
+        memberSince: getProfileEditorValue('editProfileJoined'),
+        social: getProfileEditorValue('editProfileSocial'),
+        status: getProfileEditorValue('editProfileStatus') || 'Active',
+        motto: getProfileEditorValue('editProfileMotto'),
+        skills: getProfileEditorValue('editProfileSkills').split(/[\n,]+/).map(x => x.trim()).filter(Boolean),
         achievements: getProfileEditorValue('editProfileAchievements').split('\n').map(x => x.trim()).filter(Boolean),
+        activities: getProfileEditorValue('editProfileActivities').split('\n').map(x => x.trim()).filter(Boolean),
+        galleryImages: getProfileEditorValue('editProfileGallery').split('\n').map(x => x.trim()).filter(Boolean),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 }
@@ -3676,21 +3744,21 @@ async function saveProfileEditor() {
     }
 
     try {
+        // Main save: update the user's own document.
         await db.collection('users').doc(userId).set(updatedProfile, { merge: true });
 
-        // Also publish the same data to publicProfiles so View Profile modals can load it.
-        const publicId = profileSlug(updatedProfile.username || updatedProfile.name || userId);
-        await db.collection('publicProfiles').doc(publicId).set({
-            uid: userId,
-            ...updatedProfile
-        }, { merge: true });
-
-        // Keep name-based lookup working too.
-        if (updatedProfile.name) {
-            await db.collection('publicProfiles').doc(profileSlug(updatedProfile.name)).set({
-                uid: userId,
-                ...updatedProfile
-            }, { merge: true });
+        // Optional public profile publish. Some Firebase rules may block this collection;
+        // if that happens, do not fail the whole save because the users collection is enough
+        // for the modal fallback lookup.
+        try {
+            const publicPayload = { uid: userId, ...updatedProfile };
+            const publicId = profileSlug(updatedProfile.username || updatedProfile.name || userId);
+            await db.collection('publicProfiles').doc(publicId).set(publicPayload, { merge: true });
+            if (updatedProfile.name) {
+                await db.collection('publicProfiles').doc(profileSlug(updatedProfile.name)).set(publicPayload, { merge: true });
+            }
+        } catch (publicError) {
+            console.warn('Public profile publish skipped by Firebase rules:', publicError);
         }
 
         showToast('Profile updated successfully!', 'success');
@@ -3704,8 +3772,16 @@ async function saveProfileEditor() {
 
 function previewEditedProfile() {
     const data = collectProfileEditorData();
-    showProfile(data.name || 'Preview Member', data.role || 'member', data.details || 'No bio added yet.', data.photoUrl || '');
+    renderProfileData({
+        ...data,
+        roleLabel: data.role,
+        position: data.role,
+        description: data.details,
+    });
+    switchProfileTab('overview');
+    document.getElementById('profileModal').classList.add('active');
 }
+
 
 async function deleteUser(userId, userName) {
     const user = allUsers.find(u => u.id === userId);
@@ -4134,5 +4210,5 @@ document.addEventListener('DOMContentLoaded', function () {
     <script src="upload-support.js?v=16"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=16"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06d14ab9d601262',t:'MTc4MDY0MDUyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06da018cdae7ed9',t:'MTc4MDY0NjIzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
