@@ -1004,9 +1004,14 @@
 }
 
 
-        /* ===== EMERGENCY GALLERY FIX ===== */
+        /* ===== MEDIA TAB VISIBILITY FIX ===== */
+#mediaGallery,
+#mediaMagazines {
+    display: none !important;
+}
+
 #mediaGallery.active,
-#mediaGallery {
+#mediaMagazines.active {
     display: block !important;
 }
 
@@ -1771,8 +1776,8 @@
                 <div class="sec-line"><span></span></div>
             </div>
 <div class="button-group">
-  <button class="gallery-btn active" id="photoGalleryBtn">📷 Photo Gallery</button>
-  <button class="gallery-btn" id="magazinesBtn">📘 Magazines & Tabloids</button>
+<button class="gallery-btn active" id="photoGalleryBtn" onclick="switchMediaTab('gallery')">📷 Photo Gallery</button>
+  <button class="gallery-btn" id="magazinesBtn" onclick="switchMediaTab('magazines')">📘 Magazines & Tabloids</button>
 </div>
             
             <!-- PHOTO GALLERY PANEL - ALWAYS VISIBLE -->
@@ -1986,7 +1991,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b2d1dddcc6d3d1c6f2dbc6c3d3dcc7dcdbdddc9cddc0d5">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c5f5352485d5f487c55484d5d52495255535212534e5b">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2904,21 +2909,23 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
 function switchMediaTab(tab) {
     const galleryPanel = document.getElementById('mediaGallery');
     const magPanel = document.getElementById('mediaMagazines');
-    const galleryTab = document.querySelector('.media-tab.t-gal');
-    const magTab = document.querySelector('.media-tab.t-mag');
+    const galleryBtn = document.getElementById('photoGalleryBtn');
+    const magBtn = document.getElementById('magazinesBtn');
     
     if (!galleryPanel || !magPanel) return;
     
-    if (tab === 'gallery') {
+    if (tab === 'gallery' || tab === 'photo') {
         galleryPanel.classList.add('active');
         magPanel.classList.remove('active');
-        if (galleryTab) galleryTab.classList.add('active');
-        if (magTab) magTab.classList.remove('active');
+        if (galleryBtn) galleryBtn.classList.add('active');
+        if (magBtn) magBtn.classList.remove('active');
+        if (typeof loadPublicGallery === 'function') loadPublicGallery();
     } else {
         magPanel.classList.add('active');
         galleryPanel.classList.remove('active');
-        if (magTab) magTab.classList.add('active');
-        if (galleryTab) galleryTab.classList.remove('active');
+        if (magBtn) magBtn.classList.add('active');
+        if (galleryBtn) galleryBtn.classList.remove('active');
+        if (typeof loadPublicMags === 'function') loadPublicMags();
     }
 }
     // ===== AUTH =====
@@ -3707,112 +3714,24 @@ async function deleteMagazineItem(id) {
 }
 
 
-        // Run this as early as possible (in <head> or right after heading)
-const heading = document.querySelector('h1');
-heading.style.visibility = 'visible';
-heading.innerText = 'Publications & Media';
+        // ===== MEDIA HUB TAB BUTTONS =====
+// Keep this simple: the buttons switch between the real gallery and magazine panels.
+document.addEventListener('DOMContentLoaded', function () {
+    const photoBtn = document.getElementById('photoGalleryBtn');
+    const magazinesBtn = document.getElementById('magazinesBtn');
 
-
-
-
-        const photoBtn = document.getElementById('photoGalleryBtn');
-const magazinesBtn = document.getElementById('magazinesBtn');
-
-function setActive(activeButton) {
-  [photoBtn, magazinesBtn].forEach(btn => {
-    btn.classList.remove('active');
-  });
-  activeButton.classList.add('active');
-  
-  // Your content switching logic here
-  if (activeButton === photoBtn) {
-    console.log('Show Photo Gallery content');
-  } else {
-    console.log('Show Magazines & Tabloids content');
-  }
-}
-
-photoBtn.addEventListener('click', () => setActive(photoBtn));
-magazinesBtn.addEventListener('click', () => setActive(magazinesBtn));
-
-
-
-
-
-        // Make sure you have a variable tracking the active tab
-let activeTab = 'photo'; // 'photo' or 'magazine'
-
-// Function to render based on active tab
-function renderGallery() {
-    const allPublications = JSON.parse(localStorage.getItem('publications')) || [];
-    
-    // CRITICAL: Filter by type based on active tab
-    let itemsToShow = [];
-    
-    if (activeTab === 'photo') {
-        // Show ONLY items with type = 'photo'
-        itemsToShow = allPublications.filter(item => item.type === 'photo');
-    } else if (activeTab === 'magazine') {
-        // Show ONLY items with type = 'magazine'
-        itemsToShow = allPublications.filter(item => item.type === 'magazine');
+    if (photoBtn) {
+        photoBtn.onclick = function () { switchMediaTab('gallery'); };
     }
-    
-    const container = document.getElementById('galleryContainer');
-    
-    if (itemsToShow.length === 0) {
-        container.innerHTML = `<div class="empty-message">
-            No ${activeTab === 'photo' ? 'photos' : 'magazines'} found.
-        </div>`;
-        return;
-    }
-    
-    // Render differently based on type
-    if (activeTab === 'photo') {
-        // Photo gallery display
-        container.innerHTML = itemsToShow.map(item => `
-            <div class="photo-card">
-                <img src="${item.imageUrl}" alt="${item.title}">
-                <h3>${item.title}</h3>
-                <p>${item.description || ''}</p>
-            </div>
-        `).join('');
-    } else {
-        // Magazine display (SHOW PDF OR MAGAZINE COVER, NOT REGULAR IMAGES)
-        container.innerHTML = itemsToShow.map(item => `
-            <div class="magazine-card">
-                ${item.pdfUrl ? 
-                    `<iframe src="${item.pdfUrl}" class="pdf-viewer"></iframe>` :
-                    `<img src="${item.imageUrl}" alt="${item.title}" class="magazine-cover">`
-                }
-                <h3>${item.title}</h3>
-                <p>${item.description || ''}</p>
-                ${item.pdfUrl ? `<a href="${item.pdfUrl}" target="_blank" class="read-btn">📖 Read Full Magazine</a>` : ''}
-            </div>
-        `).join('');
-    }
-}
 
-// Tab button click handlers
-document.getElementById('photoGalleryBtn').addEventListener('click', () => {
-    activeTab = 'photo';
-    // Update active button styles
-    document.getElementById('photoGalleryBtn').classList.add('active');
-    document.getElementById('magazinesBtn').classList.remove('active');
-    // Re-render
-    renderGallery();
+    if (magazinesBtn) {
+        magazinesBtn.onclick = function () { switchMediaTab('magazines'); };
+    }
+
+    // Start with photo gallery visible.
+    switchMediaTab('gallery');
 });
 
-document.getElementById('magazinesBtn').addEventListener('click', () => {
-    activeTab = 'magazine';
-    // Update active button styles
-    document.getElementById('magazinesBtn').classList.add('active');
-    document.getElementById('photoGalleryBtn').classList.remove('active');
-    // Re-render
-    renderGallery();
-});
-
-// Initial render
-renderGallery();
 
 
 
@@ -3825,5 +3744,5 @@ renderGallery();
     <script src="upload-support.js?v=16"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=16"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06bf1ff1a873d23',t:'MTc4MDYyODYxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
