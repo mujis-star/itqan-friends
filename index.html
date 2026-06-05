@@ -2076,7 +2076,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5955544e5b594e7a534e4b5b544f545355541455485d">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bad9d5d4cedbd9cefad3cecbdbd4cfd4d3d5d494d5c8dd">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2102,7 +2102,7 @@
                 </blockquote>
 
                 <div class="profile-detail-list" id="modalContactInfo">
-                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93f0fcfde7f2f0e7d3fae7e2f2fdbdfce1f4">[email&#160;protected]</a></span></div>
+                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d2e2223392c2e390d24393c2c2363223f2a">[email&#160;protected]</a></span></div>
                     <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="profileLocation">Kerala, India</span></div>
                     <div class="profile-detail"><i class="fas fa-calendar-check"></i><span id="profileJoined">Joined 2026</span></div>
                     <div class="profile-detail"><i class="fab fa-instagram"></i><span id="profileSocial">@itqan_union</span></div>
@@ -3525,8 +3525,11 @@ function renderUsersList() {
                     <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>👑 Admin</option>
                 </select>
             </div>
-            <div>
-                <button class="del-btn" onclick="deleteUser('${user.id}', '${user.name}')">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                <button class="btn btn-sm btn-cyan" onclick="editUserProfile('${user.id}')" style="padding:7px 12px">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+<button class="del-btn" onclick="deleteUser('${user.id}')">
                     <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
@@ -3554,11 +3557,96 @@ async function updateUserRole(userId, newRole) {
     }
 }
 
+function profileSlug(value) {
+    return String(value || 'profile')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'profile';
+}
+
+async function editUserProfile(userId) {
+    const user = allUsers.find(u => u.id === userId);
+    if (!user) {
+        showToast('User not found. Please refresh and try again.', 'error');
+        return;
+    }
+
+    const name = prompt('Full name:', user.name || '');
+    if (name === null) return;
+
+    const username = prompt('Username:', user.username || '');
+    if (username === null) return;
+
+    const role = prompt('Role (member, wing, core, admin):', user.role || 'member');
+    if (role === null) return;
+
+    const wing = prompt('Wing / category:', user.wing || 'General');
+    if (wing === null) return;
+
+    const details = prompt('About Me / profile bio:', user.details || '');
+    if (details === null) return;
+
+    const contact = prompt('Email / contact:', user.contact || user.email || '');
+    if (contact === null) return;
+
+    const photoUrl = prompt('Profile photo URL:', user.photoUrl || '');
+    if (photoUrl === null) return;
+
+    const achievementsText = prompt(
+        'Responsibilities / achievements (one per line):',
+        Array.isArray(user.achievements) ? user.achievements.join('\n') : ''
+    );
+    if (achievementsText === null) return;
+
+    const cleanRole = ['member', 'wing', 'core', 'admin'].includes(role.trim().toLowerCase())
+        ? role.trim().toLowerCase()
+        : (user.role || 'member');
+
+    const updatedProfile = {
+        name: name.trim(),
+        username: username.trim().toLowerCase(),
+        role: cleanRole,
+        wing: wing.trim(),
+        details: details.trim(),
+        contact: contact.trim(),
+        photoUrl: photoUrl.trim(),
+        achievements: achievementsText.split('\n').map(x => x.trim()).filter(Boolean),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        await db.collection('users').doc(userId).set(updatedProfile, { merge: true });
+
+        // Also publish the same data to publicProfiles so View Profile modals can load it.
+        const publicId = profileSlug(updatedProfile.username || updatedProfile.name || userId);
+        await db.collection('publicProfiles').doc(publicId).set({
+            uid: userId,
+            ...updatedProfile
+        }, { merge: true });
+
+        // Keep name-based lookup working too.
+        if (updatedProfile.name) {
+            await db.collection('publicProfiles').doc(profileSlug(updatedProfile.name)).set({
+                uid: userId,
+                ...updatedProfile
+            }, { merge: true });
+        }
+
+        showToast('Profile updated successfully!', 'success');
+        await loadUsers();
+    } catch (e) {
+        console.error('Profile update error:', e);
+        showToast('Error updating profile: ' + e.message, 'error');
+    }
+}
+
 async function deleteUser(userId, userName) {
-    if (!confirm(`Delete user "${userName}" permanently?`)) return;
+    const user = allUsers.find(u => u.id === userId);
+    const displayName = userName || user?.name || 'this user';
+    if (!confirm(`Delete user "${displayName}" permanently?`)) return;
     try {
         await db.collection('users').doc(userId).delete();
-        showToast(`User "${userName}" deleted`, 'success');
+        showToast(`User "${displayName}" deleted`, 'success');
         loadUsers();
     } catch(e) {
         showToast('Error deleting user: ' + e.message, 'error');
@@ -3979,5 +4067,5 @@ document.addEventListener('DOMContentLoaded', function () {
     <script src="upload-support.js?v=16"></script>
     <script src="login-state-fix.js"></script>
     <script src="profile-tabs.js?v=16"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06bfc672ed03d2f',t:'MTc4MDYyOTA0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
