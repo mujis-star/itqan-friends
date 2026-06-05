@@ -248,6 +248,16 @@
       const profile = await findPublicProfile(name);
       if (!profile) return;
 
+      if (typeof window.renderProfileData === "function") {
+        window.renderProfileData({
+          ...profile,
+          roleLabel: profile.role || position,
+          position: profile.wing ? `${profile.role || position} • ${profile.wing}` : (profile.role || position || "Member"),
+          description: profile.details || description,
+        });
+        return;
+      }
+
       const modalDescription = document.getElementById("modalDescription");
       const modalDetails = document.getElementById("modalDetails");
       const modalContactInfo = document.getElementById("modalContactInfo");
