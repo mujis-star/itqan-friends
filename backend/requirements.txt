@@ -4,3 +4,5 @@ firebase-admin==6.2.0
 gunicorn==21.2.0
 python-dotenv==1.0.0
 Werkzeug
+google-api-python-client==2.154.0
+google-auth==2.36.0
