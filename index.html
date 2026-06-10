@@ -2087,7 +2087,7 @@
                     <h3>Contact</h3>
                     <ul class="ft-links">
                         <li><i class="fas fa-map-marker-alt"></i> Kannadipparamba D.H.I.C</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0a3afaeb4a1a3b480a9b4b1a1aeb5aea9afaeeeafb2a7">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31525e5f4550524571584540505f445f585e5f1f5e4356">[email&#160;protected]</a></li>
                     </ul>
                 </div>
             </div>
@@ -2113,7 +2113,7 @@
                 </blockquote>
 
                 <div class="profile-detail-list" id="modalContactInfo">
-                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="284b47465c494b5c68415c59494606475a4f">[email&#160;protected]</a></span></div>
+                    <div class="profile-detail"><i class="fas fa-envelope"></i><span id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f1fdfce6f3f1e6d2fbe6e3f3fcbcfde0f5">[email&#160;protected]</a></span></div>
                     <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="profileLocation">Kerala, India</span></div>
                     <div class="profile-detail"><i class="fas fa-calendar-check"></i><span id="profileJoined">Joined 2026</span></div>
                     <div class="profile-detail"><i class="fab fa-instagram"></i><span id="profileSocial">@itqan_union</span></div>
@@ -4190,10 +4190,38 @@ async function uploadPublicationPdfToStorage(file) {
     if (file.size > 25 * 1024 * 1024) {
         throw new Error('PDF is too large. Max 25MB.');
     }
+
     const safeName = String(file.name || 'publication.pdf').toLowerCase().replace(/[^a-z0-9._-]+/g, '-');
     const ref = firebase.storage().ref(`publications/${Date.now()}-${safeName}`);
-    const snap = await ref.put(file, { contentType: file.type || 'application/pdf' });
-    return snap.ref.getDownloadURL();
+    const task = ref.put(file, { contentType: file.type || 'application/pdf' });
+
+    const snapshot = await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+            try { task.cancel(); } catch (e) {}
+            reject(new Error('PDF upload timed out. The publication will be saved without the PDF.'));
+        }, 20000);
+
+        task.on(
+            'state_changed',
+            (snap) => {
+                const progressBar = document.getElementById('magProgressBar');
+                const statusText = document.getElementById('magStatus');
+                const percent = Math.round((snap.bytesTransferred / snap.totalBytes) * 35) + 55;
+                if (progressBar) progressBar.value = Math.min(90, percent);
+                if (statusText) statusText.textContent = `Uploading PDF... ${Math.round((snap.bytesTransferred / snap.totalBytes) * 100)}%`;
+            },
+            (error) => {
+                clearTimeout(timeout);
+                reject(error);
+            },
+            () => {
+                clearTimeout(timeout);
+                resolve(task.snapshot);
+            }
+        );
+    });
+
+    return snapshot.ref.getDownloadURL();
 }
 
 async function getPersistentMagazineItems() {
