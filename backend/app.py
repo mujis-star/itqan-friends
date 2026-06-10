@@ -3,6 +3,7 @@ import json
 import uuid
 import datetime
 import mimetypes
+import re
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
@@ -10,10 +11,12 @@ from flask_cors import CORS
 # GOOGLE_DRIVE_FOLDER_ID and either GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_APPLICATION_CREDENTIALS
 try:
     from google.oauth2 import service_account
+    from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaIoBaseUpload
 except Exception:  # Keep local fallback working if Drive packages are not installed yet.
     service_account = None
+    Credentials = None
     build = None
     MediaIoBaseUpload = None
 
@@ -25,7 +28,18 @@ DATA_DIR = os.environ.get('DATA_DIR', '.')
 GALLERY_FILE = os.path.join(DATA_DIR, 'gallery_data.json')
 MAGAZINE_FILE = os.path.join(DATA_DIR, 'magazine_data.json')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
-DRIVE_FOLDER_ID = os.environ.get('GOOGLE_DRIVE_FOLDER_ID', '').strip()
+def normalize_drive_folder_id(value):
+    value = (value or '').strip()
+    if not value:
+        return ''
+    match = re.search(r'/folders/([a-zA-Z0-9_-]+)', value)
+    if match:
+        return match.group(1)
+    # If someone pasted an id with query params, keep only the id part.
+    return value.split('?')[0].split('&')[0].strip()
+
+
+DRIVE_FOLDER_ID = normalize_drive_folder_id(os.environ.get('GOOGLE_DRIVE_FOLDER_ID', ''))
 DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive']
 _drive_service = None
 
@@ -36,10 +50,27 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DATA_DIR, exist_ok=True)
 
 
+def get_service_account_json_env():
+    # Prefer the Google Drive-specific variable, but also support the existing
+    # FIREBASE_SERVICE_ACCOUNT variable many deployments already use.
+    return os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON') or os.environ.get('FIREBASE_SERVICE_ACCOUNT')
+
+
+def oauth_configured():
+    return bool(
+        os.environ.get('GOOGLE_CLIENT_ID') and
+        os.environ.get('GOOGLE_CLIENT_SECRET') and
+        os.environ.get('GOOGLE_REFRESH_TOKEN') and
+        Credentials
+    )
+
+
+def service_account_configured():
+    return bool(service_account and (get_service_account_json_env() or os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')))
+
+
 def drive_enabled():
-    return bool(DRIVE_FOLDER_ID and build and service_account and MediaIoBaseUpload and (
-        os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON') or os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    ))
+    return bool(DRIVE_FOLDER_ID and build and MediaIoBaseUpload and (oauth_configured() or service_account_configured()))
 
 
 def get_drive_service():
@@ -49,14 +80,26 @@ def get_drive_service():
     if not drive_enabled():
         raise RuntimeError('Google Drive is not configured on the backend')
 
-    service_account_json = os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON')
-    if service_account_json:
-        info = json.loads(service_account_json)
-        creds = service_account.Credentials.from_service_account_info(info, scopes=DRIVE_SCOPES)
-    else:
-        creds = service_account.Credentials.from_service_account_file(
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'], scopes=DRIVE_SCOPES
+    if oauth_configured():
+        # OAuth uploads use the real Google account's Drive quota. This is needed for
+        # personal Google Drive accounts because service accounts have no My Drive quota.
+        creds = Credentials(
+            token=None,
+            refresh_token=os.environ['GOOGLE_REFRESH_TOKEN'],
+            token_uri='https://oauth2.googleapis.com/token',
+            client_id=os.environ['GOOGLE_CLIENT_ID'],
+            client_secret=os.environ['GOOGLE_CLIENT_SECRET'],
+            scopes=DRIVE_SCOPES,
         )
+    else:
+        service_account_json = get_service_account_json_env()
+        if service_account_json:
+            info = json.loads(service_account_json)
+            creds = service_account.Credentials.from_service_account_info(info, scopes=DRIVE_SCOPES)
+        else:
+            creds = service_account.Credentials.from_service_account_file(
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'], scopes=DRIVE_SCOPES
+            )
 
     _drive_service = build('drive', 'v3', credentials=creds, cache_discovery=False)
     return _drive_service
@@ -142,8 +185,19 @@ def health_check():
     return jsonify({
         'status': 'ok',
         'message': 'Server is running',
+        'version': 'oauth-drive-v2',
         'driveEnabled': drive_enabled(),
-        'storage': 'google-drive' if drive_enabled() else 'local-filesystem'
+        'storage': 'google-drive' if drive_enabled() else 'local-filesystem',
+        'driveConfig': {
+            'hasFolderId': bool(DRIVE_FOLDER_ID),
+            'folderId': DRIVE_FOLDER_ID,
+            'hasServiceAccountJson': bool(get_service_account_json_env()),
+            'hasOAuthClientId': bool(os.environ.get('GOOGLE_CLIENT_ID')),
+            'hasOAuthClientSecret': bool(os.environ.get('GOOGLE_CLIENT_SECRET')),
+            'hasOAuthRefreshToken': bool(os.environ.get('GOOGLE_REFRESH_TOKEN')),
+            'usingOAuth': oauth_configured(),
+            'hasGoogleLibraries': bool(build and MediaIoBaseUpload)
+        }
     }), 200
 
 
@@ -438,4 +492,4 @@ def serve_upload(filename):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
- 
+
