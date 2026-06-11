@@ -153,7 +153,10 @@ body {
     -webkit-backdrop-filter: blur(10px);
 }
 
-/* Hide the static image in the hero section so the dynamic background is visible */
+/* Restore the hero background image but blend it so particles show through */
 .hero-bg {
-    display: none !important;
+    display: block !important;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    pointer-events: none;
 }
