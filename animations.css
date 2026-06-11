@@ -160,3 +160,63 @@ body {
     mix-blend-mode: overlay;
     pointer-events: none;
 }
+
+/* --- Premium Attractive Tab Styling --- */
+.htab, .profile-tab, .auth-tab-btn, .admin-tbtn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--muted) !important;
+    z-index: 1;
+}
+
+/* Fix text color for profile tab to match dark theme instead of light grey */
+.profile-tab {
+    color: #94a3b8 !important; 
+    margin-bottom: 5px;
+}
+.profile-tabs {
+    background: rgba(14, 17, 32, 0.4);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Hover States */
+.htab:hover, .profile-tab:hover, .auth-tab-btn:hover, .admin-tbtn:hover {
+    color: #fff !important;
+    background: rgba(0, 229, 255, 0.05) !important;
+    transform: translateY(-1px);
+}
+
+/* Active State Glowing Magic */
+.htab.active, .profile-tab.active, .auth-tab-btn.active, .admin-tbtn.active {
+    background: rgba(0, 229, 255, 0.15) !important;
+    color: #00e5ff !important;
+    border-color: rgba(0, 229, 255, 0.4) !important;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), inset 0 0 10px rgba(0, 229, 255, 0.1) !important;
+    font-weight: 700 !important;
+    transform: scale(1.02);
+}
+
+/* Remove original active ::after to prevent double styling on profile-tab */
+.profile-tab.active::after {
+    display: none !important;
+}
+
+/* New glowing under-line for active tabs */
+.htab.active::before, .profile-tab.active::before, .auth-tab-btn.active::before, .admin-tbtn.active::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: #00e5ff;
+    box-shadow: 0 -2px 10px #00e5ff;
+    border-radius: 5px 5px 0 0;
+    transition: all 0.3s ease;
+}
