@@ -20,14 +20,58 @@ html {
     background: var(--primary);
 }
 
-/* Dynamic Animated Gradient Background */
+/* Dynamic Animated Gradient Background (Removed, now using Aurora) */
 body {
-    /* Overriding original static background */
-    background: linear-gradient(-45deg, #060913, #151a3a, #052030, #1c0e2a);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    position: relative;
-    z-index: 1; /* Base index */
+    background: transparent !important;
+}
+
+/* =========================================
+   AURORA BACKGROUND SYSTEM
+   ========================================= */
+.aurora-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #040814;
+    pointer-events: none;
+}
+.aurora-blob {
+    position: absolute;
+    filter: blur(120px);
+    opacity: 0.65;
+    border-radius: 50%;
+    animation: drift 20s infinite alternate ease-in-out;
+}
+.a-1 {
+    width: 500px; height: 500px;
+    background: #7928ca;
+    top: -100px; left: -100px;
+    animation-duration: 25s;
+}
+.a-2 {
+    width: 600px; height: 600px;
+    background: #ff0080;
+    bottom: -200px; right: -100px;
+    animation-duration: 30s;
+}
+.a-3 {
+    width: 450px; height: 450px;
+    background: #00e5ff;
+    top: 40%; left: 30%;
+    animation-duration: 35s;
+}
+.a-4 {
+    width: 300px; height: 300px;
+    background: #0033ff;
+    bottom: 20%; left: 10%;
+    animation-duration: 22s;
+}
+@keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(150px, -150px) scale(1.2); }
+    100% { transform: translate(-100px, 100px) scale(0.9); }
 }
 
 @keyframes gradientBG {
@@ -235,12 +279,27 @@ body {
     -webkit-backdrop-filter: none !important;
 }
 
-/* 2. Glass Header */
+/* 2. Floating Pill Header */
 header {
-    background: rgba(5, 6, 14, 0.4) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: fixed !important;
+    top: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 1180px !important;
+    border-radius: 50px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255,255,255,0.02) !important;
+    padding: 0 10px !important;
+    z-index: 1000 !important;
+    transition: all 0.3s ease !important;
+}
+/* Ensure content isn't hidden behind floating header */
+.hero {
+    padding-top: 80px;
 }
 
 /* 3. Glass Cards */
@@ -261,16 +320,50 @@ header {
     transform: translateY(-8px);
 }
 
-/* 4. Glass Modals */
+/* 4. Unique Vibrant Glass Cards */
+.feat-card.rv-d1 { /* Mission */
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.02)) !important;
+    border-color: rgba(0, 229, 255, 0.15) !important;
+}
+.feat-card.rv-d2 { /* Vision */
+    background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.02)) !important;
+    border-color: rgba(255, 0, 128, 0.15) !important;
+}
+.feat-card.rv-d3 { /* Achievements */
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.02)) !important;
+    border-color: rgba(255, 215, 0, 0.15) !important;
+}
+.feat-card:hover .feat-icon i {
+    animation: floatIcon 2s ease-in-out infinite;
+}
+@keyframes floatIcon {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); text-shadow: 0 5px 15px currentColor; }
+    100% { transform: translateY(0px); }
+}
+
+/* 5. Glass Modals */
 .modal-content {
-    background: rgba(14, 17, 32, 0.7) !important;
-    backdrop-filter: blur(20px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5) !important;
+    background: rgba(4, 8, 20, 0.65) !important;
+    backdrop-filter: blur(30px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05) !important;
+}
+
+/* 6. Gradient Typography */
+.hero-content h1 {
+    background: linear-gradient(to right, #00e5ff, #ff0080, #7928ca);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: textGradient 5s linear infinite;
+}
+@keyframes textGradient {
+    to { background-position: 200% center; }
 }
 
 /* Ensure text contrast on glass */
 .feat-card p, .cc-role, .hcard p {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
 }
