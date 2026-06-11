@@ -1744,8 +1744,11 @@
 
         
     </style>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="animations.css">
 </head>
 <body>
+    <div id="preloader"><div class="loader-spinner"></div></div>
     <canvas id="particleCanvas"></canvas>
     <div class="toast-c" id="toastContainer"></div>
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
@@ -4555,5 +4558,74 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="login-state-fix.js"></script>
 <script src="profile-tabs.js?v=18"></script>
 <script src="drive-backend-fix.js?v=7"></script>
+
+<!-- Highly Animated Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<script>
+    // Hide Preloader
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        if(preloader) {
+            preloader.classList.add('hide');
+            setTimeout(() => preloader.remove(), 600);
+        }
+    });
+
+    // Auto-inject AOS to all main sections
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('section:not(.hero):not(.profile-tab-panel)').forEach(sec => {
+            sec.setAttribute('data-aos', 'fade-up');
+            sec.setAttribute('data-aos-duration', '800');
+            sec.setAttribute('data-aos-once', 'true');
+        });
+        
+        // Auto-inject AOS to dynamic grid containers
+        const dynamicContainers = ['coreGrid', 'wingsGrid', 'magCardsContainer', 'historyTimeline'];
+        dynamicContainers.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.setAttribute('data-aos', 'fade-up');
+                el.setAttribute('data-aos-delay', '100');
+            }
+        });
+
+        // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                offset: 50,
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true
+            });
+        }
+    });
+
+    // VanillaTilt Initialization for Cards
+    function initTilt() {
+        if(typeof VanillaTilt !== 'undefined') {
+            // Find all eligible cards that haven't been tilted yet
+            const cards = Array.from(document.querySelectorAll('.cc-in, .w-in, .mag-card, .hcard')).filter(card => !card.vanillaTilt);
+            if (cards.length > 0) {
+                VanillaTilt.init(cards, {
+                    max: 12,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2,
+                    scale: 1.02
+                });
+            }
+        }
+    }
+    
+    setTimeout(initTilt, 500);
+    setTimeout(initTilt, 1500);
+    const animObserver = new MutationObserver(() => {
+        initTilt();
+        if (typeof AOS !== 'undefined') AOS.refreshHard();
+    });
+    animObserver.observe(document.body, { childList: true, subtree: true });
+</script>
+
 </body>
 </html>

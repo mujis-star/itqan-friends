@@ -1,0 +1,154 @@
+/* Highly Animated Premium Experience */
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Webkit Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--cyan);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Dynamic Animated Gradient Background */
+body {
+    /* Overriding original static background */
+    background: linear-gradient(-45deg, #0e1120, #151a30, #0a192f, #112240);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    position: relative;
+    z-index: 1; /* Base index */
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Preloader Styles */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s cubic-bezier(0.8, 0, 0.2, 1), visibility 0.6s;
+}
+#preloader.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 229, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--cyan);
+    animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced Hover States for Buttons */
+.btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease-out, height 0.4s ease-out;
+}
+.btn:hover::after {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+}
+
+/* Floating Animation for Header Logos/Icons */
+.header-right .btn-icon {
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+.header-right .btn-icon:hover {
+    transform: translateY(-3px) scale(1.05);
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2);
+}
+
+/* Hero Section Intro Animation (Runs once on load) */
+.hero {
+    animation: heroFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+}
+.hero-content {
+    animation: slideUpContent 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+@keyframes heroFadeIn {
+    to { opacity: 1; }
+}
+@keyframes slideUpContent {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal Open/Close Enhance */
+.modal.active .modal-content {
+    animation: modalScaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes modalScaleUp {
+    0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Soft pulse for badges/chips */
+.hbadge {
+    animation: pulseSoft 2s infinite;
+}
+@keyframes pulseSoft {
+    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+}
+
+/* Cards Hover Elevate (Fallback if JS VanillaTilt is not used) */
+.cc-in, .w-in, .mag-card, .hcard {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease !important;
+}
+.cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(0, 229, 255, 0.1);
+    border-color: rgba(0, 229, 255, 0.3);
+}
+
+/* Adjust Section Backgrounds to be transparent to show animated body gradient */
+.section-alt {
+    background: rgba(14, 17, 32, 0.5) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
