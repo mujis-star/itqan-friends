@@ -152,3 +152,8 @@ body {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
+
+/* Hide the static image in the hero section so the dynamic background is visible */
+.hero-bg {
+    display: none !important;
+}
