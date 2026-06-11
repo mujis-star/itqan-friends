@@ -172,9 +172,12 @@
         list.insertAdjacentHTML(
           "beforeend",
           `<div class="adm-ir">
-            <div class="adm-ii">
-              <h4>${esc(data.name || data.username || "Unnamed")}</h4>
-              <p>${esc(data.role || "member")} · ${esc(data.wing || "General")}</p>
+            <div class="adm-ii" style="display:flex;align-items:center;">
+              <img src="${data.photoUrl || (typeof window.getProfileImage === 'function' ? window.getProfileImage(data.name || data.username) : '') || 'logo.png'}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:12px;" onerror="this.src='logo.png'">
+              <div>
+                <h4 style="margin:0">${esc(data.name || data.username || "Unnamed")}</h4>
+                <p style="margin:0">${esc(data.role || "member")} · ${esc(data.wing || "General")}</p>
+              </div>
             </div>
             <div class="adm-ia">
               <button class="btn btn-sm btn-cyan" onclick="editAdminProfile('${esc(doc.id)}')"><i class="fas fa-edit"></i> Edit</button>
@@ -251,6 +254,7 @@
       if (typeof window.renderProfileData === "function") {
         window.renderProfileData({
           ...profile,
+          photoUrl: (typeof window.getProfileImage === "function" && window.getProfileImage(name)) || profile.photoUrl || photo || "",
           roleLabel: profile.role || position,
           position: profile.wing ? `${profile.role || position} • ${profile.wing}` : (profile.role || position || "Member"),
           description: profile.details || description,
@@ -288,8 +292,9 @@
           <div class="profile-detail"><i class="fas fa-calendar-check"></i><span>Joined 2026</span></div>
           <div class="profile-detail"><i class="fab fa-instagram"></i><span>${profile.username ? `@${esc(profile.username)}` : "@itqan_union"}</span></div>`;
       }
-      if (profile.photoUrl && modalPhoto && placeholder) {
-        modalPhoto.src = profile.photoUrl;
+      const finalPhotoUrl = (typeof window.getProfileImage === "function" && window.getProfileImage(name)) || profile.photoUrl || photo || "";
+      if (finalPhotoUrl && modalPhoto && placeholder) {
+        modalPhoto.src = finalPhotoUrl;
         modalPhoto.style.display = "block";
         placeholder.style.display = "none";
       }

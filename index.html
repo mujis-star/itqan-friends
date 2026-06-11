@@ -2707,6 +2707,59 @@
     }
 
     // ===== HARDCODED DATA =====
+    window.profileImageMap = {
+        "sayed hudaif": "profiles/Hudaif.png",
+        "s. hudaif": "profiles/Hudaif.png",
+        "hudaif": "profiles/Hudaif.png",
+        "sayed burhan": "profiles/Sayyid-Burhan.png",
+        "s. burhan": "profiles/Sayyid-Burhan.png",
+        "burhan": "profiles/Sayyid-Burhan.png",
+        "zidan": "profiles/Zidan.png",
+        "muhyudheen": "profiles/Muhyudheen.png",
+        "mirsad": "profiles/Mirsad.png",
+        "thanzeeh": "profiles/Thanzeeh.png",
+        "shahzad": "profiles/Shahzad.png",
+        "muhammed v.k": "profiles/Muhammed V.K.png",
+        "v.k": "profiles/Muhammed V.K.png",
+        "hisham": "profiles/Hisham.png",
+        "mujeeb": "profiles/Mujeeb.png",
+        "zameen": "profiles/Zameen.png",
+        "naseem": "profiles/Naseem.png",
+        "razeen": "profiles/Razeen.png",
+        "rabeeh": "profiles/Rabeeh.png",
+        "muzzammil": "profiles/Muzzammil.png",
+        "muhammed u": "profiles/Muahmmed U.png",
+        "muhammed pp": "profiles/Muhammed P.P.png",
+        "shabeel": "profiles/Shabeel.png",
+        "muhaimin": "profiles/Muhaimin.png",
+        "muhammed s.m": "profiles/Muhammed S.M.png",
+        "razin": "profiles/Razin.png",
+        "rashad": "profiles/Rashad.png",
+        "ranif": "profiles/Ranif.png",
+        "nuhman": "profiles/Nuhman.png",
+        "m.a": "profiles/Fuad M.A.png",
+        "fuad m.a": "profiles/Fuad M.A.png",
+        "fuad habeeb": "profiles/Fuad Habeeb.png",
+        "aslah": "profiles/Aslah.png",
+        "ridan": "profiles/Ridhan.png",
+        "ridhan": "profiles/Ridhan.png",
+        "salah": "profiles/Salah.png",
+        "adnan": "profiles/Adnan.png",
+        "abdu-rahman": "profiles/abdu-rahman.png",
+        "zarhan": "profiles/Zarhan.png",
+        "zayin": "profiles/Zayin.png"
+    };
+
+    window.getProfileImage = function(name) {
+        if (!name) return '';
+        const key = String(name).toLowerCase().trim();
+        return window.profileImageMap[key] || '';
+    };
+
+    function getProfileImage(name) {
+        return window.getProfileImage(name);
+    }
+
     const defaultCoreMembers = [
         {name:"Sayed Hudaif", role:"President", desc:"Leads strategic planning and represents the union externally.", icon:"fa-crown"},
         {name:"Sayed Burhan", role:"Vice President", desc:"Supports the President and oversees operations.", icon:"fa-shield-alt"},
@@ -2741,19 +2794,23 @@
             el.innerHTML = '<p style="text-align:center;color:var(--muted)">Loading core committee...</p>';
             return;
         }
-        el.innerHTML = data.map(m => `
+        el.innerHTML = data.map(m => {
+            const photo = getProfileImage(m.name);
+            const iconHtml = photo ? `<img src="${photo}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : `<i class="fas ${m.icon || 'fa-user'}"></i>`;
+            return `
             <div class="cc">
                 <div class="cc-in">
-                    <div class="cc-ic"><i class="fas ${m.icon || 'fa-user'}"></i></div>
+                    <div class="cc-ic" style="${photo ? 'padding:0;border:none;background:none;' : ''}">${iconHtml}</div>
                     <div class="cc-role">${m.role}</div>
                     <div class="cc-name">${m.name}</div>
                     <p class="cc-desc">${m.desc || ''}</p>
                     <div class="cc-btns">
-                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${m.name}','${m.role}','${m.desc || ''}')">View Profile</button>
+                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${m.name}','${m.role}','${m.desc || ''}','${photo}')">View Profile</button>
                     </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     function renderWingsGridFromData(data) {
@@ -2763,7 +2820,10 @@
             el.innerHTML = '<p style="text-align:center;color:var(--muted)">Loading wings...</p>';
             return;
         }
-        el.innerHTML = data.map(w => `
+        el.innerHTML = data.map(w => {
+            const chPhoto = getProfileImage(w.chairman);
+            const coPhoto = getProfileImage(w.convener);
+            return `
             <div class="wc">
                 <div class="w-in">
                     <div class="w-ic"><i class="fas ${w.icon || 'fa-users'}"></i></div>
@@ -2771,16 +2831,23 @@
                     <h3 class="w-ttl">${w.name}</h3>
                     <p class="w-info">${w.desc || ''}</p>
                     <div class="w-leads">
-                        <div class="w-chip"><span class="ch-role">Chairman</span><span class="ch-name">${w.chairman}</span></div>
-                        <div class="w-chip"><span class="ch-role">Convener</span><span class="ch-name">${w.convener}</span></div>
+                        <div class="w-chip">
+                            ${chPhoto ? `<img src="${chPhoto}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;margin-right:6px">` : ''}
+                            <span class="ch-role">Chairman</span><span class="ch-name">${w.chairman}</span>
+                        </div>
+                        <div class="w-chip">
+                            ${coPhoto ? `<img src="${coPhoto}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;margin-right:6px">` : ''}
+                            <span class="ch-role">Convener</span><span class="ch-name">${w.convener}</span>
+                        </div>
                     </div>
                     <div class="w-btns">
-                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman}','Chairman — ${w.name}','')">Chair</button>
-                        <button class="btn btn-outline btn-sm" onclick="showProfile('${w.convener}','Convener — ${w.name}','')">Conv.</button>
+                        <button class="btn btn-cyan btn-sm" onclick="showProfile('${w.chairman}','Chairman — ${w.name}','','${chPhoto}')">Chair</button>
+                        <button class="btn btn-outline btn-sm" onclick="showProfile('${w.convener}','Convener — ${w.name}','','${coPhoto}')">Conv.</button>
                     </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     function renderPublications() {
@@ -4452,6 +4519,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Start with photo gallery visible.
     switchMediaTab('gallery');
+
+    // Enhance history cards with profile photos and click actions
+    document.querySelectorAll('.hcard').forEach(card => {
+        const nameEl = card.querySelector('.hname');
+        const roleEl = card.querySelector('.hrole');
+        if (nameEl && roleEl && typeof getProfileImage === 'function') {
+            const name = nameEl.textContent.trim();
+            const role = roleEl.textContent.trim();
+            const photo = getProfileImage(name);
+            
+            if (photo) {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.style.cssText = 'width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.1)';
+                card.insertBefore(img, roleEl);
+            }
+            
+            card.style.cursor = 'pointer';
+            card.onclick = () => showProfile(name, role, '', photo);
+        }
+    });
 });
 
 
@@ -4461,11 +4549,11 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
     <!-- External scripts -->
-<script src="cursor-polish.js?v=16"></script>
-<script src="history-media-upgrade.js?v=16"></script>
-<script src="upload-support.js?v=16"></script>
+<script src="cursor-polish.js?v=18"></script>
+<script src="history-media-upgrade.js?v=18"></script>
+<script src="upload-support.js?v=18"></script>
 <script src="login-state-fix.js"></script>
-<script src="profile-tabs.js?v=16"></script>
-<script src="drive-backend-fix.js?v=5"></script>
+<script src="profile-tabs.js?v=18"></script>
+<script src="drive-backend-fix.js?v=7"></script>
 </body>
 </html>
