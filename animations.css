@@ -23,7 +23,7 @@ html {
 /* Dynamic Animated Gradient Background */
 body {
     /* Overriding original static background */
-    background: linear-gradient(-45deg, #0e1120, #151a30, #0a192f, #112240);
+    background: linear-gradient(-45deg, #060913, #151a3a, #052030, #1c0e2a);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     position: relative;
@@ -219,4 +219,58 @@ body {
     box-shadow: 0 -2px 10px #00e5ff;
     border-radius: 5px 5px 0 0;
     transition: all 0.3s ease;
+}
+
+/* =========================================
+   FULL GLASSMORPHISM UI OVERHAUL
+   ========================================= */
+
+/* 1. Remove solid backgrounds from all sections */
+.features, .about, .media-hub, .pub-section, .acc-zone, footer {
+    background: transparent !important;
+}
+.section-alt {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 2. Glass Header */
+header {
+    background: rgba(5, 6, 14, 0.4) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 3. Glass Cards */
+.feat-card, .cc-in, .w-in, .mag-card, .hcard, .auth-box, .dash-container {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease !important;
+}
+
+/* Glass Card Hover */
+.feat-card:hover, .cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(0, 229, 255, 0.4) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
+    transform: translateY(-8px);
+}
+
+/* 4. Glass Modals */
+.modal-content {
+    background: rgba(14, 17, 32, 0.7) !important;
+    backdrop-filter: blur(20px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5) !important;
+}
+
+/* Ensure text contrast on glass */
+.feat-card p, .cc-role, .hcard p {
+    color: rgba(255, 255, 255, 0.8) !important;
 }
