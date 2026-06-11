@@ -303,7 +303,7 @@ header {
 }
 
 /* 3. Glass Cards */
-.feat-card, .cc-in, .w-in, .mag-card, .hcard, .auth-box, .dash-container {
+.feat-card, .about-card, .cc-in, .w-in, .mag-card, .hcard, .auth-box, .dash-container {
     background: rgba(255, 255, 255, 0.03) !important;
     backdrop-filter: blur(16px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
@@ -313,27 +313,33 @@ header {
 }
 
 /* Glass Card Hover */
-.feat-card:hover, .cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
+.feat-card:hover, .about-card:hover, .cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
     background: rgba(255, 255, 255, 0.06) !important;
     border-color: rgba(0, 229, 255, 0.4) !important;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
     transform: translateY(-8px);
 }
 
-/* 4. Unique Vibrant Glass Cards */
-.feat-card.rv-d1 { /* Mission */
-    background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.02)) !important;
+/* 4. Unique Vibrant Glass Colors (Universal Application) */
+.rv-d1, .cc-in:nth-child(4n+1), .w-in:nth-child(4n+1), .hcard:nth-child(4n+1), .mag-card:nth-child(4n+1) { /* Cyan Glow */
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.01)) !important;
     border-color: rgba(0, 229, 255, 0.15) !important;
 }
-.feat-card.rv-d2 { /* Vision */
-    background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.02)) !important;
+.rv-d2, .cc-in:nth-child(4n+2), .w-in:nth-child(4n+2), .hcard:nth-child(4n+2), .mag-card:nth-child(4n+2) { /* Pink Glow */
+    background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.01)) !important;
     border-color: rgba(255, 0, 128, 0.15) !important;
 }
-.feat-card.rv-d3 { /* Achievements */
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.02)) !important;
+.rv-d3, .cc-in:nth-child(4n+3), .w-in:nth-child(4n+3), .hcard:nth-child(4n+3), .mag-card:nth-child(4n+3) { /* Gold Glow */
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.01)) !important;
     border-color: rgba(255, 215, 0, 0.15) !important;
 }
-.feat-card:hover .feat-icon i {
+.rv-d4, .cc-in:nth-child(4n+4), .w-in:nth-child(4n+4), .hcard:nth-child(4n+4), .mag-card:nth-child(4n+4) { /* Purple Glow */
+    background: linear-gradient(135deg, rgba(121, 40, 202, 0.08), rgba(255, 255, 255, 0.01)) !important;
+    border-color: rgba(121, 40, 202, 0.15) !important;
+}
+
+/* Float Animation on Hover */
+.feat-card:hover .feat-icon i, .about-card:hover .about-ic i, .cc-in:hover .cc-ic i, .w-in:hover .w-ic i {
     animation: floatIcon 2s ease-in-out infinite;
 }
 @keyframes floatIcon {
