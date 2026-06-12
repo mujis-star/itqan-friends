@@ -1,421 +1,89 @@
-/* Highly Animated Premium Experience */
+/* ============================================
+   animations.css - PREMIUM DARK PURPLE THEME
+   Modern Aurora Backgrounds & Glassmorphism
+   ============================================ */
 
-/* Smooth Scrolling */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Custom Webkit Scrollbar for Premium Feel */
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-track {
-    background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--cyan);
-    border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-}
-
-/* Dynamic Animated Gradient Background (Removed, now using Aurora) */
+/* 1. Global Aurora Body Mesh (if not in index) */
 body {
+    background-color: var(--bg) !important;
+}
+
+/* 2. Premium Section Backgrounds */
+.features, .acc-zone, .pub-section {
     background: transparent !important;
-}
-
-/* =========================================
-   ISLAMIC CONSTELLATION BACKGROUND
-   ========================================= */
-body {
-    background-color: #04060d !important;
-}
-#islamicCanvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    z-index: -1;
-    pointer-events: auto; /* Allow mouse interaction */
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Preloader Styles */
-#preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.6s cubic-bezier(0.8, 0, 0.2, 1), visibility 0.6s;
-}
-#preloader.hide {
-    opacity: 0;
-    visibility: hidden;
-}
-.loader-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(0, 229, 255, 0.2);
-    border-radius: 50%;
-    border-top-color: var(--cyan);
-    animation: spin 1s ease-in-out infinite;
-}
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Enhanced Hover States for Buttons */
-.btn {
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
-    overflow: hidden;
-}
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.4s ease-out, height 0.4s ease-out;
-}
-.btn:hover::after {
-    width: 300px;
-    height: 300px;
-    opacity: 0;
-}
-
-/* Floating Animation for Header Logos/Icons */
-.header-right .btn-icon {
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-.header-right .btn-icon:hover {
-    transform: translateY(-3px) scale(1.05);
-    background: rgba(0, 229, 255, 0.1);
-    box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2);
-}
-
-/* Hero Section Intro Animation (Runs once on load) */
-.hero {
-    animation: heroFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    opacity: 0;
-}
-.hero-content {
-    animation: slideUpContent 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards;
-    opacity: 0;
-    transform: translateY(30px);
-}
-@keyframes heroFadeIn {
-    to { opacity: 1; }
-}
-@keyframes slideUpContent {
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Modal Open/Close Enhance */
-.modal.active .modal-content {
-    animation: modalScaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-@keyframes modalScaleUp {
-    0% { transform: scale(0.9) translateY(20px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-/* Soft pulse for badges/chips */
-.hbadge {
-    animation: pulseSoft 2s infinite;
-}
-@keyframes pulseSoft {
-    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
-    70% { box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
-}
-
-/* Cards Hover Elevate (Fallback if JS VanillaTilt is not used) */
-.cc-in, .w-in, .mag-card, .hcard {
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease !important;
-}
-.cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(0, 229, 255, 0.1);
-    border-color: rgba(0, 229, 255, 0.3);
-}
-
-/* Adjust Section Backgrounds to be transparent to show animated body gradient */
-.section-alt {
-    background: rgba(14, 17, 32, 0.5) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-/* Restore the hero background image but blend it so particles show through */
-.hero-bg {
-    display: block !important;
-    opacity: 0.3;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-}
-
-/* --- Premium Attractive Tab Styling --- */
-.htab, .profile-tab, .auth-tab-btn, .admin-tbtn {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-    border-radius: 8px !important;
-    background: transparent !important;
-    border: 1px solid transparent !important;
-    color: var(--muted) !important;
     z-index: 1;
 }
 
-/* Fix text color for profile tab to match dark theme instead of light grey */
-.profile-tab {
-    color: #94a3b8 !important; 
-    margin-bottom: 5px;
-}
-.profile-tabs {
-    background: rgba(14, 17, 32, 0.4);
-    padding: 6px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
-/* Hover States */
-.htab:hover, .profile-tab:hover, .auth-tab-btn:hover, .admin-tbtn:hover {
-    color: #fff !important;
-    background: rgba(0, 229, 255, 0.05) !important;
-    transform: translateY(-1px);
-}
-
-/* Active State Glowing Magic */
-.htab.active, .profile-tab.active, .auth-tab-btn.active, .admin-tbtn.active {
-    background: rgba(0, 229, 255, 0.15) !important;
-    color: #00e5ff !important;
-    border-color: rgba(0, 229, 255, 0.4) !important;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), inset 0 0 10px rgba(0, 229, 255, 0.1) !important;
-    font-weight: 700 !important;
-    transform: scale(1.02);
-}
-
-/* Remove original active ::after to prevent double styling on profile-tab */
-.profile-tab.active::after {
-    display: none !important;
-}
-
-/* New glowing under-line for active tabs */
-.htab.active::before, .profile-tab.active::before, .auth-tab-btn.active::before, .admin-tbtn.active::before {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 10%;
-    width: 80%;
-    height: 3px;
-    background: #00e5ff;
-    box-shadow: 0 -2px 10px #00e5ff;
-    border-radius: 5px 5px 0 0;
-    transition: all 0.3s ease;
-}
-
-/* =========================================
-   FULL GLASSMORPHISM UI OVERHAUL
-   ========================================= */
-
-/* 1. Remove solid backgrounds from all sections */
-.media-hub, .pub-section, footer {
-    background: transparent !important;
-}
-.section-alt {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* --- NEW: Visual Anchors & Animated Backgrounds for Sections --- */
-.features {
-    background: linear-gradient(-45deg, var(--bg), var(--bg3), var(--bg)) !important;
-    background-size: 400% 400% !important;
-    animation: fluidMesh 15s ease infinite !important;
-    box-shadow: none;
-    position: relative;
-    z-index: 1;
-}
 .about {
-    background: linear-gradient(135deg, var(--bg2), var(--bg), var(--bg2)) !important;
-    background-size: 300% 300% !important;
-    animation: fluidMesh 12s ease infinite alternate !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+    background: radial-gradient(circle at 50% 50%, rgba(184, 41, 234, 0.05), transparent 60%) !important;
     border-top: 1px solid var(--border2);
     position: relative;
     z-index: 1;
 }
-.acc-zone {
-    background: linear-gradient(-45deg, var(--bg), var(--bg3), var(--bg)) !important;
-    background-size: 400% 400% !important;
-    animation: fluidMesh 18s ease infinite !important;
-    position: relative;
-    z-index: 1;
+
+/* 3. Glassmorphism Hover Effects */
+.feat-card, .about-card, .cc, .wc, .mag-card, .pub-card {
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    background: var(--card) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--border2) !important;
+    box-shadow: none !important;
 }
 
-@keyframes fluidMesh {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* 2. Floating Pill Header */
-header {
-    position: fixed !important;
-    top: 20px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 90% !important;
-    max-width: 1180px !important;
-    border-radius: 50px !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(24px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255,255,255,0.02) !important;
-    padding: 0 10px !important;
-    z-index: 1000 !important;
-    transition: all 0.3s ease !important;
-}
-/* Ensure content isn't hidden behind floating header */
-.hero {
-    padding-top: 80px;
-}
-
-/* =========================================
-   UNIQUE CARD DESIGNS
-   ========================================= */
-
-/* A. Mission/Vision: Vibrant Animated Glass Cards */
-.feat-card, .mag-card, .w-in, .auth-box, .dash-container {
-    background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(16px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease !important;
-    background-size: 200% 200% !important;
-    animation: fluidMesh 8s ease infinite !important;
-}
-.feat-card:hover, .mag-card:hover, .w-in:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(0, 229, 255, 0.4) !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
-    transform: translateY(-8px);
-}
-.feat-card.rv-d1 { background-image: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(255, 255, 255, 0.01), rgba(0, 229, 255, 0.05)) !important; border-color: rgba(0, 229, 255, 0.15) !important; }
-.feat-card.rv-d2 { background-image: linear-gradient(135deg, rgba(255, 0, 128, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 0, 128, 0.05)) !important; border-color: rgba(255, 0, 128, 0.15) !important; }
-.feat-card.rv-d3 { background-image: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 215, 0, 0.05)) !important; border-color: rgba(255, 215, 0, 0.15) !important; }
-
-
-/* B. About/Awards: Solid Premium Dark with Animated Shimmer */
-.about-card {
-    background: linear-gradient(-45deg, var(--card), var(--bg3), var(--card)) !important;
-    background-size: 300% 300% !important;
-    animation: fluidMesh 6s ease infinite alternate !important;
-    border: none !important;
-    border-left: 4px solid #00e5ff !important;
-    border-radius: 8px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
-.about-card.rv-d2 { border-left-color: #ff0080 !important; }
-.about-card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6), -10px 0 30px rgba(0, 229, 255, 0.1) !important;
-}
-
-
-/* C. Team/Leadership: Premium Cards */
-.cc-in {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 229, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
-    background-size: 200% 200% !important;
-    animation: fluidMesh 10s ease infinite !important;
-    border-radius: 20px !important;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-    transition: all 0.4s ease !important;
-    padding: 24px !important;
-}
-.cc-in:hover {
-    transform: translateY(-10px) scale(1.05);
+.feat-card:hover, .about-card:hover, .cc:hover, .wc:hover, .mag-card:hover, .pub-card:hover {
+    transform: translateY(-8px) scale(1.01);
     background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(0, 229, 255, 0.3) !important;
-    box-shadow: 0 20px 40px rgba(0, 229, 255, 0.1) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(184, 41, 234, 0.15) !important;
 }
 
-
-/* D. History: Minimalist Sharp Frosted Tiles */
-.hcard {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border-radius: 0 !important; /* Sharp corners */
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-top: 3px solid #00e5ff !important;
-    transition: all 0.3s ease !important;
-}
-.hcard:hover {
-    background: rgba(255,255,255,0.1) !important;
-    transform: translateY(-5px);
+/* Hover Accent Borders */
+.feat-card:hover::before, .about-card:hover::before {
+    background: linear-gradient(135deg, var(--cyan), var(--rose)) !important;
+    opacity: 0.8 !important;
 }
 
-
-/* Float Animation on Hover */
-.feat-card:hover .feat-icon i, .about-card:hover .about-ic i, .cc-in:hover .cc-ic i, .w-in:hover .w-ic i {
-    animation: floatIcon 2s ease-in-out infinite;
-}
-@keyframes floatIcon {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); text-shadow: 0 5px 15px currentColor; }
-    100% { transform: translateY(0px); }
+/* 4. Smooth Fade Ins (AOS Enhancements) */
+[data-aos] {
+    transition-timing-function: cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
 }
 
-/* 5. Glass Modals */
-.modal-content {
-    background: rgba(4, 8, 20, 0.65) !important;
-    backdrop-filter: blur(30px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05) !important;
+/* 5. Custom Cursor Adjustments for Dark Theme */
+.custom-cursor {
+    mix-blend-mode: screen;
 }
 
-/* 6. Gradient Typography */
-.hero-content h1 {
-    background: linear-gradient(to right, #00e5ff, #ff0080, #7928ca);
+.cc-dot {
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+}
+
+.cc-outline {
+    border: 1px solid rgba(184, 41, 234, 0.5);
+}
+
+.cc-outline.hovered {
+    background: rgba(184, 41, 234, 0.1);
+    border-color: var(--cyan);
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+/* 6. Glowing Text Utilities */
+.glow-text {
+    text-shadow: 0 0 20px rgba(184, 41, 234, 0.5);
+}
+
+/* Ensure no rogue light mode overrides remain */
+.section-title {
+    color: var(--text) !important;
+}
+
+/* Dynamic Gradients */
+.gradient-text {
+    background: linear-gradient(130deg, #f8fafc 0%, #d8b4fe 50%, var(--cyan) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: textGradient 5s linear infinite;
-}
-@keyframes textGradient {
-    to { background-position: 200% center; }
-}
-
-/* Ensure text contrast on glass */
-.feat-card p, .cc-role, .hcard p {
-    color: rgba(255, 255, 255, 0.85) !important;
 }

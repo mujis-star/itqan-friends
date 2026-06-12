@@ -22,21 +22,21 @@
 
     <style>
     :root {
-        --bg:       #ffffff;
-        --bg2:      #f4f7fb;
-        --bg3:      #eaf0f6;
-        --cyan:     #00d4ff;
-        --cyan2:    #00a8cc;
+        --bg:       #06020c;
+        --bg2:      #0d061c;
+        --bg3:      #170c2d;
+        --cyan:     #b829ea;
+        --cyan2:    #9333ea;
         --gold:     #f5c518;
-        --rose:     #ff1f5a;
-        --rose2:    #cc0033;
-        --text:     #111827;
-        --muted:    #4b5563;
-        --border:   rgba(0,212,255,.25);
-        --border2:  rgba(0,0,0,.06);
-        --card:     #ffffff;
-        --glow-c:   rgba(0,212,255,.15);
-        --glow-r:   rgba(255,31,90,.15);
+        --rose:     #f43f5e;
+        --rose2:    #e11d48;
+        --text:     #f8fafc;
+        --muted:    #94a3b8;
+        --border:   rgba(184, 41, 234, 0.2);
+        --border2:  rgba(255, 255, 255, 0.08);
+        --card:     rgba(255, 255, 255, 0.03);
+        --glow-c:   rgba(184, 41, 234, 0.25);
+        --glow-r:   rgba(244, 63, 94, 0.25);
         --radius:   18px;
         --radius-sm:10px;
         --trans:    all .35s cubic-bezier(.4,0,.2,1);
@@ -106,11 +106,6 @@
         pointer-events:none;z-index:9998;opacity:.6;
     }
 
-    /* ─── PARTICLE CANVAS ─── */
-    #particleCanvas{
-        position:fixed;top:0;left:0;width:100%;height:100%;
-        pointer-events:none;z-index:0;opacity:0.8;
-    }
     header,.hero,.features,.about,.media-hub,.acc-zone,footer,.pub-section{
         position:relative;z-index:1;
     }
@@ -126,7 +121,7 @@
     /* ─── HEADER ─── */
     header{
         position:sticky;top:0;z-index:1000;
-        background:rgba(255,255,255,.88);
+        background:rgba(6, 2, 12, .88);
         backdrop-filter:blur(24px) saturate(160%);
         border-bottom:1px solid var(--border);
         padding:14px 0;
@@ -155,7 +150,7 @@
         content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
         background:var(--cyan);transition:width .3s;
     }
-    .nav-links a:hover{color:var(--text)}
+    .nav-links a:hover{color:#fff}
     .nav-links a:hover::after{width:100%}
 
     .auth-area{display:flex;align-items:center;gap:10px}
@@ -218,18 +213,23 @@
     }
     .hero-bg{
         position:absolute;inset:0;
-        background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
-        background-size:cover;background-position:center;
-        filter:brightness(1.2) grayscale(0.5) opacity(0.15);z-index:0;
+        background: radial-gradient(circle at 15% 50%, rgba(184, 41, 234, 0.25), transparent 50%),
+                    radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.2), transparent 50%),
+                    radial-gradient(circle at 50% 80%, rgba(0, 212, 255, 0.15), transparent 50%);
+        z-index:0;
+        animation: auroraMove 20s ease infinite alternate;
     }
     .hero-grad{
         position:absolute;inset:0;z-index:1;
-        background:
-            radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,.08) 0%,transparent 60%),
-            radial-gradient(ellipse 60% 60% at 80% 90%,rgba(255,31,90,.08) 0%,transparent 60%),
-            linear-gradient(to bottom,var(--bg) 0%,rgba(255,255,255,0.4) 50%,var(--bg) 100%);
+        background: linear-gradient(to bottom, transparent 0%, rgba(6, 2, 12, 0.6) 60%, var(--bg) 100%);
     }
     .hero-inner{position:relative;z-index:2;max-width:780px;padding:0 24px}
+    
+    @keyframes auroraMove {
+        0% { transform: scale(1) translate(0, 0); }
+        50% { transform: scale(1.1) translate(2%, 4%); }
+        100% { transform: scale(1) translate(-2%, -2%); }
+    }
     .hero-badge{
         display:inline-flex;align-items:center;gap:8px;
         padding:8px 22px;margin-bottom:28px;
@@ -1749,8 +1749,7 @@
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="animations.css">
-    <!-- Islamic Geometry Constellation Background -->
-    <canvas id="islamicCanvas"></canvas>
+    <!-- Premium Aurora Background handles the visuals now -->
     <div class="toast-c" id="toastContainer"></div>
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
     <div class="lightbox" id="lightbox">
@@ -4593,146 +4592,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     animObserver.observe(document.body, { childList: true, subtree: true });
 
-    // ===== ISLAMIC GEOMETRY CONSTELLATION CANVAS =====
-    (function(){
-        const canvas = document.getElementById('islamicCanvas');
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let w, h;
-        let particles = [];
-        
-        // Colors: Subtle Gold, Cyan, and Soft Pink
-        const colors = ['#ffd700', '#00e5ff', '#ff0080'];
-        
-        let mouse = { x: null, y: null, radius: 150 };
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-        window.addEventListener('mouseout', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-    
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
-        
-        function init() {
-            particles = [];
-            const numParticles = Math.min(80, Math.floor(w * h / 15000));
-            for(let i=0; i<numParticles; i++) {
-                particles.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    size: Math.random() * 15 + 8,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    speedX: (Math.random() - 0.5) * 0.4,
-                    speedY: (Math.random() - 0.5) * 0.4,
-                    angle: Math.random() * Math.PI * 2,
-                    spinSpeed: (Math.random() - 0.5) * 0.01,
-                    type: Math.random() > 0.4 ? 'star' : 'hex',
-                    opacity: Math.random() * 0.4 + 0.1
-                });
-            }
-        }
-        
-        function drawShape(p) {
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.angle);
-            ctx.globalAlpha = p.opacity;
-            ctx.strokeStyle = p.color;
-            ctx.lineWidth = 1.5;
-            
-            if (p.type === 'star') {
-                // Rub el Hizb (Two squares)
-                let r = p.size;
-                for(let i=0; i<2; i++) {
-                    ctx.rotate(Math.PI / 4 * i);
-                    ctx.beginPath();
-                    ctx.rect(-r/2, -r/2, r, r);
-                    ctx.stroke();
-                }
-            } else {
-                // Hexagon
-                let r = p.size * 0.8;
-                ctx.beginPath();
-                for (let i = 0; i < 6; i++) {
-                    ctx.lineTo(r * Math.cos(i * Math.PI / 3), r * Math.sin(i * Math.PI / 3));
-                }
-                ctx.closePath();
-                ctx.stroke();
-            }
-            ctx.restore();
-        }
-        
-        function draw() {
-            ctx.clearRect(0, 0, w, h);
-            
-            // Update & Draw Particles
-            for(let i=0; i<particles.length; i++) {
-                let p = particles[i];
-                p.x += p.speedX;
-                p.y += p.speedY;
-                p.angle += p.spinSpeed;
-                
-                // Bounce off edges smoothly
-                if(p.x < -50) p.x = w + 50;
-                if(p.x > w + 50) p.x = -50;
-                if(p.y < -50) p.y = h + 50;
-                if(p.y > h + 50) p.y = -50;
-                
-                drawShape(p);
-                
-                // Constellation connecting lines
-                for(let j=i+1; j<particles.length; j++) {
-                    let p2 = particles[j];
-                    let dx = p.x - p2.x;
-                    let dy = p.y - p2.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if(dist < 180) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = p.color;
-                        ctx.globalAlpha = (1 - dist/180) * 0.15; // Very subtle lines
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                }
-                
-                // Mouse Interaction
-                if (mouse.x != null) {
-                    let dx = mouse.x - p.x;
-                    let dy = mouse.y - p.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < mouse.radius) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = p.color;
-                        ctx.globalAlpha = (1 - dist/mouse.radius) * 0.4;
-                        ctx.lineWidth = 1;
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.stroke();
-                        
-                        // Slightly repel from mouse for interactivity
-                        p.x -= dx * 0.005;
-                        p.y -= dy * 0.005;
-                    }
-                }
-            }
-            
-            requestAnimationFrame(draw);
-        }
-        
-        window.addEventListener('resize', () => { resize(); init(); });
-        resize();
-        init();
-        draw();
-    })();
 </script>
 
 </body>
