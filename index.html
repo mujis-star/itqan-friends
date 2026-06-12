@@ -1746,11 +1746,13 @@
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="animations.css">
-</head>
-<body>
-    <div id="preloader"><div class="loader-spinner"></div></div>
-    <!-- Space Network Background -->
-    <canvas id="spaceCanvas"></canvas>
+    <!-- Premium Fluid Mesh Background -->
+    <div class="bg-mesh">
+        <div class="blob color-1"></div>
+        <div class="blob color-2"></div>
+        <div class="blob color-3"></div>
+        <div class="blob color-4"></div>
+    </div>
     <div class="toast-c" id="toastContainer"></div>
     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
     <div class="lightbox" id="lightbox">
@@ -4560,141 +4562,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof AOS !== 'undefined') AOS.refreshHard();
     });
     animObserver.observe(document.body, { childList: true, subtree: true });
-
-    // ===== SPACE NETWORK CANVAS ANIMATION =====
-    (function(){
-        const canvas = document.getElementById('spaceCanvas');
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let w, h;
-        let particles = [];
-        let orbitals = [];
-        
-        // Colors from screenshot (Cyan, Pink, Purple, White)
-        const colors = ['#00e5ff', '#ff0080', '#7928ca', '#ffffff'];
-        
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
-        
-        function init() {
-            particles = [];
-            orbitals = [];
-            
-            // Particles (Floating squares)
-            const numParticles = Math.min(150, Math.floor(w * h / 8000));
-            for(let i=0; i<numParticles; i++) {
-                particles.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    size: Math.random() * 2.5 + 1.0,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    speedY: (Math.random() - 0.5) * 0.5,
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    opacity: Math.random() * 0.8 + 0.2
-                });
-            }
-            
-            // Orbitals (Ellipses)
-            for(let i=0; i<3; i++) {
-                orbitals.push({
-                    cx: w / 2,
-                    cy: h / 2,
-                    rx: w * 0.4 + Math.random() * 300,
-                    ry: h * 0.3 + Math.random() * 150,
-                    angle: Math.random() * Math.PI * 2,
-                    rotationSpeed: (Math.random() - 0.5) * 0.001,
-                    color: colors[i % 3]
-                });
-            }
-        }
-        
-        // Wireframe Sphere logic
-        let sphereRotation = 0;
-        const lines = 12;
-        
-        function drawSphere() {
-            const sphereRadius = Math.min(w, h) * 0.35;
-            ctx.save();
-            ctx.translate(w/2, h/2);
-            ctx.rotate(sphereRotation);
-            
-            ctx.lineWidth = 0.5;
-            ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
-            
-            // Latitudes
-            for(let i=1; i<lines; i++) {
-                const y = sphereRadius * Math.cos(Math.PI * i / lines);
-                const r = sphereRadius * Math.sin(Math.PI * i / lines);
-                ctx.beginPath();
-                ctx.ellipse(0, y, r, r * 0.3, 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            // Longitudes
-            for(let i=0; i<lines; i++) {
-                const angle = (Math.PI / lines) * i;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, sphereRadius, sphereRadius * Math.cos(angle), 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            ctx.restore();
-            sphereRotation += 0.002;
-        }
-        
-        function draw() {
-            // Dark trail effect instead of clearRect
-            ctx.fillStyle = 'rgba(4, 8, 20, 0.2)';
-            ctx.fillRect(0, 0, w, h);
-            
-            // Draw Orbitals
-            orbitals.forEach((o, index) => {
-                ctx.save();
-                ctx.translate(o.cx, o.cy);
-                ctx.rotate(o.angle);
-                ctx.beginPath();
-                ctx.ellipse(0, 0, o.rx, o.ry, 0, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(0, 229, 255, 0.15)`;
-                if(index === 1) ctx.strokeStyle = `rgba(255, 0, 128, 0.1)`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                o.angle += o.rotationSpeed;
-                ctx.restore();
-            });
-            
-            // Draw Sphere
-            drawSphere();
-            
-            // Draw Particles (Squares)
-            particles.forEach(p => {
-                p.x += p.speedX;
-                p.y += p.speedY;
-                
-                if(p.x < 0) p.x = w;
-                if(p.x > w) p.x = 0;
-                if(p.y < 0) p.y = h;
-                if(p.y > h) p.y = 0;
-                
-                ctx.globalAlpha = p.opacity;
-                ctx.fillStyle = p.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = p.color;
-                // Draw square
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-            });
-            ctx.globalAlpha = 1;
-            ctx.shadowBlur = 0;
-            
-            requestAnimationFrame(draw);
-        }
-        
-        window.addEventListener('resize', () => { resize(); init(); });
-        resize();
-        init();
-        draw();
-    })();
 </script>
 
 </body>

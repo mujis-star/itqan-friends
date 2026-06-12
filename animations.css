@@ -26,15 +26,34 @@ body {
 }
 
 /* =========================================
-   SPACE CANVAS BACKGROUND SYSTEM
+   PREMIUM FLUID MESH BACKGROUND
    ========================================= */
-#spaceCanvas {
+.bg-mesh {
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
     z-index: -1;
-    background: #040814;
+    background-color: #040814;
+    overflow: hidden;
     pointer-events: none;
+}
+.bg-mesh .blob {
+    position: absolute;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float-blob 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+}
+.bg-mesh .color-1 { width: 60vw; height: 60vh; background: #00e5ff; top: -10%; left: -10%; animation-duration: 20s; }
+.bg-mesh .color-2 { width: 50vw; height: 50vh; background: #ff0080; bottom: -10%; right: -10%; animation-duration: 25s; }
+.bg-mesh .color-3 { width: 55vw; height: 55vh; background: #7928ca; top: 30%; left: 40%; animation-duration: 22s; mix-blend-mode: screen; }
+.bg-mesh .color-4 { width: 40vw; height: 40vh; background: #ffbc00; bottom: 20%; left: 10%; animation-duration: 18s; mix-blend-mode: screen; }
+
+@keyframes float-blob {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(10vw, 15vh) scale(1.2) rotate(90deg); }
+    66% { transform: translate(-10vw, 5vh) scale(0.8) rotate(180deg); }
+    100% { transform: translate(5vw, -10vh) scale(1.1) rotate(270deg); }
 }
 
 @keyframes gradientBG {
@@ -342,13 +361,12 @@ header {
 }
 
 
-/* C. Team/Leadership: Floating Animated Circular Profiles */
+/* C. Team/Leadership: Premium Cards */
 .cc-in {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 229, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
     background-size: 200% 200% !important;
     animation: fluidMesh 10s ease infinite !important;
-    border-radius: 50% !important;
-    aspect-ratio: 1 / 1;
+    border-radius: 20px !important;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -357,7 +375,7 @@ header {
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
     transition: all 0.4s ease !important;
-    padding: 20px !important;
+    padding: 24px !important;
 }
 .cc-in:hover {
     transform: translateY(-10px) scale(1.05);
