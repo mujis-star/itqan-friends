@@ -559,14 +559,14 @@
     }
 
     .cc-ic, .w-ic {
-        width: 70px;
-        height: 70px;
-        border-radius: 20px;
+        width: 85px;
+        height: 85px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 18px;
-        font-size: 1.8rem;
+        font-size: 2rem;
         transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
 
@@ -576,24 +576,29 @@
     }
 
     /* Core member colors with glow animation */
-    .cc:nth-child(1) .cc-ic{background:linear-gradient(135deg,#ffd70022,#ffa50022);color:#ffd700;border:1px solid #ffd70030}
-    .cc:nth-child(2) .cc-ic{background:linear-gradient(135deg,#c0c0c022,#e8e8e822);color:#c0c0c0;border:1px solid #c0c0c030}
+    .cc:nth-child(1) .cc-ic{background:linear-gradient(135deg,#ffd70022,#ffa50022);color:#ffd700;border:1px solid #ffd70050}
+    .cc:nth-child(2) .cc-ic{background:linear-gradient(135deg,#c0c0c022,#e8e8e822);color:#c0c0c0;border:1px solid #c0c0c050}
     .cc:nth-child(3) .cc-ic{background:linear-gradient(135deg,rgba(184,41,234,.15),rgba(147,51,234,.15));color:var(--cyan);border:1px solid var(--border);animation:cardGlow 3s infinite}
-    .cc:nth-child(4) .cc-ic{background:linear-gradient(135deg,#a78bfa22,#8250ff22);color:#a78bfa;border:1px solid #a78bfa30}
-    .cc:nth-child(5) .cc-ic{background:linear-gradient(135deg,#00dc8222,#00b86822);color:#00dc82;border:1px solid #00dc8230}
-    .cc:nth-child(6) .cc-ic{background:linear-gradient(135deg,#ff646422,#ff444422);color:#ff6464;border:1px solid #ff646430}
-    .cc:nth-child(7) .cc-ic{background:linear-gradient(135deg,#ffb80022,#ff950022);color:#ffb800;border:1px solid #ffb80030;animation:cardGlow 2.5s infinite}
+    .cc:nth-child(4) .cc-ic{background:linear-gradient(135deg,#a78bfa22,#8250ff22);color:#a78bfa;border:1px solid #a78bfa50}
+    .cc:nth-child(5) .cc-ic{background:linear-gradient(135deg,#00dc8222,#00b86822);color:#00dc82;border:1px solid #00dc8250}
+    .cc:nth-child(6) .cc-ic{background:linear-gradient(135deg,#ff646422,#ff444422);color:#ff6464;border:1px solid #ff646450}
+    .cc:nth-child(7) .cc-ic{background:linear-gradient(135deg,#ffb80022,#ff950022);color:#ffb800;border:1px solid #ffb80050;animation:cardGlow 2.5s infinite}
 
     /* Wing colors with glow animation */
-    .wc:nth-child(1) .w-ic{background:linear-gradient(135deg,#ffb80022,#ff950022);color:#ffb800;border:1px solid #ffb80030}
-    .wc:nth-child(2) .w-ic{background:linear-gradient(135deg,rgba(184,41,234,.15),rgba(147,51,234,.15));color:var(--cyan);border:1px solid var(--border);animation:cardGlow 3s infinite}
-    .wc:nth-child(3) .w-ic{background:linear-gradient(135deg,#00dc8222,#00b86822);color:#00dc82;border:1px solid #00dc8230}
-    .wc:nth-child(4) .w-ic{background:linear-gradient(135deg,#a78bfa22,#8250ff22);color:#a78bfa;border:1px solid #a78bfa30}
+    .wc:nth-child(1) .w-ic{background:linear-gradient(135deg,#60a5fa22,#3b82f622);color:#60a5fa;border:1px solid #60a5fa50}
+    .wc:nth-child(2) .w-ic{background:linear-gradient(135deg,#f472b622,#ec489922);color:#f472b6;border:1px solid #f472b650}
+    .wc:nth-child(3) .w-ic{background:linear-gradient(135deg,#34d39922,#10b98122);color:#34d399;border:1px solid #34d39950}
+    .wc:nth-child(4) .w-ic{background:linear-gradient(135deg,#fbbf2422,#f59e0b22);color:#fbbf24;border:1px solid #fbbf2450}
     .wc:nth-child(5) .w-ic{background:linear-gradient(135deg,#4a90e222,#357abd22);color:#4a90e2;border:1px solid #4a90e230}
     .wc:nth-child(6) .w-ic{background:linear-gradient(135deg,#ff646422,#ff444422);color:#ff6464;border:1px solid #ff646430}
     .wc:nth-child(7) .w-ic{background:linear-gradient(135deg,var(--glow-r),rgba(204,41,82,.15));color:var(--rose);border:1px solid rgba(255,51,102,.2);animation:cardGlow 3.5s infinite}
 
     .cc-role, .w-lab {
+        display: inline-block;
+        padding: 6px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 30px;
         font-size: .68rem;
         text-transform: uppercase;
         letter-spacing: 3px;
@@ -1822,7 +1827,7 @@
         }
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="animations.css?v=21">
+    <link rel="stylesheet" href="animations.css?v=22">
     <!-- Sleek Preloader -->
     <div id="preloader">
         <div class="preloader-logo">ITQAN</div>
@@ -2854,7 +2859,7 @@
             return `
             <div class="cc">
                 <div class="cc-in">
-                    <div class="cc-ic" style="${photo ? 'padding:0;border:none;background:none;' : ''}">${iconHtml}</div>
+                    <div class="cc-ic" style="${photo ? 'padding:3px;box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius:50%;' : ''}">${iconHtml}</div>
                     <div class="cc-role">${m.role}</div>
                     <div class="cc-name">${m.name}</div>
                     <p class="cc-desc">${m.desc || ''}</p>
