@@ -91,7 +91,7 @@
 
 .itqan-media-modal .gallery-item img {
   object-fit: contain;
-  background: #05070d;
+  background: var(--bg2);
 }
 
 .itqan-media-head {

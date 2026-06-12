@@ -22,21 +22,21 @@
 
     <style>
     :root {
-        --bg:       #05060e;
-        --bg2:      #090c18;
-        --bg3:      #0e1120;
-        --cyan:     #00e5ff;
-        --cyan2:    #00b4cc;
+        --bg:       #ffffff;
+        --bg2:      #f4f7fb;
+        --bg3:      #eaf0f6;
+        --cyan:     #00d4ff;
+        --cyan2:    #00a8cc;
         --gold:     #f5c518;
-        --rose:     #ff3366;
-        --rose2:    #cc2952;
-        --text:     #dce4f0;
-        --muted:    #6b7895;
-        --border:   rgba(0,229,255,.10);
-        --border2:  rgba(255,255,255,.05);
-        --card:     rgba(255,255,255,.025);
-        --glow-c:   rgba(0,229,255,.15);
-        --glow-r:   rgba(255,51,102,.15);
+        --rose:     #ff1f5a;
+        --rose2:    #cc0033;
+        --text:     #111827;
+        --muted:    #4b5563;
+        --border:   rgba(0,212,255,.25);
+        --border2:  rgba(0,0,0,.08);
+        --card:     rgba(255,255,255,.7);
+        --glow-c:   rgba(0,212,255,.25);
+        --glow-r:   rgba(255,31,90,.25);
         --radius:   18px;
         --radius-sm:10px;
         --trans:    all .35s cubic-bezier(.4,0,.2,1);
@@ -126,7 +126,7 @@
     /* ─── HEADER ─── */
     header{
         position:sticky;top:0;z-index:1000;
-        background:rgba(5,6,14,.88);
+        background:rgba(255,255,255,.88);
         backdrop-filter:blur(24px) saturate(160%);
         border-bottom:1px solid var(--border);
         padding:14px 0;
@@ -155,7 +155,7 @@
         content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
         background:var(--cyan);transition:width .3s;
     }
-    .nav-links a:hover{color:#fff}
+    .nav-links a:hover{color:var(--text)}
     .nav-links a:hover::after{width:100%}
 
     .auth-area{display:flex;align-items:center;gap:10px}
@@ -220,14 +220,14 @@
         position:absolute;inset:0;
         background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format');
         background-size:cover;background-position:center;
-        filter:brightness(.22) saturate(1.4);z-index:0;
+        filter:brightness(1) saturate(1.1);z-index:0;
     }
     .hero-grad{
         position:absolute;inset:0;z-index:1;
         background:
-            radial-gradient(ellipse 70% 50% at 20% 50%,rgba(0,229,255,.12) 0%,transparent 60%),
-            radial-gradient(ellipse 50% 60% at 80% 50%,rgba(255,51,102,.1) 0%,transparent 60%),
-            linear-gradient(to bottom,rgba(5,6,14,.6) 0%,rgba(5,6,14,.2) 50%,rgba(5,6,14,.95) 100%);
+            radial-gradient(ellipse 70% 50% at 20% 50%,rgba(0,212,255,.3) 0%,transparent 60%),
+            radial-gradient(ellipse 50% 60% at 80% 50%,rgba(255,31,90,.25) 0%,transparent 60%),
+            linear-gradient(to bottom,rgba(255,255,255,.7) 0%,rgba(255,255,255,.4) 50%,rgba(255,255,255,1) 100%);
     }
     .hero-inner{position:relative;z-index:2;max-width:780px;padding:0 24px}
     .hero-badge{
@@ -241,14 +241,14 @@
     .hero h1{
         font-size:clamp(2.4rem,6vw,4.2rem);
         margin-bottom:20px;
-        background:linear-gradient(130deg,#fff 0%,rgba(255,255,255,.9) 40%,var(--cyan) 80%);
+        background:linear-gradient(130deg,var(--text) 0%,var(--muted) 40%,var(--cyan) 80%);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         animation:fadeSlideUp .8s .15s ease both;
         line-height:1.1;
     }
     .hero p{
-        font-size:1.08rem;color:#a8b5cc;max-width:560px;
-        margin:0 auto 36px;font-weight:300;
+        font-size:1.08rem;color:var(--muted);max-width:560px;
+        margin:0 auto 36px;font-weight:400;
         animation:fadeSlideUp .8s .3s ease both;
     }
     .hero-btns{
@@ -273,7 +273,7 @@
         font-size:.7rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;
         color:var(--cyan);
     }
-    .sec-title{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;color:#fff;margin-bottom:12px}
+    .sec-title{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;color:var(--text);margin-bottom:12px}
     .sec-sub{font-size:.95rem;color:var(--muted);max-width:520px;margin:0 auto}
     .sec-line{
         display:flex;justify-content:center;align-items:center;gap:10px;margin:20px auto 0;
@@ -1827,6 +1827,38 @@
                     <div class="feat-icon"><i class="fas fa-trophy"></i></div>
                     <h3>Achievements</h3>
                     <p>Best Union Award and featured in Mission-20 Publication — milestones that define our journey of excellence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section class="events" id="events" style="padding:100px 0; background:var(--bg2);">
+        <div class="container">
+            <div class="sec-wrap">
+                <div class="sec-eyebrow">Updates</div>
+                <div class="sec-title">Upcoming <span style="color:var(--cyan)">Events</span></div>
+                <div class="sec-sub">Stay tuned with our latest activities and union gatherings.</div>
+                <div class="sec-line"><span></span></div>
+            </div>
+            <div class="feat-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                <div class="feat-card" style="text-align:left;">
+                    <div class="mag-badge magazine" style="margin-bottom:15px;">Meeting</div>
+                    <h3>Annual General Assembly</h3>
+                    <p>Join us for the yearly review of our union's progress, achievements, and future planning.</p>
+                    <div style="margin-top:20px; font-size:0.8rem; color:var(--cyan); font-weight:700;"><i class="fa-regular fa-calendar"></i> Oct 15, 2026</div>
+                </div>
+                <div class="feat-card" style="text-align:left;">
+                    <div class="mag-badge tabloid" style="margin-bottom:15px;">Workshop</div>
+                    <h3>Leadership Training</h3>
+                    <p>A comprehensive workshop focusing on building leadership skills among students.</p>
+                    <div style="margin-top:20px; font-size:0.8rem; color:var(--cyan); font-weight:700;"><i class="fa-regular fa-calendar"></i> Nov 02, 2026</div>
+                </div>
+                <div class="feat-card" style="text-align:left;">
+                    <div class="mag-badge magazine" style="margin-bottom:15px;">Social</div>
+                    <h3>Winter Gala</h3>
+                    <p>Celebrate the end of the semester with your peers at our annual winter gathering.</p>
+                    <div style="margin-top:20px; font-size:0.8rem; color:var(--cyan); font-weight:700;"><i class="fa-regular fa-calendar"></i> Dec 20, 2026</div>
                 </div>
             </div>
         </div>
