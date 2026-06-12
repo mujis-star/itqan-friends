@@ -26,41 +26,17 @@ body {
 }
 
 /* =========================================
-   PREMIUM ANIMATED GRID BACKGROUND
+   ISLAMIC CONSTELLATION BACKGROUND
    ========================================= */
 body {
     background-color: #04060d !important;
 }
-.premium-grid-bg {
+#islamicCanvas {
     position: fixed;
-    top: -50vh; left: 0;
-    width: 100vw; height: 200vh;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     z-index: -1;
-    background-image: 
-        linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: gridMove 30s linear infinite;
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
-}
-@keyframes gridMove {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(50px); }
-}
-.premium-grid-bg::after {
-    content: '';
-    position: absolute;
-    top: 20%; left: 30%;
-    width: 40vw; height: 40vh;
-    background: radial-gradient(circle, rgba(0, 229, 255, 0.04) 0%, transparent 60%);
-    border-radius: 50%;
-    animation: ambientPulse 15s ease-in-out infinite alternate;
-}
-@keyframes ambientPulse {
-    0% { transform: scale(1); opacity: 0.5; }
-    100% { transform: scale(1.2); opacity: 1; }
+    pointer-events: auto; /* Allow mouse interaction */
 }
 
 @keyframes gradientBG {
