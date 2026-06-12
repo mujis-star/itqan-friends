@@ -210,32 +210,66 @@
         position:relative;min-height:100vh;display:flex;
         align-items:center;justify-content:center;text-align:center;
         overflow:hidden;
-    }
+    /* Floating Glowing Orbs & Rings */
     .hero-bg{
         position:absolute;inset:0;
-        background: radial-gradient(circle at 15% 50%, rgba(184, 41, 234, 0.25), transparent 50%),
-                    radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.2), transparent 50%),
-                    radial-gradient(circle at 50% 80%, rgba(0, 212, 255, 0.15), transparent 50%);
         z-index:0;
-        animation: auroraMove 20s ease infinite alternate;
+        overflow:hidden;
+        background: var(--bg);
+    }
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+        animation: floatOrb 20s infinite ease-in-out alternate;
+    }
+    .orb-1 {
+        width: 400px; height: 400px;
+        background: var(--cyan);
+        top: -10%; left: -10%;
+        animation-delay: 0s;
+    }
+    .orb-2 {
+        width: 500px; height: 500px;
+        background: var(--rose);
+        bottom: -20%; right: -10%;
+        animation-delay: -5s;
+    }
+    .orb-3 {
+        width: 350px; height: 350px;
+        background: rgba(184, 41, 234, 0.8);
+        top: 40%; left: 30%;
+        animation-delay: -10s;
+        animation-duration: 25s;
+    }
+    @keyframes floatOrb {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(100px, 50px) scale(1.2); }
+        100% { transform: translate(-50px, 150px) scale(0.9); }
     }
     .hero-bg::after{
         content:''; position:absolute; inset:0;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-        background-size: 32px 32px;
-        mask-image: radial-gradient(ellipse at center, black 10%, transparent 80%);
-        -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 80%);
+        background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+        -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
         pointer-events:none;
+        z-index: 1;
     }
     .hero-ring {
         position: absolute; border-radius: 50%;
-        border: 1px dashed rgba(255, 255, 255, 0.08);
+        border: 2px dashed rgba(255, 255, 255, 0.15);
         top: 50%; left: 50%; transform: translate(-50%, -50%);
         pointer-events: none;
+        z-index: 2;
+        box-shadow: 0 0 40px rgba(184, 41, 234, 0.2), inset 0 0 40px rgba(184, 41, 234, 0.2);
     }
-    .ring-1 { width: 600px; height: 600px; animation: spinRing 40s linear infinite; }
-    .ring-2 { width: 900px; height: 900px; animation: spinRing 60s linear infinite reverse; border-style: solid; border-color: rgba(184, 41, 234, 0.05); }
+    .ring-1 { width: 700px; height: 700px; animation: spinRing 40s linear infinite; }
+    .ring-2 { width: 1000px; height: 1000px; animation: spinRing 60s linear infinite reverse; border-style: solid; border-color: rgba(184, 41, 234, 0.2); }
     @keyframes spinRing { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    
     .hero-grad{
         position:absolute;inset:0;z-index:1;
         background: linear-gradient(to bottom, transparent 0%, rgba(6, 2, 12, 0.6) 60%, var(--bg) 100%);
@@ -1810,6 +1844,9 @@
     <!-- Hero -->
     <section class="hero" id="home">
         <div class="hero-bg">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
             <div class="hero-ring ring-1"></div>
             <div class="hero-ring ring-2"></div>
         </div>
