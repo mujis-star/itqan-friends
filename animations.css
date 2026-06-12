@@ -279,19 +279,37 @@ body {
     -webkit-backdrop-filter: none !important;
 }
 
-/* --- NEW: Visual Anchors for Sections --- */
+/* --- NEW: Visual Anchors & Animated Backgrounds for Sections --- */
 .features {
-    background: rgba(4, 8, 20, 0.5) !important;
+    background: linear-gradient(-45deg, rgba(4, 8, 20, 0.7), rgba(0, 229, 255, 0.1), rgba(255, 0, 128, 0.1), rgba(4, 8, 20, 0.7)) !important;
+    background-size: 400% 400% !important;
+    animation: fluidMesh 15s ease infinite !important;
     box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
 }
 .about {
-    background: rgba(255, 255, 255, 0.02) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
+    background-size: 300% 300% !important;
+    animation: fluidMesh 12s ease infinite alternate !important;
     backdrop-filter: blur(40px) brightness(0.6) !important;
     -webkit-backdrop-filter: blur(40px) brightness(0.6) !important;
     border-top: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    z-index: 1;
 }
 .acc-zone {
-    background: linear-gradient(180deg, transparent, #040814 15%, #040814 100%) !important;
+    background: linear-gradient(-45deg, rgba(4, 8, 20, 0.9), rgba(121, 40, 202, 0.15), rgba(4, 8, 20, 0.9)) !important;
+    background-size: 400% 400% !important;
+    animation: fluidMesh 18s ease infinite !important;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes fluidMesh {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* 2. Floating Pill Header */
@@ -321,7 +339,7 @@ header {
    UNIQUE CARD DESIGNS
    ========================================= */
 
-/* A. Mission/Vision: Vibrant Glass Cards */
+/* A. Mission/Vision: Vibrant Animated Glass Cards */
 .feat-card, .mag-card, .w-in, .auth-box, .dash-container {
     background: rgba(255, 255, 255, 0.03) !important;
     backdrop-filter: blur(16px) saturate(180%) !important;
@@ -329,21 +347,25 @@ header {
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease !important;
+    background-size: 200% 200% !important;
+    animation: fluidMesh 8s ease infinite !important;
 }
 .feat-card:hover, .mag-card:hover, .w-in:hover {
-    background: rgba(255, 255, 255, 0.06) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
     border-color: rgba(0, 229, 255, 0.4) !important;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
     transform: translateY(-8px);
 }
-.feat-card.rv-d1 { background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(0, 229, 255, 0.15) !important; }
-.feat-card.rv-d2 { background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(255, 0, 128, 0.15) !important; }
-.feat-card.rv-d3 { background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(255, 215, 0, 0.15) !important; }
+.feat-card.rv-d1 { background-image: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(255, 255, 255, 0.01), rgba(0, 229, 255, 0.05)) !important; border-color: rgba(0, 229, 255, 0.15) !important; }
+.feat-card.rv-d2 { background-image: linear-gradient(135deg, rgba(255, 0, 128, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 0, 128, 0.05)) !important; border-color: rgba(255, 0, 128, 0.15) !important; }
+.feat-card.rv-d3 { background-image: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 215, 0, 0.05)) !important; border-color: rgba(255, 215, 0, 0.15) !important; }
 
 
-/* B. About/Awards: Solid Premium Dark with Neon Accents */
+/* B. About/Awards: Solid Premium Dark with Animated Shimmer */
 .about-card {
-    background: #0a0f1c !important;
+    background: linear-gradient(-45deg, #0a0f1c, #131b2f, #0a0f1c) !important;
+    background-size: 300% 300% !important;
+    animation: fluidMesh 6s ease infinite alternate !important;
     border: none !important;
     border-left: 4px solid #00e5ff !important;
     border-radius: 8px !important;
@@ -357,9 +379,11 @@ header {
 }
 
 
-/* C. Team/Leadership: Floating Circular Profiles */
+/* C. Team/Leadership: Floating Animated Circular Profiles */
 .cc-in {
-    background: rgba(255, 255, 255, 0.02) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 229, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
+    background-size: 200% 200% !important;
+    animation: fluidMesh 10s ease infinite !important;
     border-radius: 50% !important;
     aspect-ratio: 1 / 1;
     margin: 0 auto;
