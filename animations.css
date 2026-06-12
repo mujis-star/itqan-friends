@@ -270,13 +270,28 @@ body {
    ========================================= */
 
 /* 1. Remove solid backgrounds from all sections */
-.features, .about, .media-hub, .pub-section, .acc-zone, footer {
+.media-hub, .pub-section, footer {
     background: transparent !important;
 }
 .section-alt {
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+}
+
+/* --- NEW: Visual Anchors for Sections --- */
+.features {
+    background: rgba(4, 8, 20, 0.5) !important;
+    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+}
+.about {
+    background: rgba(255, 255, 255, 0.02) !important;
+    backdrop-filter: blur(40px) brightness(0.6) !important;
+    -webkit-backdrop-filter: blur(40px) brightness(0.6) !important;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.acc-zone {
+    background: linear-gradient(180deg, transparent, #040814 15%, #040814 100%) !important;
 }
 
 /* 2. Floating Pill Header */
@@ -302,8 +317,12 @@ header {
     padding-top: 80px;
 }
 
-/* 3. Glass Cards */
-.feat-card, .about-card, .cc-in, .w-in, .mag-card, .hcard, .auth-box, .dash-container {
+/* =========================================
+   UNIQUE CARD DESIGNS
+   ========================================= */
+
+/* A. Mission/Vision: Vibrant Glass Cards */
+.feat-card, .mag-card, .w-in, .auth-box, .dash-container {
     background: rgba(255, 255, 255, 0.03) !important;
     backdrop-filter: blur(16px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
@@ -311,32 +330,71 @@ header {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease !important;
 }
-
-/* Glass Card Hover */
-.feat-card:hover, .about-card:hover, .cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
+.feat-card:hover, .mag-card:hover, .w-in:hover {
     background: rgba(255, 255, 255, 0.06) !important;
     border-color: rgba(0, 229, 255, 0.4) !important;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
     transform: translateY(-8px);
 }
+.feat-card.rv-d1 { background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(0, 229, 255, 0.15) !important; }
+.feat-card.rv-d2 { background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(255, 0, 128, 0.15) !important; }
+.feat-card.rv-d3 { background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.01)) !important; border-color: rgba(255, 215, 0, 0.15) !important; }
 
-/* 4. Unique Vibrant Glass Colors (Universal Application) */
-.rv-d1, .cc-in:nth-child(4n+1), .w-in:nth-child(4n+1), .hcard:nth-child(4n+1), .mag-card:nth-child(4n+1) { /* Cyan Glow */
-    background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 255, 255, 0.01)) !important;
-    border-color: rgba(0, 229, 255, 0.15) !important;
+
+/* B. About/Awards: Solid Premium Dark with Neon Accents */
+.about-card {
+    background: #0a0f1c !important;
+    border: none !important;
+    border-left: 4px solid #00e5ff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
-.rv-d2, .cc-in:nth-child(4n+2), .w-in:nth-child(4n+2), .hcard:nth-child(4n+2), .mag-card:nth-child(4n+2) { /* Pink Glow */
-    background: linear-gradient(135deg, rgba(255, 0, 128, 0.08), rgba(255, 255, 255, 0.01)) !important;
-    border-color: rgba(255, 0, 128, 0.15) !important;
+.about-card.rv-d2 { border-left-color: #ff0080 !important; }
+.about-card:hover {
+    transform: translateX(10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6), -10px 0 30px rgba(0, 229, 255, 0.1) !important;
 }
-.rv-d3, .cc-in:nth-child(4n+3), .w-in:nth-child(4n+3), .hcard:nth-child(4n+3), .mag-card:nth-child(4n+3) { /* Gold Glow */
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 255, 255, 0.01)) !important;
-    border-color: rgba(255, 215, 0, 0.15) !important;
+
+
+/* C. Team/Leadership: Floating Circular Profiles */
+.cc-in {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    transition: all 0.4s ease !important;
+    padding: 20px !important;
 }
-.rv-d4, .cc-in:nth-child(4n+4), .w-in:nth-child(4n+4), .hcard:nth-child(4n+4), .mag-card:nth-child(4n+4) { /* Purple Glow */
-    background: linear-gradient(135deg, rgba(121, 40, 202, 0.08), rgba(255, 255, 255, 0.01)) !important;
-    border-color: rgba(121, 40, 202, 0.15) !important;
+.cc-in:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(0, 229, 255, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 229, 255, 0.1) !important;
 }
+
+
+/* D. History: Minimalist Sharp Frosted Tiles */
+.hcard {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 0 !important; /* Sharp corners */
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-top: 3px solid #00e5ff !important;
+    transition: all 0.3s ease !important;
+}
+.hcard:hover {
+    background: rgba(255,255,255,0.1) !important;
+    transform: translateY(-5px);
+}
+
 
 /* Float Animation on Hover */
 .feat-card:hover .feat-icon i, .about-card:hover .about-ic i, .cc-in:hover .cc-ic i, .w-in:hover .w-ic i {
