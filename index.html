@@ -1797,9 +1797,30 @@
 }
 
         
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; z-index: 99999;
+            background: #06020c;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+        }
+        #preloader.hide { opacity: 0; visibility: hidden; }
+        .preloader-logo {
+            font-size: 2rem; font-weight: 800; font-family: 'Inter', sans-serif;
+            color: var(--cyan);
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 10px rgba(184,41,234,0.2); transform: scale(0.98); }
+            100% { text-shadow: 0 0 30px rgba(184,41,234,0.8); transform: scale(1.02); }
+        }
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="animations.css">
+    <!-- Sleek Preloader -->
+    <div id="preloader">
+        <div class="preloader-logo">ITQAN</div>
+    </div>
     <!-- Premium Aurora Background handles the visuals now -->
     <div class="global-aurora"></div>
     <div class="toast-c" id="toastContainer"></div>
@@ -4584,9 +4605,42 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="drive-backend-fix.js?v=7"></script>
 
 <!-- Highly Animated Scripts -->
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 <script>
+    // --- Smooth Scrolling (Lenis) ---
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+    });
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // --- Magnetic Buttons ---
+    const magneticElements = document.querySelectorAll('.btn-pink, .btn-cyan');
+    magneticElements.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
+        });
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = `translate(0px, 0px) scale(1)`;
+        });
+    });
+
     // Hide Preloader
     window.addEventListener('load', () => {
         const preloader = document.getElementById('preloader');
@@ -4600,11 +4654,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('section:not(.hero):not(.profile-tab-panel)').forEach(sec => {
             sec.setAttribute('data-aos', 'fade-up');
-            sec.setAttribute('data-aos-duration', '800');
+            sec.setAttribute('data-aos-duration', '1000');
             sec.setAttribute('data-aos-once', 'true');
         });
         
-        // Auto-inject AOS to dynamic grid containers
         const dynamicContainers = ['coreGrid', 'wingsGrid', 'magCardsContainer', 'historyTimeline'];
         dynamicContainers.forEach(id => {
             const el = document.getElementById(id);
@@ -4614,12 +4667,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Initialize AOS
         if (typeof AOS !== 'undefined') {
             AOS.init({
                 offset: 50,
-                duration: 800,
-                easing: 'ease-out-cubic',
+                duration: 1000,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 once: true
             });
         }
@@ -4628,14 +4680,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // VanillaTilt Initialization for Cards
     function initTilt() {
         if(typeof VanillaTilt !== 'undefined') {
-            // Find all eligible cards that haven't been tilted yet
-            const cards = Array.from(document.querySelectorAll('.cc-in, .w-in, .mag-card, .hcard')).filter(card => !card.vanillaTilt);
+            const cards = Array.from(document.querySelectorAll('.feat-card, .about-card, .cc-in, .w-in, .mag-card, .hcard, .pub-card')).filter(card => !card.vanillaTilt);
             if (cards.length > 0) {
                 VanillaTilt.init(cards, {
-                    max: 12,
-                    speed: 400,
+                    max: 8,
+                    speed: 600,
                     glare: true,
-                    "max-glare": 0.2,
+                    "max-glare": 0.3,
                     scale: 1.02
                 });
             }
