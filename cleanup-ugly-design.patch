@@ -1,0 +1,667 @@
+diff --git a/animations.css b/animations.css
+index 60ec200..90febc4 100644
+--- a/animations.css
++++ b/animations.css
+@@ -1,421 +1,17 @@
+-/* Highly Animated Premium Experience */
++/* animations.css intentionally simplified.
++   The previous experimental full-page animated/glassmorphism theme made the site look noisy.
++   Keep this file lightweight so any existing reference stays safe. */
+ 
+-/* Smooth Scrolling */
+-html {
+-    scroll-behavior: smooth;
+-}
+-
+-/* Custom Webkit Scrollbar for Premium Feel */
+-::-webkit-scrollbar {
+-    width: 10px;
+-}
+-::-webkit-scrollbar-track {
+-    background: var(--bg);
+-}
+-::-webkit-scrollbar-thumb {
+-    background: var(--cyan);
+-    border-radius: 5px;
+-}
+-::-webkit-scrollbar-thumb:hover {
+-    background: var(--primary);
+-}
+-
+-/* Dynamic Animated Gradient Background (Removed, now using Aurora) */
+-body {
+-    background: transparent !important;
+-}
+-
+-/* =========================================
+-   ISLAMIC CONSTELLATION BACKGROUND
+-   ========================================= */
+-body {
+-    background-color: #04060d !important;
+-}
+-#islamicCanvas {
+-    position: fixed;
+-    top: 0; left: 0;
+-    width: 100vw; height: 100vh;
+-    z-index: -1;
+-    pointer-events: auto; /* Allow mouse interaction */
+-}
+-
+-@keyframes gradientBG {
+-    0% { background-position: 0% 50%; }
+-    50% { background-position: 100% 50%; }
+-    100% { background-position: 0% 50%; }
+-}
+-
+-/* Preloader Styles */
+-#preloader {
+-    position: fixed;
+-    top: 0;
+-    left: 0;
+-    width: 100%;
+-    height: 100%;
+-    background: var(--bg);
+-    display: flex;
+-    justify-content: center;
+-    align-items: center;
+-    z-index: 9999;
+-    transition: opacity 0.6s cubic-bezier(0.8, 0, 0.2, 1), visibility 0.6s;
+-}
+-#preloader.hide {
+-    opacity: 0;
+-    visibility: hidden;
+-}
+-.loader-spinner {
+-    width: 50px;
+-    height: 50px;
+-    border: 3px solid rgba(0, 229, 255, 0.2);
+-    border-radius: 50%;
+-    border-top-color: var(--cyan);
+-    animation: spin 1s ease-in-out infinite;
+-}
+-@keyframes spin {
+-    to { transform: rotate(360deg); }
+-}
+-
+-/* Enhanced Hover States for Buttons */
+-.btn {
+-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+-    position: relative;
+-    overflow: hidden;
+-}
+-.btn::after {
+-    content: '';
+-    position: absolute;
+-    top: 50%;
+-    left: 50%;
+-    width: 0;
+-    height: 0;
+-    background: rgba(255, 255, 255, 0.2);
+-    border-radius: 50%;
+-    transform: translate(-50%, -50%);
+-    transition: width 0.4s ease-out, height 0.4s ease-out;
+-}
+-.btn:hover::after {
+-    width: 300px;
+-    height: 300px;
+-    opacity: 0;
+-}
+-
+-/* Floating Animation for Header Logos/Icons */
+-.header-right .btn-icon {
+-    transition: transform 0.3s ease, background 0.3s ease;
+-}
+-.header-right .btn-icon:hover {
+-    transform: translateY(-3px) scale(1.05);
+-    background: rgba(0, 229, 255, 0.1);
+-    box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2);
+-}
+-
+-/* Hero Section Intro Animation (Runs once on load) */
+-.hero {
+-    animation: heroFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+-    opacity: 0;
+-}
+-.hero-content {
+-    animation: slideUpContent 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards;
+-    opacity: 0;
+-    transform: translateY(30px);
+-}
+-@keyframes heroFadeIn {
+-    to { opacity: 1; }
+-}
+-@keyframes slideUpContent {
+-    to { opacity: 1; transform: translateY(0); }
+-}
+-
+-/* Modal Open/Close Enhance */
+-.modal.active .modal-content {
+-    animation: modalScaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+-}
+-@keyframes modalScaleUp {
+-    0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+-    100% { transform: scale(1) translateY(0); opacity: 1; }
+-}
+-
+-/* Soft pulse for badges/chips */
+-.hbadge {
+-    animation: pulseSoft 2s infinite;
+-}
+-@keyframes pulseSoft {
+-    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+-    70% { box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+-    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+-}
+-
+-/* Cards Hover Elevate (Fallback if JS VanillaTilt is not used) */
+-.cc-in, .w-in, .mag-card, .hcard {
+-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease !important;
+-}
+-.cc-in:hover, .w-in:hover, .mag-card:hover, .hcard:hover {
+-    transform: translateY(-8px);
+-    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(0, 229, 255, 0.1);
+-    border-color: rgba(0, 229, 255, 0.3);
+-}
+-
+-/* Adjust Section Backgrounds to be transparent to show animated body gradient */
+-.section-alt {
+-    background: rgba(14, 17, 32, 0.5) !important;
+-    backdrop-filter: blur(10px);
+-    -webkit-backdrop-filter: blur(10px);
+-}
+-
+-/* Restore the hero background image but blend it so particles show through */
+-.hero-bg {
+-    display: block !important;
+-    opacity: 0.3;
+-    mix-blend-mode: overlay;
+-    pointer-events: none;
+-}
+-
+-/* --- Premium Attractive Tab Styling --- */
+-.htab, .profile-tab, .auth-tab-btn, .admin-tbtn {
+-    position: relative;
+-    overflow: hidden;
+-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+-    border-radius: 8px !important;
+-    background: transparent !important;
+-    border: 1px solid transparent !important;
+-    color: var(--muted) !important;
+-    z-index: 1;
+-}
+-
+-/* Fix text color for profile tab to match dark theme instead of light grey */
+-.profile-tab {
+-    color: #94a3b8 !important; 
+-    margin-bottom: 5px;
+-}
+-.profile-tabs {
+-    background: rgba(14, 17, 32, 0.4);
+-    padding: 6px;
+-    border-radius: 12px;
+-    border: 1px solid rgba(255,255,255,0.05);
+-}
+-
+-/* Hover States */
+-.htab:hover, .profile-tab:hover, .auth-tab-btn:hover, .admin-tbtn:hover {
+-    color: #fff !important;
+-    background: rgba(0, 229, 255, 0.05) !important;
+-    transform: translateY(-1px);
+-}
+-
+-/* Active State Glowing Magic */
+-.htab.active, .profile-tab.active, .auth-tab-btn.active, .admin-tbtn.active {
+-    background: rgba(0, 229, 255, 0.15) !important;
+-    color: #00e5ff !important;
+-    border-color: rgba(0, 229, 255, 0.4) !important;
+-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), inset 0 0 10px rgba(0, 229, 255, 0.1) !important;
+-    font-weight: 700 !important;
+-    transform: scale(1.02);
+-}
+-
+-/* Remove original active ::after to prevent double styling on profile-tab */
+-.profile-tab.active::after {
+-    display: none !important;
+-}
+-
+-/* New glowing under-line for active tabs */
+-.htab.active::before, .profile-tab.active::before, .auth-tab-btn.active::before, .admin-tbtn.active::before {
+-    content: '';
+-    position: absolute;
+-    bottom: -1px;
+-    left: 10%;
+-    width: 80%;
+-    height: 3px;
+-    background: #00e5ff;
+-    box-shadow: 0 -2px 10px #00e5ff;
+-    border-radius: 5px 5px 0 0;
+-    transition: all 0.3s ease;
+-}
+-
+-/* =========================================
+-   FULL GLASSMORPHISM UI OVERHAUL
+-   ========================================= */
+-
+-/* 1. Remove solid backgrounds from all sections */
+-.media-hub, .pub-section, footer {
+-    background: transparent !important;
+-}
+-.section-alt {
+-    background: transparent !important;
+-    backdrop-filter: none !important;
+-    -webkit-backdrop-filter: none !important;
+-}
+-
+-/* --- NEW: Visual Anchors & Animated Backgrounds for Sections --- */
+-.features {
+-    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.8), rgba(0, 229, 255, 0.02), rgba(4, 6, 13, 0.8)) !important;
+-    background-size: 400% 400% !important;
+-    animation: fluidMesh 15s ease infinite !important;
+-    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+-    position: relative;
+-    z-index: 1;
+-}
+-.about {
+-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.005)) !important;
+-    background-size: 300% 300% !important;
+-    animation: fluidMesh 12s ease infinite alternate !important;
+-    backdrop-filter: blur(20px) brightness(0.7) !important;
+-    -webkit-backdrop-filter: blur(20px) brightness(0.7) !important;
+-    border-top: 1px solid rgba(255,255,255,0.02);
+-    position: relative;
+-    z-index: 1;
+-}
+-.acc-zone {
+-    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.95), rgba(121, 40, 202, 0.05), rgba(4, 6, 13, 0.95)) !important;
+-    background-size: 400% 400% !important;
+-    animation: fluidMesh 18s ease infinite !important;
+-    position: relative;
+-    z-index: 1;
+-}
+-
+-@keyframes fluidMesh {
+-    0% { background-position: 0% 50%; }
+-    50% { background-position: 100% 50%; }
+-    100% { background-position: 0% 50%; }
+-}
+-
+-/* 2. Floating Pill Header */
+-header {
+-    position: fixed !important;
+-    top: 20px !important;
+-    left: 50% !important;
+-    transform: translateX(-50%) !important;
+-    width: 90% !important;
+-    max-width: 1180px !important;
+-    border-radius: 50px !important;
+-    background: rgba(255, 255, 255, 0.03) !important;
+-    backdrop-filter: blur(24px) saturate(200%) !important;
+-    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255,255,255,0.02) !important;
+-    padding: 0 10px !important;
+-    z-index: 1000 !important;
+-    transition: all 0.3s ease !important;
+-}
+-/* Ensure content isn't hidden behind floating header */
+-.hero {
+-    padding-top: 80px;
+-}
+-
+-/* =========================================
+-   UNIQUE CARD DESIGNS
+-   ========================================= */
+-
+-/* A. Mission/Vision: Vibrant Animated Glass Cards */
+-.feat-card, .mag-card, .w-in, .auth-box, .dash-container {
+-    background: rgba(255, 255, 255, 0.03) !important;
+-    backdrop-filter: blur(16px) saturate(180%) !important;
+-    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease !important;
+-    background-size: 200% 200% !important;
+-    animation: fluidMesh 8s ease infinite !important;
+-}
+-.feat-card:hover, .mag-card:hover, .w-in:hover {
+-    background: rgba(255, 255, 255, 0.08) !important;
+-    border-color: rgba(0, 229, 255, 0.4) !important;
+-    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0, 229, 255, 0.15) !important;
+-    transform: translateY(-8px);
+-}
+-.feat-card.rv-d1 { background-image: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(255, 255, 255, 0.01), rgba(0, 229, 255, 0.05)) !important; border-color: rgba(0, 229, 255, 0.15) !important; }
+-.feat-card.rv-d2 { background-image: linear-gradient(135deg, rgba(255, 0, 128, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 0, 128, 0.05)) !important; border-color: rgba(255, 0, 128, 0.15) !important; }
+-.feat-card.rv-d3 { background-image: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 255, 255, 0.01), rgba(255, 215, 0, 0.05)) !important; border-color: rgba(255, 215, 0, 0.15) !important; }
+-
+-
+-/* B. About/Awards: Solid Premium Dark with Animated Shimmer */
+-.about-card {
+-    background: linear-gradient(-45deg, #0a0f1c, #131b2f, #0a0f1c) !important;
+-    background-size: 300% 300% !important;
+-    animation: fluidMesh 6s ease infinite alternate !important;
+-    border: none !important;
+-    border-left: 4px solid #00e5ff !important;
+-    border-radius: 8px !important;
+-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+-}
+-.about-card.rv-d2 { border-left-color: #ff0080 !important; }
+-.about-card:hover {
+-    transform: translateX(10px);
+-    box-shadow: 0 15px 40px rgba(0,0,0,0.6), -10px 0 30px rgba(0, 229, 255, 0.1) !important;
+-}
+-
+-
+-/* C. Team/Leadership: Premium Cards */
+-.cc-in {
+-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 229, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
+-    background-size: 200% 200% !important;
+-    animation: fluidMesh 10s ease infinite !important;
+-    border-radius: 20px !important;
+-    margin: 0 auto;
+-    display: flex;
+-    flex-direction: column;
+-    justify-content: center;
+-    align-items: center;
+-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+-    transition: all 0.4s ease !important;
+-    padding: 24px !important;
+-}
+-.cc-in:hover {
+-    transform: translateY(-10px) scale(1.05);
+-    background: rgba(255, 255, 255, 0.05) !important;
+-    border-color: rgba(0, 229, 255, 0.3) !important;
+-    box-shadow: 0 20px 40px rgba(0, 229, 255, 0.1) !important;
+-}
+-
+-
+-/* D. History: Minimalist Sharp Frosted Tiles */
+-.hcard {
+-    background: rgba(255, 255, 255, 0.05) !important;
+-    backdrop-filter: blur(10px) !important;
+-    -webkit-backdrop-filter: blur(10px) !important;
+-    border-radius: 0 !important; /* Sharp corners */
+-    border: 1px solid rgba(255,255,255,0.1) !important;
+-    border-top: 3px solid #00e5ff !important;
+-    transition: all 0.3s ease !important;
+-}
+-.hcard:hover {
+-    background: rgba(255,255,255,0.1) !important;
+-    transform: translateY(-5px);
+-}
+-
+-
+-/* Float Animation on Hover */
+-.feat-card:hover .feat-icon i, .about-card:hover .about-ic i, .cc-in:hover .cc-ic i, .w-in:hover .w-ic i {
+-    animation: floatIcon 2s ease-in-out infinite;
+-}
+-@keyframes floatIcon {
+-    0% { transform: translateY(0px); }
+-    50% { transform: translateY(-5px); text-shadow: 0 5px 15px currentColor; }
+-    100% { transform: translateY(0px); }
+-}
+-
+-/* 5. Glass Modals */
+-.modal-content {
+-    background: rgba(4, 8, 20, 0.65) !important;
+-    backdrop-filter: blur(30px) saturate(200%) !important;
+-    -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
+-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+-    box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05) !important;
+-}
++html { scroll-behavior: smooth; }
+ 
+-/* 6. Gradient Typography */
+-.hero-content h1 {
+-    background: linear-gradient(to right, #00e5ff, #ff0080, #7928ca);
+-    -webkit-background-clip: text;
+-    -webkit-text-fill-color: transparent;
+-    background-size: 200% auto;
+-    animation: textGradient 5s linear infinite;
++/* Subtle, non-invasive polish only */
++.btn, .auth-btn, .admin-tbtn, .gallery-btn {
++  transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
+ }
+-@keyframes textGradient {
+-    to { background-position: 200% center; }
++.btn:hover, .auth-btn:hover, .gallery-btn:hover {
++  transform: translateY(-2px);
+ }
+ 
+-/* Ensure text contrast on glass */
+-.feat-card p, .cc-role, .hcard p {
+-    color: rgba(255, 255, 255, 0.85) !important;
++.cc-in, .w-in, .mag-card, .gallery-item, .feat-card {
++  transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+ }
+diff --git a/index.html b/index.html
+index 2cc9162..a9334b0 100644
+--- a/index.html
++++ b/index.html
+@@ -1744,10 +1744,6 @@
+ 
+         
+     </style>
+-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+-    <link rel="stylesheet" href="animations.css">
+-    <!-- Islamic Geometry Constellation Background -->
+-    <canvas id="islamicCanvas"></canvas>
+     <div class="toast-c" id="toastContainer"></div>
+     <div class="ov-dim" id="overlayDim" onclick="closeDashboards()"></div>
+     <div class="lightbox" id="lightbox">
+@@ -4491,214 +4487,5 @@ document.addEventListener('DOMContentLoaded', function () {
+ <script src="profile-tabs.js?v=18"></script>
+ <script src="drive-backend-fix.js?v=7"></script>
+ 
+-<!-- Highly Animated Scripts -->
+-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+-<script>
+-    // Hide Preloader
+-    window.addEventListener('load', () => {
+-        const preloader = document.getElementById('preloader');
+-        if(preloader) {
+-            preloader.classList.add('hide');
+-            setTimeout(() => preloader.remove(), 600);
+-        }
+-    });
+-
+-    // Auto-inject AOS to all main sections
+-    document.addEventListener('DOMContentLoaded', () => {
+-        document.querySelectorAll('section:not(.hero):not(.profile-tab-panel)').forEach(sec => {
+-            sec.setAttribute('data-aos', 'fade-up');
+-            sec.setAttribute('data-aos-duration', '800');
+-            sec.setAttribute('data-aos-once', 'true');
+-        });
+-        
+-        // Auto-inject AOS to dynamic grid containers
+-        const dynamicContainers = ['coreGrid', 'wingsGrid', 'magCardsContainer', 'historyTimeline'];
+-        dynamicContainers.forEach(id => {
+-            const el = document.getElementById(id);
+-            if(el) {
+-                el.setAttribute('data-aos', 'fade-up');
+-                el.setAttribute('data-aos-delay', '100');
+-            }
+-        });
+-
+-        // Initialize AOS
+-        if (typeof AOS !== 'undefined') {
+-            AOS.init({
+-                offset: 50,
+-                duration: 800,
+-                easing: 'ease-out-cubic',
+-                once: true
+-            });
+-        }
+-    });
+-
+-    // VanillaTilt Initialization for Cards
+-    function initTilt() {
+-        if(typeof VanillaTilt !== 'undefined') {
+-            // Find all eligible cards that haven't been tilted yet
+-            const cards = Array.from(document.querySelectorAll('.cc-in, .w-in, .mag-card, .hcard')).filter(card => !card.vanillaTilt);
+-            if (cards.length > 0) {
+-                VanillaTilt.init(cards, {
+-                    max: 12,
+-                    speed: 400,
+-                    glare: true,
+-                    "max-glare": 0.2,
+-                    scale: 1.02
+-                });
+-            }
+-        }
+-    }
+-    
+-    setTimeout(initTilt, 500);
+-    setTimeout(initTilt, 1500);
+-    const animObserver = new MutationObserver(() => {
+-        initTilt();
+-        if (typeof AOS !== 'undefined') AOS.refreshHard();
+-    });
+-    animObserver.observe(document.body, { childList: true, subtree: true });
+-
+-    // ===== ISLAMIC GEOMETRY CONSTELLATION CANVAS =====
+-    (function(){
+-        const canvas = document.getElementById('islamicCanvas');
+-        if(!canvas) return;
+-        const ctx = canvas.getContext('2d');
+-        let w, h;
+-        let particles = [];
+-        
+-        // Colors: Subtle Gold, Cyan, and Soft Pink
+-        const colors = ['#ffd700', '#00e5ff', '#ff0080'];
+-        
+-        let mouse = { x: null, y: null, radius: 150 };
+-        window.addEventListener('mousemove', (e) => {
+-            mouse.x = e.clientX;
+-            mouse.y = e.clientY;
+-        });
+-        window.addEventListener('mouseout', () => {
+-            mouse.x = null;
+-            mouse.y = null;
+-        });
+-    
+-        function resize() {
+-            w = canvas.width = window.innerWidth;
+-            h = canvas.height = window.innerHeight;
+-        }
+-        
+-        function init() {
+-            particles = [];
+-            const numParticles = Math.min(80, Math.floor(w * h / 15000));
+-            for(let i=0; i<numParticles; i++) {
+-                particles.push({
+-                    x: Math.random() * w,
+-                    y: Math.random() * h,
+-                    size: Math.random() * 15 + 8,
+-                    color: colors[Math.floor(Math.random() * colors.length)],
+-                    speedX: (Math.random() - 0.5) * 0.4,
+-                    speedY: (Math.random() - 0.5) * 0.4,
+-                    angle: Math.random() * Math.PI * 2,
+-                    spinSpeed: (Math.random() - 0.5) * 0.01,
+-                    type: Math.random() > 0.4 ? 'star' : 'hex',
+-                    opacity: Math.random() * 0.4 + 0.1
+-                });
+-            }
+-        }
+-        
+-        function drawShape(p) {
+-            ctx.save();
+-            ctx.translate(p.x, p.y);
+-            ctx.rotate(p.angle);
+-            ctx.globalAlpha = p.opacity;
+-            ctx.strokeStyle = p.color;
+-            ctx.lineWidth = 1.5;
+-            
+-            if (p.type === 'star') {
+-                // Rub el Hizb (Two squares)
+-                let r = p.size;
+-                for(let i=0; i<2; i++) {
+-                    ctx.rotate(Math.PI / 4 * i);
+-                    ctx.beginPath();
+-                    ctx.rect(-r/2, -r/2, r, r);
+-                    ctx.stroke();
+-                }
+-            } else {
+-                // Hexagon
+-                let r = p.size * 0.8;
+-                ctx.beginPath();
+-                for (let i = 0; i < 6; i++) {
+-                    ctx.lineTo(r * Math.cos(i * Math.PI / 3), r * Math.sin(i * Math.PI / 3));
+-                }
+-                ctx.closePath();
+-                ctx.stroke();
+-            }
+-            ctx.restore();
+-        }
+-        
+-        function draw() {
+-            ctx.clearRect(0, 0, w, h);
+-            
+-            // Update & Draw Particles
+-            for(let i=0; i<particles.length; i++) {
+-                let p = particles[i];
+-                p.x += p.speedX;
+-                p.y += p.speedY;
+-                p.angle += p.spinSpeed;
+-                
+-                // Bounce off edges smoothly
+-                if(p.x < -50) p.x = w + 50;
+-                if(p.x > w + 50) p.x = -50;
+-                if(p.y < -50) p.y = h + 50;
+-                if(p.y > h + 50) p.y = -50;
+-                
+-                drawShape(p);
+-                
+-                // Constellation connecting lines
+-                for(let j=i+1; j<particles.length; j++) {
+-                    let p2 = particles[j];
+-                    let dx = p.x - p2.x;
+-                    let dy = p.y - p2.y;
+-                    let dist = Math.sqrt(dx*dx + dy*dy);
+-                    
+-                    if(dist < 180) {
+-                        ctx.beginPath();
+-                        ctx.strokeStyle = p.color;
+-                        ctx.globalAlpha = (1 - dist/180) * 0.15; // Very subtle lines
+-                        ctx.lineWidth = 0.5;
+-                        ctx.moveTo(p.x, p.y);
+-                        ctx.lineTo(p2.x, p2.y);
+-                        ctx.stroke();
+-                    }
+-                }
+-                
+-                // Mouse Interaction
+-                if (mouse.x != null) {
+-                    let dx = mouse.x - p.x;
+-                    let dy = mouse.y - p.y;
+-                    let dist = Math.sqrt(dx*dx + dy*dy);
+-                    if (dist < mouse.radius) {
+-                        ctx.beginPath();
+-                        ctx.strokeStyle = p.color;
+-                        ctx.globalAlpha = (1 - dist/mouse.radius) * 0.4;
+-                        ctx.lineWidth = 1;
+-                        ctx.moveTo(p.x, p.y);
+-                        ctx.lineTo(mouse.x, mouse.y);
+-                        ctx.stroke();
+-                        
+-                        // Slightly repel from mouse for interactivity
+-                        p.x -= dx * 0.005;
+-                        p.y -= dy * 0.005;
+-                    }
+-                }
+-            }
+-            
+-            requestAnimationFrame(draw);
+-        }
+-        
+-        window.addEventListener('resize', () => { resize(); init(); });
+-        resize();
+-        init();
+-        draw();
+-    })();
+-</script>
+-
+ </body>
+ </html>
