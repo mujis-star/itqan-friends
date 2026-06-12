@@ -26,34 +26,41 @@ body {
 }
 
 /* =========================================
-   PREMIUM FLUID MESH BACKGROUND
+   PREMIUM ANIMATED GRID BACKGROUND
    ========================================= */
-.bg-mesh {
+body {
+    background-color: #04060d !important;
+}
+.premium-grid-bg {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
+    top: -50vh; left: 0;
+    width: 100vw; height: 200vh;
     z-index: -1;
-    background-color: #040814;
-    overflow: hidden;
+    background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 30s linear infinite;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
     pointer-events: none;
 }
-.bg-mesh .blob {
-    position: absolute;
-    filter: blur(80px);
-    opacity: 0.6;
-    animation: float-blob 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 50%;
+@keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50px); }
 }
-.bg-mesh .color-1 { width: 60vw; height: 60vh; background: #00e5ff; top: -10%; left: -10%; animation-duration: 20s; }
-.bg-mesh .color-2 { width: 50vw; height: 50vh; background: #ff0080; bottom: -10%; right: -10%; animation-duration: 25s; }
-.bg-mesh .color-3 { width: 55vw; height: 55vh; background: #7928ca; top: 30%; left: 40%; animation-duration: 22s; mix-blend-mode: screen; }
-.bg-mesh .color-4 { width: 40vw; height: 40vh; background: #ffbc00; bottom: 20%; left: 10%; animation-duration: 18s; mix-blend-mode: screen; }
-
-@keyframes float-blob {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(10vw, 15vh) scale(1.2) rotate(90deg); }
-    66% { transform: translate(-10vw, 5vh) scale(0.8) rotate(180deg); }
-    100% { transform: translate(5vw, -10vh) scale(1.1) rotate(270deg); }
+.premium-grid-bg::after {
+    content: '';
+    position: absolute;
+    top: 20%; left: 30%;
+    width: 40vw; height: 40vh;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.04) 0%, transparent 60%);
+    border-radius: 50%;
+    animation: ambientPulse 15s ease-in-out infinite alternate;
+}
+@keyframes ambientPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.2); opacity: 1; }
 }
 
 @keyframes gradientBG {
@@ -263,7 +270,7 @@ body {
 
 /* --- NEW: Visual Anchors & Animated Backgrounds for Sections --- */
 .features {
-    background: linear-gradient(-45deg, rgba(4, 8, 20, 0.7), rgba(0, 229, 255, 0.1), rgba(255, 0, 128, 0.1), rgba(4, 8, 20, 0.7)) !important;
+    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.8), rgba(0, 229, 255, 0.02), rgba(4, 6, 13, 0.8)) !important;
     background-size: 400% 400% !important;
     animation: fluidMesh 15s ease infinite !important;
     box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
@@ -271,17 +278,17 @@ body {
     z-index: 1;
 }
 .about {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.005)) !important;
     background-size: 300% 300% !important;
     animation: fluidMesh 12s ease infinite alternate !important;
-    backdrop-filter: blur(40px) brightness(0.6) !important;
-    -webkit-backdrop-filter: blur(40px) brightness(0.6) !important;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px) brightness(0.7) !important;
+    -webkit-backdrop-filter: blur(20px) brightness(0.7) !important;
+    border-top: 1px solid rgba(255,255,255,0.02);
     position: relative;
     z-index: 1;
 }
 .acc-zone {
-    background: linear-gradient(-45deg, rgba(4, 8, 20, 0.9), rgba(121, 40, 202, 0.15), rgba(4, 8, 20, 0.9)) !important;
+    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.95), rgba(121, 40, 202, 0.05), rgba(4, 6, 13, 0.95)) !important;
     background-size: 400% 400% !important;
     animation: fluidMesh 18s ease infinite !important;
     position: relative;
