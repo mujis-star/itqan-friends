@@ -246,25 +246,25 @@ body {
 
 /* --- NEW: Visual Anchors & Animated Backgrounds for Sections --- */
 .features {
-    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.8), rgba(0, 229, 255, 0.02), rgba(4, 6, 13, 0.8)) !important;
+    background: linear-gradient(-45deg, var(--bg), var(--bg3), var(--bg)) !important;
     background-size: 400% 400% !important;
     animation: fluidMesh 15s ease infinite !important;
-    box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+    box-shadow: none;
     position: relative;
     z-index: 1;
 }
 .about {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.005)) !important;
+    background: linear-gradient(135deg, var(--bg2), var(--bg), var(--bg2)) !important;
     background-size: 300% 300% !important;
     animation: fluidMesh 12s ease infinite alternate !important;
-    backdrop-filter: blur(20px) brightness(0.7) !important;
-    -webkit-backdrop-filter: blur(20px) brightness(0.7) !important;
-    border-top: 1px solid rgba(255,255,255,0.02);
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid var(--border2);
     position: relative;
     z-index: 1;
 }
 .acc-zone {
-    background: linear-gradient(-45deg, rgba(4, 6, 13, 0.95), rgba(121, 40, 202, 0.05), rgba(4, 6, 13, 0.95)) !important;
+    background: linear-gradient(-45deg, var(--bg), var(--bg3), var(--bg)) !important;
     background-size: 400% 400% !important;
     animation: fluidMesh 18s ease infinite !important;
     position: relative;
@@ -328,7 +328,7 @@ header {
 
 /* B. About/Awards: Solid Premium Dark with Animated Shimmer */
 .about-card {
-    background: linear-gradient(-45deg, #0a0f1c, #131b2f, #0a0f1c) !important;
+    background: linear-gradient(-45deg, var(--card), var(--bg3), var(--card)) !important;
     background-size: 300% 300% !important;
     animation: fluidMesh 6s ease infinite alternate !important;
     border: none !important;
