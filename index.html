@@ -4652,16 +4652,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Hide Preloader
-    window.addEventListener('load', () => {
+</script>
+<script>
+    // Hide Preloader robustly (immune to other JS errors blocking execution)
+    setTimeout(() => {
         const preloader = document.getElementById('preloader');
         if(preloader) {
-            setTimeout(() => {
-                preloader.classList.add('hide');
-                setTimeout(() => preloader.remove(), 800);
-            }, 1800); // Artificial delay to showcase the premium logo animation
+            preloader.classList.add('hide');
+            setTimeout(() => preloader.remove(), 800);
         }
-    });
+    }, 1800);
+</script>
+<script>
 
     // Auto-inject AOS to all main sections
     document.addEventListener('DOMContentLoaded', () => {
