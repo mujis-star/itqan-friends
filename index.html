@@ -1817,20 +1817,20 @@
         }
         #preloader.hide { opacity: 0; visibility: hidden; }
         .preloader-logo {
-            font-size: 2rem; font-weight: 800; font-family: 'Inter', sans-serif;
-            color: var(--cyan);
-            animation: pulseGlow 1.5s infinite alternate;
+            height: 100px;
+            width: auto;
+            animation: pulseGlow 1.5s infinite alternate ease-in-out;
         }
         @keyframes pulseGlow {
-            0% { text-shadow: 0 0 10px rgba(184,41,234,0.2); transform: scale(0.98); }
-            100% { text-shadow: 0 0 30px rgba(184,41,234,0.8); transform: scale(1.02); }
+            0% { filter: drop-shadow(0 0 10px rgba(184,41,234,0.3)); transform: scale(0.98); }
+            100% { filter: drop-shadow(0 0 40px rgba(184,41,234,1)); transform: scale(1.08); }
         }
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="animations.css?v=22">
     <!-- Sleek Preloader -->
     <div id="preloader">
-        <div class="preloader-logo">ITQAN</div>
+        <img src="logo.png" alt="ITQAN Logo" class="preloader-logo">
     </div>
     <!-- Premium Aurora Background handles the visuals now -->
     <div class="global-aurora"></div>
