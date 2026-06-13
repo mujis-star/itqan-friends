@@ -1817,7 +1817,7 @@
         }
         #preloader.hide { opacity: 0; visibility: hidden; }
         .preloader-logo {
-            height: 100px;
+            height: 180px;
             width: auto;
             animation: pulseGlow 1.5s infinite alternate ease-in-out;
         }
@@ -4656,8 +4656,10 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('load', () => {
         const preloader = document.getElementById('preloader');
         if(preloader) {
-            preloader.classList.add('hide');
-            setTimeout(() => preloader.remove(), 600);
+            setTimeout(() => {
+                preloader.classList.add('hide');
+                setTimeout(() => preloader.remove(), 800);
+            }, 1800); // Artificial delay to showcase the premium logo animation
         }
     });
 
