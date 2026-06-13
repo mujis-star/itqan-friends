@@ -2506,12 +2506,15 @@
             <!-- Core Committee Management Tab -->
             <div class="admin-tc" id="adminTabCore">
                 <div class="add-form">
-                    <h4><i class="fas fa-plus-circle" class="gradient-text"></i> Add Core Member</h4>
+                    <h4 id="coreFormTitle"><i class="fas fa-user-tie" class="gradient-text"></i> Add Core Member</h4>
                     <div class="fg"><label>Full Name</label><input type="text" id="coreName" class="fi" placeholder="e.g., Sayed Hudaif"></div>
                     <div class="fg"><label>Role / Position</label><input type="text" id="coreRole" class="fi" placeholder="e.g., President"></div>
                     <div class="fg"><label>Description</label><textarea id="coreDesc" class="fi" rows="2" placeholder="Brief description..."></textarea></div>
                     <div class="fg"><label>Icon Class</label><input type="text" id="coreIcon" class="fi" placeholder="fa-crown" value="fa-user"></div>
-                    <button onclick="addCoreMember()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Add Member</button>
+                    <div style="display:flex;gap:10px;">
+                        <button id="addCoreBtn" onclick="addCoreMember()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Add Member</button>
+                        <button id="cancelCoreBtn" onclick="cancelCoreEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
                 </div>
                 <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Core Members</h4>
                 <div id="adminCoreList" class="adm-il"></div>
@@ -2520,13 +2523,16 @@
             <!-- Wings Management Tab -->
             <div class="admin-tc" id="adminTabWings">
                 <div class="add-form">
-                    <h4><i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Sub-Wing</h4>
+                    <h4 id="wingFormTitle"><i class="fas fa-sitemap" style="color:var(--rose)"></i> Add Sub-Wing</h4>
                     <div class="fg"><label>Wing Name</label><input type="text" id="wingName" class="fi" placeholder="e.g., Urdu Wing"></div>
                     <div class="fg"><label>Chairman</label><input type="text" id="wingChairman" class="fi" placeholder="Full name"></div>
                     <div class="fg"><label>Convener</label><input type="text" id="wingConvener" class="fi" placeholder="Full name"></div>
                     <div class="fg"><label>Description</label><textarea id="wingDesc" class="fi" rows="2" placeholder="Brief description..."></textarea></div>
                     <div class="fg"><label>Icon Class</label><input type="text" id="wingIcon" class="fi" placeholder="fa-users" value="fa-users"></div>
-                    <button onclick="addWing()" class="btn btn-sm btn-pink"><i class="fas fa-save"></i> Add Wing</button>
+                    <div style="display:flex;gap:10px;">
+                        <button id="addWingBtn" onclick="addWing()" class="btn btn-sm btn-pink"><i class="fas fa-save"></i> Add Wing</button>
+                        <button id="cancelWingBtn" onclick="cancelWingEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
                 </div>
                 <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Sub-Wings</h4>
                 <div id="adminWingsList" class="adm-il"></div>
@@ -3145,20 +3151,88 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
     }
 
     // ===== CORE & WINGS CRUD =====
+    let editingCoreId = null;
+    let editingWingId = null;
+
     async function loadCoreMembers() {
         try {
             const snap = await db.collection('coreMembers').orderBy('order', 'asc').get();
-            if (snap.empty) { renderCoreGridFromData(defaultCoreMembers); return; }
-            renderCoreGridFromData(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        } catch(e) { console.error(e); renderCoreGridFromData(defaultCoreMembers); }
+            if (snap.empty) { 
+                renderCoreGridFromData(defaultCoreMembers); 
+                renderAdminCoreList([]);
+                return; 
+            }
+            const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderCoreGridFromData(docs);
+            renderAdminCoreList(docs);
+        } catch(e) { console.error(e); renderCoreGridFromData(defaultCoreMembers); renderAdminCoreList([]); }
     }
 
     async function loadWings() {
         try {
             const snap = await db.collection('wings').orderBy('order', 'asc').get();
-            if (snap.empty) { renderWingsGridFromData(defaultWings); return; }
-            renderWingsGridFromData(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        } catch(e) { console.error(e); renderWingsGridFromData(defaultWings); }
+            if (snap.empty) { 
+                renderWingsGridFromData(defaultWings); 
+                renderAdminWingsList([]);
+                return; 
+            }
+            const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderWingsGridFromData(docs);
+            renderAdminWingsList(docs);
+        } catch(e) { console.error(e); renderWingsGridFromData(defaultWings); renderAdminWingsList([]); }
+    }
+
+    function renderAdminCoreList(docs) {
+        const el = document.getElementById('adminCoreList');
+        if(!el) return;
+        if(docs.length === 0) { el.innerHTML = '<p style="color:var(--muted);font-size:0.9rem">No custom core members added yet.</p>'; return; }
+        el.innerHTML = docs.map(d => `
+            <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.role})</span></div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditCore('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.role.replace(/`/g, "")}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-user'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteCoreMember('${d.id}')">Delete</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderAdminWingsList(docs) {
+        const el = document.getElementById('adminWingsList');
+        if(!el) return;
+        if(docs.length === 0) { el.innerHTML = '<p style="color:var(--muted);font-size:0.9rem">No custom wings added yet.</p>'; return; }
+        el.innerHTML = docs.map(d => `
+            <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.chairman})</span></div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditWing('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.chairman ? d.chairman.replace(/`/g, "") : ''}\`, \`${d.convener ? d.convener.replace(/`/g, "") : ''}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-users'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteWing('${d.id}')">Delete</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function startEditCore(id, name, role, desc, icon) {
+        editingCoreId = id;
+        document.getElementById('coreName').value = name;
+        document.getElementById('coreRole').value = role;
+        document.getElementById('coreDesc').value = desc;
+        document.getElementById('coreIcon').value = icon;
+        document.getElementById('addCoreBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+        document.getElementById('cancelCoreBtn').style.display = 'inline-block';
+        document.getElementById('coreFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Core Member';
+        window.scrollTo({ top: document.getElementById('coreFormTitle').offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function cancelCoreEdit() {
+        editingCoreId = null;
+        document.getElementById('coreName').value = '';
+        document.getElementById('coreRole').value = '';
+        document.getElementById('coreDesc').value = '';
+        document.getElementById('coreIcon').value = 'fa-user';
+        document.getElementById('addCoreBtn').innerHTML = '<i class="fas fa-save"></i> Add Member';
+        document.getElementById('cancelCoreBtn').style.display = 'none';
+        document.getElementById('coreFormTitle').innerHTML = '<i class="fas fa-user-tie"></i> Add Core Member';
     }
 
     async function addCoreMember() {
@@ -3167,13 +3241,19 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         const desc = document.getElementById('coreDesc').value.trim();
         const icon = document.getElementById('coreIcon').value.trim() || 'fa-user';
         if (!name || !role) { showToast('Name and role required', 'error'); return; }
-        await db.collection('coreMembers').add({ name, role, desc, icon, order: Date.now() });
-        showToast('Core member added!', 'success');
-        document.getElementById('coreName').value = '';
-        document.getElementById('coreRole').value = '';
-        document.getElementById('coreDesc').value = '';
-        document.getElementById('coreIcon').value = 'fa-user';
-        loadCoreMembers();
+        
+        try {
+            if (editingCoreId) {
+                await db.collection('coreMembers').doc(editingCoreId).update({ name, role, desc, icon });
+                showToast('Core member updated!', 'success');
+                cancelCoreEdit();
+            } else {
+                await db.collection('coreMembers').add({ name, role, desc, icon, order: Date.now() });
+                showToast('Core member added!', 'success');
+                cancelCoreEdit(); // resets form
+            }
+            loadCoreMembers();
+        } catch (error) { showToast(error.message, 'error'); }
     }
 
     async function deleteCoreMember(id) {
@@ -3183,6 +3263,31 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         loadCoreMembers();
     }
 
+    function startEditWing(id, name, chairman, convener, desc, icon) {
+        editingWingId = id;
+        document.getElementById('wingName').value = name;
+        document.getElementById('wingChairman').value = chairman;
+        document.getElementById('wingConvener').value = convener;
+        document.getElementById('wingDesc').value = desc;
+        document.getElementById('wingIcon').value = icon;
+        document.getElementById('addWingBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+        document.getElementById('cancelWingBtn').style.display = 'inline-block';
+        document.getElementById('wingFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Sub-Wing';
+        window.scrollTo({ top: document.getElementById('wingFormTitle').offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function cancelWingEdit() {
+        editingWingId = null;
+        document.getElementById('wingName').value = '';
+        document.getElementById('wingChairman').value = '';
+        document.getElementById('wingConvener').value = '';
+        document.getElementById('wingDesc').value = '';
+        document.getElementById('wingIcon').value = 'fa-users';
+        document.getElementById('addWingBtn').innerHTML = '<i class="fas fa-save"></i> Add Wing';
+        document.getElementById('cancelWingBtn').style.display = 'none';
+        document.getElementById('wingFormTitle').innerHTML = '<i class="fas fa-sitemap"></i> Add Sub-Wing';
+    }
+
     async function addWing() {
         const name = document.getElementById('wingName').value.trim();
         const chairman = document.getElementById('wingChairman').value.trim();
@@ -3190,14 +3295,19 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         const desc = document.getElementById('wingDesc').value.trim();
         const icon = document.getElementById('wingIcon').value.trim() || 'fa-users';
         if (!name) { showToast('Wing name required', 'error'); return; }
-        await db.collection('wings').add({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon, order: Date.now() });
-        showToast('Wing added!', 'success');
-        document.getElementById('wingName').value = '';
-        document.getElementById('wingChairman').value = '';
-        document.getElementById('wingConvener').value = '';
-        document.getElementById('wingDesc').value = '';
-        document.getElementById('wingIcon').value = 'fa-users';
-        loadWings();
+        
+        try {
+            if (editingWingId) {
+                await db.collection('wings').doc(editingWingId).update({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon });
+                showToast('Wing updated!', 'success');
+                cancelWingEdit();
+            } else {
+                await db.collection('wings').add({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon, order: Date.now() });
+                showToast('Wing added!', 'success');
+                cancelWingEdit(); // resets form
+            }
+            loadWings();
+        } catch (error) { showToast(error.message, 'error'); }
     }
 
     async function deleteWing(id) {
