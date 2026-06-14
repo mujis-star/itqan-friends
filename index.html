@@ -3204,7 +3204,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
             <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
                 <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.role})</span></div>
                 <div style="display:flex;gap:10px;">
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditCore('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.role.replace(/`/g, "")}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-user'}\`, \`${d.color || '#ff3366'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(0,229,255,0.2);color:var(--cyan);padding:4px 10px;font-size:0.8rem" onclick="startEditCore('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.role.replace(/`/g, "")}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-user'}\`, \`${d.color || '#ff3366'}\`)">Edit</button>
                     <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteCoreMember('${d.id}')">Delete</button>
                 </div>
             </div>
@@ -3219,7 +3219,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
             <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
                 <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.chairman}${d.convener ? ' & ' + d.convener : ''})</span></div>
                 <div style="display:flex;gap:10px;">
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditWing('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.chairman ? d.chairman.replace(/`/g, "") : ''}\`, \`${d.convener ? d.convener.replace(/`/g, "") : ''}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-users'}\`, \`${d.color || '#00e5ff'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(0,229,255,0.2);color:var(--cyan);padding:4px 10px;font-size:0.8rem" onclick="startEditWing('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.chairman ? d.chairman.replace(/`/g, "") : ''}\`, \`${d.convener ? d.convener.replace(/`/g, "") : ''}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-users'}\`, \`${d.color || '#00e5ff'}\`)">Edit</button>
                     <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteWing('${d.id}')">Delete</button>
                 </div>
             </div>
@@ -4579,7 +4579,7 @@ async function loadAdminMags() {
                     </div>
                 </div>
                 <div style="display:flex;gap:10px;">
-                    ${mag._source === 'firestore' ? `<button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditMagazine('${mag.id}')"><i class="fas fa-edit"></i> Edit</button>` : ''}
+                    ${mag._source === 'firestore' ? `<button class="btn btn-sm" style="background:rgba(0,229,255,0.2);color:var(--cyan);padding:4px 10px;font-size:0.8rem" onclick="startEditMagazine('${mag.id}')"><i class="fas fa-edit"></i> Edit</button>` : ''}
                     <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
                         <i class="fas fa-trash"></i> Delete
                     </button>
