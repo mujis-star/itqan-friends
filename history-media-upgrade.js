@@ -190,7 +190,7 @@
     if (document.getElementById("itqanMediaModal")) return;
     document.body.insertAdjacentHTML(
       "beforeend",
-      `<div class="itqan-media-modal" id="itqanMediaModal">
+      `<div class="itqan-media-modal" id="itqanMediaModal" data-lenis-prevent>
         <div class="itqan-media-shell">
           <div class="itqan-media-head">
             <h3 id="itqanMediaTitle">Media Hub</h3>
