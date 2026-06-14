@@ -39,8 +39,13 @@
     try {
       const snap = await db.collection("magazines").orderBy("createdAt", "desc").get();
       const items = [];
+      window.legacyDeletedIds = new Set();
       snap.forEach((doc) => {
         const item = doc.data() || {};
+        if (item.isBlocklistEntry) {
+            window.legacyDeletedIds.add(item.targetId);
+            return;
+        }
         items.push({
           id: doc.id,
           title: item.title || "Untitled",
@@ -61,12 +66,6 @@
   window.getPersistentMagazineItems = async function getPersistentMagazineItems() {
     let backendItems = [];
     let firebaseItems = [];
-    let deletedLegacyIds = new Set();
-    
-    try {
-        const deletedSnap = await db.collection('deleted_legacy_mags').get();
-        deletedSnap.forEach(doc => deletedLegacyIds.add(doc.id));
-    } catch(e) { console.warn('Could not load deleted legacy mags blocklist', e); }
 
     try {
       backendItems = await getBackendMagazines();
@@ -78,7 +77,7 @@
 
     const seen = new Set();
     return [...backendItems, ...firebaseItems].filter((item) => {
-      if (deletedLegacyIds.has(item.id)) return false;
+      if (window.legacyDeletedIds && window.legacyDeletedIds.has(item.id)) return false;
       const key = `${item.title || ""}|${item.coverUrl || ""}|${item.pdfUrl || ""}`;
       if (!item.title || seen.has(key)) return false;
       seen.add(key);
@@ -257,8 +256,12 @@
         await fetch(`${BACKEND}/delete-magazine/${id}`, { method: "DELETE" });
       } catch(e) { console.warn('Backend delete ignored:', e); }
 
-      // Permanently block this legacy ID using Firestore
-      await db.collection('deleted_legacy_mags').doc(id).set({ deletedAt: Date.now() });
+      // Permanently block this legacy ID using a hidden document in the allowed magazines collection
+      await db.collection('magazines').doc('BLOCKLIST_' + id).set({ 
+          isBlocklistEntry: true, 
+          targetId: id, 
+          createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+      });
 
       toast("Publication deleted", "success");
 
