@@ -3162,11 +3162,13 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
 
     async function loadCoreMembers() {
         try {
-            const snap = await db.collection('coreMembers').orderBy('order', 'asc').get();
+            let snap = await db.collection('coreMembers').orderBy('order', 'asc').get();
             if (snap.empty) { 
-                renderCoreGridFromData(defaultCoreMembers); 
-                renderAdminCoreList([]);
-                return; 
+                let count = 0;
+                for (const member of defaultCoreMembers) {
+                    await db.collection('coreMembers').add({ ...member, order: count++ });
+                }
+                snap = await db.collection('coreMembers').orderBy('order', 'asc').get();
             }
             const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             renderCoreGridFromData(docs);
@@ -3176,11 +3178,13 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
 
     async function loadWings() {
         try {
-            const snap = await db.collection('wings').orderBy('order', 'asc').get();
+            let snap = await db.collection('wings').orderBy('order', 'asc').get();
             if (snap.empty) { 
-                renderWingsGridFromData(defaultWings); 
-                renderAdminWingsList([]);
-                return; 
+                let count = 0;
+                for (const wing of defaultWings) {
+                    await db.collection('wings').add({ ...wing, order: count++ });
+                }
+                snap = await db.collection('wings').orderBy('order', 'asc').get();
             }
             const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             renderWingsGridFromData(docs);
