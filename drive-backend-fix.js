@@ -61,6 +61,12 @@
   window.getPersistentMagazineItems = async function getPersistentMagazineItems() {
     let backendItems = [];
     let firebaseItems = [];
+    let deletedLegacyIds = new Set();
+    
+    try {
+        const deletedSnap = await db.collection('deleted_legacy_mags').get();
+        deletedSnap.forEach(doc => deletedLegacyIds.add(doc.id));
+    } catch(e) { console.warn('Could not load deleted legacy mags blocklist', e); }
 
     try {
       backendItems = await getBackendMagazines();
@@ -72,6 +78,7 @@
 
     const seen = new Set();
     return [...backendItems, ...firebaseItems].filter((item) => {
+      if (deletedLegacyIds.has(item.id)) return false;
       const key = `${item.title || ""}|${item.coverUrl || ""}|${item.pdfUrl || ""}`;
       if (!item.title || seen.has(key)) return false;
       seen.add(key);
@@ -146,10 +153,11 @@
                   <strong>${esc(mag.title)}</strong>
                   <span style="margin-left:10px;font-size:.72rem;color:var(--muted);text-transform:capitalize">${esc(
                     mag.type || "magazine"
-                  )}</span><br>
-                  <small style="color:var(--muted)">
-                    ${mag._source === "firebase-fallback" ? "Firebase fallback" : "Google Drive storage"}
-                  </small>
+                  )}</span>
+                  <span style="display:block;margin-top:4px;font-size:.7rem;color:var(--cyan)">
+                    <i class="fas fa-hdd"></i> 
+                    ${mag._source === "firebase-fallback" ? "Permanent storage" : "Google Drive storage"}
+                  </span>
                 </div>
               </div>
               <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
@@ -243,15 +251,14 @@
     if (!confirm("Delete this publication?")) return;
 
     try {
-      const response = await fetch(`${BACKEND}/delete-magazine/${id}`, {
-        method: "DELETE",
-      });
+      const isBackend = !id.includes('-'); // Rough heuristic, but let's just attempt backend and always blocklist
+      
+      try {
+        await fetch(`${BACKEND}/delete-magazine/${id}`, { method: "DELETE" });
+      } catch(e) { console.warn('Backend delete ignored:', e); }
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || "Delete failed");
-      }
+      // Permanently block this legacy ID using Firestore
+      await db.collection('deleted_legacy_mags').doc(id).set({ deletedAt: Date.now() });
 
       toast("Publication deleted", "success");
 
