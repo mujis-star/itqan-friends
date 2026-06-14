@@ -2820,7 +2820,10 @@
         // Keep old backend photos visible if the Render backend is currently alive.
         // New uploads use Firestore so they do not vanish after backend restarts.
         try {
-            const response = await fetch(`${API_BASE_URL}/gallery`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            const response = await fetch(`${API_BASE_URL}/gallery`, { signal: controller.signal });
+            clearTimeout(timeoutId);
             if (response.ok) {
                 const data = await response.json();
                 backendItems = (data || []).map(item => ({ ...item, _source: 'backend' }));
@@ -4321,7 +4324,10 @@ async function getPersistentMagazineItems() {
     // Keep old backend publications visible while the Render backend still has them.
     // New publications are saved to Firestore so they do not disappear after Render restarts.
     try {
-        const response = await fetch(`${API_BASE_URL}/magazines`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const response = await fetch(`${API_BASE_URL}/magazines`, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (response.ok) {
             const data = await response.json();
             backendItems = (data || []).map(item => ({ ...item, _source: 'backend' }));
@@ -4429,7 +4435,7 @@ async function deleteMagazineItem(id) {
         if (item?._source === 'backend') {
             try { await fetch(`${API_BASE_URL}/delete-magazine/${id}`, { method: 'DELETE' }); } catch(e) { console.warn('Backend delete error ignored:', e); }
             // Permanently block this legacy ID using a hidden document in the allowed magazines collection
-            await db.collection('magazines').doc('BLOCKLIST_' + id).set({ 
+            await db.collection('magazines').add({ 
                 isBlocklistEntry: true, 
                 targetId: id, 
                 createdAt: firebase.firestore.FieldValue.serverTimestamp() 
