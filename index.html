@@ -3436,8 +3436,8 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
     function showProfile(name, role, desc, photo) {
         renderProfileData({ name, roleLabel: role, position: role, description: desc, photoUrl: photo });
         switchProfileTab('overview');
+        document.getElementById('profileModal').classList.add('active');
     }
-    function openModal() { document.getElementById('profileModal').classList.add('active'); }
     function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
 
     // ===== MOBILE MENU =====
