@@ -2514,6 +2514,7 @@
                     <div class="fg"><label>Role / Position</label><input type="text" id="coreRole" class="fi" placeholder="e.g., President"></div>
                     <div class="fg"><label>Description</label><textarea id="coreDesc" class="fi" rows="2" placeholder="Brief description..."></textarea></div>
                     <div class="fg"><label>Icon Class</label><input type="text" id="coreIcon" class="fi" placeholder="fa-crown" value="fa-user"></div>
+                    <div class="fg"><label>Theme Color (Hex)</label><input type="color" id="coreColor" class="fi" value="#ff3366" style="height:45px;padding:5px;cursor:pointer;"></div>
                     <div style="display:flex;gap:10px;">
                         <button id="addCoreBtn" onclick="addCoreMember()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Add Member</button>
                         <button id="cancelCoreBtn" onclick="cancelCoreEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
@@ -2532,6 +2533,7 @@
                     <div class="fg"><label>Convener</label><input type="text" id="wingConvener" class="fi" placeholder="Full name"></div>
                     <div class="fg"><label>Description</label><textarea id="wingDesc" class="fi" rows="2" placeholder="Brief description..."></textarea></div>
                     <div class="fg"><label>Icon Class</label><input type="text" id="wingIcon" class="fi" placeholder="fa-users" value="fa-users"></div>
+                    <div class="fg"><label>Theme Color (Hex)</label><input type="color" id="wingColor" class="fi" value="#00e5ff" style="height:45px;padding:5px;cursor:pointer;"></div>
                     <div style="display:flex;gap:10px;">
                         <button id="addWingBtn" onclick="addWing()" class="btn btn-sm btn-pink"><i class="fas fa-save"></i> Add Wing</button>
                         <button id="cancelWingBtn" onclick="cancelWingEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
@@ -2867,12 +2869,13 @@
         }
         el.innerHTML = data.map(m => {
             const photo = getProfileImage(m.name);
-            const iconHtml = photo ? `<img src="${photo}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : `<i class="fas ${m.icon || 'fa-user'}"></i>`;
+            const tc = m.color || '#ff3366';
+            const iconHtml = photo ? `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : `<i class="fas ${m.icon || 'fa-user'}" style="color:${tc}"></i>`;
             return `
-            <div class="cc">
+            <div class="cc" style="border: 1px solid ${tc}30; box-shadow: 0 4px 25px ${tc}15; border-top: 3px solid ${tc};">
                 <div class="cc-in">
-                    <div class="cc-ic" style="${photo ? 'padding:3px;box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius:50%;' : ''}">${iconHtml}</div>
-                    <div class="cc-role">${m.role}</div>
+                    <div class="cc-ic" style="border-color:${tc}40;${photo ? 'padding:3px;box-shadow: 0 8px 25px rgba(0,0,0,0.5); border-radius:50%;' : ''}">${iconHtml}</div>
+                    <div class="cc-role" style="color:${tc}">${m.role}</div>
                     <div class="cc-name">${m.name}</div>
                     <p class="cc-desc">${m.desc || ''}</p>
                     <div class="cc-btns">
@@ -2894,11 +2897,12 @@
         el.innerHTML = data.map(w => {
             const chPhoto = getProfileImage(w.chairman);
             const coPhoto = getProfileImage(w.convener);
+            const tc = w.color || '#00e5ff';
             return `
-            <div class="wc">
+            <div class="wc" style="border: 1px solid ${tc}30; box-shadow: 0 4px 25px ${tc}15; border-top: 3px solid ${tc};">
                 <div class="w-in">
-                    <div class="w-ic"><i class="fas ${w.icon || 'fa-users'}"></i></div>
-                    <div class="w-lab">WING</div>
+                    <div class="w-ic" style="color:${tc};border-color:${tc}40;"><i class="fas ${w.icon || 'fa-users'}"></i></div>
+                    <div class="w-lab" style="color:${tc}">WING</div>
                     <h3 class="w-ttl">${w.name}</h3>
                     <p class="w-info">${w.desc || ''}</p>
                     <div class="w-leads">
@@ -3200,7 +3204,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
             <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
                 <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.role})</span></div>
                 <div style="display:flex;gap:10px;">
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditCore('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.role.replace(/`/g, "")}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-user'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditCore('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.role.replace(/`/g, "")}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-user'}\`, \`${d.color || '#ff3366'}\`)">Edit</button>
                     <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteCoreMember('${d.id}')">Delete</button>
                 </div>
             </div>
@@ -3213,21 +3217,22 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         if(docs.length === 0) { el.innerHTML = '<p style="color:var(--muted);font-size:0.9rem">No custom wings added yet.</p>'; return; }
         el.innerHTML = docs.map(d => `
             <div style="background:var(--bg2);padding:10px 15px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-                <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.chairman})</span></div>
+                <div><strong style="color:var(--text)">${d.name}</strong> <span style="color:var(--muted);font-size:0.8rem">(${d.chairman}${d.convener ? ' & ' + d.convener : ''})</span></div>
                 <div style="display:flex;gap:10px;">
-                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditWing('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.chairman ? d.chairman.replace(/`/g, "") : ''}\`, \`${d.convener ? d.convener.replace(/`/g, "") : ''}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-users'}\`)">Edit</button>
+                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditWing('${d.id}', \`${d.name.replace(/`/g, "")}\`, \`${d.chairman ? d.chairman.replace(/`/g, "") : ''}\`, \`${d.convener ? d.convener.replace(/`/g, "") : ''}\`, \`${d.desc ? d.desc.replace(/`/g, "") : ''}\`, \`${d.icon || 'fa-users'}\`, \`${d.color || '#00e5ff'}\`)">Edit</button>
                     <button class="btn btn-sm" style="background:rgba(255,51,102,0.2);color:var(--rose);padding:4px 10px;font-size:0.8rem" onclick="deleteWing('${d.id}')">Delete</button>
                 </div>
             </div>
         `).join('');
     }
 
-    function startEditCore(id, name, role, desc, icon) {
+    function startEditCore(id, name, role, desc, icon, color) {
         editingCoreId = id;
         document.getElementById('coreName').value = name;
         document.getElementById('coreRole').value = role;
         document.getElementById('coreDesc').value = desc;
         document.getElementById('coreIcon').value = icon;
+        document.getElementById('coreColor').value = color || '#ff3366';
         document.getElementById('addCoreBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
         document.getElementById('cancelCoreBtn').style.display = 'inline-block';
         document.getElementById('coreFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Core Member';
@@ -3240,6 +3245,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         document.getElementById('coreRole').value = '';
         document.getElementById('coreDesc').value = '';
         document.getElementById('coreIcon').value = 'fa-user';
+        document.getElementById('coreColor').value = '#ff3366';
         document.getElementById('addCoreBtn').innerHTML = '<i class="fas fa-save"></i> Add Member';
         document.getElementById('cancelCoreBtn').style.display = 'none';
         document.getElementById('coreFormTitle').innerHTML = '<i class="fas fa-user-tie"></i> Add Core Member';
@@ -3250,18 +3256,18 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         const role = document.getElementById('coreRole').value.trim();
         const desc = document.getElementById('coreDesc').value.trim();
         const icon = document.getElementById('coreIcon').value.trim() || 'fa-user';
-        if (!name || !role) { showToast('Name and role required', 'error'); return; }
+        const color = document.getElementById('coreColor').value || '#ff3366';
+        if (!name) { showToast('Name required', 'error'); return; }
         
         try {
             if (editingCoreId) {
-                await db.collection('coreMembers').doc(editingCoreId).update({ name, role, desc, icon });
-                showToast('Core member updated!', 'success');
-                cancelCoreEdit();
+                await db.collection('coreMembers').doc(editingCoreId).update({ name, role, desc, icon, color });
+                showToast('Core Member updated', 'success');
             } else {
-                await db.collection('coreMembers').add({ name, role, desc, icon, order: Date.now() });
-                showToast('Core member added!', 'success');
-                cancelCoreEdit(); // resets form
+                await db.collection('coreMembers').add({ name, role, desc, icon, color, order: Date.now() });
+                showToast('Core Member added', 'success');
             }
+            cancelCoreEdit(); // resets form
             loadCoreMembers();
         } catch (error) { showToast(error.message, 'error'); }
     }
@@ -3273,13 +3279,14 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         loadCoreMembers();
     }
 
-    function startEditWing(id, name, chairman, convener, desc, icon) {
+    function startEditWing(id, name, chairman, convener, desc, icon, color) {
         editingWingId = id;
         document.getElementById('wingName').value = name;
         document.getElementById('wingChairman').value = chairman;
         document.getElementById('wingConvener').value = convener;
         document.getElementById('wingDesc').value = desc;
         document.getElementById('wingIcon').value = icon;
+        document.getElementById('wingColor').value = color || '#00e5ff';
         document.getElementById('addWingBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
         document.getElementById('cancelWingBtn').style.display = 'inline-block';
         document.getElementById('wingFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Sub-Wing';
@@ -3293,6 +3300,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         document.getElementById('wingConvener').value = '';
         document.getElementById('wingDesc').value = '';
         document.getElementById('wingIcon').value = 'fa-users';
+        document.getElementById('wingColor').value = '#00e5ff';
         document.getElementById('addWingBtn').innerHTML = '<i class="fas fa-save"></i> Add Wing';
         document.getElementById('cancelWingBtn').style.display = 'none';
         document.getElementById('wingFormTitle').innerHTML = '<i class="fas fa-sitemap"></i> Add Sub-Wing';
@@ -3304,18 +3312,18 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         const convener = document.getElementById('wingConvener').value.trim();
         const desc = document.getElementById('wingDesc').value.trim();
         const icon = document.getElementById('wingIcon').value.trim() || 'fa-users';
+        const color = document.getElementById('wingColor').value || '#00e5ff';
         if (!name) { showToast('Wing name required', 'error'); return; }
         
         try {
             if (editingWingId) {
-                await db.collection('wings').doc(editingWingId).update({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon });
-                showToast('Wing updated!', 'success');
-                cancelWingEdit();
+                await db.collection('wings').doc(editingWingId).update({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon, color });
+                showToast('Wing updated', 'success');
             } else {
-                await db.collection('wings').add({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon, order: Date.now() });
-                showToast('Wing added!', 'success');
-                cancelWingEdit(); // resets form
+                await db.collection('wings').add({ name, chairman: chairman || 'TBD', convener: convener || 'TBD', desc, icon, color, order: Date.now() });
+                showToast('Wing added', 'success');
             }
+            cancelWingEdit(); // resets form
             loadWings();
         } catch (error) { showToast(error.message, 'error'); }
     }

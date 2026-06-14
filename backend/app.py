@@ -460,9 +460,14 @@ def delete_magazine(item_id):
                         print(f'Could not delete linked PDF: {e}')
             except Exception:
                 pass
-            service.files().delete(fileId=item_id).execute()
-            return jsonify({'success': True, 'message': 'Deleted'}), 200
-
+            
+            try:
+                service.files().delete(fileId=item_id).execute()
+            except Exception as e:
+                print(f'Could not delete main file: {e}')
+                
+            # We don't return here! We proceed to delete from data.json
+            
         data = load_data(MAGAZINE_FILE)
         item = next((x for x in data if x['id'] == item_id), None)
 
