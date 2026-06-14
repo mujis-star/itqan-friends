@@ -3025,32 +3025,7 @@
     }
 
     // ===== GALLERY FUNCTIONS (PERSISTENT FIRESTORE + LEGACY BACKEND FALLBACK) =====
-    async function loadPublicGallery() {
-        try {
-            const galleryData = await getPersistentGalleryItems();
-            const grid = document.getElementById('publicGalleryGrid');
-            const empty = document.getElementById('galleryEmpty');
-            
-            if (!galleryData || galleryData.length === 0) {
-                if (empty) empty.style.display = 'block';
-                if (grid) grid.innerHTML = '';
-                return;
-            }
-            if (empty) empty.style.display = 'none';
-            galleryCache = galleryData;
-            if (grid) {
-                grid.innerHTML = galleryData.map((item, i) => `
-                    <div class="gallery-item" onclick="openLightbox(${i})">
-<img src="${item.imageUrl}" alt="${escapeHTML(item.caption || '')}" loading="lazy">
-                        <div class="gallery-ov"><h4>${escapeHTML(item.caption || '')}</h4></div>
-                    </div>
-                `).join('');
-            }
-            console.log("Public gallery loaded with", galleryData.length, "items");
-        } catch(e) { 
-            console.error("Gallery load error:", e);
-        }
-    }
+
 
     async function loadAdminGallery() {
     try {
@@ -3183,34 +3158,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
 });
 
     // ===== MAGAZINE FUNCTIONS =====
-    async function loadPublicMags() {
-        try {
-            const snap = await db.collection('magazines').orderBy('createdAt', 'desc').get();
-            const grid = document.getElementById('publicMagGrid');
-            const empty = document.getElementById('magazinesEmpty');
-            if (snap.empty) {
-                if (empty) empty.style.display = 'block';
-                if (grid) grid.innerHTML = '';
-                return;
-            }
-            if (empty) empty.style.display = 'none';
-            if (grid) {
-                grid.innerHTML = snap.docs.map(item => {
-                    const data = item.data();
-                    const bc = data.type === 'tabloid' ? 'tabloid' : 'magazine';
-                    return `<div class="mag-card">
-                        <img class="mag-cover" src="${data.coverUrl}" alt="${data.title}" loading="lazy" onerror="this.src='https://placehold.co/260x360/0e1120/0e1120?text=Cover'">
-                        <div class="mag-body">
-                            <span class="mag-badge ${bc}">${data.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
-                            <h3>${data.title}</h3>
-                            <p>${data.description || ''}</p>
-                            ${data.pdfUrl ? `<button class="btn btn-cyan btn-sm" onclick="window.open('${data.pdfUrl}','_blank')">Read Now</button>` : '<button class="btn btn-outline btn-sm" disabled>Coming Soon</button>'}
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-        } catch(e) { console.error(e); }
-    }
+
 
     async function addMagItem() {
         const title = document.getElementById('magTitle').value.trim();
@@ -4301,37 +4249,7 @@ async function uploadMagazine() {
     }
 }
 
-async function loadPublicMags() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/magazines`);
-        const magazines = await response.json();
-        
-        const grid = document.getElementById('publicMagGrid');
-        const empty = document.getElementById('magazinesEmpty');
-        
-        if (!magazines || magazines.length === 0) {
-            if (empty) empty.style.display = 'block';
-            if (grid) grid.innerHTML = '';
-            return;
-        }
-        
-        if (empty) empty.style.display = 'none';
-        
-        if (grid) {
-            grid.innerHTML = magazines.map(mag => `
-                <div class="mag-card">
-                    <img class="mag-cover" src="${mag.coverUrl}" alt="${mag.title}" loading="lazy">
-                    <div class="mag-body">
-                        <span class="mag-badge ${mag.type}">${mag.type === 'tabloid' ? 'Tabloid' : 'Magazine'}</span>
-                        <h3>${mag.title}</h3>
-                        <p>${mag.description || ''}</p>
-                        ${mag.pdfUrl ? 
-                            `<button class="btn btn-cyan btn-sm" onclick="window.open('${mag.pdfUrl}', '_blank')">Read Now</button>` : 
-                            '<button class="btn btn-outline btn-sm" disabled>No PDF</button>'}
-                    </div>
-                </div>
-            `).join('');
-        }
+
 // ===== PERSISTENT MAGAZINES / PUBLICATIONS (FIRESTORE + LEGACY BACKEND FALLBACK) =====
 let magazineCache = [];
 
