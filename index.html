@@ -2482,7 +2482,7 @@
             <!-- Magazines Tab -->
       <div class="admin-tc" id="adminTabMagazines">
     <div class="add-form">
-        <h4><i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Publication</h4>
+        <h4 id="magFormTitle"><i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Publication</h4>
         <div class="fg"><label>Title *</label><input type="text" id="magTitle" class="fi" placeholder="e.g., ITQAN Monthly"></div>
         <div class="fg">
             <label>Type</label>
@@ -2492,13 +2492,16 @@
             </select>
         </div>
         <div class="fg"><label>Description</label><textarea id="magDesc" class="fi" rows="2" placeholder="Brief description..."></textarea></div>
-        <div class="fg"><label>Upload Cover Image *</label><input type="file" id="magCoverFile" accept="image/jpeg,image/png,image/jpg,image/webp" class="fi"></div>
-        <div class="fg"><label>Upload PDF (optional)</label><input type="file" id="magPdfFile" accept=".pdf" class="fi"></div>
+        <div class="fg"><label id="magCoverLabel">Upload Cover Image *</label><input type="file" id="magCoverFile" accept="image/jpeg,image/png,image/jpg,image/webp" class="fi"></div>
+        <div class="fg"><label id="magPdfLabel">Upload PDF (optional)</label><input type="file" id="magPdfFile" accept=".pdf" class="fi"></div>
         <div id="magUploadProgress" style="display:none;margin-top:10px">
             <progress id="magProgressBar" value="0" max="100" style="width:100%;height:6px;border-radius:3px"></progress>
             <p id="magStatus" style="font-size:0.7rem;color:var(--muted);margin-top:5px">Uploading...</p>
         </div>
-        <button onclick="uploadMagazineToBackend()" class="btn btn-sm btn-pink"><i class="fas fa-upload"></i> Add Publication</button>
+        <div style="display:flex;gap:10px;">
+            <button id="addMagBtn" onclick="uploadMagazineToBackend()" class="btn btn-sm btn-pink"><i class="fas fa-upload"></i> Add Publication</button>
+            <button id="cancelMagBtn" onclick="cancelMagazineEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
+        </div>
     </div>
     <h4 style="margin-bottom:14px;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:2px">Existing Publications</h4>
     <div id="adminMagList" class="adm-il"></div>
@@ -2543,7 +2546,7 @@
                         <!-- Profiles / User Management Tab -->
             <div class="admin-tc" id="adminTabProfiles">
                 <div class="add-form">
-                    <h4><i class="fas fa-user-plus" class="gradient-text"></i> Add New User</h4>
+                    <h4 id="userFormTitle"><i class="fas fa-user-plus" class="gradient-text"></i> Add New User</h4>
                     <div class="afg">
                         <div class="fg">
                             <label>Full Name *</label>
@@ -2554,7 +2557,7 @@
                             <input type="text" id="newUserUsername" class="fi" placeholder="e.g., johndoe">
                         </div>
                         <div class="fg">
-                            <label>Password * (min 6)</label>
+                            <label id="newUserPasswordLabel">Password * (min 6)</label>
                             <input type="text" id="newUserPassword" class="fi" placeholder="------------------">
                         </div>
                         <div class="fg">
@@ -2587,7 +2590,10 @@
                             </select>
                         </div>
                     </div>
-                    <button onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
+                    <div style="display:flex;gap:10px;">
+                        <button id="addUserBtn" onclick="addNewUser()" class="btn btn-sm btn-cyan"><i class="fas fa-save"></i> Create User</button>
+                        <button id="cancelUserBtn" onclick="cancelUserEdit()" class="btn btn-sm" style="display:none;background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
                 </div>
 
                 <div class="add-form profile-edit-panel" id="adminProfileEditor" style="display:none">
@@ -4562,9 +4568,12 @@ async function loadAdminMags() {
                         <small style="color:var(--muted)">${mag._source === 'firestore' ? 'Permanent storage' : 'Legacy backend storage'}</small>
                     </div>
                 </div>
-                <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
+                <div style="display:flex;gap:10px;">
+                    ${mag._source === 'firestore' ? `<button class="btn btn-sm" style="background:rgba(255,255,255,0.1);padding:4px 10px;font-size:0.8rem" onclick="startEditMagazine('${mag.id}')"><i class="fas fa-edit"></i> Edit</button>` : ''}
+                    <button class="del-btn" onclick="deleteMagazineItem('${mag.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
             </div>
         `).join('');
     } catch(e) {
@@ -4594,6 +4603,48 @@ async function deleteMagazineItem(id) {
     }
 }
 
+let editingMagId = null;
+let currentMagCoverUrl = '';
+let currentMagPdfUrl = '';
+
+window.startEditMagazine = function(id) {
+    const mag = magazineCache.find(x => x.id === id);
+    if (!mag) return;
+    editingMagId = id;
+    currentMagCoverUrl = mag.coverUrl || '';
+    currentMagPdfUrl = mag.pdfUrl || '';
+    
+    document.getElementById('magTitle').value = mag.title || '';
+    document.getElementById('magType').value = mag.type || 'magazine';
+    document.getElementById('magDesc').value = mag.description || '';
+    
+    document.getElementById('magCoverLabel').innerHTML = 'Upload Cover Image (Optional - Leave blank to keep existing)';
+    document.getElementById('magPdfLabel').innerHTML = 'Upload PDF (Optional - Leave blank to keep existing)';
+    
+    document.getElementById('addMagBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    document.getElementById('cancelMagBtn').style.display = 'inline-block';
+    document.getElementById('magFormTitle').innerHTML = '<i class="fas fa-edit" style="color:var(--rose)"></i> Edit Publication';
+    window.scrollTo({ top: document.getElementById('magFormTitle').offsetTop - 100, behavior: 'smooth' });
+};
+
+window.cancelMagazineEdit = function() {
+    editingMagId = null;
+    currentMagCoverUrl = '';
+    currentMagPdfUrl = '';
+    document.getElementById('magTitle').value = '';
+    document.getElementById('magType').value = 'magazine';
+    document.getElementById('magDesc').value = '';
+    document.getElementById('magCoverFile').value = '';
+    document.getElementById('magPdfFile').value = '';
+    
+    document.getElementById('magCoverLabel').innerHTML = 'Upload Cover Image *';
+    document.getElementById('magPdfLabel').innerHTML = 'Upload PDF (optional)';
+    
+    document.getElementById('addMagBtn').innerHTML = '<i class="fas fa-upload"></i> Add Publication';
+    document.getElementById('cancelMagBtn').style.display = 'none';
+    document.getElementById('magFormTitle').innerHTML = '<i class="fas fa-plus-circle" style="color:var(--rose)"></i> Add Publication';
+};
+
 async function uploadMagazineToBackend() {
     const title = document.getElementById('magTitle').value.trim();
     const type = document.getElementById('magType').value;
@@ -4605,11 +4656,13 @@ async function uploadMagazineToBackend() {
         showToast('Please enter a title', 'error');
         return;
     }
-    if (!coverFile) {
+    
+    // Cover is only required if NOT editing
+    if (!editingMagId && !coverFile) {
         showToast('Please select a cover image', 'error');
         return;
     }
-    if (!coverFile.type.startsWith('image/')) {
+    if (coverFile && !coverFile.type.startsWith('image/')) {
         showToast('Please select a valid cover image.', 'error');
         return;
     }
@@ -4622,8 +4675,12 @@ async function uploadMagazineToBackend() {
     if (statusText) statusText.textContent = 'Compressing cover for permanent storage...';
 
     try {
-        const coverUrl = await imageFileToPersistentDataUrl(coverFile);
-        let pdfUrl = '';
+        let coverUrl = currentMagCoverUrl;
+        if (coverFile) {
+            coverUrl = await imageFileToPersistentDataUrl(coverFile);
+        }
+        
+        let pdfUrl = currentMagPdfUrl;
         let pdfWarning = '';
 
         if (pdfFile) {
@@ -4638,27 +4695,34 @@ async function uploadMagazineToBackend() {
         }
 
         if (progressBar) progressBar.value = 82;
-        if (statusText) statusText.textContent = 'Saving publication permanently...';
+        if (statusText) statusText.textContent = editingMagId ? 'Updating publication...' : 'Saving publication permanently...';
 
-        await db.collection('magazines').add({
-            title,
-            type,
-            description,
-            coverUrl,
-            pdfUrl,
-            uploadedBy: currentUserData?.name || 'Admin',
-            storage: 'firestore-cover' + (pdfUrl ? '+firebase-storage-pdf' : ''),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        if (editingMagId) {
+            await db.collection('magazines').doc(editingMagId).update({
+                title,
+                type,
+                description,
+                coverUrl,
+                pdfUrl
+            });
+        } else {
+            await db.collection('magazines').add({
+                title,
+                type,
+                description,
+                coverUrl,
+                pdfUrl,
+                uploadedBy: currentUserData?.name || 'Admin',
+                storage: 'firestore-cover' + (pdfUrl ? '+firebase-storage-pdf' : ''),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
 
         if (progressBar) progressBar.value = 100;
-        if (statusText) statusText.textContent = 'Saved permanently!';
-        showToast(`Publication saved permanently.${pdfWarning}`, pdfWarning ? 'error' : 'success');
+        if (statusText) statusText.textContent = editingMagId ? 'Updated!' : 'Saved permanently!';
+        showToast(`Publication ${editingMagId ? 'updated' : 'saved'}!${pdfWarning}`, pdfWarning ? 'error' : 'success');
 
-        document.getElementById('magTitle').value = '';
-        document.getElementById('magDesc').value = '';
-        document.getElementById('magCoverFile').value = '';
-        document.getElementById('magPdfFile').value = '';
+        cancelMagazineEdit();
         if (progressDiv) setTimeout(() => { progressDiv.style.display = 'none'; }, 600);
 
         await loadPublicMags();
