@@ -3227,7 +3227,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         document.getElementById('addCoreBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
         document.getElementById('cancelCoreBtn').style.display = 'inline-block';
         document.getElementById('coreFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Core Member';
-        window.scrollTo({ top: document.getElementById('coreFormTitle').offsetTop - 100, behavior: 'smooth' });
+        document.getElementById('adminPanel').scrollTo({ top: document.getElementById('coreFormTitle').offsetTop - 100, behavior: 'smooth' });
     }
 
     function cancelCoreEdit() {
@@ -3279,7 +3279,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
         document.getElementById('addWingBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
         document.getElementById('cancelWingBtn').style.display = 'inline-block';
         document.getElementById('wingFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Sub-Wing';
-        window.scrollTo({ top: document.getElementById('wingFormTitle').offsetTop - 100, behavior: 'smooth' });
+        document.getElementById('adminPanel').scrollTo({ top: document.getElementById('wingFormTitle').offsetTop - 100, behavior: 'smooth' });
     }
 
     function cancelWingEdit() {
@@ -3436,9 +3436,7 @@ document.getElementById('galImageFile')?.addEventListener('change', function(e) 
     function showProfile(name, role, desc, photo) {
         renderProfileData({ name, roleLabel: role, position: role, description: desc, photoUrl: photo });
         switchProfileTab('overview');
-        document.getElementById('profileModal').classList.add('active');
-    }
-
+    function openModal() { document.getElementById('profileModal').classList.add('active'); }
     function closeModal() { document.getElementById('profileModal').classList.remove('active'); }
 
     // ===== MOBILE MENU =====
@@ -3591,8 +3589,7 @@ function switchMediaTab(tab) {
     function closeDashboards() {
         document.getElementById('userDashboard').classList.remove('open');
         document.getElementById('overlayDim').classList.remove('active');
-        const ap = document.getElementById('adminPanel');
-        if (ap) ap.classList.remove('active');
+        document.body.classList.remove('menu-open');
     }
     function handleLogout() { auth.signOut(); location.reload(); }
     function openAdminPanel() { closeDashboards(); document.getElementById('adminPanel').classList.add('active'); }
@@ -4624,7 +4621,7 @@ window.startEditMagazine = function(id) {
     document.getElementById('addMagBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
     document.getElementById('cancelMagBtn').style.display = 'inline-block';
     document.getElementById('magFormTitle').innerHTML = '<i class="fas fa-edit" style="color:var(--rose)"></i> Edit Publication';
-    window.scrollTo({ top: document.getElementById('magFormTitle').offsetTop - 100, behavior: 'smooth' });
+    document.getElementById('adminPanel').scrollTo({ top: document.getElementById('magFormTitle').offsetTop - 100, behavior: 'smooth' });
 };
 
 window.cancelMagazineEdit = function() {
@@ -4806,6 +4803,7 @@ document.addEventListener('DOMContentLoaded', function () {
         touchMultiplier: 2,
         infinite: false,
     });
+    window.lenis = lenis;
     function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
