@@ -4506,6 +4506,12 @@ async function getPersistentMagazineItems() {
         if (response.ok) {
             const data = await response.json();
             backendItems = (data || []).map(item => ({ ...item, _source: 'backend' }));
+            
+            try {
+                const deletedSnap = await db.collection('deleted_legacy_mags').get();
+                const deletedIds = new Set(deletedSnap.docs.map(d => d.id));
+                backendItems = backendItems.filter(item => !deletedIds.has(item.id));
+            } catch(e) { console.warn('Failed to filter deleted legacy mags', e); }
         }
     } catch (e) {
         console.warn('Backend magazines read failed; Firestore publications will still be shown:', e);
@@ -4598,9 +4604,9 @@ async function deleteMagazineItem(id) {
     try {
         const item = magazineCache.find(x => x.id === id);
         if (item?._source === 'backend') {
-            const response = await fetch(`${API_BASE_URL}/delete-magazine/${id}`, { method: 'DELETE' });
-            const result = await response.json();
-            if (!result.success) throw new Error(result.error || 'Delete failed');
+            try { await fetch(`${API_BASE_URL}/delete-magazine/${id}`, { method: 'DELETE' }); } catch(e) { console.warn('Backend delete error ignored:', e); }
+            // Vercel serverless filesystems are ephemeral, so we permanently block this legacy ID using Firestore
+            await db.collection('deleted_legacy_mags').doc(id).set({ deletedAt: Date.now() });
         } else {
             await db.collection('magazines').doc(id).delete();
         }
