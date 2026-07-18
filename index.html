@@ -47,6 +47,16 @@
         --radius:   18px;
         --radius-sm:10px;
         --trans:    all .35s cubic-bezier(.4,0,.2,1);
+        --header-bg: rgba(10, 5, 22, 0.7);
+        --header-bg-scrolled: rgba(6, 2, 12, 0.88);
+        --logo-gradient-start: #fff;
+        --hero-grad-overlay: rgba(6, 2, 12, 0.6);
+        --nav-hover: #fff;
+        --auth-login-bg: rgba(255, 255, 255, 0.04);
+        --auth-login-border: rgba(255, 255, 255, 0.15);
+        --auth-login-text: #f8fafc;
+        --auth-login-hover-bg: #fff;
+        --auth-login-hover-text: var(--bg);
     }
     
     [data-theme="light"] {
@@ -62,7 +72,17 @@
         --muted:    #64748b;
         --border:   rgba(162, 28, 175, 0.15);
         --border2:  rgba(15, 23, 42, 0.1);
-        --card:     rgba(255, 255, 255, 0.8);
+        --card:     #f8fafc;
+        --header-bg: rgba(255, 255, 255, 0.8);
+        --header-bg-scrolled: rgba(255, 255, 255, 0.95);
+        --logo-gradient-start: #0f172a;
+        --hero-grad-overlay: rgba(255, 255, 255, 0.6);
+        --nav-hover: #0f172a;
+        --auth-login-bg: rgba(15, 23, 42, 0.04);
+        --auth-login-border: rgba(15, 23, 42, 0.15);
+        --auth-login-text: #0f172a;
+        --auth-login-hover-bg: #0f172a;
+        --auth-login-hover-text: #ffffff;
     }
     
     *{margin:0;padding:0;box-sizing:border-box}
@@ -153,7 +173,7 @@
     header{
         position:fixed;top:20px;left:50%;transform:translateX(-50%);
         width:92%;max-width:1200px;z-index:1000;
-        background:rgba(10, 5, 22, 0.7);
+        background:var(--header-bg);
         backdrop-filter:blur(24px) saturate(180%);
         -webkit-backdrop-filter:blur(24px) saturate(180%);
         border:1px solid rgba(255, 255, 255, 0.08);
@@ -166,7 +186,7 @@
         header.scrolled{
             top:10px;
             width:95%;
-            background:rgba(6, 2, 12, 0.88);
+            background:var(--header-bg-scrolled);
             border-color:rgba(217, 70, 239, 0.25);
             box-shadow:0 20px 40px rgba(0,0,0,0.55), 0 0 20px rgba(217,70,239,0.15);
             padding:8px 24px;
@@ -180,7 +200,7 @@
     .logo-img{height:44px;width:auto}
     .logo-name{
         font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.25rem;
-        background:linear-gradient(115deg,#fff 0%,var(--cyan) 60%,var(--gold) 100%);
+        background:linear-gradient(115deg,var(--logo-gradient-start) 0%,var(--cyan) 60%,var(--gold) 100%);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         letter-spacing:-0.01em;
     }
@@ -196,8 +216,14 @@
         background:linear-gradient(90deg, var(--cyan), var(--cyan2));transition:width .3s;
         border-radius:2px;
     }
-    .nav-links a:hover{color:#fff}
+    .nav-links a:hover{color:var(--nav-hover)}
     .nav-links a:hover::after{width:100%}
+
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
     .auth-area{display:flex;align-items:center;gap:10px}
     .auth-btn{
@@ -206,14 +232,14 @@
         font-size:.8rem;font-family:'Inter',sans-serif;
     }
     .auth-btn-login{
-        background:rgba(255, 255, 255, 0.04);
-        border:1px solid rgba(255, 255, 255, 0.15);
-        color:#f8fafc;
+        background:var(--auth-login-bg);
+        border:1px solid var(--auth-login-border);
+        color:var(--auth-login-text);
     }
     .auth-btn-login:hover{
-        background:#fff;
-        color:var(--bg);
-        border-color:#fff;
+        background:var(--auth-login-hover-bg);
+        color:var(--auth-login-hover-text);
+        border-color:var(--auth-login-hover-bg);
         box-shadow:0 8px 20px rgba(255,255,255,0.15);
     }
     .auth-btn-register{
@@ -359,7 +385,7 @@
     
     .hero-grad{
         position:absolute;inset:0;z-index:1;
-        background: linear-gradient(to bottom, transparent 0%, rgba(6, 2, 12, 0.6) 60%, var(--bg) 100%);
+        background: linear-gradient(to bottom, transparent 0%, var(--hero-grad-overlay) 60%, var(--bg) 100%);
     }
     .hero-inner{position:relative;z-index:2;max-width:780px;padding:0 24px}
     
@@ -379,7 +405,7 @@
     .hero h1{
         font-size:clamp(2.4rem,6vw,4.2rem);
         margin-bottom:20px;
-        background:linear-gradient(135deg, #ffffff 10%, var(--cyan) 50%, var(--rose) 90%);
+        background:linear-gradient(135deg, var(--logo-gradient-start) 10%, var(--cyan) 50%, var(--rose) 90%);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         animation:fadeSlideUp .8s .15s ease both;
         line-height:1.1;
@@ -1257,12 +1283,6 @@
 @media (max-width: 768px) {
     .mob-btn {
         display: flex !important;
-    }
-    
-    .header-controls {
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
     
     .nav-links {

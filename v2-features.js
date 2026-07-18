@@ -39,15 +39,28 @@ function initThemeToggle() {
     });
 }
 
-// --- Hero Particles Animation ---
+// // --- Hero Particles Canvas ---
 function initHeroParticles() {
     const canvas = document.getElementById("heroParticles");
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
     
+    const ctx = canvas.getContext("2d");
     let particles = [];
-    const maxParticles = 40;
+    const maxParticles = window.innerWidth < 768 ? 60 : 120;
     let animationFrameId;
+    
+    let mouse = { x: null, y: null, radius: 150 };
+    
+    window.addEventListener('mousemove', function(event) {
+        mouse.x = event.x;
+        mouse.y = event.y;
+    });
+    
+    // Avoid particles getting stuck on mouse if it leaves screen
+    window.addEventListener('mouseout', function() {
+        mouse.x = undefined;
+        mouse.y = undefined;
+    });
     
     function resize() {
         canvas.width = window.innerWidth;
@@ -61,12 +74,34 @@ function initHeroParticles() {
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.size = Math.random() * 2 + 1;
-            this.color = `rgba(217, 70, 239, ${Math.random() * 0.5 + 0.1})`; // cyan-ish
+            // Faster base speed
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = (Math.random() - 0.5) * 1.5;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.size = Math.random() * 2.5 + 1;
+            // Mix of cyan and rose
+            const isCyan = Math.random() > 0.4;
+            this.color = isCyan ? `rgba(217, 70, 239, ${Math.random() * 0.6 + 0.2})` : `rgba(244, 63, 94, ${Math.random() * 0.6 + 0.2})`;
         }
         update() {
+            // Mouse interaction (repel)
+            if (mouse.x != null && mouse.y != null) {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    const maxDistance = mouse.radius;
+                    const force = (maxDistance - distance) / maxDistance;
+                    const directionX = forceDirectionX * force * 5;
+                    const directionY = forceDirectionY * force * 5;
+                    this.x -= directionX;
+                    this.y -= directionY;
+                }
+            }
+            
             this.x += this.vx;
             this.y += this.vy;
             
@@ -95,17 +130,28 @@ function initHeroParticles() {
             p.draw();
         });
         
-        // Draw connecting lines
+        // Draw connecting lines with dynamic opacity
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
-                if (dist < 150) {
+                if (dist < 130) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(217, 70, 239, ${0.15 - dist/1000})`;
-                    ctx.lineWidth = 1;
+                    const opacity = 1 - (dist/130);
+                    // Lines glow brighter when near mouse
+                    let lineOpacity = opacity * 0.25;
+                    if (mouse.x != null && mouse.y != null) {
+                        const mdx = particles[i].x - mouse.x;
+                        const mdy = particles[i].y - mouse.y;
+                        const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                        if (mDist < 200) {
+                            lineOpacity = opacity * 0.6; // Brighter
+                        }
+                    }
+                    ctx.strokeStyle = `rgba(217, 70, 239, ${lineOpacity})`;
+                    ctx.lineWidth = 1.2;
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
                     ctx.stroke();
@@ -116,7 +162,6 @@ function initHeroParticles() {
         animationFrameId = requestAnimationFrame(animate);
     }
     
-    // Pause animation when tab is inactive to save CPU
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             cancelAnimationFrame(animationFrameId);
