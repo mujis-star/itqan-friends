@@ -55,9 +55,23 @@ body {
         padding: 0 16px !important;
     }
     
-    /* ===== HEADER - SIMPLE FIX ===== */
+    /* ===== HEADER - MOBILE OVERRIDES ===== */
     header {
+        position: sticky !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-bottom: 1px solid rgba(217, 70, 239, 0.15) !important;
+        margin: 0 !important;
         padding: 12px 0 !important;
+        background: rgba(6, 2, 12, 0.95) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
     }
     
     .h-wrap {

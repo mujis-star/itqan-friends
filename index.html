@@ -22,21 +22,21 @@
 
     <style>
     :root {
-        --bg:       #06020c;
-        --bg2:      #0d061c;
-        --bg3:      #170c2d;
-        --cyan:     #b829ea;
-        --cyan2:    #9333ea;
-        --gold:     #f5c518;
+        --bg:       #05020a;
+        --bg2:      #0a0414;
+        --bg3:      #120722;
+        --cyan:     #d946ef;
+        --cyan2:    #a855f7;
+        --gold:     #fbbf24;
         --rose:     #f43f5e;
         --rose2:    #e11d48;
         --text:     #f8fafc;
         --muted:    #94a3b8;
-        --border:   rgba(184, 41, 234, 0.2);
+        --border:   rgba(217, 70, 239, 0.15);
         --border2:  rgba(255, 255, 255, 0.08);
         --card:     rgba(255, 255, 255, 0.03);
-        --glow-c:   rgba(184, 41, 234, 0.25);
-        --glow-r:   rgba(244, 63, 94, 0.25);
+        --glow-c:   rgba(217, 70, 239, 0.3);
+        --glow-r:   rgba(244, 63, 94, 0.3);
         --radius:   18px;
         --radius-sm:10px;
         --trans:    all .35s cubic-bezier(.4,0,.2,1);
@@ -125,12 +125,26 @@
 
     /* --------- HEADER --------- */
     header{
-        position:sticky;top:0;z-index:1000;
-        background:rgba(6, 2, 12, .88);
-        backdrop-filter:blur(24px) saturate(160%);
-        border-bottom:1px solid var(--border);
-        padding:14px 0;
-        transition:var(--trans);
+        position:fixed;top:20px;left:50%;transform:translateX(-50%);
+        width:92%;max-width:1200px;z-index:1000;
+        background:rgba(10, 5, 22, 0.7);
+        backdrop-filter:blur(24px) saturate(180%);
+        -webkit-backdrop-filter:blur(24px) saturate(180%);
+        border:1px solid rgba(255, 255, 255, 0.08);
+        border-radius:50px;
+        padding:10px 24px;
+        box-shadow:0 15px 35px rgba(0,0,0,0.4), 0 0 15px rgba(217,70,239,0.1);
+        transition:all .4s cubic-bezier(.16, 1, .3, 1);
+    }
+    @media (min-width: 769px) {
+        header.scrolled{
+            top:10px;
+            width:95%;
+            background:rgba(6, 2, 12, 0.88);
+            border-color:rgba(217, 70, 239, 0.25);
+            box-shadow:0 20px 40px rgba(0,0,0,0.55), 0 0 20px rgba(217,70,239,0.15);
+            padding:8px 24px;
+        }
     }
     .h-wrap{
         display:flex;align-items:center;
@@ -152,29 +166,36 @@
         transition:color .25s;position:relative;padding-bottom:2px;
     }
     .nav-links a::after{
-        content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
-        background:var(--cyan);transition:width .3s;
+        content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+        background:linear-gradient(90deg, var(--cyan), var(--cyan2));transition:width .3s;
+        border-radius:2px;
     }
     .nav-links a:hover{color:#fff}
     .nav-links a:hover::after{width:100%}
 
     .auth-area{display:flex;align-items:center;gap:10px}
     .auth-btn{
-        padding:8px 20px;border-radius:40px;font-weight:600;
+        padding:8px 22px;border-radius:40px;font-weight:600;
         cursor:pointer;transition:var(--trans);border:none;
         font-size:.8rem;font-family:'Inter',sans-serif;
     }
     .auth-btn-login{
-        background:transparent;
-        border:1.5px solid rgba(184,41,234,.35);
-        color:var(--cyan);
+        background:rgba(255, 255, 255, 0.04);
+        border:1px solid rgba(255, 255, 255, 0.15);
+        color:#f8fafc;
     }
-    .auth-btn-login:hover{background:var(--cyan);color:var(--bg)}
+    .auth-btn-login:hover{
+        background:#fff;
+        color:var(--bg);
+        border-color:#fff;
+        box-shadow:0 8px 20px rgba(255,255,255,0.15);
+    }
     .auth-btn-register{
-        background:linear-gradient(135deg,var(--rose),var(--rose2));
-        color:#fff;
+        background:linear-gradient(135deg,var(--cyan),var(--cyan2));
+        color:#05020a;
+        font-weight: 700;
     }
-    .auth-btn-register:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--glow-r)}
+    .auth-btn-register:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(217, 70, 239, 0.45)}
     .auth-user-btn{
         display:flex;align-items:center;gap:8px;
         padding:7px 16px;border-radius:40px;
@@ -196,18 +217,52 @@
 
     /* --------- BUTTONS --------- */
     .btn{
-        padding:13px 34px;border-radius:50px;font-weight:600;
-        cursor:pointer;transition:var(--trans);border:none;
+        padding:13px 34px;border-radius:50px;font-weight:700;
+        cursor:pointer;transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);border:none;
         font-size:.9rem;font-family:'Inter',sans-serif;
         display:inline-flex;align-items:center;gap:8px;
     }
-    .btn-pink{background:linear-gradient(135deg,var(--rose),var(--rose2));color:#fff}
-    .btn-pink:hover{transform:translateY(-3px);box-shadow:0 12px 28px var(--glow-r)}
-    .btn-cyan{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:var(--bg)}
-    .btn-cyan:hover{transform:translateY(-3px);box-shadow:0 12px 28px var(--glow-c)}
-    .btn-outline{background:transparent;border:1.5px solid var(--cyan);color:var(--cyan)}
-    .btn-outline:hover{background:var(--cyan);color:var(--bg)}
-    .btn-danger{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:#ef4444}
+    .btn-pink{
+        background:linear-gradient(135deg,var(--rose),var(--rose2));
+        color:#fff;
+        box-shadow:0 0 15px rgba(244,63,94,0.15);
+    }
+    .btn-pink:hover{
+        transform:translateY(-3px) scale(1.02);
+        box-shadow:0 12px 30px rgba(244,63,94,0.45), 0 0 20px rgba(244,63,94,0.25);
+    }
+    .btn-cyan{
+        background:linear-gradient(135deg,var(--cyan),var(--cyan2));
+        color:#05020a;
+        box-shadow:0 0 15px rgba(217,70,239,0.15);
+    }
+    .btn-cyan:hover{
+        transform:translateY(-3px) scale(1.02);
+        box-shadow:0 12px 30px rgba(217,70,239,0.45), 0 0 20px rgba(217,70,239,0.25);
+    }
+    .btn-outline{
+        background:rgba(255, 255, 255, 0.04);
+        border:1.5px solid rgba(255, 255, 255, 0.15);
+        color:#fff;
+    }
+    .btn-outline:hover{
+        background:#fff;
+        color:var(--bg);
+        border-color:#fff;
+        transform:translateY(-3px) scale(1.02);
+        box-shadow:0 12px 30px rgba(255,255,255,0.2);
+    }
+    .btn-danger{
+        background:rgba(239,68,68,.1);
+        border:1px solid rgba(239,68,68,.3);
+        color:#ef4444;
+        font-weight:600;
+    }
+    .btn-danger:hover{
+        background:rgba(239,68,68,.2);
+        transform:translateY(-2px);
+        box-shadow:0 8px 20px rgba(239,68,68,0.25);
+    }
     .btn-sm{padding:7px 18px;font-size:.78rem}
 
     /* --------- HERO --------- */
@@ -298,7 +353,7 @@
     .hero h1{
         font-size:clamp(2.4rem,6vw,4.2rem);
         margin-bottom:20px;
-        background:linear-gradient(130deg,var(--text) 0%,var(--muted) 40%,var(--cyan) 80%);
+        background:linear-gradient(135deg, #ffffff 10%, var(--cyan) 50%, var(--rose) 90%);
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         animation:fadeSlideUp .8s .15s ease both;
         line-height:1.1;
@@ -1762,8 +1817,8 @@
 
 
 
-        // ===== MOBILE MENU TOGGLE =====
-// ===== MOBILE MENU - COMPLETE FIX =====
+        /* ===== MOBILE MENU TOGGLE ===== */
+        /* ===== MOBILE MENU - COMPLETE FIX ===== */
 /* Mobile menu - ensure it works */
 @media (max-width: 768px) {
     .nav-links {
@@ -1927,6 +1982,13 @@
                 <div class="logo-tag">Intelligent Trainees for Qualified Academic Network</div>
             </div>
         </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#mission">About</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
         <div class="header-controls">
             <div class="auth-area" id="authArea">
                 <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
@@ -1936,13 +1998,6 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#mission">About</a></li>
-            <li><a href="#media">Media</a></li>
-            <li><a href="#team">Team</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
     </div>
 </header>
 
@@ -4686,6 +4741,18 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+
+    // --- Header Scroll State ---
+    const header = document.querySelector('header');
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
 
     // --- Magnetic Buttons ---
     const magneticElements = document.querySelectorAll('.btn-pink, .btn-cyan');
