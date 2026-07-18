@@ -129,9 +129,22 @@ function initHeroParticles() {
 }
 
 // --- Animated Stats Counter ---
-function initStatsCounter() {
+async function initStatsCounter() {
     const stats = document.querySelectorAll(".hero-stat-num");
     if (!stats.length) return;
+    
+    try {
+        const res = await fetch("data/stats.json");
+        const data = await res.json();
+        
+        // Update DOM with fetched target values
+        if (stats[0]) stats[0].setAttribute("data-target", data.members || 0);
+        if (stats[1]) stats[1].setAttribute("data-target", data.events || 0);
+        if (stats[2]) stats[2].setAttribute("data-target", data.years || 0);
+        if (stats[3]) stats[3].setAttribute("data-target", data.achievements || 0);
+    } catch (e) {
+        console.warn("Could not load stats.json, using fallback values", e);
+    }
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
