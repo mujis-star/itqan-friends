@@ -1,0 +1,25 @@
+{
+  "achievements": [
+  ],
+  "_meta": {
+    "description": "ITQAN Friends achievements data. Add real achievements here.",
+    "schema": {
+      "year": "string — e.g. '2026'",
+      "title": "string — achievement title",
+      "category": "string — e.g. 'Education', 'Community', 'Award'",
+      "date": "string — e.g. 'March 2026'",
+      "description": "string — brief description",
+      "image": "string — optional path to image",
+      "gallery": "boolean — optional, links to gallery"
+    },
+    "example": {
+      "year": "2026",
+      "title": "Annual Education Program",
+      "category": "Education",
+      "date": "March 2026",
+      "description": "Organized a comprehensive education program for 200+ students.",
+      "image": "",
+      "gallery": false
+    }
+  }
+}

@@ -4,7 +4,13 @@
     <link rel="canonical" href="https://itqan-friends.vercel.app/" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ITQAN UNION --- Intelligent Trainees for Qualified Academic Network</title>
+    <title>ITQAN Friends | Community Organization</title>
+    <meta name="description" content="ITQAN Friends brings people together through community, collaboration, and meaningful experiences.">
+    <meta name="keywords" content="ITQAN Friends, Community, Organization, Network, Events, Achievements">
+    <meta property="og:title" content="ITQAN Friends | Community Organization">
+    <meta property="og:description" content="ITQAN Friends brings people together through community, collaboration, and meaningful experiences.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://itqan-friends.vercel.app/">
 
     <!-- Fonts: Option A - Modern Premium (Plus Jakarta Sans + Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,6 +19,7 @@
     <!-- Your external CSS files -->
     <link rel="stylesheet" href="history-media-upgrade.css?v=16">
     <link rel="stylesheet" href="responsive-polish.css?v=16">
+    <link rel="stylesheet" href="v2-styles.css">
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -2003,21 +2010,34 @@
 
     <!-- Hero -->
     <section class="hero" id="home">
-        <div class="hero-bg">
-            <div class="orb orb-1"></div>
-            <div class="orb orb-2"></div>
-            <div class="orb orb-3"></div>
-            <div class="hero-ring ring-1"></div>
-            <div class="hero-ring ring-2"></div>
-        </div>
+        <canvas id="heroParticles" class="hero-particles"></canvas>
         <div class="hero-grad"></div>
         <div class="hero-inner">
-            <div class="hero-badge"><i class="fas fa-bolt"></i>&nbsp; Empowering Leaders Since Day One</div>
-            <h1>United for Professional<br>Growth &amp; Excellence</h1>
-            <p>ITQAN Union represents students, workers, and community members, fostering leadership, responsibility, and a network of qualified professionals.</p>
+            <div class="hero-badge"><i class="fas fa-heart"></i>&nbsp; Community · Friendship · Impact</div>
+            <h1>Building Friendship.<br>Creating <span class="gradient-text">Lasting Impact.</span></h1>
+            <p>ITQAN Friends brings people together through community, collaboration, and meaningful experiences.</p>
             <div class="hero-btns">
-                <a href="#mission" class="btn btn-pink"><i class="fas fa-compass"></i> Discover More</a>
-                <a href="#team" class="btn btn-cyan"><i class="fas fa-users"></i> Meet Our Leadership</a>
+                <a href="#mission" class="btn btn-pink"><i class="fas fa-compass"></i> Explore Our Journey</a>
+                <a href="#team" class="btn btn-outline"><i class="fas fa-user-plus"></i> Join Community</a>
+            </div>
+        </div>
+        <!-- Stats Bar -->
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num" data-target="34">0</span>
+                <span class="hero-stat-label">Community Members</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num" data-target="3">0</span>
+                <span class="hero-stat-label">Events Held</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num" data-target="1">0</span>
+                <span class="hero-stat-label">Years Active</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num" data-target="2">0</span>
+                <span class="hero-stat-label">Achievements</span>
             </div>
         </div>
         <div class="scroll-hint"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
@@ -2079,6 +2099,28 @@
                     <h3>Winter Gala</h3>
                     <p>Celebrate the end of the semester with your peers at our annual winter gathering.</p>
                     <div style="margin-top:20px; font-size:0.8rem; color:var(--cyan); font-weight:700;"><i class="fa-regular fa-calendar"></i> Dec 20, 2026</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements -->
+    <section class="achievements" id="achievements" style="padding:100px 0; background:var(--bg);">
+        <div class="container">
+            <div class="sec-wrap">
+                <div class="sec-eyebrow">Milestones</div>
+                <div class="sec-title">Our <span class="gradient-text">Achievements</span></div>
+                <div class="sec-sub">Milestones and accomplishments that define our journey.</div>
+                <div class="sec-line"><span></span></div>
+            </div>
+            <div id="achievementsGrid" class="achievements-grid">
+                <!-- Populated by JS from data/achievements.json -->
+            </div>
+            <div id="achievementsEmpty" class="achievements-empty">
+                <div class="achievements-empty-inner">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Achievements Coming Soon</h3>
+                    <p>Our milestones and accomplishments will be showcased here. Stay tuned!</p>
                 </div>
             </div>
         </div>
@@ -4834,6 +4876,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
+<script src="v2-features.js"></script>
 </body>
 </html>
 

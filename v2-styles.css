@@ -1,0 +1,216 @@
+/* =========================================
+   ITQAN Friends v2 Styles
+   (Hero, Stats, Achievements)
+========================================= */
+
+/* Hero Particles Canvas */
+.hero-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Ensure hero content stays above particles */
+.hero-inner, .hero-stats {
+    position: relative;
+    z-index: 2;
+}
+
+/* Redesigned Hero Container (adjusted padding for stats bar) */
+.hero {
+    padding-bottom: 120px; /* Make room for stats */
+}
+
+/* Hero Stats Bar */
+.hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    animation: fadeUp 1s ease 0.6s backwards;
+}
+
+.hero-stat {
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+}
+
+.hero-stat-num {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, var(--text), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+
+.hero-stat-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* --- Achievements Section --- */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.achievement-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 30px;
+    transition: var(--trans);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.achievement-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.achievement-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--cyan), var(--cyan2));
+    opacity: 0;
+    transition: var(--trans);
+}
+
+.achievement-card:hover::before {
+    opacity: 1;
+}
+
+.achievement-year {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(217, 70, 239, 0.1);
+    color: var(--cyan);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    width: max-content;
+}
+
+.achievement-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.achievement-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 15px;
+}
+
+.achievement-meta i {
+    color: var(--cyan);
+    margin-right: 4px;
+}
+
+.achievement-desc {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.achievement-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--trans);
+    display: inline-flex;
+    align-items: center;
+}
+
+.achievement-link:hover {
+    color: #fff;
+}
+
+/* Empty State / Coming Soon */
+.achievements-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.achievements-empty-inner {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 40px;
+    max-width: 500px;
+}
+
+.achievements-empty-inner i {
+    font-size: 3rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.achievements-empty-inner h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.achievements-empty-inner p {
+    color: var(--muted);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-stats {
+        gap: 20px;
+        padding: 20px;
+    }
+    .hero-stat {
+        min-width: 100px;
+    }
+    .hero-stat-num {
+        font-size: 2rem;
+    }
+}

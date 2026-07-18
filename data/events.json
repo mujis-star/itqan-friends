@@ -1,0 +1,15 @@
+{
+  "events": [
+  ],
+  "_meta": {
+    "description": "ITQAN Friends events data. Add real events here.",
+    "schema": {
+      "title": "string — event name",
+      "type": "string — e.g. 'Meeting', 'Workshop', 'Social', 'Competition'",
+      "date": "string — e.g. '2026-10-15'",
+      "description": "string — brief description",
+      "location": "string — optional venue",
+      "registerUrl": "string — optional registration link"
+    }
+  }
+}
