@@ -48,6 +48,23 @@
         --radius-sm:10px;
         --trans:    all .35s cubic-bezier(.4,0,.2,1);
     }
+    
+    [data-theme="light"] {
+        --bg:       #ffffff;
+        --bg2:      #f8fafc;
+        --bg3:      #f1f5f9;
+        --cyan:     #a21caf; /* darker cyan/purple for contrast */
+        --cyan2:    #7e22ce;
+        --gold:     #b45309; /* darker gold */
+        --rose:     #e11d48;
+        --rose2:    #be123c;
+        --text:     #0f172a;
+        --muted:    #64748b;
+        --border:   rgba(162, 28, 175, 0.15);
+        --border2:  rgba(15, 23, 42, 0.1);
+        --card:     rgba(255, 255, 255, 0.8);
+    }
+    
     *{margin:0;padding:0;box-sizing:border-box}
     html.lenis, html.lenis body { height: auto; }
     .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -68,29 +85,31 @@
         font-family: 'Inter', sans-serif;
         background: var(--bg);
         color: var(--text);
-        line-height: 1.65;
+        line-height: 1.7; /* Relaxed paragraphs */
         overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     h1, h2, h3, h4, h5, .logo-name, .sec-title, .hero h1, .cc-name, .w-ttl, .acc-hdr h2 {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+        font-weight: 800; /* Tighter bolder headings */
+        letter-spacing: -0.04em; /* Tighter letter spacing */
+        line-height: 1.2;
     }
 
     .logo-name {
         font-weight: 800;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.02em;
     }
 
     .hero h1 {
         font-weight: 800;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.04em;
     }
 
     .sec-title {
-        font-weight: 700;
-        letter-spacing: -0.01em;
+        font-weight: 800;
+        letter-spacing: -0.03em;
     }
 
     .hero-badge, .sec-eyebrow, .cc-role, .w-lab, .auth-btn, .btn, .media-tab, .htab, .admin-tbtn {
@@ -1997,6 +2016,9 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="header-controls">
+            <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
             <div class="auth-area" id="authArea">
                 <button class="auth-btn auth-btn-login" onclick="openAuthModal('login')">Login</button>
                 <button class="auth-btn auth-btn-register" onclick="openAuthModal('register')">Register</button>

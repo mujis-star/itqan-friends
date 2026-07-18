@@ -206,7 +206,26 @@
     if (pdfFile) formData.append("pdf", pdfFile);
 
     try {
-      const response = await fetch(`${BACKEND}/upload-magazine`, {
+      if (statusText) statusText.textContent = "Waking up server (can take 30-50s) & uploading...";
+      
+      const fetchWithRetry = async (url, options, maxRetries = 2) => {
+          for (let i = 0; i <= maxRetries; i++) {
+              try {
+                  const controller = new AbortController();
+                  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for cold start
+                  
+                  const res = await fetch(url, { ...options, signal: controller.signal });
+                  clearTimeout(timeoutId);
+                  return res;
+              } catch (err) {
+                  if (i === maxRetries) throw err;
+                  if (statusText) statusText.textContent = `Server still waking up, retrying (${i + 1}/${maxRetries})...`;
+                  await new Promise(r => setTimeout(r, 5000)); // wait 5 seconds before retry
+              }
+          }
+      };
+
+      const response = await fetchWithRetry(`${BACKEND}/upload-magazine`, {
         method: "POST",
         body: formData,
       });

@@ -1,7 +1,29 @@
 /* =========================================
    ITQAN Friends v2 Styles
-   (Hero, Stats, Achievements)
+   (Hero, Stats, Achievements, Theme)
 ========================================= */
+
+/* Theme Toggle Button */
+.theme-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--trans);
+    font-size: 1.1rem;
+    margin-right: 15px;
+}
+
+.theme-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--cyan);
+}
 
 /* Hero Particles Canvas */
 .hero-particles {
