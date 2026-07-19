@@ -1,4 +1,6 @@
-// three-scene.js
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import gsap from 'gsap';
 
 document.addEventListener("DOMContentLoaded", () => {
     initThreeScene();
@@ -11,136 +13,128 @@ function initThreeScene() {
     // --- 1. Scene Setup ---
     const scene = new THREE.Scene();
     
-    // Add subtle fog for atmospheric effect
-    scene.fog = new THREE.FogExp2('#05020a', 0.04);
+    // Heavy volumetric fog with dark hex color
+    scene.fog = new THREE.FogExp2(0x111111, 0.04);
+    // Setting background color to match the fog
+    scene.background = new THREE.Color(0x111111);
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 2, 8);
+    camera.position.set(0, 0, 8);
 
     const renderer = new THREE.WebGLRenderer({ 
         canvas: canvas, 
-        alpha: true, 
+        alpha: false, 
         antialias: true 
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Mobile optimization
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // --- 2. Lighting ---
-    // Ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambientLight);
 
-    // Spotlight pointing down for dramatic shadows
-    const spotLight = new THREE.SpotLight(0xffffff, 1.5);
+    // Bright SpotLight pointing downward
+    const spotLight = new THREE.SpotLight(0xffffff, 2.5);
     spotLight.position.set(0, 10, 5);
-    spotLight.angle = Math.PI / 6;
+    spotLight.angle = Math.PI / 5;
     spotLight.penumbra = 0.5;
     spotLight.castShadow = true;
     scene.add(spotLight);
 
-    // Neon tube lights (PointLights)
-    const cyanLight = new THREE.PointLight(0xd946ef, 2, 20); // Cyan/Purple
-    cyanLight.position.set(-4, 0, 2);
-    scene.add(cyanLight);
+    // Glowing neon blue PointLight for rim lighting
+    const blueNeonLight = new THREE.PointLight(0x00f3ff, 3, 20);
+    blueNeonLight.position.set(4, 2, 2);
+    scene.add(blueNeonLight);
 
-    const roseLight = new THREE.PointLight(0xf43f5e, 2, 20); // Rose
-    roseLight.position.set(4, -2, 2);
-    scene.add(roseLight);
-
-
-    // --- 3. Model Loading & Placeholder ---
-    let mixer; // AnimationMixer
-    let animationDuration = 5; // Placeholder duration
+    // --- 3. Model Loading & Fallback ---
+    let currentModel = null;
+    const loader = new GLTFLoader();
     
-    // Create a cinematic geometric placeholder until the user provides a GLTF model
-    const geometry = new THREE.IcosahedronGeometry(2, 2);
-    const material = new THREE.MeshStandardMaterial({ 
-        color: 0x111111,
-        roughness: 0.2,
-        metalness: 0.9
+    // Add a temporary loading text (font-family: Montserrat as requested)
+    const loadingDiv = document.createElement('div');
+    loadingDiv.innerText = 'Loading 3D Environment...';
+    Object.assign(loadingDiv.style, {
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        color: '#fff',
+        fontFamily: "'Montserrat', 'Helvetica', sans-serif",
+        fontSize: '14px',
+        opacity: '0.5',
+        pointerEvents: 'none',
+        zIndex: '0'
     });
-    const cube = new THREE.Mesh(geometry, material); // Keeping the variable name 'cube' for the mixer below
-    cube.castShadow = true;
-    cube.receiveShadow = true;
-    
-    // Add a glowing wireframe overlay for that "AI-generated" tech look
-    const wireframeMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0xd946ef, 
-        wireframe: true, 
-        transparent: true, 
-        opacity: 0.3 
-    });
-    const wireframe = new THREE.Mesh(geometry, wireframeMaterial);
-    wireframe.scale.set(1.01, 1.01, 1.01);
-    cube.add(wireframe);
-    
-    scene.add(cube);
+    document.body.appendChild(loadingDiv);
 
-    // Create a simple animation for the placeholder to test scrubbing
-    const times = [0, 5];
-    const values = [0, 0, 0, 0, 3, 0]; // Move up along Y axis
-    
-    const track = new THREE.VectorKeyframeTrack('.position', times, values);
-    const clip = new THREE.AnimationClip('move', 5, [track]);
-    
-    mixer = new THREE.AnimationMixer(cube);
-    const action = mixer.clipAction(clip);
-    action.play();
-    mixer.setTime(0); // Initialize at frame 0
-    action.paused = true; // Pause it so we can scrub it manually
-
-    /* 
-    // GLTF Loader scaffolding (Commented out until URL is provided)
-    const loader = new THREE.GLTFLoader();
-    const modelUrl = 'YOUR_MODEL_URL_HERE.gltf';
-    loader.load(modelUrl, (gltf) => {
-        scene.remove(cube); // Remove placeholder
-        
-        const model = gltf.scene;
-        model.traverse((node) => {
-            if (node.isMesh) {
-                node.castShadow = true;
-                node.receiveShadow = true;
-            }
+    function createFallbackGeometry() {
+        const geometry = new THREE.TorusKnotGeometry(1.5, 0.5, 256, 32);
+        const material = new THREE.MeshStandardMaterial({ 
+            color: 0x1a1a1a,
+            roughness: 0.1,
+            metalness: 0.95
         });
-        scene.add(model);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
+    }
 
-        if (gltf.animations && gltf.animations.length > 0) {
-            mixer = new THREE.AnimationMixer(model);
-            const action = mixer.clipAction(gltf.animations[0]);
-            animationDuration = gltf.animations[0].duration;
-            action.play();
-            action.paused = true; // Manual scrub
-        }
-    });
-    */
-
-    // --- 4. Drag to Scrub Interaction ---
-    let isDragging = false;
-    let startX = 0;
-    let currentScrubTime = 0; // Current time in animation
-    let targetScrubTime = 0; // Target time based on drag
+    const modelUrl = 'PLACEHOLDER_URL_TO_TEST_FALLBACK.glb';
     
+    loader.load(
+        modelUrl,
+        (gltf) => {
+            currentModel = gltf.scene;
+            scene.add(currentModel);
+            loadingDiv.remove();
+        },
+        undefined,
+        (error) => {
+            console.warn('Failed to load GLB model. Falling back to TorusKnotGeometry.', error);
+            // Crucial Fallback Logic
+            currentModel = createFallbackGeometry();
+            scene.add(currentModel);
+            loadingDiv.innerText = 'Fallback 3D Environment Loaded';
+            setTimeout(() => loadingDiv.remove(), 2000);
+        }
+    );
+
+    // --- 4. GSAP Drag-to-Scrub Interaction ---
+    let isDragging = false;
+    let previousX = 0;
+    
+    // We maintain a target rotation value
+    let targetRotationY = 0;
+
     const handleDragStart = (x) => {
         isDragging = true;
-        startX = x;
+        previousX = x;
         canvas.style.cursor = 'grabbing';
     };
 
     const handleDragMove = (x) => {
         if (!isDragging) return;
         
-        const deltaX = x - startX;
-        // Map screen drag distance to animation duration (e.g., full screen drag = full animation)
-        const scrubSensitivity = window.innerWidth; 
+        const deltaX = x - previousX;
         
-        let timeOffset = (deltaX / scrubSensitivity) * animationDuration;
-        targetScrubTime = Math.max(0, Math.min(animationDuration, currentScrubTime + timeOffset));
+        // Map drag distance to rotation
+        // Dragging full width of screen rotates by PI (180 degrees)
+        const rotationDelta = (deltaX / window.innerWidth) * Math.PI * 2;
+        targetRotationY += rotationDelta;
         
-        startX = x; // Reset startX for relative dragging
-        currentScrubTime = targetScrubTime;
+        if (currentModel) {
+            // Use GSAP to animate the rotation for smooth inertia and deceleration
+            gsap.to(currentModel.rotation, {
+                y: targetRotationY,
+                duration: 1.5, // The duration of the inertia deceleration
+                ease: "power2.out",
+                overwrite: "auto"
+            });
+        }
+        
+        previousX = x;
     };
 
     const handleDragEnd = () => {
@@ -148,13 +142,12 @@ function initThreeScene() {
         canvas.style.cursor = 'grab';
     };
 
-    // Mouse Events
-    canvas.addEventListener('mousedown', (e) => handleDragStart(e.clientX));
+    // Listeners on the window so dragging works globally
+    window.addEventListener('mousedown', (e) => handleDragStart(e.clientX));
     window.addEventListener('mousemove', (e) => handleDragMove(e.clientX));
     window.addEventListener('mouseup', handleDragEnd);
 
-    // Touch Events
-    canvas.addEventListener('touchstart', (e) => handleDragStart(e.touches[0].clientX));
+    window.addEventListener('touchstart', (e) => handleDragStart(e.touches[0].clientX));
     window.addEventListener('touchmove', (e) => handleDragMove(e.touches[0].clientX));
     window.addEventListener('touchend', handleDragEnd);
     
@@ -166,18 +159,17 @@ function initThreeScene() {
     function animate() {
         requestAnimationFrame(animate);
 
-        // Smoothly interpolate the mixer time towards the target scrub time
-        if (mixer) {
-            // Apply easing to the scrub time for smoothness
-            const timeDiff = targetScrubTime - mixer.time;
-            mixer.setTime(mixer.time + timeDiff * 0.1); 
-        }
-
-        // Add a slight idle floating animation to the camera for atmosphere
+        // Add a slight idle floating animation for atmosphere
         const elapsedTime = clock.getElapsedTime();
-        camera.position.x = Math.sin(elapsedTime * 0.2) * 0.5;
-        camera.position.y = 2 + Math.cos(elapsedTime * 0.3) * 0.3;
-        camera.lookAt(0, 0, 0);
+        if (currentModel && !isDragging) {
+            // Idle floating
+            currentModel.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
+            
+            // If we aren't overriding the rotation via GSAP, we can add a very slow idle spin
+            // but since GSAP controls rotation.y, let's idle rotate on X and Z slightly
+            currentModel.rotation.x = Math.sin(elapsedTime * 0.3) * 0.1;
+            currentModel.rotation.z = Math.cos(elapsedTime * 0.2) * 0.1;
+        }
 
         renderer.render(scene, camera);
     }
