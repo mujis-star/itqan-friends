@@ -25,15 +25,15 @@
     color: var(--cyan);
 }
 
-/* Hero Particles Canvas */
-.hero-particles {
+/* WebGL 3D Background Canvas */
+#webgl-canvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    pointer-events: auto; /* Required for GSAP interaction */
+    pointer-events: none; /* Let clicks pass through to your UI */
     opacity: 1; 
 }
 
