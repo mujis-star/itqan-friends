@@ -2057,35 +2057,62 @@
     <section class="hero" id="home">
         <div class="hero-grad"></div>
         <div class="hero-inner">
-            <div class="hero-badge"><i class="fas fa-heart"></i>&nbsp; Community · Friendship · Impact</div>
-            <h1>Building Friendship.<br>Creating <span class="gradient-text">Lasting Impact.</span></h1>
-            <p>ITQAN Friends brings people together through community, collaboration, and meaningful experiences.</p>
+            <div class="hero-badge"><i class="fas fa-heart"></i>&nbsp; Community · Innovation · Learning</div>
+            <h1>ITQAN Friends – Empowering Students Through <br><span class="gradient-text">Innovation, Learning &amp; Community</span></h1>
+            <p>A student union dedicated to organizing events, promoting collaboration, supporting academic growth, and creating opportunities for every member.</p>
             <div class="hero-btns">
-                <a href="#mission" class="btn btn-pink"><i class="fas fa-compass"></i> Explore Our Journey</a>
-                <a href="#team" class="btn btn-outline"><i class="fas fa-user-plus"></i> Join Community</a>
+                <a href="#events" class="btn btn-pink"><i class="fas fa-calendar-alt"></i> Explore Events</a>
+                <a href="#team" class="btn btn-pink"><i class="fas fa-users"></i> Meet the Team</a>
+                <a href="#join" class="btn btn-outline"><i class="fas fa-user-plus"></i> Join Community</a>
             </div>
         </div>
         <!-- Stats Bar -->
         <div class="hero-stats">
             <div class="hero-stat">
-                <span class="hero-stat-num" data-target="34">0</span>
-                <span class="hero-stat-label">Community Members</span>
+                <span class="hero-stat-num" data-target="300">0</span><span style="font-size:1.5rem;font-weight:700;color:var(--text)">+</span>
+                <span class="hero-stat-label">Members</span>
             </div>
             <div class="hero-stat">
-                <span class="hero-stat-num" data-target="3">0</span>
-                <span class="hero-stat-label">Events Held</span>
+                <span class="hero-stat-num" data-target="25">0</span><span style="font-size:1.5rem;font-weight:700;color:var(--text)">+</span>
+                <span class="hero-stat-label">Events</span>
             </div>
             <div class="hero-stat">
-                <span class="hero-stat-num" data-target="1">0</span>
-                <span class="hero-stat-label">Years Active</span>
+                <span class="hero-stat-num" data-target="12">0</span>
+                <span class="hero-stat-label">Workshops</span>
             </div>
             <div class="hero-stat">
-                <span class="hero-stat-num" data-target="2">0</span>
-                <span class="hero-stat-label">Achievements</span>
+                <span class="hero-stat-num" data-target="5">0</span>
+                <span class="hero-stat-label">Awards</span>
             </div>
         </div>
         <div class="scroll-hint"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
         <div class="hero-line"></div>
+    </section>
+
+    <!-- Announcements (Live Ticker / Cards) -->
+    <section class="announcements-section" id="announcements" style="padding: 60px 0 20px 0; background: var(--bg);">
+        <div class="container">
+            <div class="sec-wrap" style="text-align: left; margin-bottom: 30px;">
+                <div class="sec-eyebrow">Latest Updates</div>
+                <div class="sec-title">Important <span class="gradient-text">Announcements</span></div>
+            </div>
+            <div class="announcements-grid" id="announcementsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Generated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Activities -->
+    <section class="news-section" id="news" style="padding: 20px 0 80px 0; background: var(--bg);">
+        <div class="container">
+            <div class="sec-wrap" style="text-align: left; margin-bottom: 30px;">
+                <div class="sec-eyebrow">Our History</div>
+                <div class="sec-title">Recent <span class="gradient-text">Activities</span></div>
+            </div>
+            <div class="news-grid" id="newsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <!-- Generated via JS -->
+            </div>
+        </div>
     </section>
 
     <!-- Features / Mission -->
@@ -3076,6 +3103,94 @@
         {title:"Summer 2026 Newsletter", desc:"ZENITH recap, new members, achievements, and community updates.", date:"June 2026", type:"NEWSLETTER", color:"#ff3366", icon:"fa-envelope-open-text"}
     ];
 
+    // ===== ANNOUNCEMENTS DATA =====
+    const announcements = [
+        {
+            title: "General Body Meeting",
+            date: "25 July 2026",
+            badge: "Important",
+            badgeColor: "var(--rose)",
+            description: "Join us for the annual review of progress, financial reports, and future roadmap planning.",
+            link: "#"
+        },
+        {
+            title: "Workshop Registration Open",
+            date: "10 August 2026",
+            badge: "New",
+            badgeColor: "var(--cyan)",
+            description: "Seats are filling up fast for the upcoming UI/UX and WebGL masterclass. Register now!",
+            link: "#"
+        },
+        {
+            title: "Volunteer Recruitment",
+            date: "Ongoing",
+            badge: "Hiring",
+            badgeColor: "var(--gold)",
+            description: "We are looking for dedicated students to join the media and events wings for the upcoming semester.",
+            link: "#"
+        }
+    ];
+
+    function renderAnnouncements() {
+        const el = document.getElementById('announcementsGrid');
+        if (!el) return;
+        el.innerHTML = announcements.map(a => `
+            <div class="announcement-card rv" style="background: var(--card); border: 1px solid var(--border2); padding: 25px; border-radius: 16px; position: relative; overflow: hidden; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <span style="background: ${a.badgeColor}20; color: ${a.badgeColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">${a.badge}</span>
+                    <span style="color: var(--muted); font-size: 0.85rem; font-weight: 500;"><i class="far fa-calendar-alt"></i> ${a.date}</span>
+                </div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 10px; font-weight: 700; color: var(--text);">${a.title}</h3>
+                <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">${a.description}</p>
+                <a href="${a.link}" style="color: var(--cyan); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; transition: gap 0.2s ease;" onmouseover="this.style.gap='8px'" onmouseout="this.style.gap='5px'">Read More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        `).join('');
+    }
+
+    // ===== NEWS DATA =====
+    const newsActivities = [
+        {
+            title: "Successfully Conducted AI Workshop",
+            date: "12 May 2026",
+            icon: "fa-robot",
+            color: "var(--cyan)"
+        },
+        {
+            title: "Independence Day Celebration",
+            date: "15 August 2025",
+            icon: "fa-flag",
+            color: "var(--gold)"
+        },
+        {
+            title: "Blood Donation Camp",
+            date: "05 April 2025",
+            icon: "fa-heartbeat",
+            color: "var(--rose)"
+        },
+        {
+            title: "Sports Meet Highlights",
+            date: "20 Jan 2025",
+            icon: "fa-running",
+            color: "var(--cyan2)"
+        }
+    ];
+
+    function renderNews() {
+        const el = document.getElementById('newsGrid');
+        if (!el) return;
+        el.innerHTML = newsActivities.map(n => `
+            <div class="news-card rv" style="background: var(--card); border: 1px solid var(--border2); padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.05)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <div style="background: ${n.color}15; color: ${n.color}; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                    <i class="fas ${n.icon}"></i>
+                </div>
+                <div>
+                    <h4 style="font-weight: 700; color: var(--text); font-size: 1.05rem; margin-bottom: 5px; line-height: 1.3;">${n.title}</h4>
+                    <span style="color: var(--muted); font-size: 0.8rem; font-weight: 500;"><i class="far fa-calendar"></i> ${n.date}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
     // ===== RENDER FUNCTIONS =====
     function renderCoreGridFromData(data) {
         const el = document.getElementById('coreGrid');
@@ -3099,7 +3214,8 @@
                     </div>
                     <div class="cc-role" style="color:${tc}; background:${tc}15; border-color:${tc}30;">${m.role}</div>
                     <div class="cc-name" style="font-size: 1.3rem; margin-bottom: 8px;">${m.name}</div>
-                    <p class="cc-desc" style="color:var(--muted); line-height: 1.5; margin-bottom: 20px;">${m.desc || ''}</p>
+                    <div class="cc-dept" style="font-size: 0.85rem; font-weight: 600; color:${tc}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Executive Committee</div>
+                    <p class="cc-desc" style="color:var(--text); line-height: 1.5; margin-bottom: 20px; font-size: 0.95rem;">${m.desc || ''}</p>
                     <button class="cc-view-btn" style="background:${tc}15; color:${tc}; border-color:${tc}30;" onmouseover="this.style.background='${tc}'; this.style.color='#fff';" onmouseout="this.style.background='${tc}15'; this.style.color='${tc}';" onclick="showProfile('${m.name}','${m.role}','${m.desc || ''}','${photo}')">View Profile</button>
                 </div>
             </div>
@@ -4875,14 +4991,22 @@ document.addEventListener('DOMContentLoaded', function () {
             sec.setAttribute('data-aos-once', 'true');
         });
         
-        const dynamicContainers = ['coreGrid', 'wingsGrid', 'magCardsContainer', 'historyTimeline'];
-        dynamicContainers.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) {
-                el.setAttribute('data-aos', 'fade-up');
-                el.setAttribute('data-aos-delay', '100');
-            }
-        });
+        const dynamicContainers = ['coreGrid', 'wingsGrid', 'magCardsContainer', 'historyTimeline', 'announcementsGrid', 'newsGrid'];
+        let needsMount = false;
+        for (let c of dynamicContainers) {
+            if (document.getElementById(c)) needsMount = true;
+        }
+
+        if (needsMount) {
+            // Wait a brief moment to ensure DOM is fully ready
+            setTimeout(() => {
+                if(typeof renderCoreGridFromData === 'function') renderCoreGridFromData(defaultCoreMembers);
+                if(typeof renderWings === 'function') renderWings(defaultWings);
+                if(typeof renderMagazines === 'function') renderMagazines(publications);
+                if(typeof renderAnnouncements === 'function') renderAnnouncements();
+                if(typeof renderNews === 'function') renderNews();
+            }, 100);
+        }
 
         if (typeof AOS !== 'undefined') {
             AOS.init({
