@@ -11,6 +11,18 @@
     <meta property="og:description" content="ITQAN Friends brings people together through community, collaboration, and meaningful experiences.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://itqan-friends.vercel.app/">
+    <meta property="og:image" content="https://itqan-friends.vercel.app/profiles/logo.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NGO",
+      "name": "ITQAN Friends",
+      "url": "https://itqan-friends.vercel.app/",
+      "logo": "https://itqan-friends.vercel.app/profiles/logo.png",
+      "description": "A student union dedicated to organizing events, promoting collaboration, supporting academic growth, and creating opportunities for every member."
+    }
+    </script>
 
     <!-- Fonts: Option A - Modern Premium (Plus Jakarta Sans + Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -93,11 +105,44 @@
     .lenis.lenis-scrolling iframe { pointer-events: none; }
     html{scroll-padding-top:80px}
 
-    /* Font Smoothing */
+    /* Font Smoothing & Accessibility */
     body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+    }
+
+    /* Accessibility: Focus outlines */
+    *:focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 4px;
+    }
+
+    /* Accessibility: Skip to main content */
+    .skip-to-content {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--cyan);
+        color: white;
+        padding: 8px 16px;
+        z-index: 9999;
+        transition: top 0.2s ease;
+    }
+    .skip-to-content:focus {
+        top: 0;
+    }
+
+    /* Accessibility: Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 
     /* Typography - Option A */
@@ -2002,6 +2047,10 @@
     </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="animations.css?v=22">
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to Main Content</a>
+
     <!-- 3D Background Canvas -->
     <canvas id="webgl-canvas"></canvas>
     
@@ -2053,8 +2102,9 @@
     </div>
 </header>
 
+<main id="main-content">
     <!-- Hero -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" aria-label="Hero Section">
         <div class="hero-grad"></div>
         <div class="hero-inner">
             <div class="hero-badge"><i class="fas fa-heart"></i>&nbsp; Community · Innovation · Learning</div>
@@ -2426,6 +2476,7 @@
             </div>
         </div>
     </section>
+</main>
 
     <!-- Footer -->
     <footer id="contact">

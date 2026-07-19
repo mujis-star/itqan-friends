@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://itqan-friends-pi.vercel.app/sitemap.xml
+Sitemap: https://itqan-friends.vercel.app/sitemap.xml
