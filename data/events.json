@@ -1,15 +1,26 @@
-{
-  "events": [
-  ],
-  "_meta": {
-    "description": "ITQAN Friends events data. Add real events here.",
-    "schema": {
-      "title": "string — event name",
-      "type": "string — e.g. 'Meeting', 'Workshop', 'Social', 'Competition'",
-      "date": "string — e.g. '2026-10-15'",
-      "description": "string — brief description",
-      "location": "string — optional venue",
-      "registerUrl": "string — optional registration link"
+[
+    {
+        "id": "ai-workshop-2026",
+        "title": "Future of AI Workshop",
+        "date": "12 May 2026",
+        "time": "10:00 AM - 04:00 PM",
+        "location": "Main Auditorium",
+        "description": "An intensive 1-day workshop covering modern AI architectures, prompt engineering, and the ethics of autonomous agents. Perfect for beginners and advanced students.",
+        "speaker": "Dr. Sarah Chen",
+        "status": "upcoming",
+        "registrationUrl": "#",
+        "imageUrl": "profiles/event1.jpg"
+    },
+    {
+        "id": "hackathon-2026",
+        "title": "ITQAN Hackathon '26",
+        "date": "01 July 2026",
+        "time": "48 Hours",
+        "location": "Innovation Hub",
+        "description": "Join the biggest student-led 48-hour hackathon! Build incredible projects, meet mentors, and win prizes.",
+        "speaker": "Multiple Mentors",
+        "status": "upcoming",
+        "registrationUrl": "#",
+        "imageUrl": "profiles/event2.jpg"
     }
-  }
-}
+]

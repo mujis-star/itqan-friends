@@ -1,0 +1,20 @@
+{
+    "coreMembers": [
+        {"name":"Sayed Hudaif", "role":"President", "desc":"Leads strategic planning and represents the union externally.", "icon":"fa-crown"},
+        {"name":"Sayed Burhan", "role":"Vice President", "desc":"Supports the President and oversees operations.", "icon":"fa-shield-alt"},
+        {"name":"Zidan", "role":"Secretary", "desc":"Manages official records and documentation.", "icon":"fa-pen-alt"},
+        {"name":"Muhyudheen", "role":"Joint Secretary", "desc":"Administrative support and portfolio management.", "icon":"fa-cog"},
+        {"name":"Mirsad", "role":"Treasurer", "desc":"Manages financial assets and budgets.", "icon":"fa-coins"},
+        {"name":"Thanzeeh", "role":"Financial Manager", "desc":"Oversees financial operations and compliance.", "icon":"fa-chart-bar"},
+        {"name":"Shahzad", "role":"P.R.O", "desc":"External communications and media relations.", "icon":"fa-bullhorn"}
+    ],
+    "wings": [
+        {"name":"Urdu Wing", "chairman":"Muhammed V.K", "convener":"Hisham", "desc":"Urdu literature and heritage.", "icon":"fa-pen-fancy"},
+        {"name":"English Wing", "chairman":"Mujeeb", "convener":"Zameen", "desc":"Professional communication.", "icon":"fa-keyboard"},
+        {"name":"Arabic Wing", "chairman":"Naseem", "convener":"Razeen", "desc":"Arabic language and heritage.", "icon":"fa-moon"},
+        {"name":"Malayalam Wing", "chairman":"Rabeeh", "convener":"Muzzammil", "desc":"Regional linguistic heritage.", "icon":"fa-water"},
+        {"name":"Maths Wing", "chairman":"Muhammed U", "convener":"Muhammed PP", "desc":"Analytical thinking.", "icon":"fa-calculator"},
+        {"name":"Science Wing", "chairman":"Shabeel", "convener":"Muhaimin", "desc":"Science fairs and tech demos.", "icon":"fa-atom"},
+        {"name":"Media Wing", "chairman":"Muhammed S.M", "convener":"Shahzad", "desc":"Photography and videography.", "icon":"fa-camera-retro"}
+    ]
+}

@@ -1,0 +1,26 @@
+[
+    {
+        "title": "ITQAN Annual Report 2025",
+        "desc": "Committee achievements, financial summary, and future roadmap.",
+        "date": "April 2026",
+        "type": "ANNUAL REPORT",
+        "color": "#f5c518",
+        "icon": "fa-file-alt"
+    },
+    {
+        "title": "ITQAN Quarterly - Issue 03",
+        "desc": "Student spotlights, wing activities, and upcoming events.",
+        "date": "March 2026",
+        "type": "MAGAZINE",
+        "color": "#00e5ff",
+        "icon": "fa-newspaper"
+    },
+    {
+        "title": "Summer 2026 Newsletter",
+        "desc": "ZENITH recap, new members, achievements, and community updates.",
+        "date": "June 2026",
+        "type": "NEWSLETTER",
+        "color": "#ff3366",
+        "icon": "fa-envelope-open-text"
+    }
+]

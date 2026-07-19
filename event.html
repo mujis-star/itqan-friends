@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details - ITQAN Friends</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="v2-styles.css?v=23">
+    <link rel="stylesheet" href="animations.css?v=23">
+    <style>
+        .event-banner {
+            padding: 120px 5% 60px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg) 0%, rgba(10, 10, 15, 0.9) 100%);
+        }
+        .event-title {
+            font-size: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .event-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            color: var(--muted);
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .event-meta span {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border2);
+        }
+        .event-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 5% 100px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+        .register-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+        .error-state {
+            text-align: center;
+            padding: 100px 20px;
+            color: var(--rose);
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="https://i.ibb.co/3s6qCgT/itqan-logo-trans.png" alt="ITQAN Logo">
+                <div class="logo-text">
+                    <h2>ITQAN UNION</h2>
+                    <p>Intelligent Trainees For Qualified Academic Network</p>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#events">Events</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div id="event-content">
+            <div class="event-banner">
+                <h1 class="event-title">Loading...</h1>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="f-bot">
+            <p>&copy; 2026 ITQAN Friends. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('id');
+            const container = document.getElementById('event-content');
+
+            if (!eventId) {
+                container.innerHTML = `<div class="error-state"><h2>Event Not Found</h2><a href="index.html" class="btn btn-cyan" style="margin-top:20px;">Go Back Home</a></div>`;
+                return;
+            }
+
+            try {
+                const response = await fetch('data/events.json');
+                const events = await response.json();
+                const event = events.find(e => e.id === eventId);
+
+                if (event) {
+                    container.innerHTML = `
+                        <div class="event-banner">
+                            <h1 class="event-title">${event.title}</h1>
+                            <div class="event-meta">
+                                <span><i class="far fa-calendar-alt"></i> ${event.date}</span>
+                                <span><i class="far fa-clock"></i> ${event.time}</span>
+                                <span><i class="fas fa-map-marker-alt"></i> ${event.location}</span>
+                            </div>
+                        </div>
+                        <div class="event-container">
+                            <p>${event.description}</p>
+                            ${event.speaker ? `<p><strong>Speaker / Host:</strong> ${event.speaker}</p>` : ''}
+                            <div style="text-align: center;">
+                                <a href="${event.registrationUrl}" class="btn btn-pink register-btn">Register Now</a>
+                            </div>
+                        </div>
+                    `;
+                    document.title = `${event.title} - ITQAN Friends`;
+                } else {
+                    container.innerHTML = `<div class="error-state"><h2>Event Not Found</h2><a href="index.html" class="btn btn-cyan" style="margin-top:20px;">Go Back Home</a></div>`;
+                }
+            } catch (err) {
+                console.error('Failed to load event:', err);
+                container.innerHTML = `<div class="error-state"><h2>Error Loading Event</h2><p>Please check your connection and try again.</p></div>`;
+            }
+        });
+    </script>
+</body>
+</html>

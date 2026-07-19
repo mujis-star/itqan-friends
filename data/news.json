@@ -1,0 +1,26 @@
+[
+    {
+        "title": "Successfully Conducted AI Workshop",
+        "date": "12 May 2026",
+        "icon": "fa-robot",
+        "color": "var(--cyan)"
+    },
+    {
+        "title": "Independence Day Celebration",
+        "date": "15 August 2025",
+        "icon": "fa-flag",
+        "color": "var(--gold)"
+    },
+    {
+        "title": "Blood Donation Camp",
+        "date": "05 April 2025",
+        "icon": "fa-heartbeat",
+        "color": "var(--rose)"
+    },
+    {
+        "title": "Sports Meet Highlights",
+        "date": "20 Jan 2025",
+        "icon": "fa-running",
+        "color": "var(--cyan2)"
+    }
+]

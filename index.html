@@ -41,6 +41,33 @@
 
     <style>
     :root {
+        /* Design System Tokens */
+        --space-4:  4px;
+        --space-8:  8px;
+        --space-12: 12px;
+        --space-16: 16px;
+        --space-24: 24px;
+        --space-32: 32px;
+        --space-48: 48px;
+        --space-64: 64px;
+        --space-96: 96px;
+
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 20px;
+        --radius:    var(--radius-md);
+
+        --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+        --trans-fast: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --trans:      all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        --trans-slow: all 600ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Brand Colors */
         --bg:       #05020a;
         --bg2:      #0a0414;
         --bg3:      #120722;
@@ -56,9 +83,7 @@
         --card:     rgba(255, 255, 255, 0.03);
         --glow-c:   rgba(217, 70, 239, 0.3);
         --glow-r:   rgba(244, 63, 94, 0.3);
-        --radius:   18px;
-        --radius-sm:10px;
-        --trans:    all .35s cubic-bezier(.4,0,.2,1);
+        
         --header-bg: rgba(10, 5, 22, 0.7);
         --header-bg-scrolled: rgba(6, 2, 12, 0.88);
         --logo-gradient-start: #fff;
@@ -3128,61 +3153,16 @@
         return window.getProfileImage(name);
     }
 
-    const defaultCoreMembers = [
-        {name:"Sayed Hudaif", role:"President", desc:"Leads strategic planning and represents the union externally.", icon:"fa-crown"},
-        {name:"Sayed Burhan", role:"Vice President", desc:"Supports the President and oversees operations.", icon:"fa-shield-alt"},
-        {name:"Zidan", role:"Secretary", desc:"Manages official records and documentation.", icon:"fa-pen-alt"},
-        {name:"Muhyudheen", role:"Joint Secretary", desc:"Administrative support and portfolio management.", icon:"fa-cog"},
-        {name:"Mirsad", role:"Treasurer", desc:"Manages financial assets and budgets.", icon:"fa-coins"},
-        {name:"Thanzeeh", role:"Financial Manager", desc:"Oversees financial operations and compliance.", icon:"fa-chart-bar"},
-        {name:"Shahzad", role:"P.R.O", desc:"External communications and media relations.", icon:"fa-bullhorn"}
-    ];
+    
 
-    const defaultWings = [
-        {name:"Urdu Wing", chairman:"Muhammed V.K", convener:"Hisham", desc:"Urdu literature and heritage.", icon:"fa-pen-fancy"},
-        {name:"English Wing", chairman:"Mujeeb", convener:"Zameen", desc:"Professional communication.", icon:"fa-keyboard"},
-        {name:"Arabic Wing", chairman:"Naseem", convener:"Razeen", desc:"Arabic language and heritage.", icon:"fa-moon"},
-        {name:"Malayalam Wing", chairman:"Rabeeh", convener:"Muzzammil", desc:"Regional linguistic heritage.", icon:"fa-water"},
-        {name:"Maths Wing", chairman:"Muhammed U", convener:"Muhammed PP", desc:"Analytical thinking.", icon:"fa-calculator"},
-        {name:"Science Wing", chairman:"Shabeel", convener:"Muhaimin", desc:"Science fairs and tech demos.", icon:"fa-atom"},
-        {name:"Media Wing", chairman:"Muhammed S.M", convener:"Shahzad", desc:"Photography and videography.", icon:"fa-camera-retro"}
-    ];
+    
 
-    const publications = [
-        {title:"ITQAN Annual Report 2025", desc:"Committee achievements, financial summary, and future roadmap.", date:"April 2026", type:"ANNUAL REPORT", color:"#f5c518", icon:"fa-file-alt"},
-        {title:"ITQAN Quarterly --- Issue 03", desc:"Student spotlights, wing activities, and upcoming events.", date:"March 2026", type:"MAGAZINE", color:"#00e5ff", icon:"fa-newspaper"},
-        {title:"Summer 2026 Newsletter", desc:"ZENITH recap, new members, achievements, and community updates.", date:"June 2026", type:"NEWSLETTER", color:"#ff3366", icon:"fa-envelope-open-text"}
-    ];
+    
 
     // ===== ANNOUNCEMENTS DATA =====
-    const announcements = [
-        {
-            title: "General Body Meeting",
-            date: "25 July 2026",
-            badge: "Important",
-            badgeColor: "var(--rose)",
-            description: "Join us for the annual review of progress, financial reports, and future roadmap planning.",
-            link: "#"
-        },
-        {
-            title: "Workshop Registration Open",
-            date: "10 August 2026",
-            badge: "New",
-            badgeColor: "var(--cyan)",
-            description: "Seats are filling up fast for the upcoming UI/UX and WebGL masterclass. Register now!",
-            link: "#"
-        },
-        {
-            title: "Volunteer Recruitment",
-            date: "Ongoing",
-            badge: "Hiring",
-            badgeColor: "var(--gold)",
-            description: "We are looking for dedicated students to join the media and events wings for the upcoming semester.",
-            link: "#"
-        }
-    ];
+    
 
-    function renderAnnouncements() {
+    function renderAnnouncements(announcements) {
         const el = document.getElementById('announcementsGrid');
         if (!el) return;
         el.innerHTML = announcements.map((a, i) => `
@@ -3199,34 +3179,9 @@
     }
 
     // ===== NEWS DATA =====
-    const newsActivities = [
-        {
-            title: "Successfully Conducted AI Workshop",
-            date: "12 May 2026",
-            icon: "fa-robot",
-            color: "var(--cyan)"
-        },
-        {
-            title: "Independence Day Celebration",
-            date: "15 August 2025",
-            icon: "fa-flag",
-            color: "var(--gold)"
-        },
-        {
-            title: "Blood Donation Camp",
-            date: "05 April 2025",
-            icon: "fa-heartbeat",
-            color: "var(--rose)"
-        },
-        {
-            title: "Sports Meet Highlights",
-            date: "20 Jan 2025",
-            icon: "fa-running",
-            color: "var(--cyan2)"
-        }
-    ];
+    
 
-    function renderNews() {
+    function renderNews(newsActivities) {
         const el = document.getElementById('newsGrid');
         if (!el) return;
         el.innerHTML = newsActivities.map((n, i) => `
@@ -5049,14 +5004,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (needsMount) {
-            // Wait a brief moment to ensure DOM is fully ready
-            setTimeout(() => {
-                if(typeof renderCoreGridFromData === 'function') renderCoreGridFromData(defaultCoreMembers);
-                if(typeof renderWings === 'function') renderWings(defaultWings);
-                if(typeof renderMagazines === 'function') renderMagazines(publications);
-                if(typeof renderAnnouncements === 'function') renderAnnouncements();
-                if(typeof renderNews === 'function') renderNews();
-            }, 100);
+            Promise.all([
+                fetch('data/team.json').then(r => r.json()).catch(() => ({coreMembers:[], wings:[]})),
+                fetch('data/publications.json').then(r => r.json()).catch(() => []),
+                fetch('data/announcements.json').then(r => r.json()).catch(() => []),
+                fetch('data/news.json').then(r => r.json()).catch(() => [])
+            ]).then(([teamData, pubData, annData, newsData]) => {
+                if(typeof renderCoreGridFromData === 'function') renderCoreGridFromData(teamData.coreMembers);
+                if(typeof renderWings === 'function') renderWings(teamData.wings);
+                if(typeof renderMagazines === 'function') renderMagazines(pubData);
+                if(typeof renderAnnouncements === 'function') renderAnnouncements(annData);
+                if(typeof renderNews === 'function') renderNews(newsData);
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            });
         }
 
         if (typeof AOS !== 'undefined') {
@@ -5105,7 +5065,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 </script>
 <script src="v2-features.js"></script>
-<script type="module" src="three-scene.js"></script>
+<script type="module">
+    import { initThreeScene } from './three/scene.js';
+    document.addEventListener("DOMContentLoaded", () => {
+        initThreeScene("webgl-canvas");
+    });
+</script>
 </body>
 </html>
 
