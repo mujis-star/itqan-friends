@@ -68,7 +68,7 @@ function initThreeScene() {
         return mesh;
     }
 
-    const modelUrl = 'PLACEHOLDER_URL.glb'; // Replace with your actual .glb URL
+    const modelUrl = 'RobotExpressive.glb';
     
     loader.load(
         modelUrl,
@@ -140,7 +140,7 @@ function initThreeScene() {
         // Add a slight cinematic idle float when not actively dragging
         if (currentModel && !isDragging) {
             const elapsedTime = clock.getElapsedTime();
-            currentModel.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
+            currentModel.position.y = -2 + Math.sin(elapsedTime * 0.5) * 0.2;
             currentModel.rotation.x = Math.sin(elapsedTime * 0.3) * 0.1;
             currentModel.rotation.z = Math.cos(elapsedTime * 0.2) * 0.1;
         }
