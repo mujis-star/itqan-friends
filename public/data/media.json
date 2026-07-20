@@ -1,0 +1,62 @@
+{
+    "categories": ["All", "Photos", "Videos", "Magazines", "Tabloids", "Publications"],
+    "items": [
+        {
+            "id": "mag-2026",
+            "title": "ITQAN Annual Magazine 2026",
+            "category": "Magazines",
+            "date": "2026-06-15",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0085.jpg",
+            "fileSize": "12 MB",
+            "pages": 120,
+            "description": "The definitive look back at our accomplishments in the 2025-2026 academic year."
+        },
+        {
+            "id": "video-hackathon",
+            "title": "Innovation Hackathon Highlights",
+            "category": "Videos",
+            "date": "2026-04-20",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0086.jpg",
+            "duration": "03:45",
+            "description": "A cinematic recap of our largest coding event of the year."
+        },
+        {
+            "id": "photo-assembly",
+            "title": "General Assembly 2026",
+            "category": "Photos",
+            "date": "2026-01-10",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0084.jpg",
+            "count": 45,
+            "description": "Photos from the first General Assembly of the year."
+        },
+        {
+            "id": "pub-leadership",
+            "title": "Leadership in the Digital Age",
+            "category": "Publications",
+            "date": "2025-11-05",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0087.jpg",
+            "fileSize": "3 MB",
+            "pages": 24,
+            "description": "A whitepaper published by the ITQAN Media Wing on future leadership trends."
+        },
+        {
+            "id": "tab-tech",
+            "title": "Tech Trends Monthly - Vol 5",
+            "category": "Tabloids",
+            "date": "2025-10-12",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0088.jpg",
+            "fileSize": "1.5 MB",
+            "pages": 8,
+            "description": "Latest updates from the world of AI, Web3, and Student tech initiatives."
+        },
+        {
+            "id": "photo-workshop",
+            "title": "AI & Web Dev Workshop",
+            "category": "Photos",
+            "date": "2025-09-22",
+            "thumbnail": "/legacy/images/gallery/IMG-20250625-WA0089.jpg",
+            "count": 112,
+            "description": "Behind the scenes of our intensive weekend workshop."
+        }
+    ]
+}

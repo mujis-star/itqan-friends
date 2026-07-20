@@ -77,15 +77,11 @@ export const NetworkSphere = () => {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={positions.length / 3}
-            array={positions}
-            itemSize={3}
+            args={[positions, 3]}
           />
           <bufferAttribute
             attach="attributes-color"
-            count={colors.length / 3}
-            array={colors}
-            itemSize={3}
+            args={[colors, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
@@ -102,9 +98,7 @@ export const NetworkSphere = () => {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={connections.length / 3}
-            array={connections}
-            itemSize={3}
+            args={[connections, 3]}
           />
         </bufferGeometry>
         <lineBasicMaterial

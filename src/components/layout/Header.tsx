@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Menu, X, Command } from 'lucide-react';
 
@@ -17,10 +18,12 @@ export const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Wings', href: '#wings' },
-    { name: 'Events', href: '#events' },
-    { name: 'Achievements', href: '#timeline' },
+    { name: 'About', href: '/#about' },
+    { name: 'Wings', href: '/#wings' },
+    { name: 'Events', href: '/#events' },
+    { name: 'Achievements', href: '/#timeline' },
+    { name: 'Media', href: '/media' },
+    { name: 'Team', href: '/team' },
     { name: 'Portal', href: '/portal' },
   ];
 
@@ -36,9 +39,14 @@ export const Header = () => {
         }`}>
           
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-accent flex items-center justify-center text-white font-bold tracking-tighter">
-              IU
-            </div>
+            <Image 
+              src="/logo.png" 
+              alt="ITQAN Logo" 
+              width={36} 
+              height={36} 
+              className="object-contain" 
+              unoptimized
+            />
             <span className="font-bold text-lg hidden sm:block tracking-wide group-hover:text-accent transition-colors">
               ITQAN
             </span>
