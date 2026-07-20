@@ -55,7 +55,7 @@ export const TimelineAchievements = () => {
   ];
 
   return (
-    <section id="timeline" className="py-24 bg-black/40 relative">
+    <section id="timeline" className="py-24 bg-black/40 relative scroll-mt-24">
       <div className="container mx-auto px-6">
         <SectionHeader 
           eyebrow="Our Journey"

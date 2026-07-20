@@ -2,19 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Image, Video, FileText, BookOpen, Layers } from "lucide-react";
-
-interface MediaItem {
-  id: string;
-  title: string;
-  category: string;
-  date: string;
-  thumbnail: string;
-  description: string;
-  fileSize?: string;
-  pages?: number;
-  duration?: string;
-  count?: number;
-}
+import { MediaService, MediaItem } from "@/services/MediaService";
 
 interface MediaData {
   categories: string[];
@@ -26,10 +14,26 @@ export default function MediaArchive() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
-    fetch("/data/media.json")
-      .then((res) => res.json())
-      .then((json) => setData(json))
-      .catch((err) => console.error("Failed to load media", err));
+    const loadData = async () => {
+      // 1. Try to fetch real legacy data from Firestore
+      const firebaseItems = await MediaService.fetchAllMedia();
+      
+      if (firebaseItems.length > 0) {
+        const uniqueCategories = ["All", ...Array.from(new Set(firebaseItems.map(i => i.category)))];
+        setData({ categories: uniqueCategories, items: firebaseItems });
+      } else {
+        // 2. Fallback to placeholder JSON if database is empty/unconfigured
+        try {
+          const res = await fetch("/data/media.json");
+          const json = await res.json();
+          setData(json);
+        } catch (err) {
+          console.error("Failed to load fallback media", err);
+        }
+      }
+    };
+    
+    loadData();
   }, []);
 
   if (!data) {
@@ -56,7 +60,7 @@ export default function MediaArchive() {
   };
 
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div className="container mx-auto px-6 pt-32 pb-12">
       <div className="max-w-4xl mx-auto text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
           ITQAN <span className="text-accent">Media Archive</span>
@@ -86,7 +90,9 @@ export default function MediaArchive() {
       {/* Media Grid */}
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <AnimatePresence mode="popLayout">
-          {filteredItems.map((item) => (
+          {filteredItems.map((item) => {
+            const finalUrl = item.fileUrl || item.thumbnail || "#";
+            return (
             <motion.div
               layout
               initial={{ opacity: 0, scale: 0.9 }}
@@ -94,43 +100,62 @@ export default function MediaArchive() {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
               key={item.id}
-              className="glass rounded-2xl overflow-hidden group cursor-pointer hover:border-accent/50 transition-colors"
             >
-              <div className="relative h-48 bg-gray-800/50 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-                {/* Fallback image style since actual images might not exist */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-secondary/20 to-accent/20 group-hover:scale-110 transition-transform duration-700"></div>
-                
-                <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
-                  <div className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-accent">
-                    {getIcon(item.category)}
+              <a
+                href={finalUrl === "" ? "#" : finalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-2xl overflow-hidden group cursor-pointer hover:border-accent/50 transition-colors block h-full"
+              >
+                <div className="relative h-48 bg-gray-800/50 overflow-hidden">
+                  {/* Real Thumbnail Image */}
+                  {item.thumbnail && (
+                    <img 
+                      src={item.thumbnail} 
+                      alt={item.title} 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 z-0"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+                  {/* Fallback gradient if image fails or doesn't exist */}
+                  {!item.thumbnail && (
+                    <div className="absolute inset-0 bg-gradient-to-tr from-secondary/20 to-accent/20 group-hover:scale-110 transition-transform duration-700"></div>
+                  )}
+                  
+                  <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
+                    <div className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-accent">
+                      {getIcon(item.category)}
+                    </div>
+                    <span className="text-xs font-semibold px-2 py-1 bg-white/10 rounded-full backdrop-blur-md border border-white/10">
+                      {item.category}
+                    </span>
                   </div>
-                  <span className="text-xs font-semibold px-2 py-1 bg-white/10 rounded-full backdrop-blur-md border border-white/10">
-                    {item.category}
-                  </span>
                 </div>
-              </div>
 
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                  {item.description}
-                </p>
-                
-                <div className="flex items-center justify-between text-xs text-gray-500 border-t border-white/5 pt-4">
-                  <span>{new Date(item.date).toLocaleDateString()}</span>
-                  <div className="flex items-center gap-3">
-                    {item.pages && <span>{item.pages} Pages</span>}
-                    {item.duration && <span>{item.duration}</span>}
-                    {item.count && <span>{item.count} Items</span>}
-                    {item.fileSize && <span>{item.fileSize}</span>}
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    {item.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500 border-t border-white/5 pt-4">
+                    <span>{new Date(item.date).toLocaleDateString()}</span>
+                    <div className="flex items-center gap-3">
+                      {item.pages && <span>{item.pages} Pages</span>}
+                      {item.duration && <span>{item.duration}</span>}
+                      {item.count && <span>{item.count} Items</span>}
+                      {item.fileSize && <span>{item.fileSize}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a>
             </motion.div>
-          ))}
+          )})}
         </AnimatePresence>
       </motion.div>
     </div>

@@ -35,7 +35,7 @@ export const EcosystemWings = () => {
   ];
 
   return (
-    <section id="wings" className="py-24 relative">
+    <section id="wings" className="py-24 relative scroll-mt-24">
       <div className="container mx-auto px-6">
         <SectionHeader 
           eyebrow="Structure"

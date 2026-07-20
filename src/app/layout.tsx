@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+
 const geistSans = { variable: "--font-geist-sans" };
 const geistMono = { variable: "--font-geist-mono" };
 
@@ -20,14 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-accent selection:text-black`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary text-white selection:bg-accent/30 min-h-screen`}
       >
-        <CommandPalette />
-        <Header />
-        <main className="min-h-screen pt-24 pb-16">
-          {children}
-        </main>
-        <Footer />
+        <AuthProvider>
+          <CommandPalette />
+          <Header />
+          <main className="pt-24 min-h-[calc(100vh-80px)]">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

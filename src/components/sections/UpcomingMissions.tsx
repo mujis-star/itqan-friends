@@ -28,7 +28,7 @@ export const UpcomingMissions = () => {
   ];
 
   return (
-    <section id="events" className="py-24 relative">
+    <section id="events" className="py-24 relative scroll-mt-24">
       <div className="container mx-auto px-6">
         <SectionHeader 
           eyebrow="Mission Control"

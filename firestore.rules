@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only authenticated users can read basic collections
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      // Only admins or the user themselves can update their profile
+      allow write: if request.auth != null && (request.auth.uid == userId || request.auth.token.role in ['Administrator', 'Super Admin']);
+    }
+    
+    // Only admins can read/write audit logs
+    match /audit_logs/{logId} {
+      allow read, write: if request.auth != null && request.auth.token.role in ['Administrator', 'Super Admin'];
+    }
+    
+    // Public read for content, admin write
+    match /magazines/{magId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.role in ['Media', 'Administrator', 'Super Admin'];
+    }
+  }
+}

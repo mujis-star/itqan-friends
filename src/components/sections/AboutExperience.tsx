@@ -31,7 +31,7 @@ export const AboutExperience = () => {
   ];
 
   return (
-    <section id="about" className="py-24 relative z-10">
+    <section id="about" className="py-24 relative z-10 scroll-mt-24">
       <div className="container mx-auto px-6">
         <SectionHeader 
           eyebrow="The ITQAN Experience"
