@@ -25,10 +25,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // 3. Validate File
+    // 3. Validate Inputs
     const validation = mediaUploadSchema.safeParse({
-      size: file.size,
-      type: file.type,
+      title: title,
+      description: description,
+      type: category,
+      file: file,
     });
     if (!validation.success) {
       return NextResponse.json({ error: validation.error.format() }, { status: 400 });

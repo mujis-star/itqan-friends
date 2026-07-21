@@ -57,7 +57,13 @@ export default function MediaUploadForm() {
         setTitle("");
         setDescription("");
       } else {
-        setStatus({ type: "error", message: data.error || "Upload failed." });
+        let errorMessage = "Upload failed.";
+        if (typeof data.error === "string") {
+          errorMessage = data.error;
+        } else if (data.error && typeof data.error === "object") {
+          errorMessage = "Validation Error: Invalid file or inputs.";
+        }
+        setStatus({ type: "error", message: errorMessage });
       }
     } catch (error: any) {
       setStatus({ type: "error", message: error.message || "An error occurred." });
