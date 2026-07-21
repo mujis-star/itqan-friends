@@ -33,4 +33,34 @@ export class MediaRepository {
       throw error;
     }
   }
+
+  static async getMedia() {
+    if (!adminDb) return { gallery: [], magazines: [] };
+    
+    const gallerySnap = await adminDb.collection("gallery").orderBy("createdAt", "desc").get();
+    const magazinesSnap = await adminDb.collection("magazines").orderBy("createdAt", "desc").get();
+    
+    const gallery = gallerySnap.docs.map((doc: any) => ({ 
+      id: doc.id, 
+      collection: "gallery", 
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate()?.toISOString() || null
+    }));
+    
+    const magazines = magazinesSnap.docs.map((doc: any) => ({ 
+      id: doc.id, 
+      collection: "magazines", 
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate()?.toISOString() || null
+    }));
+    
+    return { gallery, magazines };
+  }
+
+  static async deleteMedia(collection: string, id: string) {
+    if (!adminDb) throw new Error("Firestore Admin SDK not initialized");
+    if (collection !== "gallery" && collection !== "magazines") throw new Error("Invalid collection");
+    
+    await adminDb.collection(collection).doc(id).delete();
+  }
 }
