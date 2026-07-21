@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Crown, Shield, PenTool, Settings, Coins, BarChart, Megaphone, Users, Mail, Phone, MapPin } from "lucide-react";
+import { ArrowLeft, Crown, Shield, PenTool, Settings, Coins, BarChart, Megaphone, Users, Mail, Phone, MapPin, User, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -10,6 +10,8 @@ interface TeamMember {
   role: string;
   desc: string;
   icon: string;
+  about?: string;
+  responsibilities?: string[];
 }
 
 export default function MemberProfilePage({ params }: { params: Promise<{ memberId: string }> }) {
@@ -99,6 +101,43 @@ export default function MemberProfilePage({ params }: { params: Promise<{ member
             </div>
           </div>
         </div>
+
+        {/* Extended Details Section */}
+        {(member.about || member.responsibilities) && (
+          <div className="mt-16 grid md:grid-cols-2 gap-12 border-t border-white/10 pt-12">
+            
+            {/* About Section */}
+            {member.about && (
+              <div>
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <User size={20} className="text-accent" />
+                  About
+                </h3>
+                <p className="text-gray-300 leading-relaxed bg-white/5 p-6 rounded-2xl border border-white/10">
+                  {member.about}
+                </p>
+              </div>
+            )}
+
+            {/* Responsibilities Section */}
+            {member.responsibilities && member.responsibilities.length > 0 && (
+              <div>
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <CheckCircle2 size={20} className="text-secondary" />
+                  Key Responsibilities
+                </h3>
+                <ul className="space-y-3">
+                  {member.responsibilities.map((resp, i) => (
+                    <li key={i} className="flex items-start gap-3 bg-white/5 p-4 rounded-xl border border-white/10">
+                      <div className="mt-1 w-2 h-2 rounded-full bg-secondary shrink-0"></div>
+                      <span className="text-gray-300 text-sm">{resp}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

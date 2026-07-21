@@ -1,12 +1,61 @@
 {
     "coreMembers": [
-        {"name":"Sayed Hudaif", "role":"President", "desc":"Leads strategic planning and represents the union externally.", "icon":"fa-crown"},
-        {"name":"Sayed Burhan", "role":"Vice President", "desc":"Supports the President and oversees operations.", "icon":"fa-shield-alt"},
-        {"name":"Zidan", "role":"Secretary", "desc":"Manages official records and documentation.", "icon":"fa-pen-alt"},
-        {"name":"Muhyudheen", "role":"Joint Secretary", "desc":"Administrative support and portfolio management.", "icon":"fa-cog"},
-        {"name":"Mirsad", "role":"Treasurer", "desc":"Manages financial assets and budgets.", "icon":"fa-coins"},
-        {"name":"Thanzeeh", "role":"Financial Manager", "desc":"Oversees financial operations and compliance.", "icon":"fa-chart-bar"},
-        {"name":"Shahzad", "role":"P.R.O", "desc":"External communications and media relations.", "icon":"fa-bullhorn"}
+        {
+            "name":"Sayed Hudaif", 
+            "role":"President", 
+            "desc":"Leads strategic planning and represents the union externally.", 
+            "icon":"fa-crown",
+            "about": "Sayed Hudaif is a visionary leader with a passion for student welfare and community building. He has spearheaded numerous initiatives that have transformed the ITQAN ecosystem into a thriving hub for innovation.",
+            "responsibilities": ["Oversee all ITQAN operations", "Represent the student body externally", "Drive long-term strategic initiatives", "Chair executive committee meetings"]
+        },
+        {
+            "name":"Sayed Burhan", 
+            "role":"Vice President", 
+            "desc":"Supports the President and oversees operations.", 
+            "icon":"fa-shield-alt",
+            "about": "Sayed Burhan acts as the strong operational backbone of the committee. With a keen eye for detail, he ensures that all events and daily activities run smoothly and efficiently.",
+            "responsibilities": ["Assist the President in daily tasks", "Manage internal committee relations", "Oversee wing activities", "Step in for the President when required"]
+        },
+        {
+            "name":"Zidan", 
+            "role":"Secretary", 
+            "desc":"Manages official records and documentation.", 
+            "icon":"fa-pen-alt",
+            "about": "Zidan is the organizational powerhouse behind ITQAN. He manages all critical documentation, communication channels, and ensures that every meeting is effectively recorded and actioned.",
+            "responsibilities": ["Maintain official records and minutes", "Manage internal communications", "Handle correspondence and scheduling", "Ensure compliance with ITQAN bylaws"]
+        },
+        {
+            "name":"Muhyudheen", 
+            "role":"Joint Secretary", 
+            "desc":"Administrative support and portfolio management.", 
+            "icon":"fa-cog",
+            "about": "Providing crucial administrative support, Muhyudheen works closely with the Secretary to maintain the high standards of ITQAN's organizational structure and daily workflow.",
+            "responsibilities": ["Assist the Secretary in administrative tasks", "Manage specific project portfolios", "Coordinate with external vendors", "Organize executive files"]
+        },
+        {
+            "name":"Mirsad", 
+            "role":"Treasurer", 
+            "desc":"Manages financial assets and budgets.", 
+            "icon":"fa-coins",
+            "about": "Mirsad brings financial discipline and transparency to ITQAN. He meticulously plans budgets and ensures that all funds are allocated efficiently for maximum impact.",
+            "responsibilities": ["Manage the annual budget", "Maintain transparent financial records", "Process approvals and reimbursements", "Provide financial reports to the board"]
+        },
+        {
+            "name":"Thanzeeh", 
+            "role":"Financial Manager", 
+            "desc":"Oversees financial operations and compliance.", 
+            "icon":"fa-chart-bar",
+            "about": "Working in tandem with the Treasurer, Thanzeeh ensures all financial operations comply with established protocols, performing audits and optimizing resource allocation.",
+            "responsibilities": ["Conduct financial compliance checks", "Assist in budget allocation", "Monitor expenditure across wings", "Develop financial strategy"]
+        },
+        {
+            "name":"Shahzad", 
+            "role":"P.R.O", 
+            "desc":"External communications and media relations.", 
+            "icon":"fa-bullhorn",
+            "about": "Shahzad is the voice of ITQAN. He crafts compelling narratives, manages public relations, and ensures that the organization's achievements are broadcasted far and wide.",
+            "responsibilities": ["Manage social media and public channels", "Draft press releases and announcements", "Coordinate with media partners", "Build brand awareness for ITQAN"]
+        }
     ],
     "wings": [
         {"name":"Urdu Wing", "chairman":"Muhammed V.K", "convener":"Hisham", "desc":"Urdu literature and heritage.", "icon":"fa-pen-fancy"},
