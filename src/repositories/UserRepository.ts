@@ -33,4 +33,44 @@ export class UserRepository {
       return null;
     }
   }
+
+  /**
+   * Fetches all registered users (Server-side, Admin only)
+   */
+  static async getAllUsers(): Promise<UserProfile[]> {
+    if (!adminDb) return [];
+
+    try {
+      const snapshot = await adminDb.collection(this.collection).orderBy("createdAt", "desc").get();
+      return snapshot.docs.map((doc: any) => {
+        const data = doc.data();
+        return {
+          uid: doc.id,
+          ...data,
+          createdAt: data?.createdAt?.toDate() || new Date(),
+        } as UserProfile;
+      });
+    } catch (error) {
+      console.error("Error fetching all users", error);
+      return [];
+    }
+  }
+
+  /**
+   * Updates a user's role (Server-side, Admin only)
+   */
+  static async updateUserRole(uid: string, newRole: string): Promise<boolean> {
+    if (!adminDb) return false;
+
+    try {
+      await adminDb.collection(this.collection).doc(uid).update({
+        role: newRole,
+        updatedAt: new Date()
+      });
+      return true;
+    } catch (error) {
+      console.error("Error updating user role", error);
+      return false;
+    }
+  }
 }

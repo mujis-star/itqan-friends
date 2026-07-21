@@ -46,9 +46,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <p className="text-xs text-gray-500 mt-1">Logged in as {role}</p>
         </div>
         <nav className="p-4 flex-1 space-y-2">
-          <a href="#" className="block px-4 py-3 rounded-xl bg-white/10 text-white font-medium">Dashboard</a>
+          <a href="/portal/dashboard" className="block px-4 py-3 rounded-xl bg-white/10 text-white font-medium">Dashboard</a>
           <a href="#" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Media & Events</a>
-          <a href="#" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Members</a>
+          <a href="/portal/dashboard/members" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Members</a>
           <a href="#" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Audit Logs</a>
         </nav>
       </aside>
