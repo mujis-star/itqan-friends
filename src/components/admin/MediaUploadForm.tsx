@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { UploadCloud, CheckCircle, AlertCircle } from "lucide-react";
+import { auth } from "@/lib/firebase/config";
 
 export default function MediaUploadForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -17,6 +18,23 @@ export default function MediaUploadForm() {
     setLoading(true);
     setStatus(null);
 
+    // Get the current user's Firebase ID token for server-side verification
+    const currentUser = auth?.currentUser;
+    if (!currentUser) {
+      setStatus({ type: "error", message: "You must be logged in to upload files. Please sign in again." });
+      setLoading(false);
+      return;
+    }
+
+    let idToken: string;
+    try {
+      idToken = await currentUser.getIdToken();
+    } catch {
+      setStatus({ type: "error", message: "Failed to get authentication token. Please sign in again." });
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("title", title);
@@ -26,6 +44,9 @@ export default function MediaUploadForm() {
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
         body: formData,
       });
       const data = await res.json();
