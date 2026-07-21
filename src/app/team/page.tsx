@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Crown, Shield, PenTool, Settings, 
-  Coins, BarChart, Megaphone, Users 
+  Coins, BarChart, Megaphone, Users, ArrowRight
 } from "lucide-react";
+import Link from "next/link";
 
 interface TeamMember {
   name: string;
@@ -82,7 +83,7 @@ export default function TeamPage() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               key={member.name}
-              className="glass p-6 rounded-2xl group hover:border-accent/30 transition-all duration-300 relative overflow-hidden"
+              className="glass p-6 rounded-2xl group hover:border-accent/30 transition-all duration-300 relative overflow-hidden flex flex-col h-full"
             >
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/20 transition-colors"></div>
               
@@ -92,9 +93,18 @@ export default function TeamPage() {
               
               <h3 className="text-lg font-bold mb-1">{member.name}</h3>
               <div className="text-accent text-sm font-medium mb-3">{member.role}</div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400 flex-grow">
                 {member.desc}
               </p>
+
+              <div className="pt-6 mt-auto">
+                <Link 
+                  href={`/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  className="inline-flex items-center text-sm font-medium text-white/70 hover:text-accent transition-colors"
+                >
+                  View Profile <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>
