@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     
     // Verify requester is an Admin
     const requester = await UserRepository.getUserProfile(decodedToken.uid);
-    if (!requester || requester.role !== "Admin") {
+    if (!requester || (!requester.role.toLowerCase().includes("admin") && requester.role !== "Super Admin")) {
       return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
     }
 
@@ -38,7 +38,7 @@ export async function PATCH(request: Request) {
     
     // Verify requester is an Admin
     const requester = await UserRepository.getUserProfile(decodedToken.uid);
-    if (!requester || requester.role !== "Admin") {
+    if (!requester || (!requester.role.toLowerCase().includes("admin") && requester.role !== "Super Admin")) {
       return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
     }
 

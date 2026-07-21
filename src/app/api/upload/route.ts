@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       file: file,
     });
     if (!validation.success) {
-      return NextResponse.json({ error: validation.error.format() }, { status: 400 });
+      return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
     }
 
     // 4. Convert File to Buffer

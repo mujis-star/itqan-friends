@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -18,5 +18,5 @@ if (firebaseConfig.apiKey) {
 }
 
 export const auth = app ? getAuth(app) : null as any;
-export const db = app ? getFirestore(app) : null as any;
+export const db = app ? initializeFirestore(app, { experimentalForceLongPolling: true }) : null as any;
 export const storage = app ? getStorage(app) : null as any;

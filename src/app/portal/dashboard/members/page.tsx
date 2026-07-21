@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { User, ShieldAlert, CheckCircle2, MoreVertical, Shield } from "lucide-react";
+import { User, ShieldAlert, CheckCircle2, Trash2, Shield } from "lucide-react";
 import { auth } from "@/lib/firebase/config";
 
 interface UserProfile {
@@ -80,6 +80,34 @@ export default function MembersPage() {
     }
   };
 
+  const handleDeleteUser = async (uid: string) => {
+    if (!auth?.currentUser) return;
+    if (!confirm("Are you sure you want to permanently delete this user? This cannot be undone.")) return;
+
+    setUpdating(uid);
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(`/api/users/${uid}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      if (!res.ok) {
+        throw new Error("Failed to delete user");
+      }
+      
+      // Update local state
+      setUsers(users.filter(u => u.uid !== uid));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete user. Ensure you have Admin privileges.");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -88,7 +116,7 @@ export default function MembersPage() {
     );
   }
 
-  if (currentUserRole !== "Admin") {
+  if (!currentUserRole?.toLowerCase().includes("admin") && currentUserRole !== "Super Admin") {
     return (
       <div className="glass p-8 rounded-2xl flex flex-col items-center justify-center text-center">
         <ShieldAlert className="text-red-400 mb-4" size={48} />
@@ -158,9 +186,16 @@ export default function MembersPage() {
                     </select>
                   </td>
                   <td className="p-4 text-right">
-                    <button className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-white/5 transition-colors">
-                      <MoreVertical size={18} />
-                    </button>
+                    {user.uid !== currentUser?.uid && (
+                      <button 
+                        onClick={() => handleDeleteUser(user.uid)}
+                        disabled={updating === user.uid}
+                        className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                        title="Delete User"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
