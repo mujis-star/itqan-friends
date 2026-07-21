@@ -5,17 +5,20 @@ import { motion } from "framer-motion";
 import { Sparkles, Search, Command } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase/config";
 
 export default function PortalPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     // Redirect if already logged in
@@ -24,27 +27,46 @@ export default function PortalPage() {
     }
   }, [user, authLoading, router]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError("Please enter both email and password.");
+    if (!email || !password || (isSignUp && !name)) {
+      setError("Please fill in all required fields.");
       return;
     }
     
     setError("");
-    setIsLoggingIn(true);
+    setIsProcessing(true);
     
     try {
-      if (!auth) {
-        throw new Error("Firebase is not initialized. Please restart your local server to load .env.local variables.");
+      if (!auth || !db) {
+        throw new Error("Firebase is not initialized. Please check your environment variables.");
       }
-      await signInWithEmailAndPassword(auth, email, password);
-      // AuthContext will automatically pick up the change and the useEffect will redirect
+
+      if (isSignUp) {
+        // Register User
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const newUser = userCredential.user;
+        
+        // Set display name on Firebase Auth profile
+        await updateProfile(newUser, { displayName: name });
+        
+        // Create user document in Firestore with 'Pending' role (Option B)
+        await setDoc(doc(db, "users", newUser.uid), {
+          email: newUser.email,
+          displayName: name,
+          role: "Pending",
+          createdAt: new Date()
+        });
+        
+      } else {
+        // Login User
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      // AuthContext will automatically pick up the change and redirect
     } catch (err: any) {
-      console.error("Login failed:", err);
-      // Display the actual error message from Firebase for easier debugging
-      setError(err.message || "Invalid credentials or server error.");
-      setIsLoggingIn(false);
+      console.error("Authentication failed:", err);
+      setError(err.message || "Authentication failed. Please try again.");
+      setIsProcessing(false);
     }
   };
 
@@ -60,7 +82,7 @@ export default function PortalPage() {
     <div className="container mx-auto px-6 py-12 lg:py-24">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
-        {/* Left Side: Login UI */}
+        {/* Left Side: Auth UI */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -71,20 +93,36 @@ export default function PortalPage() {
               ITQAN <span className="text-accent">Digital Portal</span>
             </h1>
             <p className="text-xl text-gray-400">
-              Welcome back. Manage. Create. Inspire.
+              {isSignUp ? "Join the community. Start your journey." : "Welcome back. Manage. Create. Inspire."}
             </p>
           </div>
 
           <div className="glass p-8 rounded-3xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             
-            <form className="space-y-5 relative z-10" onSubmit={handleLogin}>
+            <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm">
                   {error}
                 </div>
               )}
               
+              {isSignUp && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                >
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-600"
+                    placeholder="Mujeeb Ur Rahman"
+                  />
+                </motion.div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                 <input 
@@ -99,7 +137,7 @@ export default function PortalPage() {
               <div>
                 <div className="flex justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-400">Password</label>
-                  <a href="#" className="text-xs text-accent hover:underline">Forgot?</a>
+                  {!isSignUp && <a href="#" className="text-xs text-accent hover:underline">Forgot?</a>}
                 </div>
                 <input 
                   type="password" 
@@ -112,16 +150,32 @@ export default function PortalPage() {
               
               <button 
                 type="submit"
-                disabled={isLoggingIn}
+                disabled={isProcessing}
                 className="w-full py-4 mt-4 bg-gradient-to-r from-secondary to-accent hover:from-accent hover:to-secondary text-black font-bold rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] transition-all duration-300 transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoggingIn ? "Authenticating..." : "Access Command Center"}
+                {isProcessing ? "Authenticating..." : (isSignUp ? "Create Account" : "Access Command Center")}
               </button>
+
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-400">
+                  {isSignUp ? "Already have an account?" : "Don't have an account?"}
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setError("");
+                    }} 
+                    className="ml-2 text-accent font-semibold hover:underline"
+                  >
+                    {isSignUp ? "Log In" : "Sign Up"}
+                  </button>
+                </p>
+              </div>
             </form>
           </div>
         </motion.div>
 
-        {/* Right Side: AI Assistant Preview (Same as before) */}
+        {/* Right Side: AI Assistant Preview */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}

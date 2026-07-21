@@ -50,6 +50,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <a href="#" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Media & Events</a>
           <a href="/portal/dashboard/members" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Members</a>
           <a href="#" className="block px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-colors">Audit Logs</a>
+          
+          <button 
+            onClick={() => {
+              import("@/lib/firebase/config").then(({ auth }) => {
+                auth.signOut();
+              });
+            }}
+            className="w-full text-left block px-4 py-3 mt-8 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            Sign Out
+          </button>
         </nav>
       </aside>
 
