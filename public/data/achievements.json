@@ -1,25 +1,66 @@
 {
-  "achievements": [
-  ],
-  "_meta": {
-    "description": "ITQAN Friends achievements data. Add real achievements here.",
-    "schema": {
-      "year": "string — e.g. '2026'",
-      "title": "string — achievement title",
-      "category": "string — e.g. 'Education', 'Community', 'Award'",
-      "date": "string — e.g. 'March 2026'",
-      "description": "string — brief description",
-      "image": "string — optional path to image",
-      "gallery": "boolean — optional, links to gallery"
-    },
-    "example": {
-      "year": "2026",
-      "title": "Annual Education Program",
-      "category": "Education",
-      "date": "March 2026",
-      "description": "Organized a comprehensive education program for 200+ students.",
-      "image": "",
-      "gallery": false
-    }
-  }
+    "campaigns": [
+        {
+            "year": "2024-25",
+            "title": "The ITQAN 2024-25 Campaign",
+            "stats": [
+                {"label": "Programs Executed", "value": "200+"},
+                {"label": "Guest Talks", "value": "3"},
+                {"label": "Courses Completed", "value": "60+"}
+            ],
+            "media": "Published 100+ newspapers and 50+ unique magazines.",
+            "festivals": "Orchestrated two comprehensive internal arts festivals: ARTUP and MIRACLE.",
+            "honors": "Achieved the definitive Best Union Award of the Year and 2nd Prize for Swalih Memorial Best Artist Award."
+        },
+        {
+            "year": "2025-26",
+            "title": "The 2025-26 Academic Union",
+            "stats": [
+                {"label": "Targeted Programs", "value": "400+"},
+                {"label": "Digital Tabloids", "value": "30+"},
+                {"label": "Social Media Videos", "value": "40+"}
+            ],
+            "media": "Generated 2 special editions, 10 digital magazines, 30 handwritten tabloids, and 10 handwritten magazines.",
+            "festivals": "Expanded institutional engagement across multiple disciplines.",
+            "honors": "Concluded the session by securing 2nd place for the prestigious AHSAS Best Union Award."
+        }
+    ],
+    "awards": [
+        {
+            "category": "ITQAN Union Awards (2024-25)",
+            "winners": [
+                {"name": "Muhammed Zidan P", "award": "Best Organizer & Kam Ratna Special Thanks"},
+                {"name": "Mirsad KK", "award": "Best Sub-Organizer"},
+                {"name": "Muhammed Zarhan", "award": "Art Talent 1"},
+                {"name": "Naseem Zayan TV", "award": "Art Talent 2"},
+                {"name": "Muhammed PP", "award": "Best Designer"},
+                {"name": "Muhammed Shabeel", "award": "Best Improvement"},
+                {"name": "Muhyuddin Mehroof", "award": "Best Student"},
+                {"name": "Zameen Sajeer C & Ranif Ali KP", "award": "Best Artist Award"}
+            ]
+        },
+        {
+            "category": "ITQAN Union Awards (2025-26)",
+            "winners": [
+                {"name": "Zameen Sajeer", "award": "Best Student"},
+                {"name": "Muhammed SM", "award": "Best Designer"},
+                {"name": "Muhammed U", "award": "Most Improvement"},
+                {"name": "Muzammil", "award": "Best Reader"},
+                {"name": "Zidan", "award": "Best Writer"}
+            ]
+        },
+        {
+            "category": "Destan 2K25 & Merit Board Honors",
+            "winners": [
+                {"name": "Zameen", "award": "Destan Kalaprathipa Talent, Song & Recitation Category"},
+                {"name": "Muhammed U", "award": "General Awareness & Logic"},
+                {"name": "Muzammil", "award": "Linguistics Excellence"},
+                {"name": "Hisham", "award": "Sports & Athletics Competitions"},
+                {"name": "Ranif Ali", "award": "Arts Category"},
+                {"name": "Naseem and Muhammed PP", "award": "Writings & Technological Arts"},
+                {"name": "Zameen", "award": "Galib Zameen Award (AHSAS Board)"},
+                {"name": "Muhyaddin", "award": "Best Orator Award & Kamrathna Special Jury Mention"}
+            ]
+        }
+    ]
 }

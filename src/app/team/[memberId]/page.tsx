@@ -3,6 +3,7 @@ import React, { useState, useEffect, use } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Crown, Shield, PenTool, Settings, Coins, BarChart, Megaphone, Users, Mail, Phone, MapPin, User, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 interface TeamMember {
@@ -10,6 +11,7 @@ interface TeamMember {
   role: string;
   desc: string;
   icon: string;
+  image?: string;
   about?: string;
   responsibilities?: string[];
 }
@@ -74,8 +76,18 @@ export default function MemberProfilePage({ params }: { params: Promise<{ member
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10"></div>
         
         <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
-          <div className="w-48 h-48 shrink-0 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center text-accent shadow-[0_0_50px_rgba(var(--color-accent-rgb),0.2)]">
-            {getLucideIcon(member.icon, 80)}
+          <div className="w-48 h-48 shrink-0 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center text-accent shadow-[0_0_50px_rgba(var(--color-accent-rgb),0.2)] relative overflow-hidden">
+            {member.image ? (
+              <Image 
+                src={member.image} 
+                alt={member.name} 
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 192px, 192px"
+              />
+            ) : (
+              getLucideIcon(member.icon, 80)
+            )}
           </div>
           
           <div className="flex-1 text-center md:text-left space-y-6">

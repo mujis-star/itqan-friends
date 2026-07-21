@@ -1,0 +1,36 @@
+{
+    "categories": [
+        {
+            "category": "Language Wings",
+            "wings": [
+                {"name": "Malayalam Wing", "chairman": "Zarhan", "convener": "Fidyan V", "icon": "fa-water"},
+                {"name": "English Wing", "chairman": "Shahzad", "convener": "Abdu Rahman", "icon": "fa-keyboard"},
+                {"name": "Urdu Wing", "chairman": "Muhammed PP", "convener": "Muhammed VK", "icon": "fa-pen-fancy"},
+                {"name": "Arabic Wing", "chairman": "Aslah", "convener": "Shabeel", "icon": "fa-moon"}
+            ]
+        },
+        {
+            "category": "STEM & Intelligence Clubs",
+            "wings": [
+                {"name": "Science Wing", "chairman": "Moosa", "convener": "Muhyuddin", "icon": "fa-atom"},
+                {"name": "Maths Wing", "chairman": "Zayin P", "convener": "Razin NKV", "icon": "fa-calculator"},
+                {"name": "GK Wing", "chairman": "Fuad Habeeb", "convener": "Abdul Muhaimin", "icon": "fa-globe"}
+            ]
+        },
+        {
+            "category": "Arts & Media Clubs",
+            "wings": [
+                {"name": "Art Wing", "chairman": "Nuhman KK", "convener": "Razeen PV", "icon": "fa-palette"},
+                {"name": "Media Wing", "chairman": "Mujeeb Rahman", "convener": "Muhammed U", "icon": "fa-camera-retro"},
+                {"name": "Sports Club", "chairman": "Minhaj", "convener": "Hisham", "icon": "fa-running"}
+            ]
+        },
+        {
+            "category": "Publications & Literary Wings",
+            "wings": [
+                {"name": "Library Wing", "chairman": "Muzammil", "convener": "N/A", "icon": "fa-book"},
+                {"name": "Publishing Bureau", "chairman": "Mirsad KK", "convener": "Ranif Ali KP", "asst_convener": "Zameen Sajeer C", "icon": "fa-print"}
+            ]
+        }
+    ]
+}

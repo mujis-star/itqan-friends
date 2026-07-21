@@ -1,0 +1,54 @@
+{
+    "timeline": [
+        {
+            "year": "2026-27",
+            "president": "Sayed Hudaif",
+            "vice_president": "Burhan",
+            "secretary": "Muhammed SM",
+            "treasurer": "Naseem Zayan",
+            "asst_secretary": "Rashad",
+            "other_roles": [
+                {"role": "Financial Manager", "name": "Fuad MA"},
+                {"role": "Auditing Board", "name": "Rabeeh and Salah"},
+                {"role": "Arts Fest Controllers", "name": "Zidan, Moosa, and Salah"}
+            ]
+        },
+        {
+            "year": "2025-26",
+            "president": "Sayed Hudaif",
+            "vice_president": "Syaed Burhan",
+            "secretary": "Muhyuddin Mehroof",
+            "treasurer": "Mirsad",
+            "asst_secretary": "Shahzad",
+            "other_roles": [
+                {"role": "PRO", "name": "Zidan"},
+                {"role": "Arts Fest Leaders", "name": "Mirsad, Razin, Ranif, and Shahzad"}
+            ]
+        },
+        {
+            "year": "2024-25",
+            "president": "Sayed Burhan",
+            "vice_president": "Sayed Hudaif",
+            "secretary": "Zidan",
+            "treasurer": "Muhammed VK",
+            "asst_secretary": "Shahzad",
+            "other_roles": [
+                {"role": "Arts Fest Controllers", "name": "Zidan and Burhan"},
+                {"role": "Arts Fest Leaders", "name": "Naseem, Nuhman, and Fuad MA"}
+            ]
+        },
+        {
+            "year": "2023-24",
+            "president": "Sayed Burhan",
+            "vice_president": "Sayed Hudaif",
+            "secretary": "Razin",
+            "treasurer": "Muhammed VK",
+            "asst_secretary": "Shahzad",
+            "other_roles": [
+                {"role": "PRO", "name": "Zidan"},
+                {"role": "Arts Fest Controllers", "name": "Ranif, Naseem, and Muzzammil"},
+                {"role": "Arts Fest Leaders", "name": "Zidan, Hisham, Muhyudhenn, and Muhammed VK"}
+            ]
+        }
+    ]
+}

@@ -21,7 +21,7 @@ export const Header = () => {
     { name: 'About', href: '/#about' },
     { name: 'Wings', href: '/#wings' },
     { name: 'Events', href: '/#events' },
-    { name: 'Achievements', href: '/#timeline' },
+    { name: 'Achievements', href: '/achievements' },
     { name: 'Media', href: '/media' },
     { name: 'Team', href: '/team' },
     { name: 'Portal', href: '/portal' },

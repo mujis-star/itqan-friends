@@ -6,25 +6,20 @@ import {
   Coins, BarChart, Megaphone, Users, ArrowRight
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface TeamMember {
   name: string;
   role: string;
   desc: string;
   icon: string;
+  image?: string;
 }
 
-interface Wing {
-  name: string;
-  chairman: string;
-  convener: string;
-  desc: string;
-  icon: string;
-}
+
 
 interface TeamData {
   coreMembers: TeamMember[];
-  wings: Wing[];
 }
 
 export default function TeamPage() {
@@ -87,8 +82,18 @@ export default function TeamPage() {
             >
               <div className="absolute -right-6 -top-6 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/20 transition-colors"></div>
               
-              <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-accent mb-4 group-hover:scale-110 group-hover:bg-accent group-hover:text-black transition-all duration-300">
-                {getLucideIcon(member.icon, 20)}
+              <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-accent mb-4 group-hover:scale-110 group-hover:bg-accent group-hover:text-black transition-all duration-300 relative overflow-hidden">
+                {member.image ? (
+                  <Image 
+                    src={member.image} 
+                    alt={member.name} 
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                ) : (
+                  getLucideIcon(member.icon, 20)
+                )}
               </div>
               
               <h3 className="text-lg font-bold mb-1">{member.name}</h3>
@@ -104,39 +109,6 @@ export default function TeamPage() {
                 >
                   View Profile <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-          <Users className="text-secondary" />
-          ITQAN Wings
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.wings.map((wing, index) => (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
-              key={wing.name}
-              className="glass p-6 rounded-2xl border-t border-t-secondary/20 hover:border-t-secondary transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">{wing.name}</h3>
-              <p className="text-sm text-gray-400 mb-6 h-10">{wing.desc}</p>
-              
-              <div className="space-y-3 bg-black/20 p-4 rounded-xl">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">Chairman</span>
-                  <span className="font-semibold">{wing.chairman}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">Convener</span>
-                  <span className="font-semibold">{wing.convener}</span>
-                </div>
               </div>
             </motion.div>
           ))}

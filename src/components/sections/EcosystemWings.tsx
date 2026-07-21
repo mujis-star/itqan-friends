@@ -1,38 +1,51 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { Camera, Book, Globe2, X } from 'lucide-react';
+import { Camera, Book, Globe2, X, PenTool, Calculator, Atom, Palette, Activity, Printer, Briefcase, Droplet, UserCircle2 } from 'lucide-react';
+
+interface Wing {
+  name: string;
+  chairman: string;
+  convener: string;
+  asst_convener?: string;
+  icon: string;
+}
+
+interface WingCategory {
+  category: string;
+  wings: Wing[];
+}
 
 export const EcosystemWings = () => {
-  const [activeWing, setActiveWing] = useState<number | null>(null);
+  const [categories, setCategories] = useState<WingCategory[]>([]);
+  const [activeWing, setActiveWing] = useState<Wing | null>(null);
 
-  const wings = [
-    {
-      id: 1,
-      title: "Media Wing",
-      icon: <Camera size={48} className="text-secondary" />,
-      members: 25,
-      projects: 120,
-      description: "Driving the digital narrative through cutting-edge photography, videography, and graphic design."
-    },
-    {
-      id: 2,
-      title: "Library Wing",
-      icon: <Book size={48} className="text-accent" />,
-      members: 18,
-      projects: 45,
-      description: "Curating a vast repository of academic resources, research papers, and literary archives."
-    },
-    {
-      id: 3,
-      title: "Arabic Wing",
-      icon: <Globe2 size={48} className="text-highlight" />,
-      members: 30,
-      projects: 60,
-      description: "Promoting linguistic excellence, cultural heritage, and literature."
+  useEffect(() => {
+    fetch('/data/wings.json')
+      .then(res => res.json())
+      .then(data => setCategories(data.categories))
+      .catch(err => console.error(err));
+  }, []);
+
+  const getIcon = (iconStr: string, size = 48) => {
+    const props = { size, className: "text-accent" };
+    switch (iconStr) {
+      case 'fa-water': return <Droplet {...props} />;
+      case 'fa-keyboard': return <Briefcase {...props} />;
+      case 'fa-pen-fancy': return <PenTool {...props} />;
+      case 'fa-moon': return <Globe2 {...props} />;
+      case 'fa-atom': return <Atom {...props} />;
+      case 'fa-calculator': return <Calculator {...props} />;
+      case 'fa-globe': return <Globe2 {...props} />;
+      case 'fa-palette': return <Palette {...props} />;
+      case 'fa-camera-retro': return <Camera {...props} />;
+      case 'fa-running': return <Activity {...props} />;
+      case 'fa-book': return <Book {...props} />;
+      case 'fa-print': return <Printer {...props} />;
+      default: return <Briefcase {...props} />;
     }
-  ];
+  };
 
   return (
     <section id="wings" className="py-24 relative scroll-mt-24">
@@ -43,20 +56,26 @@ export const EcosystemWings = () => {
           description="ITQAN is composed of specialized wings, each operating as a focused command center."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto relative z-10">
-          {wings.map((wing) => (
-            <motion.div
-              key={wing.id}
-              whileHover={{ y: -10 }}
-              onClick={() => setActiveWing(wing.id)}
-              className="glass p-8 rounded-2xl cursor-pointer text-center group border border-white/10 hover:border-white/30 transition-colors shadow-2xl relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="mb-6 flex justify-center">{wing.icon}</div>
-              <h3 className="text-2xl font-bold mb-2">{wing.title}</h3>
-              <div className="w-12 h-1 bg-white/20 mx-auto rounded-full mb-6 group-hover:w-24 group-hover:bg-accent transition-all"></div>
-              <p className="text-gray-400 text-sm">Click to explore Command Center</p>
-            </motion.div>
+        <div className="max-w-6xl mx-auto space-y-16 relative z-10">
+          {categories.map((cat, idx) => (
+            <div key={idx}>
+              <h3 className="text-2xl font-bold mb-8 text-center text-gray-300">{cat.category}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {cat.wings.map((wing, wIdx) => (
+                  <motion.div
+                    key={wIdx}
+                    whileHover={{ y: -5 }}
+                    onClick={() => setActiveWing(wing)}
+                    className="glass p-6 rounded-2xl cursor-pointer text-center group border border-white/10 hover:border-accent/30 transition-all shadow-xl relative overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="mb-4 flex justify-center">{getIcon(wing.icon, 36)}</div>
+                    <h4 className="text-lg font-bold mb-2">{wing.name}</h4>
+                    <div className="w-8 h-1 bg-white/20 mx-auto rounded-full group-hover:w-16 group-hover:bg-accent transition-all"></div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -75,52 +94,49 @@ export const EcosystemWings = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-10"
+              className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-10"
             >
-              {(() => {
-                const wing = wings.find(w => w.id === activeWing);
-                return wing ? (
-                  <>
-                    <div className="p-8 border-b border-white/10 relative">
-                      <button onClick={() => setActiveWing(null)} className="absolute top-6 right-6 text-gray-500 hover:text-white"><X /></button>
-                      <div className="flex items-center gap-4 mb-4">
-                        {wing.icon}
-                        <h2 className="text-3xl font-bold">{wing.title}</h2>
-                      </div>
-                      <p className="text-gray-400">{wing.description}</p>
+              <div className="p-8 border-b border-white/10 relative text-center">
+                <button onClick={() => setActiveWing(null)} className="absolute top-6 right-6 text-gray-500 hover:text-white"><X /></button>
+                <div className="flex justify-center mb-6">
+                  <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    {getIcon(activeWing.icon, 40)}
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mb-2">{activeWing.name}</h2>
+                <p className="text-gray-400">Command Center Details</p>
+              </div>
+              <div className="p-8 bg-black/40">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                    <div className="flex items-center gap-3">
+                      <UserCircle2 className="text-secondary" />
+                      <span className="font-semibold text-gray-300">Chairman</span>
                     </div>
-                    <div className="p-8 grid grid-cols-2 gap-8 bg-black/40">
-                      <div>
-                        <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Members</div>
-                        <div className="text-4xl font-bold text-accent">{wing.members}</div>
+                    <span className="text-white font-bold">{activeWing.chairman}</span>
+                  </div>
+                  
+                  {activeWing.convener !== "N/A" && (
+                    <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                      <div className="flex items-center gap-3">
+                        <UserCircle2 className="text-accent" />
+                        <span className="font-semibold text-gray-300">Convener</span>
                       </div>
-                      <div>
-                        <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Projects Completed</div>
-                        <div className="text-4xl font-bold text-highlight">{wing.projects}</div>
-                      </div>
-                      <div className="col-span-2">
-                        <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Leadership</div>
-                        <div className="flex gap-4">
-                          <div className="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/10 flex-1">
-                            <div className="w-10 h-10 rounded-full bg-gray-800"></div>
-                            <div>
-                              <div className="font-semibold text-sm">Director</div>
-                              <div className="text-xs text-gray-400">View Profile</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/10 flex-1">
-                            <div className="w-10 h-10 rounded-full bg-gray-800"></div>
-                            <div>
-                              <div className="font-semibold text-sm">Coordinator</div>
-                              <div className="text-xs text-gray-400">View Profile</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <span className="text-white font-bold">{activeWing.convener}</span>
                     </div>
-                  </>
-                ) : null;
-              })()}
+                  )}
+
+                  {activeWing.asst_convener && (
+                    <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                      <div className="flex items-center gap-3">
+                        <UserCircle2 className="text-gray-400" />
+                        <span className="font-semibold text-gray-300">Asst. Convener</span>
+                      </div>
+                      <span className="text-white font-bold">{activeWing.asst_convener}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           </div>
         )}
