@@ -78,8 +78,8 @@ export const TimelineAchievements = () => {
                 <h4 className="text-2xl font-bold mb-3">{c.title}</h4>
                 <p className="text-gray-400 leading-relaxed">{c.honors}</p>
                 
-                <Link href="/achievements" className="mt-4 inline-flex text-accent text-sm font-semibold hover:text-white transition-colors items-center gap-1">
-                  View Full Report <span aria-hidden="true">&rarr;</span>
+                <Link href="/achievements" className="mt-6 inline-flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-black px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.15)] hover:shadow-[0_0_30px_rgba(var(--color-accent-rgb),0.4)]">
+                  View Full Report <span aria-hidden="true" className="text-lg">&rarr;</span>
                 </Link>
               </div>
 
