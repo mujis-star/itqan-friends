@@ -78,37 +78,47 @@ export default function TeamPage() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               key={member.name}
-              className="glass p-6 rounded-2xl group hover:border-accent/30 transition-all duration-300 relative overflow-hidden flex flex-col h-full"
+              className="glass p-8 rounded-3xl group border border-white/5 hover:border-accent/40 transition-all duration-500 relative overflow-hidden flex flex-col h-full bg-gradient-to-br from-white/[0.05] to-transparent hover:shadow-[0_10px_40px_rgba(var(--color-accent-rgb),0.2)]"
             >
-              <div className="absolute -right-6 -top-6 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/20 transition-colors"></div>
+              {/* Background Glows on hover */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
               
-              <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-accent mb-4 group-hover:scale-110 group-hover:bg-accent group-hover:text-black transition-all duration-300 relative overflow-hidden">
-                {member.image ? (
-                  <Image 
-                    src={member.image} 
-                    alt={member.name} 
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                  />
-                ) : (
-                  getLucideIcon(member.icon, 20)
-                )}
+              {/* Subtle Grid Pattern */}
+              <div className="absolute inset-0 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-500" 
+                   style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}>
               </div>
-              
-              <h3 className="text-lg font-bold mb-1">{member.name}</h3>
-              <div className="text-accent text-sm font-medium mb-3">{member.role}</div>
-              <p className="text-sm text-gray-400 flex-grow">
-                {member.desc}
-              </p>
 
-              <div className="pt-6 mt-auto">
-                <Link 
-                  href={`/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                  className="inline-flex items-center text-sm font-medium text-white/70 hover:text-accent transition-colors"
-                >
-                  View Profile <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-20 h-20 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center text-accent group-hover:scale-105 group-hover:border-accent group-hover:shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.4)] transition-all duration-500 relative overflow-hidden">
+                    {member.image ? (
+                      <Image 
+                        src={member.image} 
+                        alt={member.name} 
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    ) : (
+                      getLucideIcon(member.icon, 28)
+                    )}
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold mb-1 text-white group-hover:text-accent transition-colors duration-300">{member.name}</h3>
+                <div className="text-accent text-sm font-bold tracking-wider uppercase mb-4">{member.role}</div>
+                <p className="text-gray-400 flex-grow leading-relaxed group-hover:text-gray-300 transition-colors">
+                  {member.desc}
+                </p>
+
+                <div className="pt-8 mt-auto">
+                  <Link 
+                    href={`/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                    className="inline-flex items-center justify-center w-full bg-white/5 hover:bg-accent hover:text-black border border-white/10 hover:border-accent px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.3)]"
+                  >
+                    View Full Profile <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ))}
