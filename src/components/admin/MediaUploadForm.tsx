@@ -148,7 +148,7 @@ export default function MediaUploadForm() {
             <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
           ) : (
             <>
-              <UploadCloud size={20} /> Upload to Drive
+              <UploadCloud size={20} /> Upload Media
             </>
           )}
         </button>
