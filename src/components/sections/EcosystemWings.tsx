@@ -29,7 +29,7 @@ export const EcosystemWings = () => {
   }, []);
 
   const getIcon = (iconStr: string, size = 48) => {
-    const props = { size, className: "text-accent" };
+    const props = { size, className: "text-accent group-hover:text-black transition-colors duration-300" };
     switch (iconStr) {
       case 'fa-water': return <Droplet {...props} />;
       case 'fa-keyboard': return <Briefcase {...props} />;
@@ -56,22 +56,41 @@ export const EcosystemWings = () => {
           description="ITQAN is composed of specialized wings, each operating as a focused command center."
         />
 
-        <div className="max-w-6xl mx-auto space-y-16 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-20 relative z-10 mt-12">
           {categories.map((cat, idx) => (
-            <div key={idx}>
-              <h3 className="text-2xl font-bold mb-8 text-center text-gray-300">{cat.category}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div key={idx} className="relative">
+              <div className="flex items-center gap-4 mb-10 justify-center">
+                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-accent/50"></div>
+                <h3 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight uppercase">
+                  {cat.category}
+                </h3>
+                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-accent/50"></div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {cat.wings.map((wing, wIdx) => (
                   <motion.div
                     key={wIdx}
-                    whileHover={{ y: -5 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
                     onClick={() => setActiveWing(wing)}
-                    className="glass p-6 rounded-2xl cursor-pointer text-center group border border-white/10 hover:border-accent/30 transition-all shadow-xl relative overflow-hidden"
+                    className="glass p-8 rounded-3xl cursor-pointer text-center group border border-white/5 hover:border-accent/50 transition-all duration-500 relative overflow-hidden bg-[#0a0a0a]/80 hover:shadow-[0_0_40px_rgba(var(--color-accent-rgb),0.15)]"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="mb-4 flex justify-center">{getIcon(wing.icon, 36)}</div>
-                    <h4 className="text-lg font-bold mb-2">{wing.name}</h4>
-                    <div className="w-8 h-1 bg-white/20 mx-auto rounded-full group-hover:w-16 group-hover:bg-accent transition-all"></div>
+                    {/* Background Glows on hover */}
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+
+                    {/* Icon Container */}
+                    <div className="mb-8 flex justify-center relative">
+                      <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-accent group-hover:shadow-[0_0_30px_rgba(var(--color-accent-rgb),0.5)] transition-all duration-500 relative z-10 group-hover:-translate-y-2">
+                        {getIcon(wing.icon, 36)}
+                      </div>
+                      <div className="absolute inset-0 bg-accent/30 blur-2xl rounded-full scale-50 group-hover:scale-125 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                    </div>
+                    
+                    <h4 className="text-xl font-bold text-white mb-4 group-hover:text-accent transition-colors duration-300">{wing.name}</h4>
+                    
+                    {/* Decorative line */}
+                    <div className="w-12 h-1 bg-white/10 mx-auto rounded-full group-hover:w-24 group-hover:bg-accent transition-all duration-500"></div>
                   </motion.div>
                 ))}
               </div>
