@@ -41,7 +41,7 @@ export const StatsDashboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 divide-white/5">
           <AnimatedCounter value={450} label="Programs" />
           <AnimatedCounter value={100} label="Publications" />
-          <AnimatedCounter value={700} label="Members" />
+          <AnimatedCounter value={32} label="Members" />
           <AnimatedCounter value={35} label="Teams" />
         </div>
       </div>

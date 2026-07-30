@@ -1,77 +1,123 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505; /* Deep Black / Midnight */
-  --foreground: #ffffff;
-  --primary: #050505;
-  --secondary: #2563EB; /* Royal Blue */
-  --accent: #22D3EE;    /* Electric Cyan */
-  --highlight: #FACC15; /* Gold */
+  --background: #020617; /* Deep Midnight Slate */
+  --surface: #0f172a;    /* Dark Surface */
+  --foreground: #f8fafc;
+  --primary: #0ea5a4;    /* Teal / Emerald */
+  --secondary: #1e293b;  /* Slate Container */
+  --accent: #fbbf24;     /* Gold Accent */
   
-  --card: rgba(255, 255, 255, 0.08);
-  --card-border: rgba(255, 255, 255, 0.12);
+  --card: rgba(15, 23, 42, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+  
+  /* Motion Tokens */
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-linear: linear;
+  
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
-  --color-highlight: var(--highlight);
   --color-card: var(--card);
   --color-border: var(--card-border);
   
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #f8fafc;
-    --foreground: #0f172a;
-    --card: rgba(255, 255, 255, 0.7);
-    --card-border: rgba(0, 0, 0, 0.08);
-  }
+  --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-heading: var(--font-outfit), var(--font-sans);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   
-  /* Gradient Mesh Background */
+  /* Ambient Mesh Background */
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.15), transparent 25%);
+    radial-gradient(circle at 15% 30%, rgba(14, 165, 164, 0.12), transparent 35%),
+    radial-gradient(circle at 85% 70%, rgba(251, 191, 36, 0.08), transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.4), transparent 60%);
   background-attachment: fixed;
   overflow-x: hidden;
-  
-  /* Noise Texture Overlay */
   position: relative;
 }
 
+/* Subtle Noise Overlay */
 body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Glassmorphism Utility */
+/* Glassmorphism Standard */
 .glass {
   background: var(--card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--card-border);
 }
 
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform var(--duration-normal) var(--ease-standard),
+              border-color var(--duration-normal) var(--ease-standard),
+              box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.glass-card:hover {
+  border-color: rgba(14, 165, 164, 0.3);
+  box-shadow: 0 12px 32px -8px rgba(14, 165, 164, 0.15);
+}
+
 .gradient-text {
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Accessibility Focus Ring Utility */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
