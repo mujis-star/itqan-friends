@@ -19,6 +19,11 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Hide the global website header when inside the portal dashboard to prevent header overlap
+  if (pathname?.startsWith("/portal/dashboard")) {
+    return null;
+  }
+
   const triggerCommandPalette = () => {
     window.dispatchEvent(new CustomEvent("toggle-command-palette"));
   };
