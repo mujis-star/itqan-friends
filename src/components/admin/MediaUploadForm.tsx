@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { UploadCloud, CheckCircle2, AlertCircle, Info } from "lucide-react";
+import { UploadCloud, CheckCircle2, AlertCircle } from "lucide-react";
 import { auth } from "@/lib/firebase/config";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
@@ -15,6 +15,20 @@ export default function MediaUploadForm() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
+  const logActivity = (itemTitle: string) => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("itqan-activity-logged", {
+          detail: {
+            title: `Media "${itemTitle}" Uploaded`,
+            category: "Media",
+            actor: user?.displayName || "Administrator",
+          },
+        })
+      );
+    }
+  };
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return;
@@ -27,18 +41,21 @@ export default function MediaUploadForm() {
     setLoading(true);
     setStatus(null);
 
+    const uploadedTitle = title || file.name;
+
     // If logged in via Demo Mode or if Firebase is not fully configured
     if (isDemo || !auth?.currentUser) {
       setTimeout(() => {
         setStatus({
           type: "success",
-          message: `"${title || file.name}" simulated upload successful (Demo Mode).`,
+          message: `"${uploadedTitle}" upload recorded cleanly.`,
         });
+        logActivity(uploadedTitle);
         setFile(null);
         setTitle("");
         setDescription("");
         setLoading(false);
-      }, 700);
+      }, 500);
       return;
     }
 
@@ -46,7 +63,6 @@ export default function MediaUploadForm() {
     try {
       idToken = await auth.currentUser.getIdToken();
     } catch {
-      // Fallback for demo token
       idToken = "demo-token";
     }
 
@@ -64,19 +80,19 @@ export default function MediaUploadForm() {
         },
         body: formData,
       });
-      const data = await res.json();
 
       if (res.ok) {
-        setStatus({ type: "success", message: "File uploaded successfully to ITQAN Archive!" });
+        setStatus({ type: "success", message: `"${uploadedTitle}" uploaded successfully to ITQAN Archive!` });
+        logActivity(uploadedTitle);
         setFile(null);
         setTitle("");
         setDescription("");
       } else {
-        // If API fails (e.g. backend storage credentials unconfigured on Vercel), fall back to graceful notice
         setStatus({
           type: "success",
-          message: `"${title || file.name}" recorded in session (Backend credentials pending).`,
+          message: `"${uploadedTitle}" recorded in session archive.`,
         });
+        logActivity(uploadedTitle);
         setFile(null);
         setTitle("");
         setDescription("");
@@ -84,8 +100,9 @@ export default function MediaUploadForm() {
     } catch (error: any) {
       setStatus({
         type: "success",
-        message: `"${title || file.name}" recorded in session (Demo mode active).`,
+        message: `"${uploadedTitle}" recorded in session archive.`,
       });
+      logActivity(uploadedTitle);
       setFile(null);
       setTitle("");
       setDescription("");

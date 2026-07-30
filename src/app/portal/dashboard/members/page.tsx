@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { User, ShieldAlert, Trash2, Search, Filter, Info } from "lucide-react";
+import { User, ShieldAlert, Trash2, Search, Filter, Info, Plus, Edit2, X, Check } from "lucide-react";
 import { auth } from "@/lib/firebase/config";
+import { useToast } from "@/components/ui/Toast";
 
 interface UserProfile {
   uid: string;
@@ -15,6 +16,18 @@ interface UserProfile {
 }
 
 const ROLES = ["Pending", "Member", "Media", "Editor", "Admin", "Administrator", "Super Admin"];
+
+const WINGS = [
+  "Executive",
+  "Urdu Wing",
+  "English Wing",
+  "Arabic Wing",
+  "Malayalam Wing",
+  "Maths Wing",
+  "Science Wing",
+  "Media Wing",
+  "General",
+];
 
 // Full 32 ITQAN Union member dataset for demo/fallback mode
 const FALLBACK_32_MEMBERS: UserProfile[] = [
@@ -53,13 +66,24 @@ const FALLBACK_32_MEMBERS: UserProfile[] = [
 ];
 
 export default function MembersPage() {
-  const { user: currentUser, role: currentUserRole } = useAuth();
+  const { user: currentUser } = useAuth();
+  const { toast } = useToast();
   const [users, setUsers] = useState<UserProfile[]>(FALLBACK_32_MEMBERS);
   const [loading, setLoading] = useState(true);
   const [isFallback, setIsFallback] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
   const [updating, setUpdating] = useState<string | null>(null);
+
+  // Modals state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingMember, setEditingMember] = useState<UserProfile | null>(null);
+
+  // Form states
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formWing, setFormWing] = useState("Executive");
+  const [formRole, setFormRole] = useState("Member");
 
   useEffect(() => {
     fetchUsers();
@@ -99,6 +123,7 @@ export default function MembersPage() {
   const handleRoleChange = async (uid: string, newRole: string) => {
     setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, role: newRole } : u)));
     setUpdating(uid);
+    toast("Role Updated", `Member role changed to ${newRole}.`, "success");
 
     if (auth?.currentUser && !isFallback) {
       try {
@@ -115,8 +140,50 @@ export default function MembersPage() {
         console.error(err);
       }
     }
-
     setTimeout(() => setUpdating(null), 300);
+  };
+
+  const handleAddMember = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName || !formEmail) return;
+
+    const newMember: UserProfile = {
+      uid: `m-${Date.now()}`,
+      displayName: formName,
+      email: formEmail,
+      wing: formWing,
+      role: formRole,
+      createdAt: new Date().toISOString().slice(0, 10),
+    };
+
+    setUsers((prev) => [newMember, ...prev]);
+    setShowAddModal(false);
+    setFormName("");
+    setFormEmail("");
+    toast("Member Created", `${formName} added to directory as ${formRole}.`, "success");
+  };
+
+  const handleSaveEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingMember || !formName || !formEmail) return;
+
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.uid === editingMember.uid
+          ? { ...u, displayName: formName, email: formEmail, wing: formWing, role: formRole }
+          : u
+      )
+    );
+    setEditingMember(null);
+    toast("Member Saved", `Updated profile details for ${formName}.`, "success");
+  };
+
+  const openEditModal = (member: UserProfile) => {
+    setEditingMember(member);
+    setFormName(member.displayName);
+    setFormEmail(member.email);
+    setFormWing(member.wing || "Executive");
+    setFormRole(member.role);
   };
 
   const handleDeleteUser = async (uid: string) => {
@@ -124,6 +191,7 @@ export default function MembersPage() {
 
     setUpdating(uid);
     setUsers((prev) => prev.filter((u) => u.uid !== uid));
+    toast("Member Removed", "Member record removed.", "info");
 
     if (auth?.currentUser && !isFallback) {
       try {
@@ -166,15 +234,24 @@ export default function MembersPage() {
             Member Directory <span className="text-primary text-xl">({users.length})</span>
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Approve, assign roles, and manage all 32 registered ITQAN members.
+            Approve, assign roles, edit details, and manage all registered ITQAN members.
           </p>
         </div>
 
-        {isFallback && (
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary">
-            <Info size={14} /> Showing 32 Active ITQAN Members
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setFormName("");
+              setFormEmail("");
+              setFormWing("Executive");
+              setFormRole("Member");
+              setShowAddModal(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-primary/20"
+          >
+            <Plus size={16} /> Add Member
+          </button>
+        </div>
       </div>
 
       {/* Search & Role Filter Row */}
@@ -218,7 +295,7 @@ export default function MembersPage() {
                 <th className="p-4">Email</th>
                 <th className="p-4">Wing</th>
                 <th className="p-4">Role</th>
-                <th className="p-4 text-right">Actions</th>
+                <th className="p-4 text-right">Advanced Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-xs">
@@ -242,7 +319,7 @@ export default function MembersPage() {
                   <td className="p-4 text-gray-300 font-mono text-[11px]">{u.email}</td>
                   <td className="p-4 text-gray-400">
                     <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-semibold text-gray-300">
-                      {u.wing || "General"}
+                      {u.wing || "Executive"}
                     </span>
                   </td>
                   <td className="p-4">
@@ -260,14 +337,23 @@ export default function MembersPage() {
                     </select>
                   </td>
                   <td className="p-4 text-right">
-                    <button
-                      onClick={() => handleDeleteUser(u.uid)}
-                      disabled={updating === u.uid}
-                      className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition-colors disabled:opacity-50 cursor-pointer"
-                      title="Remove Member"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    <div className="flex items-center justify-end gap-1">
+                      <button
+                        onClick={() => openEditModal(u)}
+                        className="text-gray-400 hover:text-primary p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                        title="Edit Member Details"
+                      >
+                        <Edit2 size={15} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(u.uid)}
+                        disabled={updating === u.uid}
+                        className="text-gray-400 hover:text-red-400 p-2 rounded-lg hover:bg-red-500/10 transition-colors disabled:opacity-50 cursor-pointer"
+                        title="Remove Member"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -283,6 +369,150 @@ export default function MembersPage() {
           </table>
         </div>
       </div>
+
+      {/* Modal: Add New Member */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[1000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-white p-1 rounded-lg"
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-xl font-bold text-white">Add New ITQAN Member</h3>
+            <form onSubmit={handleAddMember} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="e.g. Muhammed Hisham"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                  placeholder="e.g. hisham@itqan.org"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Wing</label>
+                <select
+                  value={formWing}
+                  onChange={(e) => setFormWing(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  {WINGS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Assigned Role</label>
+                <select
+                  value={formRole}
+                  onChange={(e) => setFormRole(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity mt-2"
+              >
+                Create Member Record
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Edit Existing Member */}
+      {editingMember && (
+        <div className="fixed inset-0 z-[1000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
+            <button
+              onClick={() => setEditingMember(null)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-white p-1 rounded-lg"
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-xl font-bold text-white">Edit Member Details</h3>
+            <form onSubmit={handleSaveEdit} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Wing</label>
+                <select
+                  value={formWing}
+                  onChange={(e) => setFormWing(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  {WINGS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">Role</label>
+                <select
+                  value={formRole}
+                  onChange={(e) => setFormRole(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity mt-2"
+              >
+                Save Member Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
