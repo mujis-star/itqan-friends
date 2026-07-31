@@ -140,11 +140,11 @@ export const EcosystemWings = () => {
           {categories.map((cat, idx) => (
             <div key={idx} className="relative">
               {/* Category Header */}
-              <div className="flex items-center gap-6 mb-10">
-                <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-wide uppercase shrink-0">
+              <div className="flex items-center gap-4 mb-8">
+                <h3 className="text-base sm:text-xl md:text-2xl font-extrabold text-white tracking-wide uppercase leading-tight">
                   {cat.category}
                 </h3>
-                <div className="h-[1px] w-full bg-gradient-to-r from-primary/40 via-white/10 to-transparent" />
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/40 via-white/10 to-transparent" />
               </div>
 
               {/* Cards Grid */}

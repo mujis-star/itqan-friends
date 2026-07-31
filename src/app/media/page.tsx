@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Image as ImageIcon,
@@ -17,25 +17,28 @@ import {
   Trash2,
   Download,
   Maximize2,
+  Search,
+  Play,
+  Film,
+  Upload,
+  Eye,
+  Filter,
 } from "lucide-react";
 import { MediaService, MediaItem } from "@/services/MediaService";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/Toast";
-
-interface MediaData {
-  categories: string[];
-  items: MediaItem[];
-}
+import Link from "next/link";
 
 const CATEGORY_OPTIONS = ["Photos", "Videos", "Magazines", "Tabloids", "Publications"];
 
 export default function MediaArchive() {
   const { user, role } = useAuth();
   const { toast } = useToast();
-  const [data, setData] = useState<MediaData | null>(null);
+  const [data, setData] = useState<{ categories: string[]; items: MediaItem[] } | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);
 
   // Edit Modal State
@@ -46,7 +49,7 @@ export default function MediaArchive() {
   const [editCoverFile, setEditCoverFile] = useState<File | null>(null);
   const [editPdfFile, setEditPdfFile] = useState<File | null>(null);
 
-  const isAdmin = !!user || role === "Administrator" || role === "Admin";
+  const isAdmin = !!user || role === "Administrator" || role === "Admin" || role === "Super Admin";
 
   const loadData = useCallback(async () => {
     const customAndFirebaseItems = await MediaService.fetchAllMedia();
@@ -85,11 +88,21 @@ export default function MediaArchive() {
     return () => window.removeEventListener("itqan-media-added", handleMediaAdded);
   }, [loadData]);
 
-  const filteredItems = data
-    ? data.items.filter(
-        (item) => activeCategory === "All" || item.category === activeCategory
-      )
-    : [];
+  const filteredItems = useMemo(() => {
+    if (!data) return [];
+    return data.items.filter((item) => {
+      const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+      const matchesSearch =
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [data, activeCategory, searchQuery]);
+
+  const featuredItem = useMemo(() => {
+    if (!data || data.items.length === 0) return null;
+    return data.items.find((i) => i.category === "Magazines" || i.category === "Videos") || data.items[0];
+  }, [data]);
 
   const handleNext = useCallback(() => {
     if (selectedItemIndex !== null && filteredItems.length > 0) {
@@ -99,9 +112,7 @@ export default function MediaArchive() {
 
   const handlePrev = useCallback(() => {
     if (selectedItemIndex !== null && filteredItems.length > 0) {
-      setSelectedItemIndex(
-        (selectedItemIndex - 1 + filteredItems.length) % filteredItems.length
-      );
+      setSelectedItemIndex((selectedItemIndex - 1 + filteredItems.length) % filteredItems.length);
     }
   }, [selectedItemIndex, filteredItems.length]);
 
@@ -196,12 +207,18 @@ export default function MediaArchive() {
 
   const getIcon = (category: string) => {
     switch (category) {
-      case "Photos": return <ImageIcon size={18} />;
-      case "Videos": return <Video size={18} />;
-      case "Magazines": return <BookOpen size={18} />;
-      case "Tabloids": return <Layers size={18} />;
-      case "Publications": return <FileText size={18} />;
-      default: return <ImageIcon size={18} />;
+      case "Photos":
+        return <ImageIcon size={18} />;
+      case "Videos":
+        return <Video size={18} />;
+      case "Magazines":
+        return <BookOpen size={18} />;
+      case "Tabloids":
+        return <Layers size={18} />;
+      case "Publications":
+        return <FileText size={18} />;
+      default:
+        return <ImageIcon size={18} />;
     }
   };
 
@@ -214,46 +231,146 @@ export default function MediaArchive() {
     : false;
 
   return (
-    <div className="container mx-auto px-6 pt-32 pb-24 scroll-mt-24">
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white">
-          ITQAN <span className="gradient-text">Media Archive</span>
-        </h1>
-        <p className="text-lg text-gray-300">
-          Explore our collection of event photography, publications, cinematic videos, and organizational archives.
-        </p>
+    <div className="container mx-auto px-4 md:px-6 pt-28 md:pt-36 pb-24 scroll-mt-24">
+      {/* Hero Spotlight Section */}
+      <div className="max-w-6xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-extrabold text-primary uppercase tracking-wider">
+            <Sparkles size={14} /> Official Digital Archives & Publications
+          </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+            ITQAN <span className="gradient-text">Media Hub</span>
+          </h1>
+          <p className="text-sm md:text-base text-gray-300">
+            Explore event photo galleries, annual magazine publications, summit video highlights, and academic archives.
+          </p>
+        </div>
+
+        {/* Featured Spotlight Showcase Card */}
+        {featuredItem && (
+          <div className="glass-card p-6 md:p-8 rounded-3xl border border-white/15 relative overflow-hidden group shadow-2xl shadow-black/50">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
+              <div className="md:col-span-7 space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-primary text-slate-950 font-extrabold text-[11px] uppercase tracking-wider flex items-center gap-1 shadow-md">
+                    <Film size={12} /> Featured Release
+                  </span>
+                  <span className="text-xs text-gray-400 font-mono">
+                    {new Date(featuredItem.date).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight group-hover:text-primary transition-colors">
+                  {featuredItem.title}
+                </h2>
+
+                <p className="text-xs md:text-sm text-gray-300 leading-relaxed line-clamp-3">
+                  {featuredItem.description || "Official ITQAN publication featuring academic summits, student achievements, and wing reports."}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      const idx = filteredItems.findIndex((i) => i.id === featuredItem.id);
+                      setSelectedItemIndex(idx !== -1 ? idx : 0);
+                    }}
+                    className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-primary/20 flex items-center gap-2"
+                  >
+                    <Eye size={16} /> Preview Publication
+                  </button>
+
+                  {isAdmin && (
+                    <Link
+                      href="/portal/dashboard/media-events"
+                      className="px-5 py-3 rounded-xl bg-white/10 border border-white/15 text-white font-bold text-xs uppercase tracking-wider hover:bg-white/20 transition-all flex items-center gap-2"
+                    >
+                      <Upload size={14} /> Upload New Media
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="md:col-span-5 relative h-56 md:h-64 rounded-2xl overflow-hidden bg-slate-900 border border-white/10 shadow-xl group-hover:border-primary/40 transition-colors">
+                {featuredItem.thumbnail ? (
+                  <img
+                    src={featuredItem.thumbnail}
+                    alt={featuredItem.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/20 via-slate-900 to-slate-950 text-primary p-6 text-center">
+                    <BookOpen size={48} className="mb-2 animate-pulse" />
+                    <span className="text-xs font-extrabold text-white uppercase tracking-wider">{featuredItem.title}</span>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Category Filter Pills */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-        {data.categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => {
-              setActiveCategory(category);
-              setSelectedItemIndex(null);
-            }}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              activeCategory === category
-                ? "bg-primary text-slate-950 shadow-lg shadow-primary/20"
-                : "glass text-gray-400 hover:text-white hover:bg-white/10"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
+      {/* Interactive Search & Category Filter Controls */}
+      <div className="max-w-6xl mx-auto mb-10 space-y-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-card p-4 rounded-2xl border border-white/10">
+          {/* Live Search Input */}
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <input
+              type="text"
+              placeholder="Search publications, videos, photos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-950/80 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+            {data.categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => {
+                  setActiveCategory(category);
+                  setSelectedItemIndex(null);
+                }}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                  activeCategory === category
+                    ? "bg-primary text-slate-950 shadow-md shadow-primary/20"
+                    : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-white/5"
+                }`}
+              >
+                {category !== "All" && getIcon(category)}
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Media Grid / Empty State */}
       {filteredItems.length === 0 ? (
         <EmptyState
           title="No Media Found"
-          description={`No media items currently available in category "${activeCategory}".`}
-          actionLabel="Reset Category"
-          onAction={() => setActiveCategory("All")}
+          description={`No media items matched "${searchQuery || activeCategory}".`}
+          actionLabel="Reset Search & Filters"
+          onAction={() => {
+            setActiveCategory("All");
+            setSearchQuery("");
+          }}
         />
       ) : (
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div layout className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, idx) => (
               <motion.div
@@ -264,7 +381,7 @@ export default function MediaArchive() {
                 transition={{ duration: 0.25 }}
                 key={item.id}
                 onClick={() => setSelectedItemIndex(idx)}
-                className="glass-card rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-primary/40 transition-colors flex flex-col h-full relative"
+                className="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/10 hover:border-primary/50 transition-all flex flex-col h-full relative shadow-xl hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
               >
                 {/* Admin Quick Action Controls */}
                 {isAdmin && (
@@ -291,27 +408,36 @@ export default function MediaArchive() {
                   </div>
                 )}
 
-                <div className="relative h-52 bg-slate-900 overflow-hidden shrink-0">
+                <div className="relative h-56 bg-slate-950 overflow-hidden shrink-0">
                   {item.thumbnail ? (
                     <img
                       src={item.thumbnail}
                       alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 z-0"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 z-0"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 text-primary p-4 text-center">
-                      <BookOpen size={36} className="mb-2" />
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-300">{item.title}</span>
-                      <span className="text-[9px] text-gray-500 uppercase mt-0.5 font-mono">{item.category} Document</span>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/20 via-slate-900 to-slate-950 text-primary p-4 text-center">
+                      <BookOpen size={40} className="mb-2 animate-bounce" />
+                      <span className="text-xs font-extrabold uppercase tracking-wider text-white mb-1">{item.title}</span>
+                      <span className="text-[10px] text-primary/80 uppercase font-mono">{item.category} Document</span>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent z-10" />
+
+                  {/* Play icon overlay for videos */}
+                  {item.category === "Videos" && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-primary/90 text-slate-950 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                        <Play size={20} className="ml-1 fill-slate-950" />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
-                    <div className="p-2 bg-slate-950/80 backdrop-blur-md rounded-lg text-primary border border-white/10">
+                    <div className="p-2 bg-slate-950/80 backdrop-blur-md rounded-xl text-primary border border-white/10">
                       {getIcon(item.category)}
                     </div>
-                    <span className="text-[11px] font-bold px-2.5 py-1 bg-white/10 rounded-full backdrop-blur-md border border-white/10 text-gray-200 uppercase tracking-wider">
+                    <span className="text-[10px] font-extrabold px-2.5 py-1 bg-white/10 rounded-full backdrop-blur-md border border-white/10 text-gray-200 uppercase tracking-wider">
                       {item.category}
                     </span>
                   </div>
@@ -323,14 +449,18 @@ export default function MediaArchive() {
                       {item.title}
                     </h3>
                     <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
-                      {item.description}
+                      {item.description || "Official ITQAN media item."}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-gray-400 border-t border-white/5 pt-4">
+                  <div className="flex items-center justify-between text-[11px] text-gray-400 border-t border-white/10 pt-4">
                     <span>{new Date(item.date).toLocaleDateString()}</span>
-                    <span className="text-primary font-semibold">
-                      {item.category === "Photos" ? "View Image \u2192" : item.category === "Videos" ? "Watch Video \u2192" : "Read Document \u2192"}
+                    <span className="text-primary font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      {item.category === "Photos"
+                        ? "View Photo \u2192"
+                        : item.category === "Videos"
+                        ? "Watch Video \u2192"
+                        : "Read Document \u2192"}
                     </span>
                   </div>
                 </div>
@@ -389,7 +519,7 @@ export default function MediaArchive() {
               </div>
 
               <div>
-                <label className="block text-primary font-semibold mb-1 uppercase tracking-wider">Replace Image / Thumbnail (Optional)</label>
+                <label className="block text-primary font-semibold mb-1 uppercase tracking-wider">Replace Cover Image (Optional)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -400,7 +530,7 @@ export default function MediaArchive() {
 
               {editCategory !== "Photos" && editCategory !== "Videos" && (
                 <div>
-                  <label className="block text-accent font-semibold mb-1 uppercase tracking-wider">Attach / Replace PDF Document File (Optional)</label>
+                  <label className="block text-accent font-semibold mb-1 uppercase tracking-wider">Attach / Replace PDF File (Optional)</label>
                   <input
                     type="file"
                     accept="application/pdf"
@@ -421,7 +551,7 @@ export default function MediaArchive() {
         </div>
       )}
 
-      {/* Lightbox Modal */}
+      {/* Lightbox / Reader Preview Modal */}
       <AnimatePresence>
         {selectedItem && (
           <motion.div
@@ -494,7 +624,7 @@ export default function MediaArchive() {
                     </div>
                   )
                 ) : (
-                  // Clean High-Res Image / Photo Viewer (NO PDF Overlay)
+                  // Clean High-Res Image / Photo Viewer
                   <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
                     <img
                       src={selectedItem.thumbnail || selectedItem.fileUrl}
