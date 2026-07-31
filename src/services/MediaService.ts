@@ -36,14 +36,30 @@ export class MediaService {
 
   /**
    * Saves a newly uploaded media item locally so it immediately appears in the Media Archive.
+   * Handles browser localStorage 5MB quota gracefully.
    */
   static saveUploadedItem(item: MediaItem) {
     if (typeof window === "undefined") return;
     try {
       const existing = localStorage.getItem("itqan_user_media");
       const list: MediaItem[] = existing ? JSON.parse(existing) : [];
-      list.unshift(item);
-      localStorage.setItem("itqan_user_media", JSON.stringify(list));
+      
+      const filtered = list.filter((i) => i.id !== item.id);
+      filtered.unshift(item);
+
+      try {
+        localStorage.setItem("itqan_user_media", JSON.stringify(filtered));
+      } catch (quotaError) {
+        console.warn("Storage quota limit reached. Pruning heavy payloads for quota safety.");
+        // Strip heavy data URLs if quota exceeded to guarantee persistence
+        const lightweightList = filtered.map((m, idx) => {
+          if (idx > 0 && m.fileUrl && m.fileUrl.startsWith("data:video")) {
+            return { ...m, fileUrl: undefined };
+          }
+          return m;
+        });
+        localStorage.setItem("itqan_user_media", JSON.stringify(lightweightList));
+      }
       
       window.dispatchEvent(new CustomEvent("itqan-media-added", { detail: item }));
     } catch (e) {

@@ -64,34 +64,111 @@ export default function MediaUploadForm() {
     setFile(selectedFile);
   };
 
+  const compressImageFile = (fileToCompress: File, maxDim = 800, quality = 0.75): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          } else {
+            resolve((e.target?.result as string) || "");
+          }
+        };
+        img.onerror = () => resolve((e.target?.result as string) || "");
+        img.src = (e.target?.result as string) || "";
+      };
+      reader.readAsDataURL(fileToCompress);
+    });
+  };
+
+  const generateVideoThumbnail = (videoFile: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(videoFile);
+      const video = document.createElement("video");
+      video.src = url;
+      video.muted = true;
+      video.playsInline = true;
+
+      const timeout = setTimeout(() => {
+        resolve("");
+      }, 3500);
+
+      video.onloadeddata = () => {
+        video.currentTime = 0.5;
+      };
+
+      video.onseeked = () => {
+        clearTimeout(timeout);
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.min(video.videoWidth || 640, 640);
+          canvas.height = Math.min(video.videoHeight || 360, 360);
+          const ctx = canvas.getContext("2d");
+          if (ctx && canvas.width > 0 && canvas.height > 0) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const thumb = canvas.toDataURL("image/jpeg", 0.7);
+            resolve(thumb);
+          } else {
+            resolve("");
+          }
+        } catch {
+          resolve("");
+        }
+      };
+
+      video.onerror = () => {
+        clearTimeout(timeout);
+        resolve("");
+      };
+    });
+  };
+
   const processLocalMediaSave = async (fileToSave: File, itemTitle: string) => {
     let thumbnailDataUrl = "";
     let fileDataUrl = "";
 
-    // Read main file
+    // 1. Process Main File
     if (fileToSave.type.startsWith("image/")) {
-      fileDataUrl = await new Promise<string>((resolve) => {
-        const r = new FileReader();
-        r.onload = () => resolve((r.result as string) || "");
-        r.readAsDataURL(fileToSave);
-      });
-      thumbnailDataUrl = fileDataUrl;
+      thumbnailDataUrl = await compressImageFile(fileToSave);
+      fileDataUrl = thumbnailDataUrl;
+    } else if (fileToSave.type.startsWith("video/")) {
+      // For video files: create live Object URL for current playback & extract frame thumbnail
+      fileDataUrl = URL.createObjectURL(fileToSave);
+      thumbnailDataUrl = await generateVideoThumbnail(fileToSave);
     } else {
       // PDF or Document file
-      fileDataUrl = await new Promise<string>((resolve) => {
-        const r = new FileReader();
-        r.onload = () => resolve((r.result as string) || "");
-        r.readAsDataURL(fileToSave);
-      });
+      if (fileToSave.size < 2 * 1024 * 1024) {
+        fileDataUrl = await new Promise<string>((resolve) => {
+          const r = new FileReader();
+          r.onload = () => resolve((r.result as string) || "");
+          r.readAsDataURL(fileToSave);
+        });
+      } else {
+        fileDataUrl = URL.createObjectURL(fileToSave);
+      }
     }
 
-    // Read cover image file if provided
+    // 2. Cover image file if provided
     if (coverFile && coverFile.type.startsWith("image/")) {
-      thumbnailDataUrl = await new Promise<string>((resolve) => {
-        const r = new FileReader();
-        r.onload = () => resolve((r.result as string) || "");
-        r.readAsDataURL(coverFile);
-      });
+      thumbnailDataUrl = await compressImageFile(coverFile);
     }
 
     MediaService.saveUploadedItem({
@@ -103,6 +180,8 @@ export default function MediaUploadForm() {
       description: description || `Uploaded by ${user?.displayName || "Administrator"}`,
       fileUrl: fileDataUrl,
     });
+
+    logActivity(itemTitle);
   };
 
   const logActivity = (itemTitle: string) => {

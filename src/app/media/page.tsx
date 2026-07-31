@@ -229,6 +229,17 @@ export default function MediaArchive() {
       selectedItem.category === "Publications" ||
       (selectedItem.fileUrl && (selectedItem.fileUrl.startsWith("data:application/pdf") || selectedItem.fileUrl.endsWith(".pdf")))
     : false;
+  const isSelectedVideo = selectedItem
+    ? selectedItem.category === "Videos" ||
+      (selectedItem.fileUrl &&
+        (selectedItem.fileUrl.startsWith("data:video") ||
+          selectedItem.fileUrl.startsWith("blob:") ||
+          selectedItem.fileUrl.endsWith(".mp4") ||
+          selectedItem.fileUrl.endsWith(".webm") ||
+          selectedItem.fileUrl.endsWith(".mov") ||
+          selectedItem.fileUrl.includes("youtube.com") ||
+          selectedItem.fileUrl.includes("vimeo.com")))
+    : false;
 
   return (
     <div className="container mx-auto px-4 md:px-6 pt-28 md:pt-36 pb-24 scroll-mt-24">
@@ -623,13 +634,57 @@ export default function MediaArchive() {
                       </a>
                     </div>
                   )
+                ) : isSelectedVideo ? (
+                  /* Interactive Video Player */
+                  <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
+                    {selectedItem.fileUrl && (selectedItem.fileUrl.startsWith("data:video") || selectedItem.fileUrl.startsWith("blob:") || selectedItem.fileUrl.endsWith(".mp4") || selectedItem.fileUrl.endsWith(".webm") || selectedItem.fileUrl.endsWith(".mov")) ? (
+                      <video
+                        src={selectedItem.fileUrl}
+                        controls
+                        autoPlay
+                        className="w-full h-full object-contain rounded-xl"
+                        poster={selectedItem.thumbnail || undefined}
+                      />
+                    ) : selectedItem.fileUrl && (selectedItem.fileUrl.includes("youtube.com") || selectedItem.fileUrl.includes("youtu.be") || selectedItem.fileUrl.includes("vimeo.com")) ? (
+                      <iframe
+                        src={selectedItem.fileUrl.replace("watch?v=", "embed/")}
+                        className="w-full h-full border-0 rounded-xl"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowFullScreen
+                        title={selectedItem.title}
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full rounded-xl">
+                        <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary shadow-xl animate-pulse">
+                          <Play size={32} className="ml-1" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-bold text-white mb-1">{selectedItem.title}</h3>
+                          <p className="text-xs text-gray-400">Video Content ({selectedItem.category})</p>
+                        </div>
+                        {selectedItem.fileUrl && (
+                          <a
+                            href={selectedItem.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-extrabold text-xs uppercase tracking-wider shadow-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+                          >
+                            Watch Video <ExternalLink size={14} />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   // Clean High-Res Image / Photo Viewer
                   <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
                     <img
-                      src={selectedItem.thumbnail || selectedItem.fileUrl}
+                      src={selectedItem.thumbnail || selectedItem.fileUrl || "/logo.png"}
                       alt={selectedItem.title}
                       className="max-w-full max-h-full object-contain rounded-xl"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/logo.png";
+                      }}
                     />
                   </div>
                 )}

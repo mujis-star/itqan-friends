@@ -48,6 +48,21 @@ export default function DashboardPage() {
   const isEditor = isAdmin || userRole === "Editor" || userRole === "Media";
 
   useEffect(() => {
+    // Load stored activities on mount
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("itqan_recent_activities");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setActivities(parsed);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
     // Listen for live activity events dispatched anywhere in the dashboard
     const handleNewActivity = (e: Event) => {
       const customEvent = e as CustomEvent<{ title: string; category: ActivityItem["category"]; actor?: string }>;
@@ -59,7 +74,13 @@ export default function DashboardPage() {
           timeAgo: "Just now",
           category: customEvent.detail.category || "Media",
         };
-        setActivities((prev) => [newAct, ...prev]);
+        setActivities((prev) => {
+          const updated = [newAct, ...prev];
+          if (typeof window !== "undefined") {
+            localStorage.setItem("itqan_recent_activities", JSON.stringify(updated.slice(0, 30)));
+          }
+          return updated;
+        });
       }
     };
 
