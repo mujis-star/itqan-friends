@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, FileVideo, Users, ShieldCheck, LogOut, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, FileVideo, Users, ShieldCheck, User, LogOut, ArrowLeft } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, role, loading, isDemo, logoutDemo } = useAuth();
@@ -42,6 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: "Media & Events", href: "/portal/dashboard/media-events", icon: <FileVideo size={18} /> },
     { name: "Members", href: "/portal/dashboard/members", icon: <Users size={18} /> },
     { name: "Audit Logs", href: "/portal/dashboard/audit-logs", icon: <ShieldCheck size={18} /> },
+    { name: "My Profile", href: "/portal/dashboard/profile", icon: <User size={18} /> },
   ];
 
   return (

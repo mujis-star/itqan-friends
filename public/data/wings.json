@@ -29,7 +29,7 @@
             "category": "Publications & Literary Wings",
             "wings": [
                 {"name": "Library Wing", "chairman": "Muzammil", "convener": "N/A", "icon": "fa-book"},
-                {"name": "Publishing Bureau", "chairman": "Mirsad KK", "convener": "Ranif Ali KP", "asst_convener": "Zameen Sajeer C", "icon": "fa-print"}
+                {"name": "Publishing Bureau", "chairman": "Mirsad KK", "convener": "Minhaj", "asst_convener": "Zameen Sajeer C", "icon": "fa-print"}
             ]
         }
     ]

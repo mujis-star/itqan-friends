@@ -1,23 +1,15 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import {
-  Camera,
-  Book,
-  Globe2,
   X,
-  PenTool,
-  Calculator,
-  Atom,
-  Palette,
-  Activity,
-  Printer,
-  Briefcase,
-  Droplet,
   UserCircle2,
   ArrowUpRight,
 } from "lucide-react";
+import { StudentProfileModal, StudentProfileData, getStudentImage } from "@/components/ui/StudentProfileModal";
+import { WingLogo } from "@/components/ui/WingLogo";
 
 interface Wing {
   name: string;
@@ -35,6 +27,7 @@ interface WingCategory {
 export const EcosystemWings = () => {
   const [categories, setCategories] = useState<WingCategory[]>([]);
   const [activeWing, setActiveWing] = useState<Wing | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentProfileData | null>(null);
 
   useEffect(() => {
     fetch("/data/wings.json")
@@ -43,26 +36,14 @@ export const EcosystemWings = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const getIcon = (iconStr: string, size = 24) => {
-    const props = {
-      size,
-      className: "text-primary group-hover:text-slate-950 transition-colors duration-300",
-    };
-    switch (iconStr) {
-      case "fa-water": return <Droplet {...props} />;
-      case "fa-keyboard": return <Briefcase {...props} />;
-      case "fa-pen-fancy": return <PenTool {...props} />;
-      case "fa-moon": return <Globe2 {...props} />;
-      case "fa-atom": return <Atom {...props} />;
-      case "fa-calculator": return <Calculator {...props} />;
-      case "fa-globe": return <Globe2 {...props} />;
-      case "fa-palette": return <Palette {...props} />;
-      case "fa-camera-retro": return <Camera {...props} />;
-      case "fa-running": return <Activity {...props} />;
-      case "fa-book": return <Book {...props} />;
-      case "fa-print": return <Printer {...props} />;
-      default: return <Briefcase {...props} />;
-    }
+  const handleOpenMemberProfile = (name: string, role: string, wing: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setSelectedStudent({
+      name,
+      role,
+      wing,
+      image: getStudentImage(name),
+    });
   };
 
   return (
@@ -107,11 +88,9 @@ export const EcosystemWings = () => {
                     <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
 
                     <div className="relative z-10 flex flex-col h-full justify-between">
-                      {/* Top Row: Icon & Arrow */}
+                      {/* Top Row: Custom Wing Logo Emblem & Arrow */}
                       <div className="flex justify-between items-start mb-8">
-                        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300 relative overflow-hidden shrink-0">
-                          {getIcon(wing.icon, 24)}
-                        </div>
+                        <WingLogo wingName={wing.name} size="md" />
 
                         <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-primary/20">
                           <ArrowUpRight className="text-primary" size={18} />
@@ -124,17 +103,28 @@ export const EcosystemWings = () => {
                           {wing.name}
                         </h4>
 
-                        <div className="flex flex-col gap-1.5 text-xs text-gray-400">
-                          <div className="flex items-center gap-2">
-                            <UserCircle2 size={14} className="text-primary/70" />
+                        <div className="flex flex-col gap-2 text-xs text-gray-400">
+                          <div
+                            onClick={(e) => handleOpenMemberProfile(wing.chairman, "Chairman", wing.name, e)}
+                            className="flex items-center gap-2 hover:text-primary transition-colors group/item"
+                          >
+                            <UserCircle2 size={14} className="text-primary/70 group-hover/item:text-primary" />
                             <span className="font-semibold text-gray-400">Chair:</span>
-                            <span className="text-gray-200">{wing.chairman}</span>
+                            <span className="text-gray-200 font-bold underline decoration-primary/40 underline-offset-2">
+                              {wing.chairman}
+                            </span>
                           </div>
+
                           {wing.convener !== "N/A" && (
-                            <div className="flex items-center gap-2">
-                              <UserCircle2 size={14} className="text-accent/70" />
+                            <div
+                              onClick={(e) => handleOpenMemberProfile(wing.convener, "Convener", wing.name, e)}
+                              className="flex items-center gap-2 hover:text-accent transition-colors group/item"
+                            >
+                              <UserCircle2 size={14} className="text-accent/70 group-hover/item:text-accent" />
                               <span className="font-semibold text-gray-400">Conv:</span>
-                              <span className="text-gray-200">{wing.convener}</span>
+                              <span className="text-gray-200 font-bold underline decoration-accent/40 underline-offset-2">
+                                {wing.convener}
+                              </span>
                             </div>
                           )}
                         </div>
@@ -148,7 +138,7 @@ export const EcosystemWings = () => {
         </div>
       </div>
 
-      {/* Expanded Wing Modal */}
+      {/* Expanded Wing Command Center Modal */}
       <AnimatePresence>
         {activeWing && (
           <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
@@ -173,11 +163,12 @@ export const EcosystemWings = () => {
                 >
                   <X size={18} />
                 </button>
+
+                {/* Clean Custom Wing Logo Emblem */}
                 <div className="flex justify-center mb-5">
-                  <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg">
-                    {getIcon(activeWing.icon, 36)}
-                  </div>
+                  <WingLogo wingName={activeWing.name} size="xl" />
                 </div>
+
                 <h2 className="text-2xl font-bold mb-1 text-white">{activeWing.name}</h2>
                 <p className="text-primary font-semibold uppercase tracking-widest text-xs">
                   Command Center Details
@@ -185,31 +176,55 @@ export const EcosystemWings = () => {
               </div>
 
               <div className="p-6 space-y-3">
-                <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                <div
+                  onClick={() => handleOpenMemberProfile(activeWing.chairman, "Chairman", activeWing.name)}
+                  className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/40 cursor-pointer group transition-colors"
+                >
                   <div className="flex items-center gap-3">
                     <UserCircle2 className="text-primary" size={18} />
                     <span className="text-xs font-semibold text-gray-300">Chairman</span>
                   </div>
-                  <span className="text-white font-bold text-sm">{activeWing.chairman}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-bold text-sm group-hover:text-primary transition-colors">
+                      {activeWing.chairman}
+                    </span>
+                    <span className="text-xs text-primary font-semibold">View Full Profile &rarr;</span>
+                  </div>
                 </div>
 
                 {activeWing.convener !== "N/A" && (
-                  <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div
+                    onClick={() => handleOpenMemberProfile(activeWing.convener, "Convener", activeWing.name)}
+                    className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10 hover:border-accent/40 cursor-pointer group transition-colors"
+                  >
                     <div className="flex items-center gap-3">
                       <UserCircle2 className="text-accent" size={18} />
                       <span className="text-xs font-semibold text-gray-300">Convener</span>
                     </div>
-                    <span className="text-white font-bold text-sm">{activeWing.convener}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-bold text-sm group-hover:text-accent transition-colors">
+                        {activeWing.convener}
+                      </span>
+                      <span className="text-xs text-accent font-semibold">View Full Profile &rarr;</span>
+                    </div>
                   </div>
                 )}
 
                 {activeWing.asst_convener && (
-                  <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div
+                    onClick={() => handleOpenMemberProfile(activeWing.asst_convener!, "Asst. Convener", activeWing.name)}
+                    className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10 hover:border-white/20 cursor-pointer group transition-colors"
+                  >
                     <div className="flex items-center gap-3">
                       <UserCircle2 className="text-gray-400" size={18} />
                       <span className="text-xs font-semibold text-gray-300">Asst. Convener</span>
                     </div>
-                    <span className="text-white font-bold text-sm">{activeWing.asst_convener}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-bold text-sm group-hover:text-white transition-colors">
+                        {activeWing.asst_convener}
+                      </span>
+                      <span className="text-xs text-gray-400 font-semibold">View Full Profile &rarr;</span>
+                    </div>
                   </div>
                 )}
               </div>
@@ -217,6 +232,12 @@ export const EcosystemWings = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Rich Student Profile Portfolio Modal */}
+      <StudentProfileModal
+        student={selectedStudent}
+        onClose={() => setSelectedStudent(null)}
+      />
     </section>
   );
 };

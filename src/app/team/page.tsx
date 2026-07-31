@@ -1,14 +1,24 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  Crown, Shield, PenTool, Settings, 
-  Coins, BarChart, Megaphone, Users, ArrowRight, Globe, Mail
+import {
+  Crown,
+  Shield,
+  PenTool,
+  Settings,
+  Coins,
+  BarChart,
+  Megaphone,
+  Users,
+  ArrowRight,
+  Globe,
+  Mail,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/Card";
 import { CardSkeleton } from "@/components/ui/Skeleton";
+import { StudentProfileModal, StudentProfileData, getStudentImage } from "@/components/ui/StudentProfileModal";
 
 interface TeamMember {
   name: string;
@@ -16,6 +26,8 @@ interface TeamMember {
   desc: string;
   icon: string;
   image?: string;
+  about?: string;
+  responsibilities?: string[];
 }
 
 interface TeamData {
@@ -24,6 +36,7 @@ interface TeamData {
 
 export default function TeamPage() {
   const [data, setData] = useState<TeamData | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentProfileData | null>(null);
 
   useEffect(() => {
     fetch("/data/team.json")
@@ -61,6 +74,17 @@ export default function TeamPage() {
     }
   };
 
+  const handleOpenProfile = (member: TeamMember) => {
+    setSelectedStudent({
+      name: member.name,
+      role: member.role,
+      wing: "Executive Committee",
+      image: member.image || getStudentImage(member.name),
+      bio: member.about || member.desc,
+      responsibilities: member.responsibilities,
+    });
+  };
+
   return (
     <div className="container mx-auto px-6 py-24 scroll-mt-24">
       <div className="max-w-4xl mx-auto text-center mb-16">
@@ -85,6 +109,8 @@ export default function TeamPage() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.4 }}
               key={member.name}
+              onClick={() => handleOpenProfile(member)}
+              className="cursor-pointer"
             >
               <Card
                 tiltEffect
@@ -133,12 +159,9 @@ export default function TeamPage() {
                   </p>
 
                   <div className="pt-4 mt-auto">
-                    <Link
-                      href={`/team/${member.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                      className="inline-flex items-center justify-center w-full bg-white/5 hover:bg-primary hover:text-slate-950 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200"
-                    >
-                      View Profile <ArrowRight size={14} className="ml-1.5" />
-                    </Link>
+                    <button className="inline-flex items-center justify-center w-full bg-white/5 hover:bg-primary hover:text-slate-950 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer">
+                      View Full Profile <ArrowRight size={14} className="ml-1.5" />
+                    </button>
                   </div>
                 </div>
               </Card>
@@ -146,6 +169,11 @@ export default function TeamPage() {
           ))}
         </div>
       </div>
+
+      <StudentProfileModal
+        student={selectedStudent}
+        onClose={() => setSelectedStudent(null)}
+      />
     </div>
   );
 }
