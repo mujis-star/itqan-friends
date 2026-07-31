@@ -4,18 +4,41 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, FileVideo, Users, ShieldCheck, User, LogOut, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, FileVideo, Users, ShieldCheck, User, LogOut, ArrowLeft, Layers, Sliders } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, role, loading, isDemo, logoutDemo } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const { toast } = useToast();
+
+  const userRole = role || "Member";
+  const isSuperAdmin = userRole === "Super Admin";
+  const isAdmin = isSuperAdmin || userRole === "Administrator" || userRole === "Admin";
+  const isEditor = isAdmin || userRole === "Editor" || userRole === "Media";
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/portal");
+      return;
     }
-  }, [user, loading, router]);
+
+    // Strict Route Guard Enforcement
+    if (!loading && user) {
+      if (pathname === "/portal/dashboard/settings" && !isSuperAdmin) {
+        toast("Access Denied", "Super Admin privilege required for Website Customizer & Site Settings.", "error");
+        router.push("/portal/dashboard");
+        return;
+      }
+
+      if ((pathname === "/portal/dashboard/members" || pathname === "/portal/dashboard/audit-logs" || pathname === "/portal/dashboard/wings") && !isAdmin) {
+        toast("Access Denied", "Administrator privilege required for this Command Center section.", "error");
+        router.push("/portal/dashboard");
+        return;
+      }
+    }
+  }, [user, loading, pathname, isAdmin, isSuperAdmin, router, toast]);
 
   if (loading || !user) {
     return (
@@ -37,13 +60,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
-  const navItems = [
-    { name: "Dashboard", href: "/portal/dashboard", icon: <LayoutDashboard size={18} /> },
-    { name: "Media & Events", href: "/portal/dashboard/media-events", icon: <FileVideo size={18} /> },
-    { name: "Members", href: "/portal/dashboard/members", icon: <Users size={18} /> },
-    { name: "Audit Logs", href: "/portal/dashboard/audit-logs", icon: <ShieldCheck size={18} /> },
-    { name: "My Profile", href: "/portal/dashboard/profile", icon: <User size={18} /> },
+  // Role-filtered navigation items
+  const allNavItems = [
+    { name: "Dashboard", href: "/portal/dashboard", icon: <LayoutDashboard size={18} />, allowed: true },
+    { name: "Site Customizer", href: "/portal/dashboard/settings", icon: <Sliders size={18} />, allowed: isSuperAdmin },
+    { name: "Media & Events", href: "/portal/dashboard/media-events", icon: <FileVideo size={18} />, allowed: isEditor },
+    { name: "Members", href: "/portal/dashboard/members", icon: <Users size={18} />, allowed: isAdmin },
+    { name: "Manage Wings", href: "/portal/dashboard/wings", icon: <Layers size={18} />, allowed: isAdmin },
+    { name: "Audit Logs", href: "/portal/dashboard/audit-logs", icon: <ShieldCheck size={18} />, allowed: isAdmin },
+    { name: "My Profile", href: "/portal/dashboard/profile", icon: <User size={18} />, allowed: true },
   ];
+
+  const allowedNavItems = allNavItems.filter((item) => item.allowed);
 
   return (
     <div className="min-h-screen flex bg-slate-950 text-foreground selection:bg-primary/30">
@@ -56,13 +84,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <h2 className="font-extrabold text-lg text-white tracking-wide">
             ITQAN <span className="text-primary">Command</span>
           </h2>
-          <p className="text-[11px] text-gray-400 mt-0.5">
-            Role: <span className="text-primary font-bold">{role || "Administrator"}</span>
-          </p>
+          <div className="mt-1 flex items-center gap-1.5">
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+              isSuperAdmin
+                ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                : isAdmin
+                ? "bg-primary/20 text-primary border border-primary/30"
+                : "bg-white/10 text-gray-300 border border-white/15"
+            }`}>
+              Role: {userRole}
+            </span>
+          </div>
         </div>
 
         <nav className="p-3 flex-1 space-y-1.5 overflow-y-auto">
-          {navItems.map((item) => {
+          {allowedNavItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

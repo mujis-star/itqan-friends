@@ -39,10 +39,22 @@ export default function PortalPage() {
     setError("");
     setIsProcessing(true);
 
-    // If Firebase is not configured, fall back to Demo Mode
+    // If Firebase is not configured or offline, verify password & log in as member profile
     if (!auth || !db) {
+      const { verifyAccountPassword } = await import("@/context/AuthContext");
+      const isValid = verifyAccountPassword(email || "admin@itqan.org", password);
+
+      if (!isValid) {
+        setError(`Incorrect password for ${email}. Default password is 'itqan123' unless changed in My Profile.`);
+        setIsProcessing(false);
+        return;
+      }
+
       setTimeout(() => {
-        handleDemoAccess();
+        if (loginAsDemo) {
+          loginAsDemo(email || "admin@itqan.org");
+          router.push("/portal/dashboard");
+        }
       }, 300);
       return;
     }
@@ -111,17 +123,6 @@ export default function PortalPage() {
 
           <div className="glass-card p-8 rounded-3xl relative overflow-hidden border border-white/10">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-            {firebaseMissing && (
-              <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs space-y-2">
-                <div className="flex items-center gap-2 font-bold text-amber-400">
-                  <Info size={16} /> Firebase Environment Notice
-                </div>
-                <p className="leading-relaxed text-amber-200/90">
-                  Firebase credentials are not set in <code className="bg-black/40 px-1 py-0.5 rounded text-amber-300">.env.local</code>. You can click <strong>&ldquo;Explore Demo Command Center&rdquo;</strong> to preview the portal as an Administrator.
-                </p>
-              </div>
-            )}
 
             <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
               {error && (
@@ -194,14 +195,6 @@ export default function PortalPage() {
                     ? "Create Account"
                     : "Access Command Center"}
                 </Button>
-
-                <button
-                  type="button"
-                  onClick={handleDemoAccess}
-                  className="w-full py-3 px-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-primary font-semibold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <ShieldCheck size={16} /> Explore Demo Command Center (Preview)
-                </button>
               </div>
 
               <div className="mt-6 text-center">

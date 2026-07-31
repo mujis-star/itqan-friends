@@ -7,9 +7,13 @@ import {
   X,
   UserCircle2,
   ArrowUpRight,
+  Edit2,
+  Check,
 } from "lucide-react";
 import { StudentProfileModal, StudentProfileData, getStudentImage } from "@/components/ui/StudentProfileModal";
 import { WingLogo } from "@/components/ui/WingLogo";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/Toast";
 
 interface Wing {
   name: string;
@@ -25,11 +29,33 @@ interface WingCategory {
 }
 
 export const EcosystemWings = () => {
+  const { role, user } = useAuth();
+  const { toast } = useToast();
   const [categories, setCategories] = useState<WingCategory[]>([]);
   const [activeWing, setActiveWing] = useState<Wing | null>(null);
+  const [editingWing, setEditingWing] = useState<Wing | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<StudentProfileData | null>(null);
 
+  // Edit form state
+  const [editWingName, setEditWingName] = useState("");
+  const [editChairman, setEditChairman] = useState("");
+  const [editConvener, setEditConvener] = useState("");
+  const [editAsstConvener, setEditAsstConvener] = useState("");
+
+  const isAdmin = !!user || role === "Administrator" || role === "Admin" || role === "Super Admin";
+
   useEffect(() => {
+    // Load custom wings if saved in LocalStorage, else fetch json
+    const savedWings = typeof window !== "undefined" ? localStorage.getItem("itqan_custom_wings") : null;
+    if (savedWings) {
+      try {
+        setCategories(JSON.parse(savedWings));
+        return;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     fetch("/data/wings.json")
       .then((res) => res.json())
       .then((data) => setCategories(data.categories))
@@ -44,6 +70,53 @@ export const EcosystemWings = () => {
       wing,
       image: getStudentImage(name),
     });
+  };
+
+  const handleOpenEditWingModal = (wing: Wing, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setEditingWing(wing);
+    setEditWingName(wing.name);
+    setEditChairman(wing.chairman);
+    setEditConvener(wing.convener);
+    setEditAsstConvener(wing.asst_convener || "");
+  };
+
+  const handleSaveWingEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingWing) return;
+
+    const updatedCategories = categories.map((cat) => ({
+      ...cat,
+      wings: cat.wings.map((w) =>
+        w.name === editingWing.name
+          ? {
+              ...w,
+              name: editWingName,
+              chairman: editChairman,
+              convener: editConvener,
+              asst_convener: editAsstConvener || undefined,
+            }
+          : w
+      ),
+    }));
+
+    setCategories(updatedCategories);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("itqan_custom_wings", JSON.stringify(updatedCategories));
+    }
+
+    if (activeWing && activeWing.name === editingWing.name) {
+      setActiveWing({
+        ...activeWing,
+        name: editWingName,
+        chairman: editChairman,
+        convener: editConvener,
+        asst_convener: editAsstConvener || undefined,
+      });
+    }
+
+    setEditingWing(null);
+    toast("Wing Details Updated", `Saved leadership and details for "${editWingName}".`, "success");
   };
 
   return (
@@ -88,12 +161,23 @@ export const EcosystemWings = () => {
                     <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
 
                     <div className="relative z-10 flex flex-col h-full justify-between">
-                      {/* Top Row: Custom Wing Logo Emblem & Arrow */}
+                      {/* Top Row: Custom Wing Logo Emblem & Quick Action */}
                       <div className="flex justify-between items-start mb-8">
                         <WingLogo wingName={wing.name} size="md" />
 
-                        <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-primary/20">
-                          <ArrowUpRight className="text-primary" size={18} />
+                        <div className="flex items-center gap-1.5">
+                          {isAdmin && (
+                            <button
+                              onClick={(e) => handleOpenEditWingModal(wing, e)}
+                              className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-primary hover:bg-white/10 transition-colors cursor-pointer"
+                              title="Edit Wing Leadership"
+                            >
+                              <Edit2 size={14} />
+                            </button>
+                          )}
+                          <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-primary/20">
+                            <ArrowUpRight className="text-primary" size={18} />
+                          </div>
                         </div>
                       </div>
 
@@ -157,12 +241,23 @@ export const EcosystemWings = () => {
               className="relative w-full max-w-lg glass-card bg-slate-900 border border-white/15 rounded-3xl shadow-2xl overflow-hidden z-10"
             >
               <div className="p-8 border-b border-white/10 relative text-center bg-gradient-to-b from-primary/10 to-transparent">
-                <button
-                  onClick={() => setActiveWing(null)}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-white bg-white/5 rounded-full p-2 hover:bg-white/10 transition-colors"
-                >
-                  <X size={18} />
-                </button>
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  {isAdmin && (
+                    <button
+                      onClick={(e) => handleOpenEditWingModal(activeWing, e)}
+                      className="text-gray-400 hover:text-primary bg-white/5 rounded-full p-2 hover:bg-white/10 transition-colors cursor-pointer"
+                      title="Edit Wing Details"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setActiveWing(null)}
+                    className="text-gray-400 hover:text-white bg-white/5 rounded-full p-2 hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
 
                 {/* Clean Custom Wing Logo Emblem */}
                 <div className="flex justify-center mb-5">
@@ -232,6 +327,72 @@ export const EcosystemWings = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Edit Wing Details Modal (Admin Only) */}
+      {editingWing && (
+        <div className="fixed inset-0 z-[1150] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
+            <button
+              onClick={() => setEditingWing(null)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-white p-1 rounded-lg"
+            >
+              <X size={18} />
+            </button>
+            <h3 className="text-xl font-bold text-white">Edit Wing Command Center</h3>
+            <form onSubmit={handleSaveWingEdit} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1 uppercase tracking-wider">Wing Title</label>
+                <input
+                  type="text"
+                  required
+                  value={editWingName}
+                  onChange={(e) => setEditWingName(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-primary font-semibold mb-1 uppercase tracking-wider">Chairman</label>
+                <input
+                  type="text"
+                  required
+                  value={editChairman}
+                  onChange={(e) => setEditChairman(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-accent font-semibold mb-1 uppercase tracking-wider">Convener</label>
+                <input
+                  type="text"
+                  required
+                  value={editConvener}
+                  onChange={(e) => setEditConvener(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-400 font-semibold mb-1 uppercase tracking-wider">Asst. Convener (Optional)</label>
+                <input
+                  type="text"
+                  value={editAsstConvener}
+                  onChange={(e) => setEditAsstConvener(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity mt-2 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Check size={16} /> Save Wing Details
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Rich Student Profile Portfolio Modal */}
       <StudentProfileModal

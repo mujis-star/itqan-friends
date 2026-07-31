@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { User, Trash2, Search, Filter, Plus, Edit2, X, Eye } from "lucide-react";
+import { useAuth, setAccountPassword } from "@/context/AuthContext";
+import { User, Trash2, Search, Filter, Plus, Edit2, X, Eye, Camera, KeyRound } from "lucide-react";
 import { auth } from "@/lib/firebase/config";
 import { useToast } from "@/components/ui/Toast";
 import { StudentProfileModal, StudentProfileData, getStudentImage, getOfficialAdmissionNo } from "@/components/ui/StudentProfileModal";
@@ -14,10 +14,12 @@ interface UserProfile {
   role: string;
   wing?: string;
   admissionNo?: string;
+  bio?: string;
+  avatarUrl?: string;
   createdAt: string | Date;
 }
 
-const ROLES = ["Pending", "Member", "Media", "Editor", "Admin", "Administrator", "Super Admin"];
+const ROLES = ["Pending", "Member", "Media", "Editor", "Administrator", "Super Admin"];
 
 const WINGS = [
   "Executive",
@@ -28,14 +30,15 @@ const WINGS = [
   "Maths Wing",
   "Science Wing",
   "Media Wing",
+  "Publishing Bureau",
   "General",
 ];
 
 // Official 32 ITQAN Union members with official admission numbers provided by user
 const FALLBACK_32_MEMBERS: UserProfile[] = [
-  { uid: "m-733", displayName: "Sayed Hudaif", email: "hudaif@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "733", createdAt: "2024-01-15" },
-  { uid: "m-725", displayName: "Sayed Burhan", email: "burhan@itqan.org", role: "Admin", wing: "Executive", admissionNo: "725", createdAt: "2024-01-16" },
-  { uid: "m-707", displayName: "Zidan", email: "zidan@itqan.org", role: "Admin", wing: "Executive", admissionNo: "707", createdAt: "2024-01-20" },
+  { uid: "m-733", displayName: "Sayed Hudaif", email: "hudaif@itqan.org", role: "Super Admin", wing: "Executive", admissionNo: "733", createdAt: "2024-01-15" },
+  { uid: "m-725", displayName: "Sayed Burhan", email: "burhan@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "725", createdAt: "2024-01-16" },
+  { uid: "m-707", displayName: "Zidan", email: "zidan@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "707", createdAt: "2024-01-20" },
   { uid: "m-742", displayName: "Muhyudheen", email: "muhyudheen@itqan.org", role: "Editor", wing: "Executive", admissionNo: "742", createdAt: "2024-02-01" },
   { uid: "m-717", displayName: "Mirsad", email: "mirsad@itqan.org", role: "Editor", wing: "Executive", admissionNo: "717", createdAt: "2024-02-05" },
   { uid: "m-705", displayName: "Thanzeeh Moosa", email: "thanzeeh@itqan.org", role: "Editor", wing: "Executive", admissionNo: "705", createdAt: "2024-02-10" },
@@ -88,10 +91,35 @@ export default function MembersPage() {
   const [formAdmNo, setFormAdmNo] = useState("");
   const [formWing, setFormWing] = useState("Executive");
   const [formRole, setFormRole] = useState("Member");
+  const [formBio, setFormBio] = useState("");
+  const [formAvatarUrl, setFormAvatarUrl] = useState("");
+  const [formPassword, setFormPassword] = useState("");
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("itqan_custom_members");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setUsers(parsed);
+            setLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
     fetchUsers();
   }, []);
+
+  const saveUsersState = (updatedUsers: UserProfile[]) => {
+    setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("itqan_custom_members", JSON.stringify(updatedUsers));
+    }
+  };
 
   const fetchUsers = async () => {
     if (!auth?.currentUser) {
@@ -111,7 +139,7 @@ export default function MembersPage() {
       if (!res.ok) throw new Error("API unconfigured");
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        setUsers(data);
+        saveUsersState(data);
         setIsFallback(false);
       } else {
         setIsFallback(true);
@@ -124,8 +152,16 @@ export default function MembersPage() {
     }
   };
 
+  const handleWingChange = (uid: string, newWing: string) => {
+    const targetUser = users.find((u) => u.uid === uid);
+    const updated = users.map((u) => (u.uid === uid ? { ...u, wing: newWing } : u));
+    saveUsersState(updated);
+    toast("Wing Reassigned", `${targetUser?.displayName || "Member"} assigned to ${newWing}.`, "success");
+  };
+
   const handleRoleChange = async (uid: string, newRole: string) => {
-    setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, role: newRole } : u)));
+    const updated = users.map((u) => (u.uid === uid ? { ...u, role: newRole } : u));
+    saveUsersState(updated);
     setUpdating(uid);
     toast("Role Updated", `Member role changed to ${newRole}.`, "success");
 
@@ -158,14 +194,25 @@ export default function MembersPage() {
       admissionNo: formAdmNo || getOfficialAdmissionNo(formName) || `${Math.floor(750 + Math.random() * 50)}`,
       wing: formWing,
       role: formRole,
+      bio: formBio,
+      avatarUrl: formAvatarUrl,
       createdAt: new Date().toISOString().slice(0, 10),
     };
 
-    setUsers((prev) => [newMember, ...prev]);
+    const updated = [newMember, ...users];
+    saveUsersState(updated);
+
+    if (formPassword) {
+      setAccountPassword(formEmail, formPassword);
+    }
+
     setShowAddModal(false);
     setFormName("");
     setFormEmail("");
     setFormAdmNo("");
+    setFormBio("");
+    setFormAvatarUrl("");
+    setFormPassword("");
     toast("Member Created", `${formName} added to directory as ${formRole}.`, "success");
   };
 
@@ -173,13 +220,28 @@ export default function MembersPage() {
     e.preventDefault();
     if (!editingMember || !formName || !formEmail) return;
 
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.uid === editingMember.uid
-          ? { ...u, displayName: formName, email: formEmail, admissionNo: formAdmNo, wing: formWing, role: formRole }
-          : u
-      )
+    const updated = users.map((u) =>
+      u.uid === editingMember.uid
+        ? {
+            ...u,
+            displayName: formName,
+            email: formEmail,
+            admissionNo: formAdmNo,
+            wing: formWing,
+            role: formRole,
+            bio: formBio,
+            avatarUrl: formAvatarUrl,
+          }
+        : u
     );
+
+    saveUsersState(updated);
+
+    if (formPassword) {
+      setAccountPassword(formEmail, formPassword);
+      toast("Password Reset", `Password updated for ${formName}.`, "success");
+    }
+
     setEditingMember(null);
     toast("Member Saved", `Updated profile details for ${formName}.`, "success");
   };
@@ -191,6 +253,9 @@ export default function MembersPage() {
     setFormAdmNo(member.admissionNo || getOfficialAdmissionNo(member.displayName));
     setFormWing(member.wing || "Executive");
     setFormRole(member.role);
+    setFormBio(member.bio || "");
+    setFormAvatarUrl(member.avatarUrl || getStudentImage(member.displayName));
+    setFormPassword("");
   };
 
   const openStudentModal = (member: UserProfile) => {
@@ -200,7 +265,8 @@ export default function MembersPage() {
       wing: member.wing || "ITQAN Member",
       admissionNo: member.admissionNo || getOfficialAdmissionNo(member.displayName),
       email: member.email,
-      image: getStudentImage(member.displayName),
+      bio: member.bio,
+      image: member.avatarUrl || getStudentImage(member.displayName),
     });
   };
 
@@ -208,7 +274,8 @@ export default function MembersPage() {
     if (!confirm("Are you sure you want to remove this member from the directory?")) return;
 
     setUpdating(uid);
-    setUsers((prev) => prev.filter((u) => u.uid !== uid));
+    const updated = users.filter((u) => u.uid !== uid);
+    saveUsersState(updated);
     toast("Member Removed", "Member record removed.", "info");
 
     if (auth?.currentUser && !isFallback) {
@@ -253,7 +320,7 @@ export default function MembersPage() {
             Member Directory <span className="text-primary text-xl">({users.length})</span>
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Approve, assign roles, edit details, and manage official admission numbers for all registered ITQAN members.
+            Approve, assign roles, edit details, custom bios, avatars, and manage account passwords for all 32 members.
           </p>
         </div>
 
@@ -265,6 +332,9 @@ export default function MembersPage() {
               setFormAdmNo("");
               setFormWing("Executive");
               setFormRole("Member");
+              setFormBio("");
+              setFormAvatarUrl("");
+              setFormPassword("");
               setShowAddModal(true);
             }}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-primary/20"
@@ -280,7 +350,7 @@ export default function MembersPage() {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input
             type="text"
-            placeholder="Search by name, adm. no (e.g. 733), or wing..."
+            placeholder="Search by name, adm. no (e.g. 702), or wing..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder:text-gray-500 focus:outline-none focus:border-primary transition-all"
@@ -316,12 +386,12 @@ export default function MembersPage() {
                 <th className="p-4">Email</th>
                 <th className="p-4">Wing</th>
                 <th className="p-4">Role</th>
-                <th className="p-4 text-right">Advanced Actions</th>
+                <th className="p-4 text-right">Administrator Edit</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-xs">
               {filteredUsers.map((u) => {
-                const studentImg = getStudentImage(u.displayName);
+                const studentImg = u.avatarUrl || getStudentImage(u.displayName);
                 const officialAdmNo = u.admissionNo || getOfficialAdmissionNo(u.displayName) || "700";
                 return (
                   <tr key={u.uid} className="hover:bg-white/[0.02] transition-colors">
@@ -351,17 +421,25 @@ export default function MembersPage() {
                           </p>
                           {u.uid === currentUser?.uid && (
                             <span className="text-[9px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-2 py-0.5 rounded-full inline-block mt-0.5">
-                              You (Admin)
+                              Active Account
                             </span>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="p-4 text-gray-300 font-mono text-[11px]">{u.email}</td>
-                    <td className="p-4 text-gray-400">
-                      <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-semibold text-gray-300">
-                        {u.wing || "Executive"}
-                      </span>
+                    <td className="p-4">
+                      <select
+                        value={u.wing || "Executive"}
+                        onChange={(e) => handleWingChange(u.uid, e.target.value)}
+                        className="bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 outline-none focus:border-primary transition-colors cursor-pointer"
+                      >
+                        {WINGS.map((w) => (
+                          <option key={w} value={w}>
+                            {w}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="p-4">
                       <select
@@ -389,7 +467,7 @@ export default function MembersPage() {
                         <button
                           onClick={() => openEditModal(u)}
                           className="text-gray-400 hover:text-primary p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
-                          title="Edit Member Details"
+                          title="Complete Administrator Edit Option"
                         >
                           <Edit2 size={15} />
                         </button>
@@ -422,7 +500,7 @@ export default function MembersPage() {
       {/* Modal: Add New Member */}
       {showAddModal && (
         <div className="fixed inset-0 z-[1000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
+          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowAddModal(false)}
               className="absolute top-6 right-6 text-gray-400 hover:text-white p-1 rounded-lg"
@@ -438,7 +516,7 @@ export default function MembersPage() {
                   required
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  placeholder="e.g. Muhammed Hisham"
+                  placeholder="e.g. Mujeeb Rahman"
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
                 />
               </div>
@@ -448,7 +526,7 @@ export default function MembersPage() {
                   type="text"
                   value={formAdmNo}
                   onChange={(e) => setFormAdmNo(e.target.value)}
-                  placeholder="e.g. 733"
+                  placeholder="e.g. 702"
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-mono"
                 />
               </div>
@@ -459,8 +537,20 @@ export default function MembersPage() {
                   required
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  placeholder="e.g. hisham@itqan.org"
+                  placeholder="e.g. mujeeb@itqan.org"
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-primary font-semibold mb-1 flex items-center gap-1.5">
+                  <KeyRound size={13} /> Account Password
+                </label>
+                <input
+                  type="password"
+                  value={formPassword}
+                  onChange={(e) => setFormPassword(e.target.value)}
+                  placeholder="Default: itqan123"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-mono"
                 />
               </div>
               <div>
@@ -502,37 +592,49 @@ export default function MembersPage() {
         </div>
       )}
 
-      {/* Modal: Edit Existing Member */}
+      {/* Modal: Complete Administrator Edit Option for Any Member */}
       {editingMember && (
-        <div className="fixed inset-0 z-[1000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
+        <div className="fixed inset-0 z-[1000] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-card p-6 md:p-8 rounded-3xl max-w-lg w-full border border-white/15 relative space-y-4 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setEditingMember(null)}
               className="absolute top-6 right-6 text-gray-400 hover:text-white p-1 rounded-lg"
             >
               <X size={18} />
             </button>
-            <h3 className="text-xl font-bold text-white">Edit Member Details</h3>
-            <form onSubmit={handleSaveEdit} className="space-y-4 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="p-2 rounded-xl bg-primary/20 text-primary">
+                <Edit2 size={18} />
+              </span>
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
-                />
+                <h3 className="text-xl font-extrabold text-white">Administrator Member Edit</h3>
+                <p className="text-[11px] text-gray-400">Complete edit permissions for {editingMember.displayName}</p>
               </div>
-              <div>
-                <label className="block text-gray-300 font-semibold mb-1">Official Admission Number</label>
-                <input
-                  type="text"
-                  value={formAdmNo}
-                  onChange={(e) => setFormAdmNo(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-mono"
-                />
+            </div>
+
+            <form onSubmit={handleSaveEdit} className="space-y-4 text-xs pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-1">Official Admission Number</label>
+                  <input
+                    type="text"
+                    value={formAdmNo}
+                    onChange={(e) => setFormAdmNo(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-mono"
+                  />
+                </div>
               </div>
+
               <div>
                 <label className="block text-gray-300 font-semibold mb-1">Email Address</label>
                 <input
@@ -543,40 +645,90 @@ export default function MembersPage() {
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
                 />
               </div>
+
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Wing</label>
-                <select
-                  value={formWing}
-                  onChange={(e) => setFormWing(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
-                >
-                  {WINGS.map((w) => (
-                    <option key={w} value={w}>
-                      {w}
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-primary font-semibold mb-1 flex items-center gap-1.5">
+                  <KeyRound size={13} /> Reset Member Account Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter new password (or leave blank to keep current)..."
+                  value={formPassword}
+                  onChange={(e) => setFormPassword(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-mono"
+                />
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-1">Wing</label>
+                  <select
+                    value={formWing}
+                    onChange={(e) => setFormWing(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                  >
+                    {WINGS.map((w) => (
+                      <option key={w} value={w}>
+                        {w}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-300 font-semibold mb-1">Assigned Role</label>
+                  <select
+                    value={formRole}
+                    onChange={(e) => setFormRole(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
+                  >
+                    {ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Role</label>
-                <select
-                  value={formRole}
-                  onChange={(e) => setFormRole(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary cursor-pointer"
-                >
-                  {ROLES.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-gray-300 font-semibold mb-1">Bio / Profile Summary</label>
+                <textarea
+                  rows={3}
+                  value={formBio}
+                  onChange={(e) => setFormBio(e.target.value)}
+                  placeholder="Custom student summary..."
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-primary"
+                />
               </div>
-              <button
-                type="submit"
-                className="w-full py-3 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity mt-2"
-              >
-                Save Member Changes
-              </button>
+
+              <div>
+                <label className="block text-primary font-semibold mb-1 flex items-center gap-1.5">
+                  <Camera size={13} /> Avatar Image URL
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. /profiles/Mujeeb.png"
+                  value={formAvatarUrl}
+                  onChange={(e) => setFormAvatarUrl(e.target.value)}
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingMember(null)}
+                  className="px-5 py-2.5 rounded-xl bg-white/5 text-gray-300 hover:text-white font-bold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  Save All Member Details
+                </button>
+              </div>
             </form>
           </div>
         </div>

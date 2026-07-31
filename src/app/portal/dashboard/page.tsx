@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Upload, Users, FileText, ShieldAlert, Sparkles, Clock, CheckCircle2 } from "lucide-react";
+import { Upload, Users, FileText, ShieldAlert, Sparkles, Clock, CheckCircle2, Image, Layers, User, Sliders } from "lucide-react";
 import MediaUploadForm from "@/components/admin/MediaUploadForm";
 import Link from "next/link";
 
@@ -42,6 +42,11 @@ export default function DashboardPage() {
   const { user, role } = useAuth();
   const [activities, setActivities] = useState<ActivityItem[]>(INITIAL_ACTIVITIES);
 
+  const userRole = role || "Member";
+  const isSuperAdmin = userRole === "Super Admin";
+  const isAdmin = isSuperAdmin || userRole === "Administrator" || userRole === "Admin";
+  const isEditor = isAdmin || userRole === "Editor" || userRole === "Media";
+
   useEffect(() => {
     // Listen for live activity events dispatched anywhere in the dashboard
     const handleNewActivity = (e: Event) => {
@@ -50,7 +55,7 @@ export default function DashboardPage() {
         const newAct: ActivityItem = {
           id: `act-${Date.now()}`,
           title: customEvent.detail.title,
-          actor: customEvent.detail.actor || user?.displayName || "Administrator",
+          actor: customEvent.detail.actor || user?.displayName || "Member",
           timeAgo: "Just now",
           category: customEvent.detail.category || "Media",
         };
@@ -88,75 +93,217 @@ export default function DashboardPage() {
             <Sparkles size={14} /> Command Center Active
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            Welcome back, {user?.displayName || "Admin"}!
+            Welcome back, {user?.displayName || "Member"}!
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Logged in as <span className="text-primary font-bold">{role || "Administrator"}</span>. Here is a live overview of the ITQAN ecosystem.
+            Logged in as <span className="text-primary font-bold">{userRole}</span>. Welcome to your ITQAN portal space.
           </p>
         </div>
 
         <div className="hidden sm:block shrink-0 relative z-10 mt-4 sm:mt-0">
           <div className="w-14 h-14 rounded-full bg-primary/20 border-2 border-primary/40 flex items-center justify-center text-primary font-extrabold text-xl shadow-lg">
-            {user?.displayName?.charAt(0) || "A"}
+            {user?.displayName?.charAt(0) || "M"}
           </div>
         </div>
       </div>
 
-      {/* Quick Action Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Link href="#upload-section" className="block">
-          <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-primary/40 transition-all group cursor-pointer h-full">
-            <Upload className="text-primary mb-3 group-hover:scale-110 transition-transform" size={26} />
-            <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors">
-              Upload Media
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-              Add new photos, videos, or magazines to the archive.
-            </p>
-          </div>
-        </Link>
+      {/* Role-Based Quick Action Cards */}
+      {isSuperAdmin ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <Link href="/portal/dashboard/settings" className="block">
+            <div className="glass-card p-5 rounded-2xl border border-amber-500/30 hover:border-amber-400 transition-all group cursor-pointer h-full bg-amber-500/5">
+              <Sliders className="text-amber-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                Site Customizer
+              </h3>
+              <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Super Admin exclusive: themes, title, & announcement banner.
+              </p>
+            </div>
+          </Link>
 
-        <Link href="/portal/dashboard/members" className="block">
-          <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-accent/40 transition-all group cursor-pointer h-full">
-            <Users className="text-accent mb-3 group-hover:scale-110 transition-transform" size={26} />
-            <h3 className="text-base font-bold text-white group-hover:text-accent transition-colors">
-              Manage Members
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-              Approve 32 members, edit details, and assign roles.
-            </p>
-          </div>
-        </Link>
+          <Link href="#upload-section" className="block">
+            <div className="glass-card p-5 rounded-2xl border border-white/10 hover:border-primary/40 transition-all group cursor-pointer h-full">
+              <Upload className="text-primary mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors">
+                Upload Media
+              </h3>
+              <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Add new photos, videos, or magazines.
+              </p>
+            </div>
+          </Link>
 
-        <Link href="/portal/dashboard/media-events" className="block">
-          <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-purple-400/40 transition-all group cursor-pointer h-full">
-            <FileText className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
-            <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors">
-              Publish Event
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-              Draft and publish upcoming events or summits.
-            </p>
-          </div>
-        </Link>
+          <Link href="/portal/dashboard/members" className="block">
+            <div className="glass-card p-5 rounded-2xl border border-white/10 hover:border-accent/40 transition-all group cursor-pointer h-full">
+              <Users className="text-accent mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-sm font-bold text-white group-hover:text-accent transition-colors">
+                Manage Members
+              </h3>
+              <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Approve 32 members, roles, & details.
+              </p>
+            </div>
+          </Link>
 
-        <Link href="/portal/dashboard/audit-logs" className="block">
-          <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-all group cursor-pointer h-full">
-            <ShieldAlert className="text-amber-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
-            <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
-              Audit Logs
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-              Review administrative security actions and CSV exports.
-            </p>
-          </div>
-        </Link>
-      </div>
+          <Link href="/portal/dashboard/wings" className="block">
+            <div className="glass-card p-5 rounded-2xl border border-white/10 hover:border-purple-400/40 transition-all group cursor-pointer h-full">
+              <Layers className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
+                Manage Wings
+              </h3>
+              <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Edit 12 wing chairmen & conveners.
+              </p>
+            </div>
+          </Link>
 
-      {/* Upload Media Form */}
-      <div id="upload-section" className="scroll-mt-24">
-        <MediaUploadForm />
-      </div>
+          <Link href="/portal/dashboard/audit-logs" className="block">
+            <div className="glass-card p-5 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-all group cursor-pointer h-full">
+              <ShieldAlert className="text-amber-400 mb-3 group-hover:scale-110 transition-transform" size={24} />
+              <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                Audit Logs
+              </h3>
+              <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Security actions & CSV exports.
+              </p>
+            </div>
+          </Link>
+        </div>
+      ) : isAdmin ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="#upload-section" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-primary/40 transition-all group cursor-pointer h-full">
+              <Upload className="text-primary mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors">
+                Upload Media
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Add new photos, videos, or magazines to the archive.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/members" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-accent/40 transition-all group cursor-pointer h-full">
+              <Users className="text-accent mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-accent transition-colors">
+                Manage Members
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Approve 32 members, edit details, and assign roles.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/wings" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-purple-400/40 transition-all group cursor-pointer h-full">
+              <Layers className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors">
+                Manage Wings
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Edit 12 wing chairmen and conveners.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/audit-logs" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-all group cursor-pointer h-full">
+              <ShieldAlert className="text-amber-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                Audit Logs
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Review administrative security actions and CSV exports.
+              </p>
+            </div>
+          </Link>
+        </div>
+      ) : isEditor ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link href="#upload-section" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-primary/40 transition-all group cursor-pointer h-full">
+              <Upload className="text-primary mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors">
+                Upload Media
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Add new photos, videos, or magazines to the archive.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/media-events" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-purple-400/40 transition-all group cursor-pointer h-full">
+              <FileText className="text-purple-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors">
+                Publish Event
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Draft and publish upcoming events or summits.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/profile" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-emerald-400/40 transition-all group cursor-pointer h-full">
+              <User className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                My Profile
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Edit personal bio, avatar photo, and password security.
+              </p>
+            </div>
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link href="/media" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-primary/40 transition-all group cursor-pointer h-full">
+              <Image className="text-primary mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors">
+                View Media Archive
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Browse official magazines, photo galleries, and publications.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/#wings" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-accent/40 transition-all group cursor-pointer h-full">
+              <Layers className="text-accent mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-accent transition-colors">
+                Explore Wings
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                View all 12 specialized wings, chairmen, and conveners.
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/portal/dashboard/profile" className="block">
+            <div className="glass-card p-6 rounded-2xl border border-white/10 hover:border-emerald-400/40 transition-all group cursor-pointer h-full">
+              <User className="text-emerald-400 mb-3 group-hover:scale-110 transition-transform" size={26} />
+              <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                My Profile
+              </h3>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                Customize your leadership bio, avatar photo, and account password.
+              </p>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {/* Upload Media Form (Editors & Admins Only) */}
+      {isEditor && (
+        <div id="upload-section" className="scroll-mt-24">
+          <MediaUploadForm />
+        </div>
+      )}
 
       {/* Live Synced Recent Activity Feed */}
       <div className="glass-card p-8 rounded-3xl border border-white/10">
