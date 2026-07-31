@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Layers, Edit2, Check, X, UserCircle2, ArrowUpRight } from "lucide-react";
+import { Layers, Edit2, Check, X, UserCircle2, RefreshCw } from "lucide-react";
 import { WingLogo } from "@/components/ui/WingLogo";
 import { useToast } from "@/components/ui/Toast";
 
@@ -18,6 +18,41 @@ interface WingCategory {
   category: string;
   wings: Wing[];
 }
+
+const OFFICIAL_32_NAMES = [
+  "Sayed Hudaif",
+  "Sayed Burhan",
+  "Zidan",
+  "Muhyudheen",
+  "Mirsad",
+  "Thanzeeh Moosa",
+  "Shahzad",
+  "Muhammed V.K",
+  "Hisham",
+  "Minhaj",
+  "Habeeb",
+  "Muhaimin",
+  "Zameen",
+  "Muhammed S.M",
+  "Mujeeb Rahman",
+  "Rabeeh",
+  "Rashad",
+  "Razin",
+  "Fidyan V",
+  "Salah M.A",
+  "Abdu Rahman",
+  "Muzzammil",
+  "Shabeel",
+  "Muhammed U",
+  "Aslah",
+  "Zarhan",
+  "Muhammed P.P",
+  "Razeen",
+  "Zayin",
+  "Naseem",
+  "Fuad M.A",
+  "Nuhman",
+];
 
 export default function WingsManagementPage() {
   const { role } = useAuth();
@@ -95,10 +130,10 @@ export default function WingsManagementPage() {
             <Layers size={14} /> Structure & Leadership Editor
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            Manage Wing Command Centers
+            Manage & Replace Wing Leadership
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Edit wing names, assign Chairmen, Conveners, and Assistant Conveners across all 12 ITQAN wings.
+            Edit wing names, replace Chairmen, Conveners, and Assistant Conveners across all 12 ITQAN wings.
           </p>
         </div>
       </div>
@@ -125,7 +160,7 @@ export default function WingsManagementPage() {
                       onClick={() => openEditWingModal(wing)}
                       className="px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-slate-950 transition-all font-bold text-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Edit2 size={13} /> Edit Wing
+                      <RefreshCw size={13} /> Edit / Replace Wing
                     </button>
                   </div>
 
@@ -158,7 +193,7 @@ export default function WingsManagementPage() {
         ))}
       </div>
 
-      {/* Edit Wing Details Modal */}
+      {/* Edit / Replace Wing Details Modal */}
       {editingWing && (
         <div className="fixed inset-0 z-[1150] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/15 relative space-y-4">
@@ -168,7 +203,7 @@ export default function WingsManagementPage() {
             >
               <X size={18} />
             </button>
-            <h3 className="text-xl font-bold text-white">Edit Wing Command Center</h3>
+            <h3 className="text-xl font-bold text-white">Replace / Edit Wing Leadership</h3>
             <form onSubmit={handleSaveWingEdit} className="space-y-4 text-xs">
               <div>
                 <label className="block text-gray-300 font-semibold mb-1 uppercase tracking-wider">Wing Title</label>
@@ -177,47 +212,61 @@ export default function WingsManagementPage() {
                   required
                   value={editWingName}
                   onChange={(e) => setEditWingName(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold"
                 />
               </div>
 
               <div>
-                <label className="block text-primary font-semibold mb-1 uppercase tracking-wider">Chairman</label>
-                <input
-                  type="text"
-                  required
+                <label className="block text-primary font-semibold mb-1 uppercase tracking-wider">Chairman Selection</label>
+                <select
                   value={editChairman}
                   onChange={(e) => setEditChairman(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold"
-                />
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold cursor-pointer"
+                >
+                  {OFFICIAL_32_NAMES.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-accent font-semibold mb-1 uppercase tracking-wider">Convener</label>
-                <input
-                  type="text"
-                  required
+                <label className="block text-accent font-semibold mb-1 uppercase tracking-wider">Convener Selection</label>
+                <select
                   value={editConvener}
                   onChange={(e) => setEditConvener(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold"
-                />
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold cursor-pointer"
+                >
+                  {OFFICIAL_32_NAMES.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className="block text-gray-400 font-semibold mb-1 uppercase tracking-wider">Asst. Convener (Optional)</label>
-                <input
-                  type="text"
+                <select
                   value={editAsstConvener}
                   onChange={(e) => setEditAsstConvener(e.target.value)}
-                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary"
-                />
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary font-bold cursor-pointer"
+                >
+                  <option value="">-- None --</option>
+                  {OFFICIAL_32_NAMES.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <button
                 type="submit"
                 className="w-full py-3 bg-primary text-slate-950 font-bold rounded-xl hover:opacity-90 transition-opacity mt-2 cursor-pointer flex items-center justify-center gap-2"
               >
-                <Check size={16} /> Save Wing Details
+                <Check size={16} /> Save Wing Leadership
               </button>
             </form>
           </div>

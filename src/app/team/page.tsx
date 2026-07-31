@@ -39,6 +39,19 @@ export default function TeamPage() {
   const [selectedStudent, setSelectedStudent] = useState<StudentProfileData | null>(null);
 
   useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("itqan_custom_team") : null;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setData({ coreMembers: parsed });
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     fetch("/data/team.json")
       .then((res) => res.json())
       .then((json) => setData(json))

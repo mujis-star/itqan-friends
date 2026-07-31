@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, FileVideo, Users, ShieldCheck, User, LogOut, ArrowLeft, Layers, Sliders } from "lucide-react";
+import { LayoutDashboard, FileVideo, Users, ShieldCheck, User, LogOut, ArrowLeft, Layers, Sliders, UserCheck } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return;
       }
 
-      if ((pathname === "/portal/dashboard/members" || pathname === "/portal/dashboard/audit-logs" || pathname === "/portal/dashboard/wings") && !isAdmin) {
+      if ((pathname === "/portal/dashboard/members" || pathname === "/portal/dashboard/audit-logs" || pathname === "/portal/dashboard/wings" || pathname === "/portal/dashboard/team") && !isAdmin) {
         toast("Access Denied", "Administrator privilege required for this Command Center section.", "error");
         router.push("/portal/dashboard");
         return;
@@ -67,6 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: "Media & Events", href: "/portal/dashboard/media-events", icon: <FileVideo size={18} />, allowed: isEditor },
     { name: "Members", href: "/portal/dashboard/members", icon: <Users size={18} />, allowed: isAdmin },
     { name: "Manage Wings", href: "/portal/dashboard/wings", icon: <Layers size={18} />, allowed: isAdmin },
+    { name: "Manage Team", href: "/portal/dashboard/team", icon: <UserCheck size={18} />, allowed: isAdmin },
     { name: "Audit Logs", href: "/portal/dashboard/audit-logs", icon: <ShieldCheck size={18} />, allowed: isAdmin },
     { name: "My Profile", href: "/portal/dashboard/profile", icon: <User size={18} />, allowed: true },
   ];
