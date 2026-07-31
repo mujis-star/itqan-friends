@@ -91,6 +91,24 @@ body::before {
   background-clip: text;
 }
 
+/* Fluid Typography & Spacing Utilities (Clamp) */
+.fluid-hero-title {
+  font-size: clamp(1.85rem, 6.5vw, 4.5rem);
+  line-height: 1.12;
+}
+
+.fluid-container-padding {
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+.fluid-gap {
+  gap: clamp(10px, 2.5vw, 24px);
+}
+
+.fluid-border-radius {
+  border-radius: clamp(16px, 2.5vw, 28px);
+}
+
 /* Accessibility Focus Ring Utility */
 *:focus-visible {
   outline: none;

@@ -83,10 +83,10 @@ export const NetworkSphere = () => {
           <bufferAttribute attach="attributes-color" args={[colors, 3]} />
         </bufferGeometry>
         <pointsMaterial
-          size={0.075}
+          size={0.065}
           vertexColors
           transparent
-          opacity={0.85}
+          opacity={0.65}
           sizeAttenuation
           blending={THREE.AdditiveBlending}
         />
@@ -99,7 +99,7 @@ export const NetworkSphere = () => {
         <lineBasicMaterial
           color="#0EA5A4"
           transparent
-          opacity={0.18}
+          opacity={0.12}
           blending={THREE.AdditiveBlending}
         />
       </lineSegments>

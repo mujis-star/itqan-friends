@@ -72,26 +72,23 @@ export const Header = () => {
   const bannerLink = siteSettings?.announcementLink || "/media";
 
   return (
-    <>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full pointer-events-none">
       {/* Super Admin Top Announcement Broadcast Banner */}
       {showBanner && (
-        <div className="bg-slate-900/95 border-b border-primary/20 text-white py-1.5 text-center text-[11px] font-bold relative z-[60] flex items-center justify-center gap-1.5 px-3 leading-tight">
+        <div className="pointer-events-auto bg-slate-950/90 backdrop-blur-md border-b border-primary/20 text-white py-1.5 text-center text-[11px] font-bold flex items-center justify-center gap-1.5 px-3 leading-tight w-full">
           <Bell size={12} className="text-amber-400 animate-pulse shrink-0" />
-          <span className="truncate max-w-[240px] sm:max-w-none">{bannerText}</span>
+          <span className="truncate max-w-[200px] sm:max-w-none">{bannerText}</span>
           <Link href={bannerLink} className="underline text-amber-400 hover:text-white transition-colors shrink-0 flex items-center gap-0.5">
             Explore <ArrowRight size={11} />
           </Link>
         </div>
       )}
 
-      <header
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-          showBanner ? "top-[33px]" : "top-0"
-        } ${scrolled ? "py-2 sm:py-3" : "py-3 sm:py-5"}`}
-      >
+      {/* Navigation Bar Pill Container */}
+      <div className={`pointer-events-auto transition-all duration-300 ${scrolled ? "py-2" : "py-2.5 sm:py-4"}`}>
         <div className="container mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-center">
           <div
-            className={`flex items-center justify-between w-full max-w-5xl rounded-full px-4 sm:px-5 py-2 sm:py-2.5 transition-all duration-300 glass shadow-2xl shadow-black/60 border border-white/15 bg-slate-950/80 backdrop-blur-xl`}
+            className={`flex items-center justify-between w-full max-w-5xl rounded-full px-4 sm:px-5 py-2 sm:py-2.5 transition-all duration-300 glass shadow-2xl shadow-black/70 border border-white/15 bg-slate-950/90 backdrop-blur-xl`}
           >
             <Link href="/" className="flex items-center gap-2 group shrink-0">
               <Image
@@ -158,40 +155,40 @@ export const Header = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Navigation Drawer */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden glass border-b border-white/10 mt-2 px-6 py-5 space-y-3 bg-slate-950/95 backdrop-blur-2xl"
-            >
-              <div className="flex flex-col space-y-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-xs font-semibold text-gray-200 hover:text-primary py-2 border-b border-white/5 flex items-center justify-between"
-                  >
-                    <span>{link.name}</span>
-                    <ArrowRight size={12} className="text-gray-500" />
-                  </Link>
-                ))}
+      {/* Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="pointer-events-auto md:hidden glass border-b border-white/10 px-6 py-5 space-y-3 bg-slate-950/95 backdrop-blur-2xl"
+          >
+            <div className="flex flex-col space-y-2">
+              {navLinks.map((link) => (
                 <Link
-                  href="/portal"
+                  key={link.name}
+                  href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="mt-3 text-center py-2.5 rounded-xl bg-primary text-slate-950 font-extrabold text-xs tracking-wider uppercase shadow-lg shadow-primary/20"
+                  className="text-xs font-semibold text-gray-200 hover:text-primary py-2 border-b border-white/5 flex items-center justify-between"
                 >
-                  Command Center
+                  <span>{link.name}</span>
+                  <ArrowRight size={12} className="text-gray-500" />
                 </Link>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
-    </>
+              ))}
+              <Link
+                href="/portal"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mt-3 text-center py-2.5 rounded-xl bg-primary text-slate-950 font-extrabold text-xs tracking-wider uppercase shadow-lg shadow-primary/20"
+              >
+                Command Center
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
