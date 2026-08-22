@@ -297,12 +297,12 @@ export default function MediaUploadForm() {
       let publicFileUrl = finalVideoUrl;
       let publicCoverUrl = "";
 
-      // 1. Upload Cover Image if provided
+      // 1. Process Cover Image if provided (instant compressed data preview)
       if (coverFile) {
         try {
-          publicCoverUrl = await uploadFileToFirebaseStorage(coverFile, "covers");
-        } catch {
           publicCoverUrl = await compressImageFile(coverFile);
+        } catch {
+          publicCoverUrl = "";
         }
       }
 
