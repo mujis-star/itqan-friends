@@ -1,12 +1,34 @@
 import { adminStorage } from "@/lib/firebase/admin";
+import { GoogleDriveService } from "./GoogleDriveService";
 import { v4 as uuidv4 } from "uuid";
 
 export class UploadService {
   /**
-   * Uploads a file buffer to Firebase Storage and returns the public URL.
+   * Uploads a file buffer to Google Drive (if configured) or Firebase Storage and returns the public URL.
    * (Server-side only)
    */
-  static async uploadFile(buffer: Buffer, originalFilename: string, mimeType: string): Promise<string> {
+  static async uploadFile(
+    buffer: Buffer,
+    originalFilename: string,
+    mimeType: string,
+    appProperties?: Record<string, string>
+  ): Promise<string> {
+    // 1. If Google Drive is configured on the backend, upload directly to Google Drive
+    if (GoogleDriveService.isDriveConfigured()) {
+      try {
+        const driveResult = await GoogleDriveService.uploadToDrive(
+          buffer,
+          originalFilename,
+          mimeType,
+          appProperties
+        );
+        return driveResult.viewUrl || driveResult.thumbnailUrl || driveResult.downloadUrl;
+      } catch (driveErr) {
+        console.error("Google Drive upload error, falling back to Firebase Storage:", driveErr);
+      }
+    }
+
+    // 2. Firebase Storage upload
     if (!adminStorage) {
       console.warn("Firebase Admin Storage is not initialized. Using base64 data URI fallback.");
       const base64 = buffer.toString("base64");
@@ -44,3 +66,4 @@ export class UploadService {
     }
   }
 }
+

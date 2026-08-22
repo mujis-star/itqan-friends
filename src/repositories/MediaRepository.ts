@@ -1,4 +1,5 @@
 import { adminDb } from "@/lib/firebase/admin";
+import { GoogleDriveService } from "@/services/GoogleDriveService";
 
 export class MediaRepository {
   /**
@@ -68,7 +69,32 @@ export class MediaRepository {
   }
 
   static async getMedia() {
-    if (!adminDb) return { gallery: [], magazines: [], videos: [] };
+    let driveGallery: any[] = [];
+    let driveMagazines: any[] = [];
+    let driveVideos: any[] = [];
+
+    if (GoogleDriveService.isDriveConfigured()) {
+      try {
+        const [dGallery, dMagazines, dVideos] = await Promise.all([
+          GoogleDriveService.listDriveItems("gallery"),
+          GoogleDriveService.listDriveItems("magazines"),
+          GoogleDriveService.listDriveItems("videos"),
+        ]);
+        driveGallery = dGallery;
+        driveMagazines = dMagazines;
+        driveVideos = dVideos;
+      } catch (dErr) {
+        console.warn("Error fetching Google Drive items:", dErr);
+      }
+    }
+
+    if (!adminDb) {
+      return {
+        gallery: driveGallery,
+        magazines: driveMagazines,
+        videos: driveVideos,
+      };
+    }
 
     try {
       const [gallerySnap, magazinesSnap, videosSnap] = await Promise.all([
@@ -77,40 +103,53 @@ export class MediaRepository {
         adminDb.collection("videos").orderBy("createdAt", "desc").get().catch(() => ({ docs: [] })),
       ]);
 
-      const gallery = gallerySnap.docs.map((doc: any) => ({
-        id: doc.id,
-        collection: "gallery",
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
-      }));
+      const gallery = [
+        ...driveGallery,
+        ...gallerySnap.docs.map((doc: any) => ({
+          id: doc.id,
+          collection: "gallery",
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
+        })),
+      ];
 
-      const magazines = magazinesSnap.docs.map((doc: any) => ({
-        id: doc.id,
-        collection: "magazines",
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
-      }));
+      const magazines = [
+        ...driveMagazines,
+        ...magazinesSnap.docs.map((doc: any) => ({
+          id: doc.id,
+          collection: "magazines",
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
+        })),
+      ];
 
-      const videos = videosSnap.docs.map((doc: any) => ({
-        id: doc.id,
-        collection: "videos",
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
-      }));
+      const videos = [
+        ...driveVideos,
+        ...videosSnap.docs.map((doc: any) => ({
+          id: doc.id,
+          collection: "videos",
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : (doc.data().createdAt || null),
+        })),
+      ];
 
       return { gallery, magazines, videos };
     } catch (error) {
       console.error("Error fetching media from Firestore Admin:", error);
-      return { gallery: [], magazines: [], videos: [] };
+      return { gallery: driveGallery, magazines: driveMagazines, videos: driveVideos };
     }
   }
 
   static async deleteMedia(collection: string, id: string) {
-    if (!adminDb) throw new Error("Firestore Admin SDK not initialized");
-    if (collection !== "gallery" && collection !== "magazines" && collection !== "videos") {
-      throw new Error("Invalid collection");
+    if (GoogleDriveService.isDriveConfigured()) {
+      await GoogleDriveService.deleteDriveFile(id).catch(() => {});
     }
 
-    await adminDb.collection(collection).doc(id).delete();
+    if (adminDb) {
+      if (collection === "gallery" || collection === "magazines" || collection === "videos") {
+        await adminDb.collection(collection).doc(id).delete().catch(() => {});
+      }
+    }
   }
 }
+
