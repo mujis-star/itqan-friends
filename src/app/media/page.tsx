@@ -608,13 +608,23 @@ export default function MediaArchive() {
               </button>
 
               {/* Media Display Container */}
-              <div className="relative w-full h-[380px] md:h-[480px] bg-slate-950 rounded-2xl overflow-hidden flex items-center justify-center border border-white/10">
+              <div className="relative w-full h-[450px] md:h-[580px] lg:h-[660px] bg-slate-950 rounded-2xl overflow-hidden flex items-center justify-center border border-white/10">
                 {isSelectedPdf ? (
-                  selectedItem.fileUrl && (selectedItem.fileUrl.startsWith("data:application/pdf") || selectedItem.fileUrl.endsWith(".pdf")) ? (
+                  selectedItem.fileUrl ? (
                     <iframe
-                      src={selectedItem.fileUrl}
-                      className="w-full h-full border-0 rounded-2xl"
+                      src={
+                        selectedItem.fileUrl.includes("drive.google.com") || selectedItem.fileUrl.includes("google.com/file/d/")
+                          ? (selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]
+                              ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]}/preview`
+                              : selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]
+                              ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]}/preview`
+                              : selectedItem.fileUrl)
+                          : selectedItem.fileUrl
+                      }
+                      className="w-full h-full border-0 rounded-2xl bg-slate-900"
                       title={selectedItem.title}
+                      allow="autoplay; encrypted-media; fullscreen"
+                      allowFullScreen
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full">
