@@ -1,5 +1,5 @@
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "@/lib/firebase/config";
+import { db, auth } from "@/lib/firebase/config";
 
 export interface MediaItem {
   id: string;
@@ -51,7 +51,6 @@ export class MediaService {
         localStorage.setItem("itqan_user_media", JSON.stringify(filtered));
       } catch (quotaError) {
         console.warn("Storage quota limit reached. Pruning heavy payloads for quota safety.");
-        // Strip heavy data URLs if quota exceeded to guarantee persistence
         const lightweightList = filtered.map((m, idx) => {
           if (idx > 0 && m.fileUrl && m.fileUrl.startsWith("data:video")) {
             return { ...m, fileUrl: undefined };
@@ -89,16 +88,36 @@ export class MediaService {
   }
 
   /**
-   * Deletes an uploaded media item from local storage.
+   * Deletes an uploaded media item from local storage and optionally Firestore.
    */
-  static deleteUploadedItem(id: string) {
+  static async deleteUploadedItem(id: string, collectionName?: string) {
     if (typeof window === "undefined") return;
     try {
       const existing = localStorage.getItem("itqan_user_media");
-      if (!existing) return;
-      const list: MediaItem[] = JSON.parse(existing);
-      const filtered = list.filter((i) => i.id !== id);
-      localStorage.setItem("itqan_user_media", JSON.stringify(filtered));
+      if (existing) {
+        const list: MediaItem[] = JSON.parse(existing);
+        const filtered = list.filter((i) => i.id !== id);
+        localStorage.setItem("itqan_user_media", JSON.stringify(filtered));
+      }
+
+      // If this is a server item, request server deletion
+      if (!id.startsWith("upload-")) {
+        try {
+          let idToken = "demo-token";
+          if (auth?.currentUser) {
+            idToken = await auth.currentUser.getIdToken().catch(() => "demo-token");
+          }
+          await fetch(`/api/media/${id}?collection=${collectionName || "gallery"}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          });
+        } catch (serverErr) {
+          console.warn("Could not delete from server API", serverErr);
+        }
+      }
+
       window.dispatchEvent(new CustomEvent("itqan-media-added", { detail: { id } }));
     } catch (e) {
       console.warn("Failed to delete uploaded item", e);
@@ -119,55 +138,145 @@ export class MediaService {
   }
 
   /**
-   * Fetches media items from Firestore + local session uploads.
+   * Fetches media items from Cloud API (/api/media), Firestore client fallback, and local session uploads.
+   * Ensures items are fully accessible in incognito mode and on other computers.
    */
   static async fetchAllMedia(): Promise<MediaItem[]> {
     const localItems = this.getLocalUploadedItems();
+    const cloudItems: MediaItem[] = [];
 
-    if (!db) return localItems;
-
+    // 1. Fetch from Server-Side /api/media API (accessible across all computers & incognito)
     try {
-      const items: MediaItem[] = [...localItems];
+      const res = await fetch("/api/media", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          // Process Magazines, Tabloids, Publications
+          if (Array.isArray(json.magazines)) {
+            json.magazines.forEach((doc: any) => {
+              const rawType = doc.type || doc.category || "Magazines";
+              const normalizedCategory = rawType.charAt(0).toUpperCase() + rawType.slice(1);
+              cloudItems.push({
+                id: doc.id,
+                title: doc.title || "Untitled",
+                category: normalizedCategory,
+                date: doc.createdAt || new Date().toISOString(),
+                thumbnail: this.formatDriveUrl(doc.coverUrl || doc.thumbnail || doc.pdfUrl || doc.fileUrl, true),
+                description: doc.description || "",
+                fileUrl: this.formatDriveUrl(doc.pdfUrl || doc.fileUrl, false),
+                fileSize: doc.fileSize,
+                pages: doc.pages,
+              });
+            });
+          }
 
-      // 1. Fetch Magazines/Publications
-      const magSnap = await getDocs(query(collection(db, "magazines"), orderBy("createdAt", "desc")));
-      magSnap.forEach((doc) => {
-        const data = doc.data();
-        const rawType = data.type || "Magazines";
-        const normalizedCategory = rawType.charAt(0).toUpperCase() + rawType.slice(1);
+          // Process Gallery (Photos & Videos)
+          if (Array.isArray(json.gallery)) {
+            json.gallery.forEach((doc: any) => {
+              const rawCat = doc.category || doc.type || (doc.videoUrl ? "Videos" : "Photos");
+              const normalizedCategory = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+              cloudItems.push({
+                id: doc.id,
+                title: doc.caption || doc.title || (normalizedCategory === "Videos" ? "Untitled Video" : "Untitled Photo"),
+                category: normalizedCategory,
+                date: doc.createdAt || new Date().toISOString(),
+                thumbnail: this.formatDriveUrl(doc.thumbnail || doc.coverUrl || doc.imageUrl || doc.videoUrl || doc.fileUrl, true),
+                description: doc.description || `Uploaded by ${doc.uploadedBy || "Admin"}`,
+                fileUrl: this.formatDriveUrl(doc.videoUrl || doc.imageUrl || doc.fileUrl, false),
+                duration: doc.duration,
+              });
+            });
+          }
 
-        items.push({
-          id: doc.id,
-          title: data.title || "Untitled",
-          category: normalizedCategory,
-          date: data.createdAt?.toDate().toISOString() || new Date().toISOString(),
-          thumbnail: this.formatDriveUrl(data.coverUrl || data.pdfUrl, true),
-          description: data.description || "",
-          fileUrl: this.formatDriveUrl(data.pdfUrl, false),
-        });
-      });
-
-      // 2. Fetch Gallery items
-      const galSnap = await getDocs(query(collection(db, "gallery"), orderBy("createdAt", "desc")));
-      galSnap.forEach((doc) => {
-        const data = doc.data();
-        items.push({
-          id: doc.id,
-          title: data.caption || "Untitled Photo",
-          category: "Photos",
-          date: data.createdAt?.toDate().toISOString() || new Date().toISOString(),
-          thumbnail: this.formatDriveUrl(data.imageUrl, true),
-          description: `Uploaded by ${data.uploadedBy || "Admin"}`,
-          fileUrl: this.formatDriveUrl(data.imageUrl, false),
-        });
-      });
-
-      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-      return items;
-    } catch (error) {
-      console.error("Error fetching media from Firebase:", error);
-      return localItems;
+          // Process dedicated Videos collection if available
+          if (Array.isArray(json.videos)) {
+            json.videos.forEach((doc: any) => {
+              cloudItems.push({
+                id: doc.id,
+                title: doc.title || doc.caption || "Untitled Video",
+                category: "Videos",
+                date: doc.createdAt || new Date().toISOString(),
+                thumbnail: this.formatDriveUrl(doc.thumbnail || doc.coverUrl || doc.videoUrl || doc.fileUrl, true),
+                description: doc.description || "",
+                fileUrl: this.formatDriveUrl(doc.videoUrl || doc.fileUrl, false),
+                duration: doc.duration,
+              });
+            });
+          }
+        }
+      }
+    } catch (apiError) {
+      console.warn("API /api/media fetch failed, falling back to direct Firebase client SDK", apiError);
     }
+
+    // 2. Direct client SDK fallback if cloudItems is empty and db is available
+    if (cloudItems.length === 0 && db) {
+      try {
+        const magSnap = await getDocs(query(collection(db, "magazines"), orderBy("createdAt", "desc")));
+        magSnap.forEach((doc) => {
+          const data = doc.data();
+          const rawType = data.type || data.category || "Magazines";
+          const normalizedCategory = rawType.charAt(0).toUpperCase() + rawType.slice(1);
+
+          cloudItems.push({
+            id: doc.id,
+            title: data.title || "Untitled",
+            category: normalizedCategory,
+            date: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+            thumbnail: this.formatDriveUrl(data.coverUrl || data.thumbnail || data.pdfUrl || data.fileUrl, true),
+            description: data.description || "",
+            fileUrl: this.formatDriveUrl(data.pdfUrl || data.fileUrl, false),
+          });
+        });
+
+        const galSnap = await getDocs(query(collection(db, "gallery"), orderBy("createdAt", "desc")));
+        galSnap.forEach((doc) => {
+          const data = doc.data();
+          const rawCat = data.category || data.type || (data.videoUrl ? "Videos" : "Photos");
+          const normalizedCategory = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+
+          cloudItems.push({
+            id: doc.id,
+            title: data.caption || data.title || (normalizedCategory === "Videos" ? "Untitled Video" : "Untitled Photo"),
+            category: normalizedCategory,
+            date: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+            thumbnail: this.formatDriveUrl(data.thumbnail || data.coverUrl || data.imageUrl || data.videoUrl || data.fileUrl, true),
+            description: data.description || `Uploaded by ${data.uploadedBy || "Admin"}`,
+            fileUrl: this.formatDriveUrl(data.videoUrl || data.imageUrl || data.fileUrl, false),
+          });
+        });
+
+        try {
+          const vidSnap = await getDocs(query(collection(db, "videos"), orderBy("createdAt", "desc")));
+          vidSnap.forEach((doc) => {
+            const data = doc.data();
+            cloudItems.push({
+              id: doc.id,
+              title: data.title || data.caption || "Untitled Video",
+              category: "Videos",
+              date: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+              thumbnail: this.formatDriveUrl(data.thumbnail || data.coverUrl || data.videoUrl || data.fileUrl, true),
+              description: data.description || "",
+              fileUrl: this.formatDriveUrl(data.videoUrl || data.fileUrl, false),
+            });
+          });
+        } catch {}
+      } catch (clientError) {
+        console.warn("Client Firebase fetch failed", clientError);
+      }
+    }
+
+    // Combine local uploads with cloud items, de-duplicating by ID
+    const combined = [...localItems, ...cloudItems];
+    const uniqueMap = new Map<string, MediaItem>();
+    combined.forEach((item) => {
+      if (!uniqueMap.has(item.id)) {
+        uniqueMap.set(item.id, item);
+      }
+    });
+
+    const finalItems = Array.from(uniqueMap.values());
+    finalItems.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return finalItems;
   }
 }

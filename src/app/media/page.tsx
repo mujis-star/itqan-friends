@@ -179,11 +179,18 @@ export default function MediaArchive() {
     loadData();
   };
 
-  const handleDeleteItem = (id: string, e?: React.MouseEvent) => {
+  const handleDeleteItem = async (item: MediaItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (!confirm("Are you sure you want to remove this item from the media archive?")) return;
+    if (!confirm(`Are you sure you want to remove "${item.title}" from the media archive?`)) return;
 
-    MediaService.deleteUploadedItem(id);
+    const collectionName =
+      item.category === "Magazines" || item.category === "Tabloids" || item.category === "Publications"
+        ? "magazines"
+        : item.category === "Videos"
+        ? "videos"
+        : "gallery";
+
+    await MediaService.deleteUploadedItem(item.id, collectionName);
     if (selectedItemIndex !== null) setSelectedItemIndex(null);
     toast("Item Removed", "Media item removed from archive.", "info");
     loadData();
@@ -410,7 +417,7 @@ export default function MediaArchive() {
                       <Edit2 size={14} />
                     </button>
                     <button
-                      onClick={(e) => handleDeleteItem(item.id, e)}
+                      onClick={(e) => handleDeleteItem(item, e)}
                       className="p-2 rounded-xl bg-slate-950/80 backdrop-blur-md text-gray-200 hover:text-red-400 hover:bg-slate-900 border border-white/15 transition-colors cursor-pointer"
                       title="Delete Item"
                     >
@@ -718,7 +725,7 @@ export default function MediaArchive() {
                         <Edit2 size={14} /> Edit
                       </button>
                       <button
-                        onClick={() => handleDeleteItem(selectedItem.id)}
+                        onClick={() => handleDeleteItem(selectedItem)}
                         className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-semibold text-xs uppercase tracking-wider hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
                       >
                         <Trash2 size={14} /> Delete

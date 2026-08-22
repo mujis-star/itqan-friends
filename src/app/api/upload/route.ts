@@ -9,47 +9,73 @@ export async function POST(req: NextRequest) {
     // 1. Authenticate & Authorize
     const user = await authMiddleware(req, {
       requireAuth: true,
-      // For legacy compat, we might relax the 'Administrator' strictly in middleware, 
-      // but let's check roles inside here if needed.
     });
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // 2. Parse FormData
     const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const title = formData.get("title") as string;
-    const category = formData.get("category") as string;
-    const description = formData.get("description") as string;
+    const file = formData.get("file") as File | null;
+    const cover = formData.get("cover") as File | null;
+    const title = (formData.get("title") as string) || "";
+    const category = (formData.get("category") as string) || "Photos";
+    const description = (formData.get("description") as string) || "";
+    const videoUrl = (formData.get("videoUrl") as string) || "";
 
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    if (!file && !videoUrl) {
+      return NextResponse.json({ error: "No file or video URL provided" }, { status: 400 });
     }
 
     // 3. Validate Inputs
     const validation = mediaUploadSchema.safeParse({
-      title: title,
+      title: title || (file ? file.name : "Untitled Media"),
       description: description,
       type: category,
+      videoUrl: videoUrl,
       file: file,
     });
     if (!validation.success) {
       return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
     }
 
-    // 4. Convert File to Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    let publicUrl = videoUrl;
+    let coverUrl = "";
 
-    // 5. Upload to Google Drive via UploadService
-    const publicUrl = await UploadService.uploadFile(buffer, file.name, file.type);
+    // 4. Upload Cover Image if provided
+    if (cover && cover.size > 0) {
+      try {
+        const coverArrayBuffer = await cover.arrayBuffer();
+        const coverBuffer = Buffer.from(coverArrayBuffer);
+        coverUrl = await UploadService.uploadFile(coverBuffer, cover.name, cover.type || "image/jpeg");
+      } catch (coverErr) {
+        console.warn("Cover image upload failed, continuing with main file", coverErr);
+      }
+    }
+
+    // 5. Upload Main File if provided
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      publicUrl = await UploadService.uploadFile(buffer, file.name, file.type || "application/octet-stream");
+      if (!coverUrl && file.type.startsWith("image/")) {
+        coverUrl = publicUrl;
+      }
+    }
 
     // 6. Save Metadata to Firestore via MediaRepository
-    await MediaRepository.saveUpload(title, category, description, publicUrl, user.uid);
+    await MediaRepository.saveUpload(
+      title || (file ? file.name : "Untitled Media"),
+      category,
+      description,
+      publicUrl,
+      user.uid || "Administrator",
+      coverUrl
+    );
 
     return NextResponse.json({ 
       success: true, 
       url: publicUrl,
-      message: "File successfully uploaded to Google Drive and saved to Database."
+      coverUrl: coverUrl,
+      message: "Media successfully uploaded to Cloud Storage and saved to Database."
     });
 
   } catch (error: any) {

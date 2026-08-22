@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { UploadCloud, CheckCircle2, AlertCircle, Image as ImageIcon, FileText } from "lucide-react";
+import { UploadCloud, CheckCircle2, AlertCircle, Image as ImageIcon, Video, Link as LinkIcon } from "lucide-react";
 import { auth } from "@/lib/firebase/config";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { MediaService } from "@/services/MediaService";
 
 export default function MediaUploadForm() {
-  const { user, isDemo } = useAuth();
+  const { user } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoMode, setVideoMode] = useState<"file" | "url">("file");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Photos");
   const [description, setDescription] = useState("");
@@ -22,26 +24,21 @@ export default function MediaUploadForm() {
       case "Photos":
         return "image/*";
       case "Videos":
-        return "video/*,image/*";
+        return "video/*,video/mp4,video/webm,video/quicktime,video/x-matroska,video/avi";
       case "Magazines":
       case "Tabloids":
       case "Publications":
         return "application/pdf,image/*";
       default:
-        return "image/*,application/pdf";
+        return "image/*,video/*,application/pdf";
     }
   };
 
   const handleCategoryChange = (newCat: string) => {
     setCategory(newCat);
     setStatus(null);
-    // If switching to Photos and currently selected file is PDF, clear it
     if (newCat === "Photos" && file && file.type === "application/pdf") {
       setFile(null);
-      setStatus({
-        type: "error",
-        message: "Switched to Photos category. Selected PDF file cleared. Please select an image file (PNG/JPG/WebP).",
-      });
     }
   };
 
@@ -141,28 +138,28 @@ export default function MediaUploadForm() {
     });
   };
 
-  const processLocalMediaSave = async (fileToSave: File, itemTitle: string) => {
+  const processLocalMediaSave = async (fileToSave: File | null, itemTitle: string, directUrl?: string) => {
     let thumbnailDataUrl = "";
-    let fileDataUrl = "";
+    let fileDataUrl = directUrl || "";
 
     // 1. Process Main File
-    if (fileToSave.type.startsWith("image/")) {
-      thumbnailDataUrl = await compressImageFile(fileToSave);
-      fileDataUrl = thumbnailDataUrl;
-    } else if (fileToSave.type.startsWith("video/")) {
-      // For video files: create live Object URL for current playback & extract frame thumbnail
-      fileDataUrl = URL.createObjectURL(fileToSave);
-      thumbnailDataUrl = await generateVideoThumbnail(fileToSave);
-    } else {
-      // PDF or Document file
-      if (fileToSave.size < 2 * 1024 * 1024) {
-        fileDataUrl = await new Promise<string>((resolve) => {
-          const r = new FileReader();
-          r.onload = () => resolve((r.result as string) || "");
-          r.readAsDataURL(fileToSave);
-        });
-      } else {
+    if (fileToSave) {
+      if (fileToSave.type.startsWith("image/")) {
+        thumbnailDataUrl = await compressImageFile(fileToSave);
+        fileDataUrl = thumbnailDataUrl;
+      } else if (fileToSave.type.startsWith("video/")) {
         fileDataUrl = URL.createObjectURL(fileToSave);
+        thumbnailDataUrl = await generateVideoThumbnail(fileToSave);
+      } else {
+        if (fileToSave.size < 2 * 1024 * 1024) {
+          fileDataUrl = await new Promise<string>((resolve) => {
+            const r = new FileReader();
+            r.onload = () => resolve((r.result as string) || "");
+            r.readAsDataURL(fileToSave);
+          });
+        } else {
+          fileDataUrl = URL.createObjectURL(fileToSave);
+        }
       }
     }
 
@@ -200,9 +197,19 @@ export default function MediaUploadForm() {
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return;
 
-    if (category === "Photos" && file.type === "application/pdf") {
+    const isVideoCategory = category === "Videos";
+    if (isVideoCategory && videoMode === "url" && !videoUrl) {
+      setStatus({ type: "error", message: "Please provide a valid Video URL." });
+      return;
+    }
+
+    if (!file && !(isVideoCategory && videoMode === "url" && videoUrl)) {
+      setStatus({ type: "error", message: "Please select a file to upload." });
+      return;
+    }
+
+    if (category === "Photos" && file && file.type === "application/pdf") {
       setStatus({
         type: "error",
         message: "PDF files cannot be added to the Photos category. Please choose Magazines or Publications.",
@@ -210,46 +217,31 @@ export default function MediaUploadForm() {
       return;
     }
 
-    if (!user) {
-      setStatus({ type: "error", message: "You must be logged in to upload files. Please sign in again." });
-      return;
-    }
-
     setLoading(true);
     setStatus(null);
 
-    const uploadedTitle = title || file.name;
+    const uploadedTitle = title || (file ? file.name : "Untitled Media");
     const currentFile = file;
+    const finalVideoUrl = isVideoCategory && videoMode === "url" ? videoUrl : "";
 
-    await processLocalMediaSave(currentFile, uploadedTitle);
+    // Optimistic local save
+    await processLocalMediaSave(currentFile, uploadedTitle, finalVideoUrl);
 
-    if (isDemo || !auth?.currentUser) {
-      setTimeout(() => {
-        setStatus({
-          type: "success",
-          message: `"${uploadedTitle}" uploaded successfully into category "${category}"! View it in the Media Archive.`,
-        });
-        logActivity(uploadedTitle);
-        setFile(null);
-        setCoverFile(null);
-        setTitle("");
-        setDescription("");
-        setLoading(false);
-      }, 500);
-      return;
-    }
-
-    let idToken = "";
-    try {
-      idToken = await auth.currentUser.getIdToken();
-    } catch {
-      idToken = "demo-token";
+    // Prepare auth token
+    let idToken = "demo-token";
+    if (auth?.currentUser) {
+      try {
+        idToken = await auth.currentUser.getIdToken();
+      } catch {
+        idToken = "demo-token";
+      }
     }
 
     const formData = new FormData();
-    formData.append("file", currentFile);
+    if (currentFile) formData.append("file", currentFile);
     if (coverFile) formData.append("cover", coverFile);
-    formData.append("title", title);
+    if (finalVideoUrl) formData.append("videoUrl", finalVideoUrl);
+    formData.append("title", uploadedTitle);
     formData.append("category", category);
     formData.append("description", description);
 
@@ -262,26 +254,36 @@ export default function MediaUploadForm() {
         body: formData,
       });
 
-      if (res.ok) {
-        setStatus({ type: "success", message: `"${uploadedTitle}" uploaded successfully to ITQAN Archive!` });
-      } else {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setStatus({
           type: "success",
-          message: `"${uploadedTitle}" saved to Media Archive!`,
+          message: `"${uploadedTitle}" successfully uploaded to Cloud Database! It is now live across all computers and in incognito mode.`,
+        });
+        logActivity(uploadedTitle);
+        setFile(null);
+        setCoverFile(null);
+        setVideoUrl("");
+        setTitle("");
+        setDescription("");
+      } else {
+        const errorMsg = data.error || data.details || "Server upload failed.";
+        setStatus({
+          type: "error",
+          message: `Failed to persist to cloud database: ${errorMsg}. (Saved to local browser cache only).`,
         });
       }
     } catch (error: any) {
       setStatus({
-        type: "success",
-        message: `"${uploadedTitle}" saved to Media Archive!`,
+        type: "error",
+        message: `Network error connecting to cloud server: ${error.message || "Failed to reach server"}.`,
       });
     } finally {
-      logActivity(uploadedTitle);
-      setFile(null);
-      setCoverFile(null);
-      setTitle("");
-      setDescription("");
       setLoading(false);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("itqan-media-added"));
+      }
     }
   };
 
@@ -293,7 +295,7 @@ export default function MediaUploadForm() {
         <UploadCloud className="text-primary" size={28} /> Upload Media & Publications
       </h2>
       <p className="text-xs text-gray-400 mb-6">
-        Add new photos, videos, or PDF magazines to the ITQAN public archive.
+        Add new photos, videos, or PDF magazines to the ITQAN public archive across all devices.
       </p>
 
       {status && (
@@ -319,7 +321,7 @@ export default function MediaUploadForm() {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. ITQAN Annual Assembly Keynote Photo"
+            placeholder="e.g. ITQAN Annual Assembly Keynote Video"
             className="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-600"
           />
         </div>
@@ -334,12 +336,56 @@ export default function MediaUploadForm() {
             className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-white/10 text-white focus:outline-none focus:border-primary cursor-pointer"
           >
             <option value="Photos">Photos (Gallery) - Images only</option>
+            <option value="Videos">Videos (Video File or Link)</option>
             <option value="Magazines">Magazines (PDF Document)</option>
             <option value="Tabloids">Tabloids (PDF Document)</option>
             <option value="Publications">Publications (PDF Document)</option>
-            <option value="Videos">Videos</option>
           </select>
         </div>
+
+        {/* Video Mode Selector if Videos category */}
+        {category === "Videos" && (
+          <div className="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-xl border border-white/10">
+            <button
+              type="button"
+              onClick={() => setVideoMode("file")}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                videoMode === "file"
+                  ? "bg-primary text-slate-950 shadow-md"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Video size={14} /> Upload Video File (MP4/WebM)
+            </button>
+            <button
+              type="button"
+              onClick={() => setVideoMode("url")}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                videoMode === "url"
+                  ? "bg-primary text-slate-950 shadow-md"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <LinkIcon size={14} /> Video URL / Embed
+            </button>
+          </div>
+        )}
+
+        {category === "Videos" && videoMode === "url" && (
+          <div>
+            <label className="block text-gray-300 font-semibold mb-2 uppercase tracking-wider">
+              Video URL (YouTube, Vimeo, Google Drive, or MP4 URL)
+            </label>
+            <input
+              type="url"
+              required
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=... or Drive URL"
+              className="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-600"
+            />
+          </div>
+        )}
 
         <div>
           <label className="block text-gray-300 font-semibold mb-2 uppercase tracking-wider">
@@ -354,38 +400,42 @@ export default function MediaUploadForm() {
           />
         </div>
 
-        {/* Primary File Upload */}
-        <div>
-          <label className="block text-gray-300 font-semibold mb-2 uppercase tracking-wider">
-            Primary File ({category === "Photos" ? "Image File PNG/JPG" : "PDF Document or File"})
-          </label>
-          <div className="border-2 border-dashed border-white/15 rounded-2xl p-5 text-center hover:bg-white/5 transition-colors cursor-pointer relative bg-slate-950/40">
-            <input
-              type="file"
-              required
-              accept={getAcceptType()}
-              onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-            {file ? (
-              <span className="text-primary font-bold text-xs">
-                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-              </span>
-            ) : (
-              <span className="text-gray-400">
-                {category === "Photos"
-                  ? "Select Image File (PNG, JPG, WebP)"
-                  : "Select PDF Document (Magazines / Publications)"}
-              </span>
-            )}
+        {/* Primary File Upload (if not in URL video mode) */}
+        {!(category === "Videos" && videoMode === "url") && (
+          <div>
+            <label className="block text-gray-300 font-semibold mb-2 uppercase tracking-wider">
+              Primary File ({category === "Photos" ? "Image File PNG/JPG" : category === "Videos" ? "Video File (MP4, WebM, MOV)" : "PDF Document"})
+            </label>
+            <div className="border-2 border-dashed border-white/15 rounded-2xl p-5 text-center hover:bg-white/5 transition-colors cursor-pointer relative bg-slate-950/40">
+              <input
+                type="file"
+                required={!(category === "Videos" && videoMode === "url")}
+                accept={getAcceptType()}
+                onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              {file ? (
+                <span className="text-primary font-bold text-xs">
+                  {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                </span>
+              ) : (
+                <span className="text-gray-400">
+                  {category === "Photos"
+                    ? "Select Image File (PNG, JPG, WebP)"
+                    : category === "Videos"
+                    ? "Select Video File (MP4, WebM, MOV)"
+                    : "Select PDF Document (Magazines / Publications)"}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Optional Cover Page Photo Upload for Documents */}
-        {category !== "Photos" && category !== "Videos" && (
+        {/* Optional Cover Page / Thumbnail Photo Upload */}
+        {category !== "Photos" && (
           <div>
             <label className="block text-primary font-semibold mb-2 uppercase tracking-wider flex items-center gap-1.5">
-              <ImageIcon size={14} /> Cover Page Image (Optional)
+              <ImageIcon size={14} /> {category === "Videos" ? "Video Poster / Thumbnail (Optional)" : "Cover Page Image (Optional)"}
             </label>
             <div className="border-2 border-dashed border-primary/30 rounded-2xl p-4 text-center hover:bg-primary/5 transition-colors cursor-pointer relative bg-slate-950/40">
               <input
@@ -399,7 +449,7 @@ export default function MediaUploadForm() {
                   Cover Image: {coverFile.name}
                 </span>
               ) : (
-                <span className="text-gray-400">Attach cover photo thumbnail for document</span>
+                <span className="text-gray-400">Attach cover photo thumbnail preview</span>
               )}
             </div>
           </div>
@@ -407,7 +457,7 @@ export default function MediaUploadForm() {
 
         <Button
           type="submit"
-          disabled={loading || !file}
+          disabled={loading || (!file && !(category === "Videos" && videoMode === "url" && videoUrl))}
           magnetic
           className="w-full py-3.5 mt-2"
         >

@@ -99,11 +99,18 @@ export default function MediaEventsPage() {
     return () => window.removeEventListener("itqan-media-added", handleMediaAdded);
   }, [fetchMedia]);
 
-  const handleDeleteMedia = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this media item?")) return;
-    MediaService.deleteUploadedItem(id);
-    setMediaItems((prev) => prev.filter((i) => i.id !== id));
+  const handleDeleteMedia = async (item: MediaItem) => {
+    if (!confirm(`Are you sure you want to delete "${item.title}"?`)) return;
+    const collectionName =
+      item.category === "Magazines" || item.category === "Tabloids" || item.category === "Publications"
+        ? "magazines"
+        : item.category === "Videos"
+        ? "videos"
+        : "gallery";
+    await MediaService.deleteUploadedItem(item.id, collectionName);
+    setMediaItems((prev) => prev.filter((i) => i.id !== item.id));
     toast("Media Deleted", "Item removed from archive.", "info");
+    fetchMedia();
   };
 
   const openEditModal = (item: MediaItem) => {
@@ -239,7 +246,7 @@ export default function MediaEventsPage() {
                       <Edit2 size={14} />
                     </button>
                     <button
-                      onClick={() => handleDeleteMedia(item.id)}
+                      onClick={() => handleDeleteMedia(item)}
                       className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Delete Item"
                     >
@@ -291,7 +298,7 @@ export default function MediaEventsPage() {
                       <Edit2 size={14} />
                     </button>
                     <button
-                      onClick={() => handleDeleteMedia(item.id)}
+                      onClick={() => handleDeleteMedia(item)}
                       className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Delete Item"
                     >

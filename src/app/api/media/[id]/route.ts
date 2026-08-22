@@ -11,11 +11,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     const { id } = await params;
     const searchParams = req.nextUrl.searchParams;
-    const collection = searchParams.get("collection"); // 'gallery' or 'magazines'
-
-    if (!collection) {
-      return NextResponse.json({ error: "Collection parameter missing" }, { status: 400 });
-    }
+    const collection = searchParams.get("collection") || "gallery"; // 'gallery', 'magazines', or 'videos'
     
     await MediaRepository.deleteMedia(collection, id);
 
