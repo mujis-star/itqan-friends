@@ -315,8 +315,12 @@ export default function MediaUploadForm() {
         });
 
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("pdf", file);
+        if (category === "Magazines" || category === "Tabloids" || category === "Publications") {
+          formData.append("pdf", file);
+          formData.append("file", file);
+        } else {
+          formData.append("file", file);
+        }
         if (coverFile) formData.append("cover", coverFile);
         formData.append("title", uploadedTitle);
         formData.append("caption", uploadedTitle);
