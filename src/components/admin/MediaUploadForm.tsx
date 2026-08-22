@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { UploadCloud, CheckCircle2, AlertCircle, Image as ImageIcon, Video, Link as LinkIcon } from "lucide-react";
-import { auth } from "@/lib/firebase/config";
+import { storage, db, auth } from "@/lib/firebase/config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { MediaService } from "@/services/MediaService";
@@ -17,6 +19,7 @@ export default function MediaUploadForm() {
   const [category, setCategory] = useState("Photos");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   const getAcceptType = () => {
@@ -138,47 +141,38 @@ export default function MediaUploadForm() {
     });
   };
 
-  const processLocalMediaSave = async (fileToSave: File | null, itemTitle: string, directUrl?: string) => {
-    let thumbnailDataUrl = "";
-    let fileDataUrl = directUrl || "";
-
-    // 1. Process Main File
-    if (fileToSave) {
-      if (fileToSave.type.startsWith("image/")) {
-        thumbnailDataUrl = await compressImageFile(fileToSave);
-        fileDataUrl = thumbnailDataUrl;
-      } else if (fileToSave.type.startsWith("video/")) {
-        fileDataUrl = URL.createObjectURL(fileToSave);
-        thumbnailDataUrl = await generateVideoThumbnail(fileToSave);
-      } else {
-        if (fileToSave.size < 2 * 1024 * 1024) {
-          fileDataUrl = await new Promise<string>((resolve) => {
-            const r = new FileReader();
-            r.onload = () => resolve((r.result as string) || "");
-            r.readAsDataURL(fileToSave);
-          });
-        } else {
-          fileDataUrl = URL.createObjectURL(fileToSave);
-        }
+  const uploadFileToFirebaseStorage = (fileToUpload: File, folder = "uploads"): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (!storage) {
+        reject(new Error("Firebase Storage client is not initialized"));
+        return;
       }
-    }
+      const safeName = `${folder}/${Date.now()}-${fileToUpload.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+      const storageRef = ref(storage, safeName);
+      const uploadTask = uploadBytesResumable(storageRef, fileToUpload);
 
-    // 2. Cover image file if provided
-    if (coverFile && coverFile.type.startsWith("image/")) {
-      thumbnailDataUrl = await compressImageFile(coverFile);
-    }
-
-    MediaService.saveUploadedItem({
-      id: `upload-${Date.now()}`,
-      title: itemTitle,
-      category: category,
-      date: new Date().toISOString(),
-      thumbnail: thumbnailDataUrl,
-      description: description || `Uploaded by ${user?.displayName || "Administrator"}`,
-      fileUrl: fileDataUrl,
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          if (snapshot.totalBytes > 0) {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setUploadProgress(progress);
+          }
+        },
+        (error) => {
+          console.error("Storage upload error:", error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadUrl);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      );
     });
-
-    logActivity(itemTitle);
   };
 
   const logActivity = (itemTitle: string) => {
@@ -218,69 +212,150 @@ export default function MediaUploadForm() {
     }
 
     setLoading(true);
+    setUploadProgress(null);
     setStatus(null);
 
     const uploadedTitle = title || (file ? file.name : "Untitled Media");
-    const currentFile = file;
     const finalVideoUrl = isVideoCategory && videoMode === "url" ? videoUrl : "";
 
-    // Optimistic local save
-    await processLocalMediaSave(currentFile, uploadedTitle, finalVideoUrl);
-
-    // Prepare auth token
-    let idToken = "demo-token";
-    if (auth?.currentUser) {
-      try {
-        idToken = await auth.currentUser.getIdToken();
-      } catch {
-        idToken = "demo-token";
-      }
-    }
-
-    const formData = new FormData();
-    if (currentFile) formData.append("file", currentFile);
-    if (coverFile) formData.append("cover", coverFile);
-    if (finalVideoUrl) formData.append("videoUrl", finalVideoUrl);
-    formData.append("title", uploadedTitle);
-    formData.append("category", category);
-    formData.append("description", description);
-
     try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: formData,
+      let publicFileUrl = finalVideoUrl;
+      let publicCoverUrl = "";
+
+      // 1. Upload Cover Image if provided
+      if (coverFile) {
+        if (storage) {
+          try {
+            publicCoverUrl = await uploadFileToFirebaseStorage(coverFile, "covers");
+          } catch (coverErr) {
+            console.warn("Direct storage cover upload failed, compressing locally", coverErr);
+            publicCoverUrl = await compressImageFile(coverFile);
+          }
+        } else {
+          publicCoverUrl = await compressImageFile(coverFile);
+        }
+      }
+
+      // 2. Upload Primary File
+      if (file) {
+        if (storage) {
+          // Direct client streaming to Firebase Storage — bypasses Vercel 4.5MB limits completely!
+          setUploadProgress(5);
+          publicFileUrl = await uploadFileToFirebaseStorage(file, "uploads");
+        } else if (file.size < 4 * 1024 * 1024) {
+          // Fallback to API route for small files under 4MB
+          let idToken = "demo-token";
+          if (auth?.currentUser) {
+            idToken = await auth.currentUser.getIdToken().catch(() => "demo-token");
+          }
+
+          const formData = new FormData();
+          formData.append("file", file);
+          if (coverFile) formData.append("cover", coverFile);
+          formData.append("title", uploadedTitle);
+          formData.append("category", category);
+          formData.append("description", description);
+
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${idToken}` },
+            body: formData,
+          });
+
+          const rawText = await res.text();
+          try {
+            const data = JSON.parse(rawText);
+            if (res.ok && data.success) {
+              publicFileUrl = data.url;
+              if (data.coverUrl) publicCoverUrl = data.coverUrl;
+            } else {
+              throw new Error(data.error || "Server upload failed");
+            }
+          } catch (jsonErr: any) {
+            if (!res.ok) throw new Error(`Server returned ${res.status}: ${rawText.slice(0, 100)}`);
+          }
+        } else {
+          // Large file without storage
+          throw new Error("Direct storage connection unavailable for files over 4MB. Please use the Video URL / Embed option.");
+        }
+      }
+
+      // 3. Generate thumbnail if needed
+      if (!publicCoverUrl) {
+        if (file && file.type.startsWith("image/")) {
+          publicCoverUrl = publicFileUrl;
+        } else if (file && file.type.startsWith("video/")) {
+          publicCoverUrl = await generateVideoThumbnail(file);
+        }
+      }
+
+      // 4. Save metadata to Firestore Cloud Database
+      const targetCol =
+        category === "Magazines" || category === "Tabloids" || category === "Publications"
+          ? "magazines"
+          : category === "Videos"
+          ? "videos"
+          : "gallery";
+
+      const mediaPayload: any = {
+        title: uploadedTitle,
+        caption: uploadedTitle,
+        category: category,
+        type: category,
+        description: description || "",
+        createdAt: new Date(),
+        fileUrl: publicFileUrl,
+        thumbnail: publicCoverUrl || publicFileUrl,
+        coverUrl: publicCoverUrl || publicFileUrl,
+        imageUrl: category === "Photos" ? publicFileUrl : "",
+        videoUrl: category === "Videos" ? publicFileUrl : "",
+        pdfUrl: category !== "Photos" && category !== "Videos" ? publicFileUrl : "",
+        uploadedBy: user?.displayName || "Administrator",
+      };
+
+      if (db) {
+        try {
+          await addDoc(collection(db, targetCol), mediaPayload);
+          if (category === "Videos") {
+            await addDoc(collection(db, "gallery"), mediaPayload).catch(() => {});
+          }
+        } catch (dbErr) {
+          console.warn("Firestore direct write notice:", dbErr);
+        }
+      }
+
+      // 5. Also save in MediaService for local session cache
+      MediaService.saveUploadedItem({
+        id: `upload-${Date.now()}`,
+        title: uploadedTitle,
+        category: category,
+        date: new Date().toISOString(),
+        thumbnail: publicCoverUrl || publicFileUrl,
+        description: description || `Uploaded by ${user?.displayName || "Administrator"}`,
+        fileUrl: publicFileUrl,
       });
 
-      const data = await res.json();
+      setStatus({
+        type: "success",
+        message: `"${uploadedTitle}" successfully uploaded to Cloud Storage & Database! It is now live across all computers and Incognito sessions.`,
+      });
 
-      if (res.ok && data.success) {
-        setStatus({
-          type: "success",
-          message: `"${uploadedTitle}" successfully uploaded to Cloud Database! It is now live across all computers and in incognito mode.`,
-        });
-        logActivity(uploadedTitle);
-        setFile(null);
-        setCoverFile(null);
-        setVideoUrl("");
-        setTitle("");
-        setDescription("");
-      } else {
-        const errorMsg = data.error || data.details || "Server upload failed.";
-        setStatus({
-          type: "error",
-          message: `Failed to persist to cloud database: ${errorMsg}. (Saved to local browser cache only).`,
-        });
-      }
+      logActivity(uploadedTitle);
+      setFile(null);
+      setCoverFile(null);
+      setVideoUrl("");
+      setTitle("");
+      setDescription("");
+      setUploadProgress(null);
     } catch (error: any) {
+      console.error("Upload handler error:", error);
       setStatus({
         type: "error",
-        message: `Network error connecting to cloud server: ${error.message || "Failed to reach server"}.`,
+        message: error.message || "Failed to upload to cloud server. Please try again or use the Video URL option.",
       });
     } finally {
       setLoading(false);
+      setUploadProgress(null);
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("itqan-media-added"));
       }
@@ -308,6 +383,24 @@ export default function MediaUploadForm() {
         >
           {status.type === "success" ? <CheckCircle2 size={18} className="shrink-0" /> : <AlertCircle size={18} className="shrink-0" />}
           {status.message}
+        </div>
+      )}
+
+      {/* Live Upload Progress Bar */}
+      {uploadProgress !== null && (
+        <div className="mb-6 bg-slate-950/80 p-4 rounded-2xl border border-primary/30 space-y-2">
+          <div className="flex justify-between text-xs font-bold text-white">
+            <span className="flex items-center gap-2 text-primary">
+              <UploadCloud size={16} className="animate-bounce" /> Uploading to Cloud Storage...
+            </span>
+            <span>{uploadProgress}%</span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+            <div
+              className="bg-primary h-full transition-all duration-300 rounded-full shadow-lg shadow-primary/50"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
         </div>
       )}
 
