@@ -36,7 +36,8 @@ const WINGS = [
 
 // Official 32 ITQAN Union members with official admission numbers provided by user
 const FALLBACK_32_MEMBERS: UserProfile[] = [
-  { uid: "m-733", displayName: "Sayed Hudaif", email: "hudaif@itqan.org", role: "Super Admin", wing: "Executive", admissionNo: "733", createdAt: "2024-01-15" },
+  { uid: "m-702", displayName: "Mujeeb Rahman", email: "mujeeb@itqan.org", role: "Super Admin", wing: "Executive", admissionNo: "702", createdAt: "2024-03-05" },
+  { uid: "m-733", displayName: "Sayed Hudaif", email: "hudaif@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "733", createdAt: "2024-01-15" },
   { uid: "m-725", displayName: "Sayed Burhan", email: "burhan@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "725", createdAt: "2024-01-16" },
   { uid: "m-707", displayName: "Zidan", email: "zidan@itqan.org", role: "Administrator", wing: "Executive", admissionNo: "707", createdAt: "2024-01-20" },
   { uid: "m-742", displayName: "Muhyudheen", email: "muhyudheen@itqan.org", role: "Editor", wing: "Executive", admissionNo: "742", createdAt: "2024-02-01" },
@@ -45,7 +46,6 @@ const FALLBACK_32_MEMBERS: UserProfile[] = [
   { uid: "m-714", displayName: "Shahzad", email: "shahzad@itqan.org", role: "Media", wing: "Media Wing", admissionNo: "714", createdAt: "2024-02-15" },
   { uid: "m-695", displayName: "Muhammed V.K", email: "vk.muhammed@itqan.org", role: "Member", wing: "Urdu Wing", admissionNo: "695", createdAt: "2024-03-01" },
   { uid: "m-676", displayName: "Hisham", email: "hisham@itqan.org", role: "Member", wing: "Urdu Wing", admissionNo: "676", createdAt: "2024-03-02" },
-  { uid: "m-702", displayName: "Mujeeb Rahman", email: "mujeeb@itqan.org", role: "Member", wing: "English Wing", admissionNo: "702", createdAt: "2024-03-05" },
   { uid: "m-699", displayName: "Zameen", email: "zameen@itqan.org", role: "Member", wing: "English Wing", admissionNo: "699", createdAt: "2024-03-08" },
   { uid: "m-728", displayName: "Naseem", email: "naseem@itqan.org", role: "Member", wing: "Arabic Wing", admissionNo: "728", createdAt: "2024-03-12" },
   { uid: "m-724", displayName: "Razeen", email: "razeen@itqan.org", role: "Member", wing: "Arabic Wing", admissionNo: "724", createdAt: "2024-03-15" },

@@ -17,7 +17,8 @@ export interface UserProfileData {
 }
 
 const KNOWN_MEMBERS_MAP: Record<string, Partial<UserProfileData>> = {
-  "hudaif@itqan.org": { uid: "m-733", displayName: "Sayed Hudaif", role: "Super Admin", wing: "Executive", admissionNo: "733" },
+  "mujeeb@itqan.org": { uid: "m-702", displayName: "Mujeeb Rahman", role: "Super Admin", wing: "Executive", admissionNo: "702" },
+  "hudaif@itqan.org": { uid: "m-733", displayName: "Sayed Hudaif", role: "Administrator", wing: "Executive", admissionNo: "733" },
   "burhan@itqan.org": { uid: "m-725", displayName: "Sayed Burhan", role: "Administrator", wing: "Executive", admissionNo: "725" },
   "zidan@itqan.org": { uid: "m-707", displayName: "Zidan", role: "Administrator", wing: "Executive", admissionNo: "707" },
   "muhyudheen@itqan.org": { uid: "m-742", displayName: "Muhyudheen", role: "Editor", wing: "Executive", admissionNo: "742" },
@@ -26,7 +27,6 @@ const KNOWN_MEMBERS_MAP: Record<string, Partial<UserProfileData>> = {
   "shahzad@itqan.org": { uid: "m-714", displayName: "Shahzad", role: "Media", wing: "Media Wing", admissionNo: "714" },
   "vk.muhammed@itqan.org": { uid: "m-695", displayName: "Muhammed V.K", role: "Member", wing: "Urdu Wing", admissionNo: "695" },
   "hisham@itqan.org": { uid: "m-676", displayName: "Hisham", role: "Member", wing: "Urdu Wing", admissionNo: "676" },
-  "mujeeb@itqan.org": { uid: "m-702", displayName: "Mujeeb Rahman", role: "Member", wing: "English Wing", admissionNo: "702" },
   "zameen@itqan.org": { uid: "m-699", displayName: "Zameen", role: "Member", wing: "English Wing", admissionNo: "699" },
   "naseem@itqan.org": { uid: "m-728", displayName: "Naseem", role: "Member", wing: "Arabic Wing", admissionNo: "728" },
   "razeen@itqan.org": { uid: "m-724", displayName: "Razeen", role: "Member", wing: "Arabic Wing", admissionNo: "724" },
