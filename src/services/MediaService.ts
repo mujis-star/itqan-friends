@@ -38,7 +38,7 @@ export class MediaService {
    * Saves a newly uploaded media item locally so it immediately appears in the Media Archive.
    * Handles browser localStorage 5MB quota gracefully.
    */
-  static saveUploadedItem(item: MediaItem) {
+  static async saveUploadedItem(item: MediaItem) {
     if (typeof window === "undefined") return;
     try {
       const existing = localStorage.getItem("itqan_user_media");
@@ -59,10 +59,46 @@ export class MediaService {
         });
         localStorage.setItem("itqan_user_media", JSON.stringify(lightweightList));
       }
+
+      // Sync directly to Firestore Client DB so all computers and Incognito mode get it immediately
+      if (db) {
+        try {
+          const { collection: fsCol, addDoc } = await import("firebase/firestore");
+          const targetCol =
+            item.category === "Magazines" || item.category === "Tabloids" || item.category === "Publications"
+              ? "magazines"
+              : item.category === "Videos"
+              ? "videos"
+              : "gallery";
+
+          const payload: any = {
+            title: item.title,
+            caption: item.title,
+            category: item.category,
+            type: item.category,
+            description: item.description || "",
+            createdAt: new Date(),
+            fileUrl: item.fileUrl || "",
+            thumbnail: item.thumbnail || item.fileUrl || "",
+            coverUrl: item.thumbnail || item.fileUrl || "",
+            imageUrl: item.category === "Photos" ? item.fileUrl || item.thumbnail : "",
+            videoUrl: item.category === "Videos" ? item.fileUrl : "",
+            pdfUrl: item.category !== "Photos" && item.category !== "Videos" ? item.fileUrl : "",
+            uploadedBy: "Admin",
+          };
+
+          await addDoc(fsCol(db, targetCol), payload);
+          if (item.category === "Videos") {
+            await addDoc(fsCol(db, "gallery"), payload).catch(() => {});
+          }
+        } catch (fsErr) {
+          console.warn("Direct client Firestore sync failed:", fsErr);
+        }
+      }
       
       window.dispatchEvent(new CustomEvent("itqan-media-added", { detail: item }));
     } catch (e) {
-      console.warn("Failed to save uploaded item to local storage", e);
+      console.warn("Failed to save uploaded item", e);
     }
   }
 

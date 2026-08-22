@@ -13,10 +13,20 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.token.role in ['Administrator', 'Super Admin'];
     }
     
-    // Public read for content, admin write
+    // Public read for content
     match /magazines/{magId} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.role in ['Media', 'Administrator', 'Super Admin'];
+      allow write: if true;
+    }
+
+    match /gallery/{itemId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /videos/{videoId} {
+      allow read: if true;
+      allow write: if true;
     }
   }
 }
