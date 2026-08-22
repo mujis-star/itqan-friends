@@ -749,6 +749,15 @@ export default function MediaArchive() {
                     >
                       <BookOpen size={14} /> Read PDF Document <ExternalLink size={14} />
                     </a>
+                  ) : isSelectedVideo ? (
+                    <a
+                      href={selectedItem.fileUrl || selectedItem.thumbnail}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-primary/20"
+                    >
+                      <Play size={14} /> Open Video <ExternalLink size={14} />
+                    </a>
                   ) : (
                     <a
                       href={selectedItem.thumbnail || selectedItem.fileUrl}
