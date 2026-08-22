@@ -211,6 +211,68 @@ export default function MediaUploadForm() {
     }
   };
 
+  const uploadFileInChunks = async (
+    fileToUpload: File,
+    itemTitle: string,
+    idToken: string
+  ): Promise<string> => {
+    const CHUNK_SIZE = 2.5 * 1024 * 1024; // 2.5 MB chunks
+    const totalChunks = Math.ceil(fileToUpload.size / CHUNK_SIZE);
+    const fileId = `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+    setUploadProgress({
+      percent: 1,
+      transferredMB: "0.1",
+      totalMB: (fileToUpload.size / (1024 * 1024)).toFixed(1),
+    });
+
+    let finalUrl = "";
+
+    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+      const start = chunkIndex * CHUNK_SIZE;
+      const end = Math.min(fileToUpload.size, start + CHUNK_SIZE);
+      const chunkBlob = fileToUpload.slice(start, end);
+
+      const formData = new FormData();
+      formData.append("fileId", fileId);
+      formData.append("chunkIndex", chunkIndex.toString());
+      formData.append("totalChunks", totalChunks.toString());
+      formData.append("filename", fileToUpload.name);
+      formData.append("mimeType", fileToUpload.type || "video/mp4");
+      formData.append("title", itemTitle);
+      formData.append("category", category);
+      formData.append("description", description);
+      formData.append("chunk", chunkBlob, fileToUpload.name);
+
+      const res = await fetch("/api/upload/chunk", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Upload failed at part ${chunkIndex + 1}/${totalChunks}: ${errText.slice(0, 100)}`);
+      }
+
+      const data = await res.json();
+
+      const percent = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+      const transferredMB = (end / (1024 * 1024)).toFixed(1);
+      const totalMB = (fileToUpload.size / (1024 * 1024)).toFixed(1);
+
+      setUploadProgress({ percent, transferredMB, totalMB });
+
+      if (chunkIndex === totalChunks - 1) {
+        finalUrl = data.url || "";
+      }
+    }
+
+    return finalUrl;
+  };
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -241,37 +303,30 @@ export default function MediaUploadForm() {
     const finalVideoUrl = isVideoCategory && videoMode === "url" ? videoUrl : "";
 
     try {
+      let idToken = "demo-token";
+      if (auth?.currentUser) {
+        idToken = await auth.currentUser.getIdToken().catch(() => "demo-token");
+      }
+
       let publicFileUrl = finalVideoUrl;
       let publicCoverUrl = "";
 
       // 1. Upload Cover Image if provided
       if (coverFile) {
-        if (storage) {
-          try {
-            publicCoverUrl = await uploadFileToFirebaseStorage(coverFile, "covers");
-          } catch (coverErr) {
-            console.warn("Direct storage cover upload failed, compressing locally", coverErr);
-            publicCoverUrl = await compressImageFile(coverFile);
-          }
-        } else {
+        try {
+          publicCoverUrl = await uploadFileToFirebaseStorage(coverFile, "covers");
+        } catch {
           publicCoverUrl = await compressImageFile(coverFile);
         }
       }
 
-      // 2. Upload Primary File
+      // 2. Upload Primary File via Chunked Resilient Pipeline
       if (file) {
-        if (storage) {
-          // Direct client streaming to Firebase Storage — bypasses Vercel 4.5MB limits completely!
-          const totalMB = (file.size / (1024 * 1024)).toFixed(1);
-          setUploadProgress({ percent: 1, transferredMB: "0.1", totalMB });
-          publicFileUrl = await uploadFileToFirebaseStorage(file, "uploads");
-        } else if (file.size < 4 * 1024 * 1024) {
-          // Fallback to API route for small files under 4MB
-          let idToken = "demo-token";
-          if (auth?.currentUser) {
-            idToken = await auth.currentUser.getIdToken().catch(() => "demo-token");
-          }
-
+        if (file.size > 3 * 1024 * 1024) {
+          // Chunked upload for files over 3MB
+          publicFileUrl = await uploadFileInChunks(file, uploadedTitle, idToken);
+        } else {
+          // Standard upload for small files under 3MB
           const formData = new FormData();
           formData.append("file", file);
           if (coverFile) formData.append("cover", coverFile);
@@ -297,9 +352,6 @@ export default function MediaUploadForm() {
           } catch (jsonErr: any) {
             if (!res.ok) throw new Error(`Server returned ${res.status}: ${rawText.slice(0, 100)}`);
           }
-        } else {
-          // Large file without storage
-          throw new Error("Direct storage connection unavailable for files over 4MB. Please use the Video URL / Embed option.");
         }
       }
 
