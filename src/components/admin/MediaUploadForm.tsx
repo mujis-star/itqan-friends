@@ -101,18 +101,37 @@ export default function MediaUploadForm() {
 
   const generateVideoThumbnail = (videoFile: File): Promise<string> => {
     return new Promise((resolve) => {
-      const url = URL.createObjectURL(videoFile);
+      let objectUrl = "";
+      try {
+        objectUrl = URL.createObjectURL(videoFile);
+      } catch {
+        resolve("");
+        return;
+      }
+
       const video = document.createElement("video");
-      video.src = url;
+      video.src = objectUrl;
       video.muted = true;
       video.playsInline = true;
+      video.preload = "metadata";
+
+      const cleanup = () => {
+        if (objectUrl) URL.revokeObjectURL(objectUrl);
+        video.src = "";
+      };
 
       const timeout = setTimeout(() => {
+        cleanup();
         resolve("");
-      }, 3500);
+      }, 2000);
 
       video.onloadeddata = () => {
-        video.currentTime = 0.5;
+        try {
+          video.currentTime = 0.5;
+        } catch {
+          cleanup();
+          resolve("");
+        }
       };
 
       video.onseeked = () => {
@@ -125,17 +144,18 @@ export default function MediaUploadForm() {
           if (ctx && canvas.width > 0 && canvas.height > 0) {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             const thumb = canvas.toDataURL("image/jpeg", 0.7);
+            cleanup();
             resolve(thumb);
-          } else {
-            resolve("");
+            return;
           }
-        } catch {
-          resolve("");
-        }
+        } catch {}
+        cleanup();
+        resolve("");
       };
 
       video.onerror = () => {
         clearTimeout(timeout);
+        cleanup();
         resolve("");
       };
     });
@@ -511,9 +531,20 @@ export default function MediaUploadForm() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               {file ? (
-                <span className="text-primary font-bold text-xs">
-                  {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                </span>
+                <div className="space-y-1">
+                  <span className="text-primary font-bold text-xs block">
+                    {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                  </span>
+                  {category === "Videos" && file.size > 20 * 1024 * 1024 && (
+                    <button
+                      type="button"
+                      onClick={() => setVideoMode("url")}
+                      className="inline-flex items-center gap-1 text-[11px] text-amber-400 hover:text-amber-300 underline font-medium mt-1 cursor-pointer"
+                    >
+                      <LinkIcon size={12} /> Have this video on Google Drive? Click to link it instantly without uploading!
+                    </button>
+                  )}
+                </div>
               ) : (
                 <span className="text-gray-400">
                   {category === "Photos"
