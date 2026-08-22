@@ -676,7 +676,7 @@ export default function MediaArchive() {
                         allowFullScreen
                         title={selectedItem.title}
                       />
-                    ) : selectedItem.fileUrl ? (
+                    ) : selectedItem.fileUrl && !selectedItem.fileUrl.startsWith("data:image/") && !selectedItem.fileUrl.includes("thumbnail") ? (
                       <video
                         src={selectedItem.fileUrl}
                         controls
@@ -686,13 +686,25 @@ export default function MediaArchive() {
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full rounded-xl">
-                        <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary shadow-xl animate-pulse">
-                          <Play size={32} className="ml-1" />
-                        </div>
+                        {selectedItem.thumbnail && (
+                          <img
+                            src={selectedItem.thumbnail}
+                            alt={selectedItem.title}
+                            className="max-h-44 rounded-xl object-contain shadow-2xl border border-white/10"
+                          />
+                        )}
                         <div>
                           <h3 className="text-2xl font-bold text-white mb-1">{selectedItem.title}</h3>
-                          <p className="text-xs text-gray-400">Video Content ({selectedItem.category})</p>
+                          <p className="text-xs text-amber-300">Video file stream is missing or was uploaded as thumbnail</p>
                         </div>
+                        {isAdmin && (
+                          <button
+                            onClick={() => openEditModal(selectedItem)}
+                            className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/20"
+                          >
+                            <Edit2 size={14} /> Attach Google Drive / YouTube Video Link
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
