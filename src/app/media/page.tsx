@@ -654,15 +654,16 @@ export default function MediaArchive() {
                 ) : isSelectedVideo ? (
                   /* Interactive Video Player */
                   <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
-                    {selectedItem.fileUrl && (selectedItem.fileUrl.includes("drive.google.com") || selectedItem.fileUrl.includes("google.com/file/d/")) ? (
+                    {selectedItem.fileUrl && (selectedItem.fileUrl.includes("drive.google.com") || selectedItem.fileUrl.includes("google.com/file/d/") || selectedItem.fileUrl.includes("google.com/thumbnail")) ? (
                       <iframe
-                        src={
-                          selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]
-                            ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]}/preview`
-                            : selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]
-                            ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]}/preview`
-                            : selectedItem.fileUrl
-                        }
+                        src={(() => {
+                          const url = selectedItem.fileUrl;
+                          const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                          if (fileIdMatch) return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+                          const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                          if (idParamMatch) return `https://drive.google.com/file/d/${idParamMatch[1]}/preview`;
+                          return url;
+                        })()}
                         className="w-full h-full border-0 rounded-xl"
                         allow="autoplay; encrypted-media; fullscreen"
                         allowFullScreen

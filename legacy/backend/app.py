@@ -210,11 +210,15 @@ def get_gallery():
             data = []
             for f in files:
                 props = f.get('appProperties') or {}
+                mime = f.get('mimeType', '')
+                is_video = mime.startswith('video/')
                 data.append({
                     'id': f['id'],
-                    'imageUrl': drive_image_url(f['id']),
+                    'imageUrl': drive_view_url(f['id']) if is_video else drive_image_url(f['id']),
+                    'thumbnail': drive_image_url(f['id']),
                     'caption': props.get('caption') or 'Untitled',
-                    'type': 'image',
+                    'type': 'video' if is_video else 'image',
+                    'fileUrl': drive_view_url(f['id']) if is_video else drive_image_url(f['id']),
                     'createdAt': f.get('createdTime'),
                     'storage': 'google-drive'
                 })
@@ -253,12 +257,14 @@ def upload_image():
                 'kind': 'gallery' if ext not in ['mp4', 'webm', 'mov', 'mkv', 'avi'] else 'videos',
                 'caption': caption or 'Untitled'
             })
-            file_url = drive_image_url(created['id'])
+            is_video = ext in ['mp4', 'webm', 'mov', 'mkv', 'avi']
+            file_url = drive_view_url(created['id']) if is_video else drive_image_url(created['id'])
             return jsonify({
                 'success': True,
                 'fileUrl': file_url,
                 'id': created['id'],
                 'storage': 'google-drive',
+                'isVideo': is_video,
                 'message': 'Upload successful'
             }), 200
 
