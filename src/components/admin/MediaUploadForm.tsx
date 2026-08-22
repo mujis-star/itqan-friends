@@ -338,12 +338,12 @@ export default function MediaUploadForm() {
             if (driveData.coverUrl) publicCoverUrl = driveData.coverUrl;
             uploadSuccess = true;
           }
-        } catch (driveErr) {
+        } catch (driveErr: any) {
           console.warn("Render backend direct upload notice:", driveErr);
         }
 
-        // Fallback to Next.js API route if needed
-        if (!uploadSuccess) {
+        // For files under 4.5MB, fallback to Next.js API route
+        if (!uploadSuccess && file.size < 4.5 * 1024 * 1024) {
           try {
             const apiData = await uploadWithProgress("/api/upload", formData, {
               Authorization: `Bearer ${idToken}`,
@@ -354,10 +354,14 @@ export default function MediaUploadForm() {
               uploadSuccess = true;
             }
           } catch (apiErr: any) {
-            if (!publicFileUrl) {
-              throw new Error(apiErr.message || "Failed to upload to server.");
-            }
+            console.warn("Next.js API upload notice:", apiErr);
           }
+        }
+
+        if (!uploadSuccess && !publicFileUrl) {
+          throw new Error(
+            "Video upload service busy or payload limit reached. You can switch to the 'Video URL / Embed' tab to link your Google Drive video link instantly without uploading!"
+          );
         }
       }
 

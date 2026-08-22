@@ -27,7 +27,7 @@ UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
 DATA_DIR = os.environ.get('DATA_DIR', '.')
 GALLERY_FILE = os.path.join(DATA_DIR, 'gallery_data.json')
 MAGAZINE_FILE = os.path.join(DATA_DIR, 'magazine_data.json')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf', 'mp4', 'webm', 'mov', 'mkv', 'avi'}
 def normalize_drive_folder_id(value):
     value = (value or '').strip()
     if not value:
@@ -44,7 +44,7 @@ DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive']
 _drive_service = None
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 25 * 1024 * 1024  # 25MB for PDFs
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 500MB for Videos & PDFs
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -242,15 +242,15 @@ def upload_image():
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
 
-        ext = file.filename.rsplit('.', 1)[1].lower()
-        if ext not in ['png', 'jpg', 'jpeg', 'gif', 'webp']:
-            return jsonify({'error': 'Only image files allowed for gallery'}), 400
+        ext = file.filename.rsplit('.', 1)[1].lower() if '.' in file.filename else ''
+        if ext not in ['png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'webm', 'mov', 'mkv', 'avi']:
+            return jsonify({'error': 'Only images and video files allowed'}), 400
 
         if drive_enabled():
-            filename = f"gallery_{uuid.uuid4().hex}_{int(datetime.datetime.now().timestamp())}.{ext}"
-            mime_type = file.mimetype or mimetypes.guess_type(filename)[0] or 'image/jpeg'
+            filename = f"media_{uuid.uuid4().hex}_{int(datetime.datetime.now().timestamp())}.{ext}"
+            mime_type = file.mimetype or mimetypes.guess_type(filename)[0] or ('video/mp4' if ext in ['mp4', 'webm', 'mov', 'mkv', 'avi'] else 'image/jpeg')
             created = upload_to_drive(file, filename, mime_type, {
-                'kind': 'gallery',
+                'kind': 'gallery' if ext not in ['mp4', 'webm', 'mov', 'mkv', 'avi'] else 'videos',
                 'caption': caption or 'Untitled'
             })
             file_url = drive_image_url(created['id'])
