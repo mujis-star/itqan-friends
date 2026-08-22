@@ -644,21 +644,35 @@ export default function MediaArchive() {
                 ) : isSelectedVideo ? (
                   /* Interactive Video Player */
                   <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
-                    {selectedItem.fileUrl && (selectedItem.fileUrl.startsWith("data:video") || selectedItem.fileUrl.startsWith("blob:") || selectedItem.fileUrl.endsWith(".mp4") || selectedItem.fileUrl.endsWith(".webm") || selectedItem.fileUrl.endsWith(".mov")) ? (
+                    {selectedItem.fileUrl && (selectedItem.fileUrl.includes("drive.google.com") || selectedItem.fileUrl.includes("google.com/file/d/")) ? (
+                      <iframe
+                        src={
+                          selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]
+                            ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]}/preview`
+                            : selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]
+                            ? `https://drive.google.com/file/d/${selectedItem.fileUrl.match(/id=([a-zA-Z0-9_-]+)/)?.[1]}/preview`
+                            : selectedItem.fileUrl
+                        }
+                        className="w-full h-full border-0 rounded-xl"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowFullScreen
+                        title={selectedItem.title}
+                      />
+                    ) : selectedItem.fileUrl && (selectedItem.fileUrl.includes("youtube.com") || selectedItem.fileUrl.includes("youtu.be") || selectedItem.fileUrl.includes("vimeo.com")) ? (
+                      <iframe
+                        src={selectedItem.fileUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                        className="w-full h-full border-0 rounded-xl"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowFullScreen
+                        title={selectedItem.title}
+                      />
+                    ) : selectedItem.fileUrl ? (
                       <video
                         src={selectedItem.fileUrl}
                         controls
                         autoPlay
                         className="w-full h-full object-contain rounded-xl"
                         poster={selectedItem.thumbnail || undefined}
-                      />
-                    ) : selectedItem.fileUrl && (selectedItem.fileUrl.includes("youtube.com") || selectedItem.fileUrl.includes("youtu.be") || selectedItem.fileUrl.includes("vimeo.com")) ? (
-                      <iframe
-                        src={selectedItem.fileUrl.replace("watch?v=", "embed/")}
-                        className="w-full h-full border-0 rounded-xl"
-                        allow="autoplay; encrypted-media; fullscreen"
-                        allowFullScreen
-                        title={selectedItem.title}
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full rounded-xl">
@@ -669,16 +683,6 @@ export default function MediaArchive() {
                           <h3 className="text-2xl font-bold text-white mb-1">{selectedItem.title}</h3>
                           <p className="text-xs text-gray-400">Video Content ({selectedItem.category})</p>
                         </div>
-                        {selectedItem.fileUrl && (
-                          <a
-                            href={selectedItem.fileUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-extrabold text-xs uppercase tracking-wider shadow-xl hover:opacity-90 transition-opacity flex items-center gap-2"
-                          >
-                            Watch Video <ExternalLink size={14} />
-                          </a>
-                        )}
                       </div>
                     )}
                   </div>
