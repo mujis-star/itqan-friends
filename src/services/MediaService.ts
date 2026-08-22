@@ -297,16 +297,26 @@ export class MediaService {
         const renderGallery = await galRes.json().catch(() => []);
         if (Array.isArray(renderGallery)) {
           renderGallery.forEach((g: any) => {
-            if (!cloudItems.some((ci) => ci.id === g.id)) {
-              const isVid = g.type === "video" || (g.fileUrl && (g.fileUrl.includes(".mp4") || g.fileUrl.includes("video")));
+            const itemTitle = g.caption || g.title || "";
+            const alreadyExists = cloudItems.some(
+              (ci) => ci.id === g.id || (itemTitle && ci.title.toLowerCase() === itemTitle.toLowerCase())
+            );
+            if (!alreadyExists) {
+              const isVid = g.type === "video" || (g.mimeType && g.mimeType.startsWith("video/"));
+              // For images: use the thumbnail URL directly (works in <img> tags)
+              // For videos: use the Drive view URL (will be converted to /preview iframe by the player)
+              const thumbUrl = g.thumbnail || (g.id ? `https://drive.google.com/thumbnail?id=${g.id}&sz=w1600` : "");
+              const fileUrl = isVid
+                ? (g.fileUrl || (g.id ? `https://drive.google.com/file/d/${g.id}/view` : ""))
+                : (g.imageUrl || thumbUrl);
               cloudItems.push({
                 id: g.id,
-                title: g.caption || g.title || (isVid ? "Untitled Video" : "Untitled Photo"),
+                title: itemTitle || (isVid ? "Untitled Video" : "Untitled Photo"),
                 category: isVid ? "Videos" : "Photos",
                 date: g.createdAt || new Date().toISOString(),
-                thumbnail: g.imageUrl || g.thumbnail || (g.id ? `https://drive.google.com/thumbnail?id=${g.id}&sz=w1600` : ""),
+                thumbnail: thumbUrl,
                 description: g.description || "",
-                fileUrl: g.fileUrl || g.imageUrl || (g.id ? `https://drive.google.com/file/d/${g.id}/view` : ""),
+                fileUrl: fileUrl,
               });
             }
           });
@@ -317,15 +327,22 @@ export class MediaService {
         const renderMags = await magRes.json().catch(() => []);
         if (Array.isArray(renderMags)) {
           renderMags.forEach((m: any) => {
-            if (!cloudItems.some((ci) => ci.id === m.id)) {
+            const magTitle = m.title || "";
+            const alreadyExists = cloudItems.some(
+              (ci) => ci.id === m.id || (magTitle && ci.title.toLowerCase() === magTitle.toLowerCase())
+            );
+            if (!alreadyExists) {
+              const coverThumb = m.coverUrl || (m.id ? `https://drive.google.com/thumbnail?id=${m.id}&sz=w1600` : "");
+              // For PDF URL: if pdfFileId is available, construct the view URL
+              const pdfUrl = m.pdfUrl || (m.pdfFileId ? `https://drive.google.com/file/d/${m.pdfFileId}/view` : "");
               cloudItems.push({
                 id: m.id,
-                title: m.title || "Untitled Publication",
+                title: magTitle || "Untitled Publication",
                 category: "Magazines",
                 date: m.createdAt || new Date().toISOString(),
-                thumbnail: m.coverUrl || "",
+                thumbnail: coverThumb,
                 description: m.description || "",
-                fileUrl: m.pdfUrl || "",
+                fileUrl: pdfUrl,
               });
             }
           });
@@ -335,12 +352,15 @@ export class MediaService {
       console.warn("Render backend fetch notice:", renderErr);
     }
 
-    // Combine local uploads with cloud items, de-duplicating by ID
+    // Combine local uploads with cloud items, de-duplicating by ID and title
     const combined = [...localItems, ...cloudItems];
     const uniqueMap = new Map<string, MediaItem>();
+    const seenTitles = new Set<string>();
     combined.forEach((item) => {
-      if (!uniqueMap.has(item.id)) {
+      const titleKey = item.title.toLowerCase().trim();
+      if (!uniqueMap.has(item.id) && !seenTitles.has(titleKey)) {
         uniqueMap.set(item.id, item);
+        if (titleKey) seenTitles.add(titleKey);
       }
     });
 
