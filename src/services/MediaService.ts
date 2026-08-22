@@ -281,25 +281,37 @@ export class MediaService {
             fileUrl: this.formatDriveUrl(data.videoUrl || data.imageUrl || data.fileUrl, false),
           });
         });
-
-        try {
-          const vidSnap = await getDocs(query(collection(db, "videos"), orderBy("createdAt", "desc")));
-          vidSnap.forEach((doc) => {
-            const data = doc.data();
-            cloudItems.push({
-              id: doc.id,
-              title: data.title || data.caption || "Untitled Video",
-              category: "Videos",
-              date: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
-              thumbnail: this.formatDriveUrl(data.thumbnail || data.coverUrl || data.videoUrl || data.fileUrl, true),
-              description: data.description || "",
-              fileUrl: this.formatDriveUrl(data.videoUrl || data.fileUrl, false),
-            });
-          });
-        } catch {}
       } catch (clientError) {
         console.warn("Client Firebase fetch failed", clientError);
       }
+    }
+
+    // 3. Fetch from Google Drive Render Backend (https://itqan-backend.onrender.com)
+    try {
+      const renderRes = await fetch("https://itqan-backend.onrender.com/magazines", {
+        cache: "no-store",
+      }).catch(() => null);
+
+      if (renderRes && renderRes.ok) {
+        const renderMags = await renderRes.json().catch(() => []);
+        if (Array.isArray(renderMags)) {
+          renderMags.forEach((m: any) => {
+            if (!cloudItems.some((ci) => ci.id === m.id)) {
+              cloudItems.push({
+                id: m.id,
+                title: m.title || "Untitled Publication",
+                category: "Magazines",
+                date: m.createdAt || new Date().toISOString(),
+                thumbnail: m.coverUrl || "",
+                description: m.description || "",
+                fileUrl: m.pdfUrl || "",
+              });
+            }
+          });
+        }
+      }
+    } catch (renderErr) {
+      console.warn("Render backend fetch notice:", renderErr);
     }
 
     // Combine local uploads with cloud items, de-duplicating by ID

@@ -211,66 +211,52 @@ export default function MediaUploadForm() {
     }
   };
 
-  const uploadFileInChunks = async (
-    fileToUpload: File,
-    itemTitle: string,
-    idToken: string
-  ): Promise<string> => {
-    const CHUNK_SIZE = 2.5 * 1024 * 1024; // 2.5 MB chunks
-    const totalChunks = Math.ceil(fileToUpload.size / CHUNK_SIZE);
-    const fileId = `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  const uploadWithProgress = (
+    url: string,
+    formData: FormData,
+    headers: Record<string, string> = {}
+  ): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
 
-    setUploadProgress({
-      percent: 1,
-      transferredMB: "0.1",
-      totalMB: (fileToUpload.size / (1024 * 1024)).toFixed(1),
-    });
-
-    let finalUrl = "";
-
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-      const start = chunkIndex * CHUNK_SIZE;
-      const end = Math.min(fileToUpload.size, start + CHUNK_SIZE);
-      const chunkBlob = fileToUpload.slice(start, end);
-
-      const formData = new FormData();
-      formData.append("fileId", fileId);
-      formData.append("chunkIndex", chunkIndex.toString());
-      formData.append("totalChunks", totalChunks.toString());
-      formData.append("filename", fileToUpload.name);
-      formData.append("mimeType", fileToUpload.type || "video/mp4");
-      formData.append("title", itemTitle);
-      formData.append("category", category);
-      formData.append("description", description);
-      formData.append("chunk", chunkBlob, fileToUpload.name);
-
-      const res = await fetch("/api/upload/chunk", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: formData,
+      Object.entries(headers).forEach(([key, val]) => {
+        xhr.setRequestHeader(key, val);
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`Upload failed at part ${chunkIndex + 1}/${totalChunks}: ${errText.slice(0, 100)}`);
-      }
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          const transferredMB = (event.loaded / (1024 * 1024)).toFixed(1);
+          const totalMB = (event.total / (1024 * 1024)).toFixed(1);
+          setUploadProgress({ percent, transferredMB, totalMB });
+        }
+      };
 
-      const data = await res.json();
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            resolve(data);
+          } catch {
+            resolve({ success: true, text: xhr.responseText });
+          }
+        } else {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            reject(new Error(data.error || data.message || `Server returned status ${xhr.status}`));
+          } catch {
+            reject(new Error(`Server returned status ${xhr.status}`));
+          }
+        }
+      };
 
-      const percent = Math.round(((chunkIndex + 1) / totalChunks) * 100);
-      const transferredMB = (end / (1024 * 1024)).toFixed(1);
-      const totalMB = (fileToUpload.size / (1024 * 1024)).toFixed(1);
+      xhr.onerror = () => {
+        reject(new Error("Network error during upload to cloud server"));
+      };
 
-      setUploadProgress({ percent, transferredMB, totalMB });
-
-      if (chunkIndex === totalChunks - 1) {
-        finalUrl = data.url || "";
-      }
-    }
-
-    return finalUrl;
+      xhr.send(formData);
+    });
   };
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -320,37 +306,57 @@ export default function MediaUploadForm() {
         }
       }
 
-      // 2. Upload Primary File via Chunked Resilient Pipeline
+      // 2. Upload Primary File via Direct Google Drive Render Backend or Next.js API
       if (file) {
-        if (file.size > 3 * 1024 * 1024) {
-          // Chunked upload for files over 3MB
-          publicFileUrl = await uploadFileInChunks(file, uploadedTitle, idToken);
-        } else {
-          // Standard upload for small files under 3MB
-          const formData = new FormData();
-          formData.append("file", file);
-          if (coverFile) formData.append("cover", coverFile);
-          formData.append("title", uploadedTitle);
-          formData.append("category", category);
-          formData.append("description", description);
+        setUploadProgress({
+          percent: 1,
+          transferredMB: "0.1",
+          totalMB: (file.size / (1024 * 1024)).toFixed(1),
+        });
 
-          const res = await fetch("/api/upload", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${idToken}` },
-            body: formData,
-          });
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("pdf", file);
+        if (coverFile) formData.append("cover", coverFile);
+        formData.append("title", uploadedTitle);
+        formData.append("caption", uploadedTitle);
+        formData.append("category", category);
+        formData.append("description", description);
 
-          const rawText = await res.text();
+        let uploadSuccess = false;
+
+        // Try Google Drive Render backend first (supports large 100MB+ files directly into Google Drive)
+        try {
+          const targetUrl =
+            category === "Magazines" || category === "Tabloids" || category === "Publications"
+              ? "https://itqan-backend.onrender.com/upload-magazine"
+              : "https://itqan-backend.onrender.com/upload";
+
+          const driveData = await uploadWithProgress(targetUrl, formData);
+          if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
+            publicFileUrl = driveData.fileUrl || driveData.pdfUrl || "";
+            if (driveData.coverUrl) publicCoverUrl = driveData.coverUrl;
+            uploadSuccess = true;
+          }
+        } catch (driveErr) {
+          console.warn("Render backend direct upload notice:", driveErr);
+        }
+
+        // Fallback to Next.js API route if needed
+        if (!uploadSuccess) {
           try {
-            const data = JSON.parse(rawText);
-            if (res.ok && data.success) {
-              publicFileUrl = data.url;
-              if (data.coverUrl) publicCoverUrl = data.coverUrl;
-            } else {
-              throw new Error(data.error || "Server upload failed");
+            const apiData = await uploadWithProgress("/api/upload", formData, {
+              Authorization: `Bearer ${idToken}`,
+            });
+            if (apiData && apiData.success) {
+              publicFileUrl = apiData.url;
+              if (apiData.coverUrl) publicCoverUrl = apiData.coverUrl;
+              uploadSuccess = true;
             }
-          } catch (jsonErr: any) {
-            if (!res.ok) throw new Error(`Server returned ${res.status}: ${rawText.slice(0, 100)}`);
+          } catch (apiErr: any) {
+            if (!publicFileUrl) {
+              throw new Error(apiErr.message || "Failed to upload to server.");
+            }
           }
         }
       }
