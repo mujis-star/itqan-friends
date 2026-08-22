@@ -19,7 +19,7 @@ export default function MediaUploadForm() {
   const [category, setCategory] = useState("Photos");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<{ percent: number; transferredMB: string; totalMB: string } | null>(null);
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   const getAcceptType = () => {
@@ -155,8 +155,10 @@ export default function MediaUploadForm() {
         "state_changed",
         (snapshot) => {
           if (snapshot.totalBytes > 0) {
-            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setUploadProgress(progress);
+            const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            const transferredMB = (snapshot.bytesTransferred / (1024 * 1024)).toFixed(1);
+            const totalMB = (snapshot.totalBytes / (1024 * 1024)).toFixed(1);
+            setUploadProgress({ percent, transferredMB, totalMB });
           }
         },
         (error) => {
@@ -240,7 +242,8 @@ export default function MediaUploadForm() {
       if (file) {
         if (storage) {
           // Direct client streaming to Firebase Storage — bypasses Vercel 4.5MB limits completely!
-          setUploadProgress(5);
+          const totalMB = (file.size / (1024 * 1024)).toFixed(1);
+          setUploadProgress({ percent: 1, transferredMB: "0.1", totalMB });
           publicFileUrl = await uploadFileToFirebaseStorage(file, "uploads");
         } else if (file.size < 4 * 1024 * 1024) {
           // Fallback to API route for small files under 4MB
@@ -391,14 +394,14 @@ export default function MediaUploadForm() {
         <div className="mb-6 bg-slate-950/80 p-4 rounded-2xl border border-primary/30 space-y-2">
           <div className="flex justify-between text-xs font-bold text-white">
             <span className="flex items-center gap-2 text-primary">
-              <UploadCloud size={16} className="animate-bounce" /> Uploading to Cloud Storage...
+              <UploadCloud size={16} className="animate-bounce" /> Uploading to Cloud Storage ({uploadProgress.transferredMB} MB / {uploadProgress.totalMB} MB)
             </span>
-            <span>{uploadProgress}%</span>
+            <span className="font-mono text-primary">{uploadProgress.percent}%</span>
           </div>
-          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
             <div
               className="bg-primary h-full transition-all duration-300 rounded-full shadow-lg shadow-primary/50"
-              style={{ width: `${uploadProgress}%` }}
+              style={{ width: `${uploadProgress.percent}%` }}
             />
           </div>
         </div>
