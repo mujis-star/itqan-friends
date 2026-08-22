@@ -288,12 +288,33 @@ export class MediaService {
 
     // 3. Fetch from Google Drive Render Backend (https://itqan-backend.onrender.com)
     try {
-      const renderRes = await fetch("https://itqan-backend.onrender.com/magazines", {
-        cache: "no-store",
-      }).catch(() => null);
+      const [galRes, magRes] = await Promise.all([
+        fetch("https://itqan-backend.onrender.com/gallery", { cache: "no-store" }).catch(() => null),
+        fetch("https://itqan-backend.onrender.com/magazines", { cache: "no-store" }).catch(() => null),
+      ]);
 
-      if (renderRes && renderRes.ok) {
-        const renderMags = await renderRes.json().catch(() => []);
+      if (galRes && galRes.ok) {
+        const renderGallery = await galRes.json().catch(() => []);
+        if (Array.isArray(renderGallery)) {
+          renderGallery.forEach((g: any) => {
+            if (!cloudItems.some((ci) => ci.id === g.id)) {
+              const isVid = g.type === "video" || (g.fileUrl && (g.fileUrl.includes(".mp4") || g.fileUrl.includes("video")));
+              cloudItems.push({
+                id: g.id,
+                title: g.caption || g.title || (isVid ? "Untitled Video" : "Untitled Photo"),
+                category: isVid ? "Videos" : "Photos",
+                date: g.createdAt || new Date().toISOString(),
+                thumbnail: g.imageUrl || g.thumbnail || (g.id ? `https://drive.google.com/thumbnail?id=${g.id}&sz=w1600` : ""),
+                description: g.description || "",
+                fileUrl: g.fileUrl || g.imageUrl || (g.id ? `https://drive.google.com/file/d/${g.id}/view` : ""),
+              });
+            }
+          });
+        }
+      }
+
+      if (magRes && magRes.ok) {
+        const renderMags = await magRes.json().catch(() => []);
         if (Array.isArray(renderMags)) {
           renderMags.forEach((m: any) => {
             if (!cloudItems.some((ci) => ci.id === m.id)) {
