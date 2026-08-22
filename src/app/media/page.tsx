@@ -654,60 +654,91 @@ export default function MediaArchive() {
                 ) : isSelectedVideo ? (
                   /* Interactive Video Player */
                   <div className="relative w-full h-full flex items-center justify-center bg-slate-950 p-2">
-                    {selectedItem.fileUrl && (selectedItem.fileUrl.includes("drive.google.com") || selectedItem.fileUrl.includes("google.com/file/d/") || selectedItem.fileUrl.includes("google.com/thumbnail")) ? (
-                      <iframe
-                        src={(() => {
-                          const url = selectedItem.fileUrl;
-                          const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                          if (fileIdMatch) return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
-                          const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-                          if (idParamMatch) return `https://drive.google.com/file/d/${idParamMatch[1]}/preview`;
-                          return url;
-                        })()}
-                        className="w-full h-full border-0 rounded-xl"
-                        allow="autoplay; encrypted-media; fullscreen"
-                        allowFullScreen
-                        title={selectedItem.title}
-                      />
-                    ) : selectedItem.fileUrl && (selectedItem.fileUrl.includes("youtube.com") || selectedItem.fileUrl.includes("youtu.be") || selectedItem.fileUrl.includes("vimeo.com")) ? (
-                      <iframe
-                        src={selectedItem.fileUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
-                        className="w-full h-full border-0 rounded-xl"
-                        allow="autoplay; encrypted-media; fullscreen"
-                        allowFullScreen
-                        title={selectedItem.title}
-                      />
-                    ) : selectedItem.fileUrl && !selectedItem.fileUrl.startsWith("data:image/") && !selectedItem.fileUrl.includes("thumbnail") ? (
-                      <video
-                        src={selectedItem.fileUrl}
-                        controls
-                        autoPlay
-                        className="w-full h-full object-contain rounded-xl"
-                        poster={selectedItem.thumbnail || undefined}
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full rounded-xl">
-                        {selectedItem.thumbnail && (
-                          <img
-                            src={selectedItem.thumbnail}
-                            alt={selectedItem.title}
-                            className="max-h-44 rounded-xl object-contain shadow-2xl border border-white/10"
+                    {(() => {
+                      // Helper: extract Google Drive file ID from ANY URL
+                      const extractDriveId = (url: string | undefined): string | null => {
+                        if (!url) return null;
+                        const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                        if (fileMatch) return fileMatch[1];
+                        const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                        if (idMatch) return idMatch[1];
+                        return null;
+                      };
+
+                      const driveId = extractDriveId(selectedItem.fileUrl) || extractDriveId(selectedItem.thumbnail);
+                      const isYouTube = selectedItem.fileUrl && (selectedItem.fileUrl.includes("youtube.com") || selectedItem.fileUrl.includes("youtu.be"));
+                      const isVimeo = selectedItem.fileUrl && selectedItem.fileUrl.includes("vimeo.com");
+                      const isDirectVideo = selectedItem.fileUrl && (
+                        selectedItem.fileUrl.endsWith(".mp4") || selectedItem.fileUrl.endsWith(".webm") ||
+                        selectedItem.fileUrl.endsWith(".mov") || selectedItem.fileUrl.includes("firebasestorage.googleapis.com")
+                      );
+
+                      if (driveId) {
+                        return (
+                          <iframe
+                            src={`https://drive.google.com/file/d/${driveId}/preview`}
+                            className="w-full h-full border-0 rounded-xl"
+                            allow="autoplay; encrypted-media; fullscreen"
+                            allowFullScreen
+                            title={selectedItem.title}
                           />
-                        )}
-                        <div>
-                          <h3 className="text-2xl font-bold text-white mb-1">{selectedItem.title}</h3>
-                          <p className="text-xs text-amber-300">Video file stream is missing or was uploaded as thumbnail</p>
-                        </div>
-                        {isAdmin && (
-                          <button
-                            onClick={() => openEditModal(selectedItem)}
-                            className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/20"
-                          >
-                            <Edit2 size={14} /> Attach Google Drive / YouTube Video Link
-                          </button>
-                        )}
-                      </div>
-                    )}
+                        );
+                      } else if (isYouTube) {
+                        return (
+                          <iframe
+                            src={selectedItem.fileUrl!.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                            className="w-full h-full border-0 rounded-xl"
+                            allow="autoplay; encrypted-media; fullscreen"
+                            allowFullScreen
+                            title={selectedItem.title}
+                          />
+                        );
+                      } else if (isVimeo) {
+                        return (
+                          <iframe
+                            src={selectedItem.fileUrl!}
+                            className="w-full h-full border-0 rounded-xl"
+                            allow="autoplay; encrypted-media; fullscreen"
+                            allowFullScreen
+                            title={selectedItem.title}
+                          />
+                        );
+                      } else if (isDirectVideo) {
+                        return (
+                          <video
+                            src={selectedItem.fileUrl!}
+                            controls
+                            autoPlay
+                            className="w-full h-full object-contain rounded-xl"
+                            poster={selectedItem.thumbnail || undefined}
+                          />
+                        );
+                      } else {
+                        return (
+                          <div className="flex flex-col items-center justify-center gap-4 p-8 text-center bg-gradient-to-br from-primary/15 via-slate-900 to-slate-950 w-full h-full rounded-xl">
+                            {selectedItem.thumbnail && (
+                              <img
+                                src={selectedItem.thumbnail}
+                                alt={selectedItem.title}
+                                className="max-h-44 rounded-xl object-contain shadow-2xl border border-white/10"
+                              />
+                            )}
+                            <div>
+                              <h3 className="text-2xl font-bold text-white mb-1">{selectedItem.title}</h3>
+                              <p className="text-xs text-amber-300">Video file needs to be re-uploaded or linked</p>
+                            </div>
+                            {isAdmin && (
+                              <button
+                                onClick={() => openEditModal(selectedItem)}
+                                className="px-6 py-3 rounded-xl bg-primary text-slate-950 font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-lg shadow-primary/20"
+                              >
+                                <Edit2 size={14} /> Re-upload or Attach Video Link
+                              </button>
+                            )}
+                          </div>
+                        );
+                      }
+                    })()}
                   </div>
                 ) : (
                   // Clean High-Res Image / Photo Viewer
