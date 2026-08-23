@@ -365,11 +365,6 @@ export default function MediaUploadForm() {
 
         let uploadSuccess = false;
 
-        const targetUrl =
-          category === "Magazines" || category === "Tabloids" || category === "Publications"
-            ? `${RENDER_BACKEND}/upload-magazine`
-            : `${RENDER_BACKEND}/upload`;
-
         // Wait for backend to be ready (it starts waking on component mount)
         if (!backendReady.current) {
           setStatus({ type: "success", message: "⏳ Waiting for Google Drive server to wake up... (this takes up to 2 minutes on first use)" });
@@ -391,22 +386,80 @@ export default function MediaUploadForm() {
           setStatus(null);
         }
 
-        // Upload to Google Drive via Render backend
-        try {
-          const driveData = await uploadWithProgress(targetUrl, formData);
-          if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
-            publicFileUrl = driveData.fileUrl || driveData.pdfUrl || "";
-            if (driveData.coverUrl) publicCoverUrl = driveData.coverUrl;
-            uploadSuccess = true;
-          }
-        } catch (driveErr: any) {
-          console.warn("Render backend upload attempt 1:", driveErr);
-        }
+        const CHUNK_SIZE = 4 * 1024 * 1024; // 4MB per chunk
+        const isLargeFile = file.size > 5 * 1024 * 1024; // Files > 5MB use chunked upload
 
-        // Attempt 2: Retry once if first attempt failed (backend may have just woken up)
-        if (!uploadSuccess) {
-          setStatus({ type: "success", message: "Retrying upload to Google Drive..." });
-          setUploadProgress({ percent: 0, transferredMB: "0", totalMB: (file.size / (1024 * 1024)).toFixed(1) });
+        if (isLargeFile) {
+          // ===== CHUNKED UPLOAD (for large files) =====
+          setStatus({ type: "success", message: "Starting chunked upload to Google Drive..." });
+          const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+
+          // Step 1: Init upload session
+          const initRes = await fetch(`${RENDER_BACKEND}/upload-init`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              filename: file.name,
+              totalChunks,
+              caption: uploadedTitle,
+              category,
+              description,
+              mimeType: file.type || "application/octet-stream",
+            }),
+          });
+          const initData = await initRes.json();
+          if (!initData.success) throw new Error(initData.error || "Failed to start upload session");
+          const sessionId = initData.sessionId;
+
+          // Step 2: Send chunks one by one
+          for (let i = 0; i < totalChunks; i++) {
+            const start = i * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, file.size);
+            const chunkBlob = file.slice(start, end);
+
+            const chunkForm = new FormData();
+            chunkForm.append("sessionId", sessionId);
+            chunkForm.append("chunkIndex", String(i));
+            chunkForm.append("chunk", chunkBlob, `chunk_${i}`);
+
+            const chunkRes = await fetch(`${RENDER_BACKEND}/upload-chunk`, {
+              method: "POST",
+              body: chunkForm,
+            });
+            const chunkData = await chunkRes.json();
+            if (!chunkData.success) throw new Error(chunkData.error || `Chunk ${i + 1} failed`);
+
+            const pct = Math.round(((i + 1) / totalChunks) * 90);
+            setUploadProgress({
+              percent: pct,
+              transferredMB: (end / (1024 * 1024)).toFixed(1),
+              totalMB: (file.size / (1024 * 1024)).toFixed(1),
+            });
+          }
+
+          // Step 3: Finish — assemble and upload to Drive
+          setStatus({ type: "success", message: "Assembling file & uploading to Google Drive..." });
+          setUploadProgress({ percent: 95, transferredMB: (file.size / (1024 * 1024)).toFixed(1), totalMB: (file.size / (1024 * 1024)).toFixed(1) });
+
+          const finishRes = await fetch(`${RENDER_BACKEND}/upload-finish`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId }),
+          });
+          const finishData = await finishRes.json();
+          if (finishData.success && finishData.fileUrl) {
+            publicFileUrl = finishData.fileUrl;
+            uploadSuccess = true;
+          } else {
+            throw new Error(finishData.error || "Failed to finalize upload");
+          }
+        } else {
+          // ===== SINGLE-REQUEST UPLOAD (for small files < 5MB) =====
+          const targetUrl =
+            category === "Magazines" || category === "Tabloids" || category === "Publications"
+              ? `${RENDER_BACKEND}/upload-magazine`
+              : `${RENDER_BACKEND}/upload`;
+
           try {
             const driveData = await uploadWithProgress(targetUrl, formData);
             if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
@@ -414,8 +467,8 @@ export default function MediaUploadForm() {
               if (driveData.coverUrl) publicCoverUrl = driveData.coverUrl;
               uploadSuccess = true;
             }
-          } catch (retryErr: any) {
-            console.warn("Render backend upload attempt 2:", retryErr);
+          } catch (driveErr: any) {
+            console.warn("Single upload attempt failed:", driveErr);
           }
         }
 

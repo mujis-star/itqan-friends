@@ -495,6 +495,156 @@ def delete_magazine(item_id):
         return jsonify({'error': str(e)}), 500
 
 
+# ===== CHUNKED UPLOAD ENDPOINTS (for large files that exceed 30s timeout) =====
+CHUNK_DIR = os.path.join(UPLOAD_FOLDER, 'chunks')
+os.makedirs(CHUNK_DIR, exist_ok=True)
+# Track active upload sessions {session_id: {total_chunks, received, filename, caption, category, mime_type}}
+_upload_sessions = {}
+
+
+@app.route('/upload-init', methods=['POST', 'OPTIONS'])
+def upload_init():
+    """Start a chunked upload session."""
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        data = request.get_json() or {}
+        session_id = uuid.uuid4().hex
+        filename = data.get('filename', 'upload.bin')
+        total_chunks = int(data.get('totalChunks', 1))
+        ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+
+        session_dir = os.path.join(CHUNK_DIR, session_id)
+        os.makedirs(session_dir, exist_ok=True)
+
+        _upload_sessions[session_id] = {
+            'total_chunks': total_chunks,
+            'received': set(),
+            'filename': filename,
+            'ext': ext,
+            'caption': data.get('caption', ''),
+            'category': data.get('category', 'Videos'),
+            'description': data.get('description', ''),
+            'mime_type': data.get('mimeType', mimetypes.guess_type(filename)[0] or 'application/octet-stream'),
+        }
+
+        return jsonify({'success': True, 'sessionId': session_id}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/upload-chunk', methods=['POST', 'OPTIONS'])
+def upload_chunk():
+    """Receive a single chunk of a large file."""
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        session_id = request.form.get('sessionId', '')
+        chunk_index = int(request.form.get('chunkIndex', 0))
+        chunk_file = request.files.get('chunk')
+
+        if not session_id or session_id not in _upload_sessions:
+            return jsonify({'error': 'Invalid or expired upload session'}), 400
+        if not chunk_file:
+            return jsonify({'error': 'No chunk data'}), 400
+
+        session = _upload_sessions[session_id]
+        chunk_path = os.path.join(CHUNK_DIR, session_id, f'chunk_{chunk_index:04d}')
+        chunk_file.save(chunk_path)
+        session['received'].add(chunk_index)
+
+        return jsonify({
+            'success': True,
+            'received': len(session['received']),
+            'total': session['total_chunks'],
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/upload-finish', methods=['POST', 'OPTIONS'])
+def upload_finish():
+    """Assemble all chunks and upload the final file to Google Drive."""
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        data = request.get_json() or {}
+        session_id = data.get('sessionId', '')
+
+        if not session_id or session_id not in _upload_sessions:
+            return jsonify({'error': 'Invalid or expired upload session'}), 400
+
+        session = _upload_sessions[session_id]
+        if len(session['received']) < session['total_chunks']:
+            return jsonify({
+                'error': f"Missing chunks: received {len(session['received'])}/{session['total_chunks']}"
+            }), 400
+
+        # Assemble chunks into a single file
+        ext = session['ext']
+        assembled_name = f"media_{session_id}.{ext}"
+        assembled_path = os.path.join(UPLOAD_FOLDER, assembled_name)
+
+        with open(assembled_path, 'wb') as out:
+            for i in range(session['total_chunks']):
+                chunk_path = os.path.join(CHUNK_DIR, session_id, f'chunk_{i:04d}')
+                with open(chunk_path, 'rb') as chunk:
+                    out.write(chunk.read())
+
+        # Upload assembled file to Google Drive
+        file_url = ''
+        file_id = ''
+        is_video = ext in ['mp4', 'webm', 'mov', 'mkv', 'avi']
+
+        if drive_enabled():
+            import io
+            service = get_drive_service()
+            drive_filename = f"media_{uuid.uuid4().hex}_{int(datetime.datetime.now().timestamp())}.{ext}"
+            metadata = {
+                'name': drive_filename,
+                'parents': [DRIVE_FOLDER_ID],
+                'appProperties': {
+                    'kind': 'videos' if is_video else 'gallery',
+                    'caption': session.get('caption') or 'Untitled',
+                }
+            }
+
+            with open(assembled_path, 'rb') as f:
+                media = MediaIoBaseUpload(f, mimetype=session['mime_type'], resumable=True, chunksize=10 * 1024 * 1024)
+                created = service.files().create(
+                    body=metadata,
+                    media_body=media,
+                    fields='id,name,mimeType,createdTime'
+                ).execute()
+
+            file_id = created['id']
+            make_drive_public(service, file_id)
+            file_url = drive_view_url(file_id) if is_video else drive_image_url(file_id)
+        else:
+            base_url = request.host_url.rstrip('/')
+            file_url = f"{base_url}/uploads/{assembled_name}"
+
+        # Cleanup chunks
+        import shutil
+        chunk_dir = os.path.join(CHUNK_DIR, session_id)
+        shutil.rmtree(chunk_dir, ignore_errors=True)
+        if drive_enabled() and os.path.exists(assembled_path):
+            os.remove(assembled_path)
+        del _upload_sessions[session_id]
+
+        return jsonify({
+            'success': True,
+            'fileUrl': file_url,
+            'id': file_id,
+            'isVideo': is_video,
+            'storage': 'google-drive' if drive_enabled() else 'local',
+            'message': 'Upload successful'
+        }), 200
+    except Exception as e:
+        print(f"Chunked upload finish error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/uploads/<filename>')
 def serve_upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
