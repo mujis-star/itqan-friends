@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { UploadCloud, CheckCircle2, AlertCircle, Image as ImageIcon, Video, Link as LinkIcon } from "lucide-react";
 import { storage, db, auth } from "@/lib/firebase/config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -8,6 +8,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { MediaService } from "@/services/MediaService";
+
+const RENDER_BACKEND = "https://itqan-backend.onrender.com";
 
 export default function MediaUploadForm() {
   const { user } = useAuth();
@@ -21,6 +23,40 @@ export default function MediaUploadForm() {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ percent: number; transferredMB: string; totalMB: string } | null>(null);
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [backendStatus, setBackendStatus] = useState<"sleeping" | "waking" | "ready">("sleeping");
+  const backendReady = useRef(false);
+
+  // Wake up the Render backend as soon as this form is visible
+  useEffect(() => {
+    let keepAliveTimer: ReturnType<typeof setInterval>;
+
+    const wakeBackend = async () => {
+      setBackendStatus("waking");
+      for (let attempt = 0; attempt < 5; attempt++) {
+        try {
+          const res = await fetch(`${RENDER_BACKEND}/health`, { cache: "no-store" });
+          if (res.ok) {
+            backendReady.current = true;
+            setBackendStatus("ready");
+            return;
+          }
+        } catch {
+          // Server still waking, wait and retry
+        }
+        await new Promise((r) => setTimeout(r, 15000)); // wait 15s between retries
+      }
+      setBackendStatus("sleeping");
+    };
+
+    wakeBackend();
+
+    // Keep the backend alive while the form is open (ping every 3 min)
+    keepAliveTimer = setInterval(() => {
+      fetch(`${RENDER_BACKEND}/health`, { cache: "no-store" }).catch(() => {});
+    }, 180000);
+
+    return () => clearInterval(keepAliveTimer);
+  }, []);
 
   const getAcceptType = () => {
     switch (category) {
@@ -331,21 +367,31 @@ export default function MediaUploadForm() {
 
         const targetUrl =
           category === "Magazines" || category === "Tabloids" || category === "Publications"
-            ? "https://itqan-backend.onrender.com/upload-magazine"
-            : "https://itqan-backend.onrender.com/upload";
+            ? `${RENDER_BACKEND}/upload-magazine`
+            : `${RENDER_BACKEND}/upload`;
 
-        // Wake up the Render backend (free tier sleeps after inactivity)
-        setStatus({ type: "success", message: "Connecting to Google Drive cloud server..." });
-        try {
-          await fetch("https://itqan-backend.onrender.com/health", {
-            cache: "no-store",
-            signal: AbortSignal.timeout(90000),
-          });
-        } catch {
-          // Backend may still be waking, proceed with upload anyway
+        // Wait for backend to be ready (it starts waking on component mount)
+        if (!backendReady.current) {
+          setStatus({ type: "success", message: "⏳ Waiting for Google Drive server to wake up... (this takes up to 2 minutes on first use)" });
+          for (let wait = 0; wait < 12; wait++) {
+            if (backendReady.current) break;
+            try {
+              const res = await fetch(`${RENDER_BACKEND}/health`, { cache: "no-store" });
+              if (res.ok) {
+                backendReady.current = true;
+                setBackendStatus("ready");
+                break;
+              }
+            } catch { /* still waking */ }
+            await new Promise((r) => setTimeout(r, 10000));
+          }
+          if (!backendReady.current) {
+            throw new Error("Google Drive server did not start in time. Please refresh the page and wait for the green 'ready' indicator before uploading.");
+          }
+          setStatus(null);
         }
 
-        // Attempt 1: Upload to Google Drive via Render backend
+        // Upload to Google Drive via Render backend
         try {
           const driveData = await uploadWithProgress(targetUrl, formData);
           if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
@@ -469,9 +515,27 @@ export default function MediaUploadForm() {
       <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-white">
         <UploadCloud className="text-primary" size={28} /> Upload Media & Publications
       </h2>
-      <p className="text-xs text-gray-400 mb-6">
+      <p className="text-xs text-gray-400 mb-3">
         Add new photos, videos, or PDF magazines to the ITQAN public archive across all devices.
       </p>
+
+      {/* Google Drive Backend Status */}
+      <div className={`flex items-center gap-2 text-[11px] font-semibold mb-5 px-3 py-2 rounded-xl border ${
+        backendStatus === "ready"
+          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+          : backendStatus === "waking"
+          ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+          : "bg-red-500/10 border-red-500/20 text-red-400"
+      }`}>
+        <span className={`w-2 h-2 rounded-full shrink-0 ${
+          backendStatus === "ready" ? "bg-emerald-400" : backendStatus === "waking" ? "bg-amber-400 animate-pulse" : "bg-red-400"
+        }`} />
+        {backendStatus === "ready"
+          ? "Google Drive server is online & ready"
+          : backendStatus === "waking"
+          ? "Waking up Google Drive server... please wait"
+          : "Google Drive server is sleeping — it will wake automatically"}
+      </div>
 
       {status && (
         <div
