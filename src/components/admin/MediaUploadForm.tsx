@@ -329,13 +329,24 @@ export default function MediaUploadForm() {
 
         let uploadSuccess = false;
 
-        // Try Google Drive Render backend first (supports large 100MB+ files directly into Google Drive)
-        try {
-          const targetUrl =
-            category === "Magazines" || category === "Tabloids" || category === "Publications"
-              ? "https://itqan-backend.onrender.com/upload-magazine"
-              : "https://itqan-backend.onrender.com/upload";
+        const targetUrl =
+          category === "Magazines" || category === "Tabloids" || category === "Publications"
+            ? "https://itqan-backend.onrender.com/upload-magazine"
+            : "https://itqan-backend.onrender.com/upload";
 
+        // Wake up the Render backend (free tier sleeps after inactivity)
+        setStatus({ type: "success", message: "Connecting to Google Drive cloud server..." });
+        try {
+          await fetch("https://itqan-backend.onrender.com/health", {
+            cache: "no-store",
+            signal: AbortSignal.timeout(90000),
+          });
+        } catch {
+          // Backend may still be waking, proceed with upload anyway
+        }
+
+        // Attempt 1: Upload to Google Drive via Render backend
+        try {
           const driveData = await uploadWithProgress(targetUrl, formData);
           if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
             publicFileUrl = driveData.fileUrl || driveData.pdfUrl || "";
@@ -343,28 +354,28 @@ export default function MediaUploadForm() {
             uploadSuccess = true;
           }
         } catch (driveErr: any) {
-          console.warn("Render backend direct upload notice:", driveErr);
+          console.warn("Render backend upload attempt 1:", driveErr);
         }
 
-        // For files under 4.5MB, fallback to Next.js API route
-        if (!uploadSuccess && file.size < 4.5 * 1024 * 1024) {
+        // Attempt 2: Retry once if first attempt failed (backend may have just woken up)
+        if (!uploadSuccess) {
+          setStatus({ type: "success", message: "Retrying upload to Google Drive..." });
+          setUploadProgress({ percent: 0, transferredMB: "0", totalMB: (file.size / (1024 * 1024)).toFixed(1) });
           try {
-            const apiData = await uploadWithProgress("/api/upload", formData, {
-              Authorization: `Bearer ${idToken}`,
-            });
-            if (apiData && apiData.success) {
-              publicFileUrl = apiData.url;
-              if (apiData.coverUrl) publicCoverUrl = apiData.coverUrl;
+            const driveData = await uploadWithProgress(targetUrl, formData);
+            if (driveData && (driveData.fileUrl || driveData.pdfUrl || driveData.success)) {
+              publicFileUrl = driveData.fileUrl || driveData.pdfUrl || "";
+              if (driveData.coverUrl) publicCoverUrl = driveData.coverUrl;
               uploadSuccess = true;
             }
-          } catch (apiErr: any) {
-            console.warn("Next.js API upload notice:", apiErr);
+          } catch (retryErr: any) {
+            console.warn("Render backend upload attempt 2:", retryErr);
           }
         }
 
         if (!uploadSuccess && !publicFileUrl) {
           throw new Error(
-            "Video upload service busy or payload limit reached. You can switch to the 'Video URL / Embed' tab to link your Google Drive video link instantly without uploading!"
+            "Google Drive server is not responding. The server may be starting up — please wait 1 minute and try again."
           );
         }
       }
