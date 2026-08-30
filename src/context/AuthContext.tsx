@@ -17,6 +17,7 @@ export interface UserProfileData {
 }
 
 const KNOWN_MEMBERS_MAP: Record<string, Partial<UserProfileData>> = {
+  "admin@itqan.org": { uid: "admin-1", displayName: "ITQAN Super Admin", role: "Super Admin", wing: "Executive", admissionNo: "700" },
   "mujeeb@itqan.org": { uid: "m-702", displayName: "Mujeeb Rahman", role: "Super Admin", wing: "Executive", admissionNo: "702" },
   "hudaif@itqan.org": { uid: "m-733", displayName: "Sayed Hudaif", role: "Administrator", wing: "Executive", admissionNo: "733" },
   "burhan@itqan.org": { uid: "m-725", displayName: "Sayed Burhan", role: "Administrator", wing: "Executive", admissionNo: "725" },
@@ -131,12 +132,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser);
         setIsDemo(false);
+        const emailKey = (firebaseUser.email || "").toLowerCase();
+
+        // Check custom members in localStorage first, then fallback to KNOWN_MEMBERS_MAP
+        let knownMember = KNOWN_MEMBERS_MAP[emailKey];
+        if (typeof window !== "undefined") {
+          const savedMembersStr = localStorage.getItem("itqan_custom_members");
+          if (savedMembersStr) {
+            try {
+              const membersList = JSON.parse(savedMembersStr);
+              const custom = membersList.find((m: any) => m.email?.toLowerCase() === emailKey);
+              if (custom) knownMember = { ...knownMember, ...custom };
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
+
+        let userRole = knownMember?.role || "";
 
         try {
           const tokenResult: IdTokenResult = await firebaseUser.getIdTokenResult();
-          let userRole = tokenResult.claims.role as string;
+          if (tokenResult.claims.role) {
+            userRole = tokenResult.claims.role as string;
+          }
 
           if (!userRole && db) {
             try {
@@ -147,17 +167,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               if (userDoc.exists()) {
                 const data = userDoc.data();
                 if (data.role === "admin") userRole = "Administrator";
-                else userRole = data.role || "Member";
+                else if (data.role === "Super Admin") userRole = "Super Admin";
+                else userRole = data.role || userRole || "Member";
               }
             } catch (fsError) {
               console.warn("Failed to fetch legacy role from Firestore", fsError);
             }
           }
 
-          setRole(userRole || "Member");
+          if (!userRole) {
+            userRole = knownMember?.role || "Member";
+          }
+
+          const enhancedUser: UserProfileData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email || emailKey,
+            displayName:
+              firebaseUser.displayName ||
+              knownMember?.displayName ||
+              (emailKey ? emailKey.split("@")[0] : "ITQAN Member"),
+            role: userRole,
+            wing: knownMember?.wing || "Executive",
+            admissionNo: knownMember?.admissionNo || "700",
+            avatarUrl: firebaseUser.photoURL || knownMember?.avatarUrl,
+            bio: knownMember?.bio,
+            phone: knownMember?.phone,
+          };
+
+          setUser(enhancedUser);
+          setRole(userRole);
         } catch (error) {
           console.error("Failed to parse role", error);
-          setRole("Member");
+          const finalRole = knownMember?.role || "Member";
+          const fallbackUser: UserProfileData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email || emailKey,
+            displayName:
+              firebaseUser.displayName ||
+              knownMember?.displayName ||
+              (emailKey ? emailKey.split("@")[0] : "ITQAN Member"),
+            role: finalRole,
+            wing: knownMember?.wing || "Executive",
+            admissionNo: knownMember?.admissionNo || "700",
+          };
+          setUser(fallbackUser);
+          setRole(finalRole);
         }
       } else {
         if (!sessionStorage.getItem("itqan_demo_user")) {
@@ -194,17 +248,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     let targetRole: string;
 
     if (matched) {
+      targetRole = matched.role || "Member";
       sessionUser = {
         uid: matched.uid || `user-${Date.now()}`,
         email: targetEmail,
         displayName: matched.displayName || "ITQAN Member",
-        role: matched.role || "Member",
+        role: targetRole,
         wing: matched.wing || "Executive",
         admissionNo: matched.admissionNo || "700",
         bio: matched.bio,
         avatarUrl: matched.avatarUrl,
       };
-      targetRole = matched.role || "Member";
     } else {
       targetRole = emailOrRole.includes("@") ? "Member" : emailOrRole;
       sessionUser = {

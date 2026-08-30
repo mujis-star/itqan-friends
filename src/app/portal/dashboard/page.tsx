@@ -110,20 +110,32 @@ export default function DashboardPage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-bold text-primary uppercase tracking-wider mb-2">
-            <Sparkles size={14} /> Command Center Active
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 border ${
+            isSuperAdmin
+              ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+              : "bg-primary/10 border-primary/20 text-primary"
+          }`}>
+            <Sparkles size={14} /> {isSuperAdmin ? "Super Admin Command Center" : "Command Center Active"}
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            Welcome back, {user?.displayName || "Member"}!
+            Welcome back, {user?.displayName || (user?.email ? user.email.split("@")[0] : "Member")}!
           </h1>
           <p className="text-xs text-gray-400 mt-1">
-            Logged in as <span className="text-primary font-bold">{userRole}</span>. Welcome to your ITQAN portal space.
+            Logged in as{" "}
+            <span className={`font-bold ${isSuperAdmin ? "text-amber-400" : "text-primary"}`}>
+              {userRole}
+            </span>
+            . Welcome to your ITQAN portal space.
           </p>
         </div>
 
         <div className="hidden sm:block shrink-0 relative z-10 mt-4 sm:mt-0">
-          <div className="w-14 h-14 rounded-full bg-primary/20 border-2 border-primary/40 flex items-center justify-center text-primary font-extrabold text-xl shadow-lg">
-            {user?.displayName?.charAt(0) || "M"}
+          <div className={`w-14 h-14 rounded-full border-2 flex items-center justify-center font-extrabold text-xl shadow-lg ${
+            isSuperAdmin
+              ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+              : "bg-primary/20 border-primary/40 text-primary"
+          }`}>
+            {(user?.displayName || user?.email || "M").charAt(0).toUpperCase()}
           </div>
         </div>
       </div>
